@@ -1,0 +1,33 @@
+{
+  "database": {
+    "driver": "mysql",
+    "hostname": "localhost",
+    "username": "databaseusernamehere",
+    "password": "databasepasswordhere",
+    "database": "databasenamehere",
+    "pdo": true
+  },
+  "locale": {
+    "path": "templates/languages",
+    "extension": "lng",
+    "default_locale": "english",
+    "default_timezone": "Europe/Amsterdam"
+  },
+  "memcache": {
+    "enabled": false
+  },
+  "class_map": {
+  
+  },
+  "settings": {
+  "salt": "randomlygeneratedsalthere",
+  "defaulttemplate": "blue_default",
+  "rootkey": "../data/id_rsa",
+  "commandlog": "../data/log.txt",
+  "hostname": "hostnameforinstallhere"
+  },
+  "components": [
+    "router",
+    "errorhandler"
+  ]
+}
