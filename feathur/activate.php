@@ -8,7 +8,7 @@ if((empty($_GET['email'])) || (empty($_GET['id']))){
 	die();
 }
 
-$sActivate = $database->CachedQuery("SELECT * FROM accounts WHERE `password` = -1 AND `email_address` = :EmailAddress AND `activation_code` = :ActivationCode", array('EmailAddress' => $_GET['email'], 'ActivationCode' => $_GET['id']));
+$sActivate = $database->CachedQuery("SELECT * FROM accounts WHERE (`password` = -1 AND `email_address` = :EmailAddress AND `activation_code` = :ActivationCode) || (`email_address` = :EmailAddress AND `forgot` = :ActivationCode)", array('EmailAddress' => $_GET['email'], 'ActivationCode' => $_GET['id']));
 
 if(empty($sActivate)){
 	header("Location: index.php");

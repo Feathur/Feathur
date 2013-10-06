@@ -36,26 +36,19 @@
 
 		<div class="body">
 			{%if isset|Errors == true}
-				<div style="z-index: 670;" class="albox errorbox">
-					{%foreach error in Errors}
-						{%?error[result]}
-					{%/foreach}
-					<a original-title="close" href="#" class="close tips">close</a>
-				</div>
+				{%foreach error in Errors}
+					<div style="z-index: 670;" class="albox {%?error[type]}">
+						{%?error[content]}
+						<a original-title="close" href="#" class="close tips">close</a>
+					</div>
+				{%/foreach}
 			{%/if}
-			<form id="form1" name="form1" method="post" action="index.php?action=login">
+			<form id="form1" name="form1" method="post" action="forgot.php?action=forgot">
 				<label class="log-lab">Email Address</label>
 				<input name="email" type="text" class="login-input-user" id="textfield" value=""/>
-	
-				<label class="log-lab">Password</label>
-				<input name="password" type="password" class="login-input-pass" id="textfield" value=""/>
-	
-				<input type="submit" name="submit" id="button" value="Login" class="button"/>
+				
+				<input type="submit" name="submit" id="button" value="Request Password Reset" class="button"/>
 			</form>
-			<br>
-			<div align="center">
-				<a href="forgot.php">Forgot Password</a>
-			</div>
 		</div>
 	</div>
 </body>

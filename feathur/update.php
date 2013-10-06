@@ -10,9 +10,11 @@ if($sSSH->login("root", $sKey)) {
 				mkdir /var/feathur/data/templates/;
 				mkdir /var/feathur/data/keys;
 				mkdir /var/feathur/data/templates/openvz;
+				mkdir /var/feathur/data/templates/openvz;
 				chmod 777 /var/feathur/data/templates/;
-				chmod 777 /var/feathur/data/templates/openvz;");
+				chmod 777 /var/feathur/data/templates/openvz;
+				chmod 777 /var/feathur/data/templates/kvm");
 }
 
-$sAdd = $database->prepare("ALTER TABLE `vps` ADD `rebuilding` INT( 2 ) NOT NULL AFTER `bandwidth_usage`;");
+$sAdd = $database->prepare("ALTER TABLE `accounts` ADD `forgot` VARCHAR(130);");
 $sAdd->execute();

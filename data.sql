@@ -7,11 +7,12 @@ CREATE TABLE IF NOT EXISTS `accounts` (
   `permissions` int(2) NOT NULL DEFAULT '0',
   `salt` varchar(65) NOT NULL,
   `activation_code` varchar(130) NOT NULL,
+  `forgot` varchar(130) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=73 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=73;
 
-INSERT INTO `accounts` (`id`, `username`, `email_address`, `password`, `permissions`, `salt`, `activation_code`) VALUES
-(1, 'Admin', 'admin@company.com', '6UkIdjBU6DahbrMTbPLI/wv0ZYEfzuTg3l5hdMQixE7', 7, 'BKUIVStg0KV3n3vAUr6bWtJ5IjTDkf', '');
+INSERT INTO `accounts` (`id`, `username`, `email_address`, `password`, `permissions`, `salt`) VALUES
+(1, 'Admin', 'admin@company.com', '6UkIdjBU6DahbrMTbPLI/wv0ZYEfzuTg3l5hdMQixE7', 7, 'BKUIVStg0KV3n3vAUr6bWtJ5IjTDkf');
 
 CREATE TABLE IF NOT EXISTS `blocks` (
   `id` int(8) NOT NULL AUTO_INCREMENT,

@@ -14,6 +14,7 @@ class User extends CPHPDatabaseRecordClass {
 			'Password' => "password",
 			'ActivationCode' => "activation_code",
 			'Salt' => "salt",
+			'Forgot' => "forgot",
 		),
 		'numeric' => array(
 			'Permissions' => "permissions",
@@ -98,6 +99,21 @@ class User extends CPHPDatabaseRecordClass {
 			}
 		} else {
 			return $sResult = array("content" => "Password must be at least 5 characters");
+		}
+	}
+	
+	public static function forgot($uEmail){
+		global $database;
+		if($sResult = $database->CachedQuery("SELECT * FROM accounts WHERE `email_address` = :EmailAddress", array('EmailAddress' => $uEmail))){
+			$sForgotCode = random_string(120);
+			$sUser = new User($sResult->data[0]["id"]);
+			$sUser->uForgot = $sForgotCode;
+			$sUser->InsertIntoDatabase();
+			$sVariable = array("email" => urlencode($sUser->sEmailAddress), "forgot_code" => urlencode($sForgotCode));
+			$sSend = Core::SendEmail($sUser->sEmailAddress, "Feathur Forgot Password", "forgot", $sVariable);
+			return $sResult = array("content" => "Please check your email for a reset link!", "type" => "succesbox");
+		} else {
+			return $sResult = array("content" => "User with that email not found!", "type" => "errorbox");
 		}
 	}
 }
