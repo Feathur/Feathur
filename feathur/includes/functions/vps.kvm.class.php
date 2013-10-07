@@ -341,4 +341,69 @@ class kvm {
 			return $sArray = array("json" => 1, "type" => "status", "result" => "online", "hostname" => $sVPS->sHostname);
 		}
 	}
+	
+	public function database_kvm_getrdns($sUser, $sVPS, $sRequested){
+		$sIP = new IP($sRequested["GET"]["ip"]);
+		if($sIP->sVPSId == $sVPS->sId){
+			return $sArray = RDNS::pull_rdns($sIP);
+		} else {
+			return $sArray = array("json" => 1, "type" => "error", "result" => "That IP does not belong to you.");
+		}
+	}
+	
+	public function kvm_getrdns($sUser, $sVPS, $sRequested){
+		return true;
+	}
+	
+	public function database_kvm_setrdns($sUser, $sVPS, $sRequested){
+		$sIP = new IP($sRequested["GET"]["ip"]);
+		if($sIP->sVPSId == $sVPS->sId){
+			return RDNS::add_rdns($sIP, $sRequested["GET"]["hostname"]);
+		} else {
+			return $sArray = array("json" => 1, "type" => "error", "result" => "That IP does not belong to you.");
+		}
+	}
+	
+	public function kvm_setrdns($sUser, $sVPS, $sRequested){
+		return true;
+	}
+	
+	public function database_kvm_hostname($sUser, $sVPS, $sRequested){
+		$sHostname = preg_replace('/[^A-Za-z0-9-.]/', '', $sRequested["GET"]["hostname"]);
+		if(!empty($sHostname)){
+			$sVPS->uHostname = $sHostname;
+			$sVPS->InsertIntoDatabase();
+			return $sArray = array("json" => 1, "type" => "success", "result" => "Hostname has been updated successfully.");
+		} else {
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Hostname can not be blank!");
+		}
+	}
+	
+	public function kvm_hostname($sUser, $sVPS, $sRequested){
+		return true;
+	}
+	
+	public function database_kvm_primaryip($sUser, $sVPS, $sRequested){
+		$sIP = new IP($sRequested["GET"]["ip"]);
+		if($sIP->sVPSId == $sVPS->sId){
+			$sVPS->uPrimaryIP = $sIP->sIPAddress;
+			$sVPS->InsertIntoDatabase();
+			return true;
+		} else {
+			return $sArray = array("json" => 1, "type" => "error", "result" => "That IP does not belong to you.");
+		}
+	}
+	
+	public function kvm_primaryip($sUser, $sVPS, $sRequested){
+		$sIP = new IP($sRequested["GET"]["ip"]);
+		$sBlock = new Block($sIP->sBlockId);
+		$sServer = new Server($sVPS->sServerId);
+		$sSSH = Server::server_connect($sServer);
+		$sDHCP .= "host kvm{$sVPS->sContainerId}.0 { hardware ethernet {$sVPS->sMac}; option routers {$sBlock->sGateway}; option subnet-mask {$sBlock->sNetmask}; fixed-address {$sIP->sIPAddress}; option domain-name-servers {$sVPS->sNameserver}; }";
+		$sDHCP = escapeshellarg($sDHCP);	
+		$sCommandList .= "echo {$sDHCP} > /var/feathur/configs/kvm{$sVPS->sContainerId}-dhcp.conf;cat /var/feathur/configs/dhcpd.head /var/feathur/configs/*-dhcp.conf > /etc/dhcp/dhcpd.conf;service isc-dhcp-server restart;";
+		$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
+		$sSave = VPS::save_vps_logs($sLog, $sVPS);
+		return $sArray = array("json" => 1, "type" => "success", "result" => "Primary IP changed to {$sIP->sIPAddress}");
+	}
 }

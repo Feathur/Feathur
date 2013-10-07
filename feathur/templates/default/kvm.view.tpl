@@ -57,6 +57,37 @@
 		$(function() {
 			$("#tabs").tabs();
 		});
+		$("#RDNSIP").change(function() {
+			var ipid = $('#RDNSIP').val();
+			$('#SettingNotice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
+			$.getJSON("view.php?id={%?vps[id]}&action=getrdns&ip=" + ipid,function(result){
+				$('#RDNSValue').val(result.result);
+				$('#SettingNotice').html('');
+				$("#RDNSButton").css({visibility: "visible"});
+			});
+		});
+		$("#UpdateRDNS").click(function() {
+			var ipid = $('#RDNSIP').val();
+			var rdns = $('#RDNSValue').val();
+			$('#SettingNotice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
+			$.getJSON("view.php?id={%?vps[id]}&action=setrdns&ip=" + ipid + "&hostname=" + rdns,function(result){
+				$('#SettingNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');  
+			});
+		});
+		$("#ChangeHostname").click(function() {
+			$('#SettingNotice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
+			var hostname = $('#Hostname').attr('value');
+			$.getJSON("view.php?id={%?vps[id]}&action=hostname&hostname=" + hostname,function(result){
+				$('#SettingNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');  
+			});
+		});
+		$("#ChangePrimaryIP").click(function() {
+			$('#SettingNotice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
+			var ipaddress = $('#SelectedIP').attr('value');
+			$.getJSON("view.php?id={%?vps[id]}&action=primaryip&ip=" + ipaddress,function(result){
+				$('#SettingNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');   
+			});
+		});
 	});
 </script>
 <br><br>
@@ -143,7 +174,7 @@
 				<div class="titleh">
 					<h3>VNC Password</h3>
 				</div>
-				<table class="tablesorter" style="height:130px;">
+				<table class="tablesorter">
 					<tr>
 						<td width="50%">VNC Server/Port:</td>
 						<td width="50%">
@@ -169,6 +200,37 @@
 			</div>
 			<div class="simplebox grid340-right">
 				<div class="titleh">
+					<h3>rDNS</h3>
+				</div>
+				<table class="tablesorter">
+					<tr>
+						<td width="40%">Select IP</td>
+						<td width="60%">
+							<select id="RDNSIP" style="width:100%">
+								<option selected="selected">Select An IP</option>
+								{%if isset|IPs == true}
+									{%foreach ip in IPs}
+										<option value="{%?ip[id]}">{%?ip[ip]}</option>
+									{%/foreach}
+								{%/if}
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>rDNS Entry:</td>
+						<td><input id="RDNSValue" type="text" name="RDNSValue" /></td>
+					</tr>
+					<tr>
+						<td colspan="2" style="height:100%;vertical-align:bottom;padding:5px;">
+							<div align="center" style="visibility:hidden;" id="RDNSButton">
+								<button class="small blue" id="UpdateRDNS">Update rDNS</button>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="simplebox grid340-left">
+				<div class="titleh">
 					<h3>Mount Disk</h3>
 				</div>
 				<table class="tablesorter">
@@ -191,7 +253,7 @@
 					</tr>
 				</table>
 			</div>
-			<div class="simplebox grid340-left">
+			<div class="simplebox grid340-right">
 				<div class="titleh">
 					<h3>Boot Order</h3>
 				</div>
@@ -209,6 +271,51 @@
 						<td colspan="2">
 							<div align="center">
 								<button class="small blue" id="BootOrder">Change Boot Order</button>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="simplebox grid340-left">
+				<div class="titleh">
+					<h3>Hostname</h3>
+				</div>
+				<table class="tablesorter" style="height:120px;">
+					<tr>
+						<td width="40%">Hostname:</td>
+						<td width="60%"><input id="Hostname" type="text" name="Hostname" value="{%?vps[hostname]}" /></td>
+					</tr>
+					<tr>
+						<td colspan="2" style="height:100%;vertical-align:bottom;">
+							<div align="center">
+								<button class="small blue" id="ChangeHostname">Change Hostname</button>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="width:100%;margin:10px;"></div>
+			<div class="simplebox grid340-right">
+				<div class="titleh">
+					<h3>Primary IP</h3>
+				</div>
+				<table class="tablesorter" style="height:120px;">
+					<tr>
+						<td width="40%">Primary IP</td>
+						<td width="60%">
+							<select id="SelectedIP" style="width:100%">
+								{%if isset|IPs == true}
+									{%foreach ip in IPs}
+										<option value="{%?ip[id]}" {%if ip[primary] == 1}selected="selected"{%/if}>{%?ip[ip]}</option>
+									{%/foreach}
+								{%/if}
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" style="height:100%;vertical-align:bottom;">
+							<div align="center">
+								<button class="small blue" id="ChangePrimaryIP">Change Primary IP</button>
 							</div>
 						</td>
 					</tr>
