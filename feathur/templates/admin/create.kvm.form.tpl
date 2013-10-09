@@ -25,8 +25,8 @@
 	<div class="clear"></div>
 </div>
 <div class="st-form-line">	
-	<span class="st-labeltext">CPU Limit (100 per Core):</span>	
-	<input id="cpulimit" type="text" name="cpulimit" value="100" style="width:500px;">
+	<span class="st-labeltext">CPU Limit (1 per Core):</span>	
+	<input id="cpulimit" type="text" name="cpulimit" value="1" style="width:500px;">
 	<div class="clear"></div>
 </div>
 <div class="st-form-line">	

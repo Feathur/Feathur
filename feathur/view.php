@@ -46,6 +46,7 @@ if($sTransfer = $database->CachedQuery("SELECT * FROM transfers WHERE `completed
 }
 
 if(!empty($sAction)){
+	set_time_limit(100);
 	$sStart = new $sVPS->sType;
 	$sDBAction = "database_{$sVPS->sType}_{$sAction}";
 	$sServerAction = "{$sVPS->sType}_{$sAction}";

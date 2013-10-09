@@ -29,6 +29,7 @@ class Server extends CPHPDatabaseRecordClass {
 			"Port" => "port",
 			"Location" => "location",
 			"VolumeGroup" => "volume_group",
+			"QEMUPath" => "qemu_path",
 		),
 		'numeric' => array(
 			"Password" => "password",

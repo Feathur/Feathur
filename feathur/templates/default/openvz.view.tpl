@@ -754,7 +754,7 @@
 					<table class="hide-message tablesorter">
 						<tr>
 							<td>
-								<input type="checkbox" name="VerifyTerminate" id="VerifyTerminate" value="1"> I understand that this will completely destroy this poor users pittiful VPS.
+								<input type="checkbox" name="VerifyTerminate" id="VerifyTerminate" value="1"> I understand that this will completely destroy this poor users pitiful VPS.
 							</td>
 						</tr>
 						<tr>

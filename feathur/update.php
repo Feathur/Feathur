@@ -18,3 +18,12 @@ if($sSSH->login("root", $sKey)) {
 
 $sAdd = $database->prepare("ALTER TABLE `accounts` ADD `forgot` VARCHAR(130);");
 $sAdd->execute();
+
+$sAdd = $database->prepare("ALTER TABLE `servers` ADD `volume_group` VARCHAR(130);");
+$sAdd->execute();
+
+$sAdd = $database->prepare("ALTER TABLE `servers` ADD `qemu_path` VARCHAR(130);");
+$sAdd->execute();
+
+$sAdd = $database->prepare("ALTER TABLE `vps` CHANGE `mac` `mac` TEXT;");
+$sAdd->execute();

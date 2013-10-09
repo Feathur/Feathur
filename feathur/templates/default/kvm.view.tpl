@@ -88,6 +88,68 @@
 				$('#SettingNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');   
 			});
 		});
+		$(document).on("click", ".CloseToggle", function(){
+			$('#SettingNotice').html('');
+			$('#Notice').html('');
+			$('#RebuildNotice').html();
+			$('#AdminNotice').html();
+		});
+		{%if UserPermissions == 7}
+			$("#UpdateVPS").click(function() {
+				$('#AdminNotice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
+				var ram = $('#AdminRAM').attr('value');
+				var disk = $('#AdminDisk').attr('value');
+				var cpulimit = $('#AdminCPULimit').attr('value');
+				var bandwidthlimit = $('#AdminBandwidthLimit').attr('value');
+				$.getJSON("view.php?id={%?vps[id]}&action=update&ram=" + ram + "&disk=" + disk + "cpulimit=" + cpulimit + "&bandwidth=" + bandwidthlimit,function(result){
+					$('#AdminNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
+				});
+			});
+			$("#AddIPAddresses").click(function() {
+				$('#AdminNotice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
+				var add = $('#AddIP').attr('value');
+				$.getJSON("view.php?id={%?vps[id]}&action=addip&ip=" + add,function(result){
+					$('#AdminNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
+					if(result.reload == 1){
+						location.reload();
+					}
+				});
+			});
+			$("#RemoveIPAddress").click(function() {
+				$('#AdminNotice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
+				var remove = $('#RemoveIP').attr('value');
+				$.getJSON("view.php?id={%?vps[id]}&action=removeip&ip=" + remove,function(result){
+					$('#AdminNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
+					if(result.reload == 1){
+						location.reload();
+					}
+				});
+			});
+			$("#ManuallyAssignIP").click(function() {
+				$('#AdminNotice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
+				var add = $('#AssignIP').attr('value');
+				$.getJSON("view.php?id={%?vps[id]}&action=assignip&ip=" + add,function(result){
+					$('#AdminNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
+					if(result.reload == 1){
+						location.reload();
+					}
+				});
+			});
+			$("#Terminate").click(function() {
+				$('#AdminNotice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
+				var verify = $('#VerifyTerminate').is(':checked');
+				if(verify == 1) {
+					$.getJSON("view.php?id={%?vps[id]}&action=terminate&verify=1",function(result){
+						$('#AdminNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
+						if(result.reload == 1){
+							location.reload();
+						}
+					});
+				} else {
+					$('#AdminNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-error"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">You must check the verification box to terminate!</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
+				}
+			});
+		{%/if}
 	});
 </script>
 <br><br>
@@ -96,6 +158,7 @@
 		<ul>
 			<li><a href="#tabs-1">General</a></li>
 			<li><a href="#tabs-2">Settings</a></li>
+			{%if UserPermissions == 7}<li><a href="#tabs-3">Admin</a></li>{%/if}
 		</ul>
 		<div id="tabs-1" style="height:300px;">
 			<table>
@@ -322,6 +385,189 @@
 				</table>
 			</div>
 		</div>
+		{%if UserPermissions == 7}
+			<div id="tabs-3" style="height:1500px">
+				<table style="width:100%;">
+					<tr>
+						<td width="25%" align="left">
+						</td>
+						<td width="70%" align="right">
+							<div id="AdminNotice"></div>
+						</td>
+					</tr> 
+				</table>
+				<br><br>
+				{%foreach user in User}
+					<div class="simplebox grid340-right">
+						<div class="titleh">
+							<h3>User Details</h3>
+						</div>
+						<table class="tablesorter" style="height:122px">
+							<tr>
+								<td style="width:40%;">User Name:</td>
+								<td>
+									<a href="admin.php?view=clients&id={%?user[id]}">{%?user[username]}</a>
+								</td>
+							</tr>
+							<tr>
+								<td style="width:40%;">User Email:</td>
+								<td>
+									{%?user[email_address]}
+								</td>
+							</tr>
+							{%foreach data in UserVPSList}
+								{%if isempty|data[this] == false}
+									<tr>
+										<td style="width:40%;">VPS CTID:</td>
+										<td>
+											{%?data[container_id]}
+										</td>
+									</tr>
+									<tr>
+										<td style="width:40%;">Hostnode:</td>
+										<td>
+											{%?data[server]}
+										</td>
+									</tr>
+								{%/if}
+							{%/foreach}
+						</table>
+					</div>
+				{%/foreach}
+				<div class="simplebox grid340-left">
+					<div class="titleh">
+						<h3>Edit VPS</h3>
+					</div>
+					<table class="tablesorter" style="height:300px;">
+						<tr>
+							<td style="width:50%">RAM (MB):</td>
+							<td><input id="AdminRAM" type="text" name="AdminRAM" value="{%?vps[ram]}" style="width:90%" /></td>
+						</tr>
+						<tr>
+							<td style="width:50%">Disk (GB):</td>
+							<td><input id="AdminDisk" type="text" name="AdminDisk" value="{%?vps[disk]}" style="width:90%" /></td>
+						</tr>
+						<tr>
+							<td style="width:50%">CPU Limit (1/core):</td>
+							<td><input id="AdminCPULimit" type="text" name="AdminCPULimit" value="{%?vps[cpulimit]}" style="width:90%" /></td>
+						</tr>
+						<tr>
+							<td style="width:50%">Bandwidth Limit (GB):</td>
+							<td><input id="AdminBandwidthLimit" type="text" name="AdminBandwidthLimit" value="{%?vps[bandwidthlimit]}" style="width:90%" /></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<div align="center"><button class="small blue" id="UpdateVPS">Update VPS</button></div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="simplebox grid340-right">
+					<div class="titleh">
+						<h3>User VPS</h3>
+					</div>
+					<table class="tablesorter">
+						{%if isset|UserVPSList == true}
+							{%foreach data in UserVPSList}
+								<tr>
+									<td>
+										<a href="view.php?id={%?data[id]}">{%?data[hostname]}</a>
+									</td>
+								</tr>
+							{%/foreach}
+						{%/if}
+					</table>
+				</div>
+				<div class="simplebox grid340-left">
+					<div class="titleh">
+						<h3>Add IP Address</h3>
+					</div>
+					<table class="tablesorter" style="height:122px">
+						<tr>
+							<td style="width:50%">IP Addresses:</td>
+							<td>
+								<select name="AddIP" id="AddIP" style="width:90%;">
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<div align="center"><button class="small blue" id="AddIPAddresses">Add IP Addresses</button></div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="simplebox grid340-right">
+					<div class="titleh">
+						<h3>Remove An IP</h3>
+					</div>
+					<table class="tablesorter">
+						<tr>
+							<td style="width:50%">Select IP</td>
+							<td>
+								<select name="RemoveIP" id="RemoveIP" style="width:90%;">
+									{%if isset|IPs == true}
+										{%foreach ip in IPs}
+											<option value="{%?ip[id]}">{%?ip[ip]}</option>
+										{%/foreach}
+									{%/if}
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<div align="center"><button class="small blue" id="RemoveIPAddress">Remove IP Address</button></div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="simplebox grid340-left">
+					<div class="titleh">
+						<h3 class="title">Terminate VPS</h3>
+					</div>
+					<table class="hide-message tablesorter">
+						<tr>
+							<td>
+								<input type="checkbox" name="VerifyTerminate" id="VerifyTerminate" value="1"> I understand that this will completely destroy this poor users pitiful VPS.
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div align="center"><button class="small orange" id="Terminate">Terminate</button></div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="simplebox grid340-right">
+					<div class="titleh">
+						<h3>Manually Assign IP</h3>
+					</div>
+					<table class="tablesorter">
+						<tr>
+							<td style="width:50%">Assign IP:</td>
+							<td>
+								<input id="AssignIP" type="text" name="AssignIP" value="" style="width:90%" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<div align="center"><button class="small blue" id="ManuallyAssignIP">Add IP Address</button></div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		{%/if}
 	</div>
 </div>
 {%/foreach}

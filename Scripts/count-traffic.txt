@@ -1,0 +1,10 @@
+trafficlog="/scripts/traffic/log.log"
+for i in `sh list-ips.sh` ;
+ do
+  echo -n `date "+%Y-%m-%d %H:%M:%S"` >> $trafficlog
+  echo -n " $i " >> $trafficlog
+  echo `iptables -nvx -L FORWARD | grep " $i " | tr -s [:blank:] |cut -d' ' -f3| awk '{sum+=$1} END {print sum;}'` >> $trafficlog
+ done
+iptables -Z
+for i in `sh list-ips.sh`;  do iptables -D FORWARD -s $i; iptables -D FORWARD -d $i; done >/dev/null 2>&1
+for i in `sh list-ips.sh`;  do iptables -A FORWARD -s $i; iptables -A FORWARD -d $i; done >/dev/null 2>&1

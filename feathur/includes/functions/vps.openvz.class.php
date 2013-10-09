@@ -667,7 +667,7 @@ class openvz {
 				}
 				return true;
 			} else {
-				return $sResult = array("content" => "Unfortunatly there are no blocks assigned to this server?");
+				return $sResult = array("result" => "Unfortunatly there are no blocks assigned to this server?", "json" => 1, "type" => "error");
 			}
 		} else {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.");
