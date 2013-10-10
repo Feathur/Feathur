@@ -180,7 +180,7 @@ class VPS extends CPHPDatabaseRecordClass {
 		}
 	}
 	
-	public static function update_openvz_template($sServer, $sLocalSSH){
+	public static function update_openvz_templates($sServer, $sLocalSSH){
 		$sLog[] = array("command" => "rsync -avz -e \"ssh -o StrictHostKeyChecking=no -i /var/feathur/data/keys/{$sServer->sKey}\" /var/feathur/data/templates/openvz/* root@{$sServer->sIPAddress}:/vz/template/cache/ > /var/feathur/data/rsync.log &", "result" => $sLocalSSH->exec("rsync -avz -e \"ssh -o StrictHostKeyChecking=no -i /var/feathur/data/keys/{$sServer->sKey}\" /var/feathur/data/templates/openvz/* root@{$sServer->sIPAddress}:/vz/template/cache/ > /var/feathur/data/rsync.log &"));
 		$sSave = ServerLogs::save_server_logs($sLog, $sServer);
 		return true;
