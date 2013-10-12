@@ -134,7 +134,7 @@ INSERT INTO `settings` (`id`, `setting_name`, `setting_value`, `setting_group`) 
 (21, 'panel_url', 'localhost', 'site_settings'),
 (22, 'maintenance', '0', 'site_settings'),
 (23, 'automatic_updates', '1', 'site_settings'),
-(24, 'current_version', '5.0.0.1', 'site_settings'),
+(24, 'current_version', '0.5.6.2', 'site_settings'),
 (25, 'last_update_check', '0', 'site_settings'),
 (26, 'last_template_sync', '0', 'site_settings'),
 (27, 'sendgrid', '0', 'site_settings'),

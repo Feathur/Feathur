@@ -21,7 +21,7 @@ if($sAction == password){
 	die();
 } elseif($sAction == username){
 	if(strlen($_POST['username']) > 2){
-		$sUser->uUsername = $_POST['username'];
+		$sUser->uUsername = preg_replace("/[^a-zA-Z0-9\s]/", "", $_POST['username']);
 		$sUser->InsertIntoDatabase();
 		echo json_encode(array("content" => "Your name has been updated in the database."));
 	} else {
