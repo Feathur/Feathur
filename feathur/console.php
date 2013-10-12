@@ -32,7 +32,7 @@ if(($sVPS->sSuspended == 1) && ($sUser->sPermissions != 7)){
 
 if($sAction == connect){
 	if((!empty($_POST['hostname'])) && (!empty($_POST['port']))){
-		$sView = Templater::AdvancedParse($sTemplate->sValue.'/console', $locale->strings, array("connect" => "1", "VPS" => array("data" => $sVPS->uData), "Hostname" => htmlspecialchars($_POST["hostname"], ENT_QUOTES), ENT_QUOTES), "Port" => htmlspecialchars($_POST["port"], ENT_QUOTES)));
+		$sView = Templater::AdvancedParse($sTemplate->sValue.'/console', $locale->strings, array("connect" => "1", "VPS" => array("data" => $sVPS->uData), "Hostname" => htmlspecialchars($_POST["hostname"], ENT_QUOTES), "Port" => htmlspecialchars($_POST["port"], ENT_QUOTES)));
 	} else { 
 		$sView = Templater::AdvancedParse($sTemplate->sValue.'/console', $locale->strings, array("connect" => "0", "VPS" => array("data" => $sVPS->uData)));
 	}
