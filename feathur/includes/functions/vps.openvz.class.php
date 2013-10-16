@@ -652,10 +652,9 @@ class openvz {
 						foreach($sIP->data as $subvalue){
 							if($sCurrentIPs < $sIPs){
 								$sUpdate = $database->CachedQuery("UPDATE ipaddresses SET `vps_id` = :VPSId WHERE `id` = :Id", array('VPSId' => $sVPS->sId, 'Id' => $subvalue["id"]));
-								if((empty($sFirst)) && (empty($sVPS->sPrimaryIP))){
+								if((empty($sVPS->sPrimaryIP)) || (!$sData = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `vps_id` = :VPSId AND `ip_address` = :PrimaryIP", array('VPSId' => $sVPS->sId, 'PrimaryIP' => $sVPS->sPrimaryIP)))){
 									$sVPS->uPrimaryIP = $subvalue["ip_address"];
 									$sVPS->InsertIntoDatabase();
-									$sFirst = 1;
 								}	
 								$sCurrentIPs++;
 							}
@@ -701,6 +700,10 @@ class openvz {
 			if($sIP = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `id` = :IPId AND `vps_id` = :VPSId", array('IPId' => $sRemove, 'VPSId' => $sVPS->sId))){
 				$sServer = new Server($sVPS->sServerId);
 				$sSSH = Server::server_connect($sServer);
+				if($sVPS->sPrimaryIP == $sIP->data[0]["id"]){
+					$sVPS->sPrimaryIP = "";
+					$sVPS->InsertIntoDatabase();
+				}
 				$sUpdateIPs = $database->CachedQuery("UPDATE ipaddresses SET `vps_id` = 0 WHERE `id` = :IPId", array('IPId' => $sIP->data[0]["id"]));
 				$sLog[] = array("command" => "vzctl set {$sVPS->sContainerId} --ipdel {$sIP->data[0]["ip_address"]} --save;", "result" => $sSSH->exec("vzctl set {$sVPS->sContainerId} --ipdel {$sIP->data[0]["ip_address"]} --save;"));
 				$sSave = VPS::save_vps_logs($sLog, $sVPS);
@@ -745,7 +748,6 @@ class openvz {
 				}
 				$sLog[] = array("command" => $sCommand, "result" => $sSSH->exec($sCommand));
 				$sVariable = array("ip" => urlencode($sIP));
-				$sSend = Core::SendEmail($sVPSUser->sEmailAddress, "New IP In Switzerland", "new_ip", $sVariable);
 				return $sArray = array("json" => 1, "type" => "success", "result" => "The IP {$sIP} was added to this VPS.", "reload" => 1);
 			} elseif((empty($sTotalIPs)) && (empty($sAvailableIPs))){
 				$sIPExpand = explode(".", $sIP);
@@ -762,7 +764,6 @@ class openvz {
 					}
 					$sLog[] = array("command" => $sCommand, "result" => $sSSH->exec($sCommand));
 					$sVariable = array("ip" => urlencode($sIP));
-					$sSend = Core::SendEmail($sVPSUser->sEmailAddress, "New IP In Switzerland", "new_ip", $sVariable);
 					return $sArray = array("json" => 1, "type" => "success", "result" => "The IP {$sIP} was added to this VPS.", "reload" => 1);
 				} else {
 					$sIPAdd = new IP(0);
@@ -777,7 +778,6 @@ class openvz {
 					}
 					$sLog[] = array("command" => $sCommand, "result" => $sSSH->exec($sCommand));
 					$sVariable = array("ip" => urlencode($sIP));
-					$sSend = Core::SendEmail($sVPSUser->sEmailAddress, "New IP In Switzerland", "new_ip", $sVariable);
 					return $sArray = array("json" => 1, "type" => "success", "result" => "The IP {$sIP} was added to this VPS.", "reload" => 1);
 				}
 			} elseif((!empty($sTotalIPs)) && ($sAvailableIPs != 1)){
@@ -833,10 +833,18 @@ class openvz {
 			$sRAM = explode('kB', $sSSH->exec("vzctl exec {$sVPS->sContainerId} cat /proc/meminfo"));
 			$sUsedRAM = preg_replace("/[^0-9]/", "", $sRAM[0]) - preg_replace("/[^0-9]/", "", $sRAM[1]);
 			$sTotalRAM = preg_replace("/[^0-9]/", "", $sRAM[0]);
-			$sUsedSWAP = preg_replace("/[^0-9]/", "", $sRAM[11]);
+			$sUsedSWAP = preg_replace("/[^0-9]/", "", $sRAM[10]);
 			$sTotalSWAP = $sVPS->sSWAP;
-			$sDisk = preg_replace("/[^0-9]/", "", $sSSH->exec("vzctl exec {$sVPS->sContainerId} du -s 2>/dev/null"));
-			$sDiskUsed = $sDisk / 1048576;
+			$sDisk = $sSSH->exec("vzctl exec {$sVPS->sContainerId} df");
+			$sDisk = explode("\n", trim($sDisk));
+			array_shift($sDisk);
+			foreach($sDisk as $sValue){
+				$sValue = explode(" ", preg_replace("/\s+/", " ", $sValue));
+				if(is_numeric($sValue[2])){
+					$sDiskUsed = $sDiskUsed + $sValue[2];
+				}
+			}
+			$sDiskUsed = $sDiskUsed / 1048576;
 			$sDiskTotal = $sVPS->sDisk;
 			$sCPU = explode(' ', $sSSH->exec("vzctl exec {$sVPS->sContainerId} cat /proc/loadavg"));	
 		

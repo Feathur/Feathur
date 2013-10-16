@@ -53,7 +53,7 @@ class kvm {
 											$uNameserver = "8.8.8.8";
 										}
 										
-										while($sTotalMacs > $uIPAddresses){
+										while($sTotalMacs < $uIPAddresses){
 											if(empty($sTotalMacs)){
 												$sMac = generate_mac();
 											} else {
@@ -137,61 +137,12 @@ class kvm {
 			$sVPS = new VPS($sRequested["POST"]["VPS"]);
 			$sServer = new Server($sVPS->sServerId);
 			$sSSH = Server::server_connect($sServer);
-			$sIPList = $sRequested["POST"]["IPList"];
-			$sMemory = ($sVPS->sRAM * 1024);
-			$sHardLimit = ($sMemory + 51200);
-			$sCPUs = $sVPS->sCPULimit;
+			$sCreate = $this->kvm_config($sUser, $sVPS, $sRequested);
+			$sDHCP = $this->kvm_dhcp($sUser, $sVPS, $sRequested);
 			
-			if(!empty($sVPS->sTemplateId)){
-				$sTemplate = new Template($sVPS->sTemplateId);
-			}
+			$sCommandList .= "lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;";
 			
-			$sQEMUPath = $sServer->sQEMUPath;
-			if(empty($sQEMUPath)){
-				$sQEMUPath = "/usr/bin/qemu";
-			}
-			
-			$sVPSConfig .= "<domain type='kvm'>";
-			$sVPSConfig .= "<name>kvm{$sVPS->sContainerId}</name>";
-			$sVPSConfig .= "<memory>{$sMemory}</memory>";
-			$sVPSConfig .= "<currentMemory>{$sMemory}</currentMemory>";
-			$sVPSConfig .= "<memtune><hard_limit>{$sHardLimit}</hard_limit></memtune>";
-			$sVPSConfig .= "<vcpu>{$sCPUs}</vcpu>";
-			$sVPSConfig .= "<cpu><topology sockets='1' cores='{$sCPUs}' threads='1'/></cpu>";
-			$sVPSConfig .= "<os><type machine='pc'>hvm</type><boot dev='{$sVPS->sBootOrder}'/></os>";
-			$sVPSConfig .= "<clock sync='localtime'/>";
-			$sVPSConfig .= "<devices><emulator>{$sQEMUPath}</emulator><disk type='file' device='disk'><source file='/dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img'/><target dev='hda' bus='ide'/></disk><disk type='file' device='cdrom'>";
-			
-			if(!empty($sVPS->sTemplateId)){
-				$sVPSConfig .= "<source file='/var/feathur/data/templates/kvm/{$sTemplate->sPath}'/>";
-			}
-			
-			$sVPSConfig .= "<target dev='hdc'/><readonly/></disk>";
-			$sVPSConfig .= "<interface type='bridge'><source bridge='br0'/><target dev='kvm{$sVPS->sContainerId}.0'/><mac address='{$sVPS->sMac}'/></interface>";
-			$sVPSConfig .= "<graphics type='vnc' port='{$sVPS->sVNCPort}' passwd='' listen='127.0.0.1'/>";
-			$sVPSConfig .= "<input type='tablet'/><input type='mouse'/></devices><features><acpi/><apic/></features></domain>";
-			$sVPSConfig = escapeshellarg($sVPSConfig);
-			
-			$sIPCount = count($sIPList);
-			if($sIPCount > 1){
-				$sCurrent = 0;
-				$sMacList = explode(",", $sVPS->sMac);
-				foreach($sIPList as $sKey => $sValue){
-					$sBlock = new Block($sValue["block"]);
-					$sDHCP .= "host kvm{$sVPS->sContainerId}.{$sCurrent} { hardware ethernet {$sMacList[$sCurrent]}; option routers {$sBlock->sGateway}; option subnet-mask {$sBlock->sNetmask}; fixed-address {$sValue["ip_address"]}; option domain-name-servers {$sVPS->sNameserver}; } ";
-					$sCurrent++;
-				}
-			} else {
-				foreach($sIPList as $sKey => $sValue){
-					$sBlock = new Block($sValue["block"]);
-					$sDHCP .= "host kvm{$sVPS->sContainerId}.{$sCurrent} { hardware ethernet {$sVPS->sMac}; option routers {$sBlock->sGateway}; option subnet-mask {$sBlock->sNetmask}; fixed-address {$sValue["ip_address"]}; option domain-name-servers {$sVPS->sNameserver}; } ";
-				}
-			}
-			$sDHCP = escapeshellarg($sDHCP);
-			
-			$sCommandList .= "mkdir /var/feathur/;mkdir /var/feathur/configs/;echo {$sVPSConfig} > /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml; echo {$sDHCP} > /var/feathur/configs/kvm{$sVPS->sContainerId}-dhcp.conf;cat /var/feathur/configs/dhcpd.head /var/feathur/configs/*-dhcp.conf > /etc/dhcp/dhcpd.conf;service isc-dhcp-server restart;lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;";
-			
-			$sLog[] = array("command" => str_replace($sPassword, "obfuscated", $sCommandList), "result" => $sSSH->exec($sCommandList));
+			$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
 			
 			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS has been created!", "reload" => 1, "vps" => $sVPS->sId);
@@ -335,7 +286,8 @@ class kvm {
 		}
 			
 		$sVPSConfig .= "<target dev='hdc'/><readonly/></disk>";
-		$sVPSConfig .= "<interface type='bridge'><source bridge='br0'/><target dev='kvm{$sVPS->sContainerId}.0'/><mac address='{$sVPS->sMac}'/></interface>";
+		$sMacs = explode(",", $sVPS->sMac);
+		$sVPSConfig .= "<interface type='bridge'><source bridge='br0'/><target dev='kvm{$sVPS->sContainerId}.0'/><mac address='{$sMacs["0"]}'/></interface>";
 		$sVPSConfig .= "<graphics type='vnc' port='{$sVPS->sVNCPort}' passwd='' listen='127.0.0.1'/>";
 		$sVPSConfig .= "<input type='tablet'/><input type='mouse'/></devices><features><acpi/><apic/></features></domain>";
 		$sVPSConfig = escapeshellarg($sVPSConfig);
@@ -345,6 +297,10 @@ class kvm {
 		$sDHCP = escapeshellarg($sDHCP);
 			
 		$sCommandList .= "mkdir /var/feathur/;mkdir /var/feathur/configs/;echo {$sVPSConfig} > /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml; echo {$sDHCP} > /var/feathur/configs/kvm{$sVPS->sContainerId}-dhcp.conf;cat /var/feathur/configs/dhcpd.head /var/feathur/configs/*-dhcp.conf > /etc/dhcp/dhcpd.conf;service isc-dhcp-server restart;";
+		
+		if($sRequested["GET"]["diskchanged"] == 1){
+			$sCommandList .= "lvextend --size {$sVPS->sDisk}G /dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img;";
+		}
 			
 		$sLog[] = array("command" => str_replace($sPassword, "obfuscated", $sCommandList), "result" => $sSSH->exec($sCommandList));
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
@@ -375,14 +331,48 @@ class kvm {
 	}
 	
 	public function kvm_statistics($sUser, $sVPS, $sRequested){
+		global $sTemplate;
 		global $database;
+		global $locale;
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
 		$sLog[] = array("command" => "virsh list | grep kvm{$sVPS->sContainerId}", "result" => $sSSH->exec("virsh list | grep kvm{$sVPS->sContainerId}"));
-		if(strpos($sLog[0]["result"], 'running') === false) {
-			return $sArray = array("json" => 1, "type" => "status", "result" => "offline", "hostname" => $sVPS->sHostname);
+		if($sTemplates = $database->CachedQuery("SELECT * FROM templates WHERE `id` = :TemplateId", array('TemplateId' => $sVPS->sTemplateId))){
+			$sVPSTemplate = new Template($sVPS->sTemplateId);
+			$sTemplateName = $sVPSTemplate->sName;
 		} else {
-			return $sArray = array("json" => 1, "type" => "status", "result" => "online", "hostname" => $sVPS->sHostname);
+			$sTemplateName = "N/A";
+		}
+		
+		if($sVPS->sBandwidthUsage > 0){
+			$sBandwidthUsage = FormatBytes($sVPS->sBandwidthUsage, 0);
+		} else {
+			$sBandwidthUsage = "0 KB";
+		}
+			
+		$sPercentBandwidth = round(((100 / ($sVPS->sBandwidthLimit * 1024 * 1024 * 1024)) * $sVPS->sBandwidthUsage), 0);
+		if(empty($sPercentBandwidth)){
+			$sPercentBandwidth = 0;
+		}
+		
+		$sMac = explode(",", $sVPS->sMac);
+			
+		$sStatistics = array("info" => array("ram" => $sVPS->sRAM, 
+											"disk" => $sVPS->sDisk, 
+											"cpulimit" => $sVPS->sCPULimit,
+											"bandwidth_usage" => $sBandwidthUsage,
+											"bandwidth_limit" => FormatBytes($sVPS->sBandwidthLimit * 1024 * 1024 * 1024, 0),
+											"percent_bandwidth" => round(((100 / ($sVPS->sBandwidthLimit * 1024 * 1024 * 1024)) * $sVPS->sBandwidthUsage), 0),
+											"template" => $sTemplateName,
+											"hostname" => $sVPS->sHostname,
+											"primary_ip" => $sVPS->sPrimaryIP,
+											"mac" => $sMac[0],
+							));
+		$sStatistics = Templater::AdvancedParse($sTemplate->sValue.'/'.$sVPS->sType.'.statistics', $locale->strings, array("Statistics" => $sStatistics));
+		if(strpos($sLog[0]["result"], 'running') === false) {
+			return $sArray = array("json" => 1, "type" => "status", "result" => "offline", "hostname" => $sVPS->sHostname, "content" => $sStatistics);
+		} else {
+			return $sArray = array("json" => 1, "type" => "status", "result" => "online", "hostname" => $sVPS->sHostname, "content" => $sStatistics);
 		}
 	}
 	
@@ -440,14 +430,7 @@ class kvm {
 	
 	public function kvm_primaryip($sUser, $sVPS, $sRequested){
 		$sIP = new IP($sRequested["GET"]["ip"]);
-		$sBlock = new Block($sIP->sBlockId);
-		$sServer = new Server($sVPS->sServerId);
-		$sSSH = Server::server_connect($sServer);
-		$sDHCP .= "host kvm{$sVPS->sContainerId}.0 { hardware ethernet {$sVPS->sMac}; option routers {$sBlock->sGateway}; option subnet-mask {$sBlock->sNetmask}; fixed-address {$sIP->sIPAddress}; option domain-name-servers {$sVPS->sNameserver}; }";
-		$sDHCP = escapeshellarg($sDHCP);	
-		$sCommandList .= "echo {$sDHCP} > /var/feathur/configs/kvm{$sVPS->sContainerId}-dhcp.conf;cat /var/feathur/configs/dhcpd.head /var/feathur/configs/*-dhcp.conf > /etc/dhcp/dhcpd.conf;service isc-dhcp-server restart;";
-		$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
-		$sSave = VPS::save_vps_logs($sLog, $sVPS);
+		$sUpdate = $this->kvm_dhcp($sUser, $sVPS, $sRequested);
 		return $sArray = array("json" => 1, "type" => "success", "result" => "Primary IP changed to {$sIP->sIPAddress}");
 	}
 	
@@ -506,21 +489,24 @@ class kvm {
 		$sIPCount = count($sIPList);
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
+		$sMacList = explode(",", $sVPS->sMac);
+		$sCurrent = 0;
 		if($sIPCount > 1){
-			$sCurrent = 0;
-			$sMacList = explode(",", $sVPS->sMac);
 			foreach($sIPList as $sKey => $sValue){
 				$sBlock = new Block($sValue["block"]);
 				$sDHCP .= "host kvm{$sVPS->sContainerId}.{$sCurrent} { hardware ethernet {$sMacList[$sCurrent]}; option routers {$sBlock->sGateway}; option subnet-mask {$sBlock->sNetmask}; fixed-address {$sValue["ip"]}; option domain-name-servers {$sVPS->sNameserver}; } ";
 				$sCurrent++;
 			}
-		} else {
+			$sDHCP = escapeshellarg($sDHCP);
+		} elseif($sIPCount == 1){
 			foreach($sIPList as $sKey => $sValue){
 				$sBlock = new Block($sValue["block"]);
-				$sDHCP .= "host kvm{$sVPS->sContainerId}.{$sCurrent} { hardware ethernet {$sVPS->sMac}; option routers {$sBlock->sGateway}; option subnet-mask {$sBlock->sNetmask}; fixed-address {$sValue["ip_address"]}; option domain-name-servers {$sVPS->sNameserver}; } ";
+				$sDHCP .= "host kvm{$sVPS->sContainerId}.{$sCurrent} { hardware ethernet {$sMacList[$sCurrent]}; option routers {$sBlock->sGateway}; option subnet-mask {$sBlock->sNetmask}; fixed-address {$sValue["ip"]}; option domain-name-servers {$sVPS->sNameserver}; } ";
 			}
+			$sDHCP = escapeshellarg($sDHCP);
+		} else {
+			$sDHCP = "''";
 		}
-		$sDHCP = escapeshellarg($sDHCP);
 		
 		$sCommandList .= "echo {$sDHCP} > /var/feathur/configs/kvm{$sVPS->sContainerId}-dhcp.conf;cat /var/feathur/configs/dhcpd.head /var/feathur/configs/*-dhcp.conf > /etc/dhcp/dhcpd.conf;service isc-dhcp-server restart;";
 		
@@ -539,19 +525,23 @@ class kvm {
 						foreach($sIP->data as $subvalue){
 							if($sCurrentIPs < $sIPs){
 								$sUpdate = $database->CachedQuery("UPDATE ipaddresses SET `vps_id` = :VPSId WHERE `id` = :Id", array('VPSId' => $sVPS->sId, 'Id' => $subvalue["id"]));
-								if((empty($sFirst)) && (empty($sVPS->sPrimaryIP))){
+								if((empty($sVPS->sPrimaryIP)) || (!$sData = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `vps_id` = :VPSId AND `ip_address` = :PrimaryIP", array('VPSId' => $sVPS->sId, 'PrimaryIP' => $sVPS->sPrimaryIP)))){
 									$sVPS->uPrimaryIP = $subvalue["ip_address"];
 									$sVPS->InsertIntoDatabase();
-									$sFirst = 1;
 								}
-								$sMac = generate_mac();
-								$sCurrentMac = $sVPS->sMac;
-								if(empty($sCurrentMac)){
-									$sVPS->uMac = $sMac;
-								} else {
-									$sVPS->uMac = $sVPS->sMac.",".$sMac;
+								$sMacTotal = count(explode(",", $sVPS->sMac));
+								$sIPList = VPS::list_ipspace($sVPS);
+								$sIPCount = count($sIPList);
+								if($sIPCount > $sMacTotal){
+									$sMac = generate_mac();
+									$sCurrentMac = $sVPS->sMac;
+									if(empty($sCurrentMac)){
+										$sVPS->uMac = $sMac;
+									} else {
+										$sVPS->uMac = $sVPS->sMac.",".$sMac;
+									}
+									$sVPS->InsertIntoDatabase();
 								}
-								$sVPS->InsertIntoDatabase();
 								$sCurrentIPs++;
 							}
 						}																					
@@ -580,5 +570,166 @@ class kvm {
 		} else {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.");
 		}
+	}
+	
+	public function database_kvm_update($sUser, $sVPS, $sRequested){
+		$sUserPermissions = $sUser->sPermissions;
+		global $sRequested;
+		if($sUserPermissions == 7){
+			if((ctype_digit($sRequested["GET"]["ram"])) && (!empty($sRequested["GET"]["ram"]))) {
+				if((ctype_digit($sRequested["GET"]["disk"])) && (!empty($sRequested["GET"]["disk"]))) {
+					if($sRequested["GET"]["disk"] >= $sVPS->sDisk){
+						if((ctype_digit($sRequested["GET"]["cpulimit"])) && (!empty($sRequested["GET"]["cpulimit"]))) {
+							if((ctype_digit($sRequested["GET"]["bandwidth"])) && (!empty($sRequested["GET"]["bandwidth"]))) {
+								if($sRequested["GET"]["disk"] > $sVPS->sDisk){
+									$sRequested["GET"]["diskchanged"] = 1;
+								}
+								$sVPS->uRAM = $sRequested["GET"]["ram"];
+								$sVPS->uDisk = $sRequested["GET"]["disk"];
+								$sVPS->uCPULimit = $sRequested["GET"]["cpulimit"];
+								$sVPS->uBandwidthLimit = $sRequested["GET"]["bandwidth"];
+								$sVPS->InsertIntoDatabase();
+								return true;
+							} else {
+								return $sArray = array("json" => 1, "type" => "error", "result" => "Bandwidth limit must be greater than 0.");
+							}
+						} else {
+							return $sArray = array("json" => 1, "type" => "error", "result" => "CPU Limit must be greater than 0.");
+						}
+					} else {
+						return $sArray = array("json" => 1, "type" => "error", "result" => "Disk space can not be decreased!");
+					}
+				} else {
+					return $sArray = array("json" => 1, "type" => "error", "result" => "Disk must be a number greater than 0.");
+				}
+			} else {
+				return $sArray = array("json" => 1, "type" => "error", "result" => "RAM must be a number greater than 0.");
+			}
+		} else {
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.");
+		}
+	}
+	
+	public function kvm_update($sUser, $sVPS, $sRequested){
+		$sUserPermissions = $sUser->sPermissions;
+		if($sUserPermissions == 7){
+			$sUpdate = $this->kvm_config($sUser, $sVPS, $sRequested);
+			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS specifications updated. Reboot required.");
+		} else {
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.");
+		}
+	}
+	
+	public function database_kvm_removeip($sUser, $sVPS, $sRequested){
+		$sUserPermissions = $sUser->sPermissions;
+		global $database;
+		if($sUserPermissions == 7){
+			$sRemove = $sRequested["GET"]["ip"];
+			if($sIP = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `id` = :IPId AND `vps_id` = :VPSId", array('IPId' => $sRemove, 'VPSId' => $sVPS->sId))){
+				if($sVPS->sPrimaryIP == $sIP->data[0]["id"]){
+					$sVPS->sPrimaryIP = "";
+					$sVPS->InsertIntoDatabase();
+				}
+				$sUpdateIPs = $database->CachedQuery("UPDATE ipaddresses SET `vps_id` = 0 WHERE `id` = :IPId", array('IPId' => $sIP->data[0]["id"]));
+				return true;
+			} else {
+				return $sArray = array("json" => 1, "type" => "error", "result" => "That IP is not assigned to this VPS.");
+			}
+		} else {
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.");
+		}
+	}
+	
+	public function kvm_removeip($sUser, $sVPS, $sRequested){
+		$sUserPermissions = $sUser->sPermissions;
+		if($sUserPermissions == 7){
+			$sReload = $this->kvm_dhcp($sUser, $sVPS, $sRequested);
+			return $sArray = array("json" => 1, "type" => "success", "result" => "IP Address sucsessfully removed.", "reload" => 1);
+		} else {
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.");
+		}
+	}
+	
+	public function database_kvm_assignip($sUser, $sVPS, $sRequested){
+		$sUserPermissions = $sUser->sPermissions;
+		$sVPSUser = new User($sVPS->sUserId);
+		if($sUserPermissions == 7){
+			global $database;
+			$sIP = $sRequested["GET"]["ip"];
+			$sCheckExisting = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `ip_address` = :IPAddress", array('IPAddress' => $sIP));
+			if(!empty($sCheckExisting)){
+				foreach($sCheckExisting->data as $value){
+					if(empty($value["vps_id"])){
+						$sIPList[] = array("id" => $value["id"], "ip_address" => $value["ip_address"]);
+					}
+					$sTotalIPs++;
+				}
+			}
+				
+			$sAvailableIPs = count($sIPList);
+			if($sAvailableIPs == 1){
+				$sUpdate = $database->CachedQuery("UPDATE ipaddresses SET `vps_id` = :VPSId WHERE `id` = :Id", array('VPSId' => $sVPS->sId, 'Id' => $sIPList[0]["id"]));
+				return true;
+			} elseif((empty($sTotalIPs)) && (empty($sAvailableIPs))){
+				$sIPExpand = explode(".", $sIP);
+				if($sFindBlock = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `ip_address` LIKE :IPAddress", array('IPAddress' => "%{$sIPExpand[0]}.{$sIPExpand[1]}.{$sIPExpand[2]}%"))){
+					$sIPAdd = new IP(0);
+					$sIPAdd->uIPAddress = $sIP;
+					$sIPAdd->uVPSId = $sVPS->sId;
+					$sIPAdd->uBlockId = $sFindBlock->data[0]["block_id"];
+					$sIPAdd->InsertIntoDatabase();
+					return true;
+				} else {
+					$sIPAdd = new IP(0);
+					$sIPAdd->uIPAddress = $sIP;
+					$sIPAdd->uVPSId = $sVPS->sId;
+					$sIPAdd->uBlockId = 0;
+					$sIPAdd->InsertIntoDatabase();
+					return true;
+				}
+			} elseif((!empty($sTotalIPs)) && ($sAvailableIPs != 1)){
+				return $sArray = array("json" => 1, "type" => "error", "result" => "The IP you gave is assigned to a VPS!");
+			} else {
+				return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured!");
+			}
+		} else {
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.");
+		}
+	}
+	
+	public function kvm_assignip($sUser, $sVPS, $sRequested){
+		$sUserPermissions = $sUser->sPermissions;
+		if($sUserPermissions == 7){
+			$sReload = $this->kvm_dhcp($sUser, $sVPS, $sRequested);
+			return $sArray = array("json" => 1, "type" => "success", "result" => "IP {$sRequested["GET"]["ip"]} assigned to VPS!", "reload" => 1);
+		} else {
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.");
+		}
+	}
+	
+	public function database_kvm_terminate($sUser, $sVPS, $sRequested){
+		global $database;
+		$sUserPermissions = $sUser->sPermissions;
+		if($sUserPermissions == 7){
+			$sServer = new Server($sVPS->sServerId);
+			$sSSH = Server::server_connect($sServer);
+			$sCommandList .= "virsh destroy kvm{$sVPS->sContainerId};";
+			$sCommandList .= "rm -rf /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;rm -rf /var/feathur/configs/kvm{$sVPS->sContainerId}-dhcp.conf;";
+			$sCommandList .= "cat /var/feathur/configs/dhcpd.head /var/feathur/configs/*-dhcp.conf > /etc/dhcp/dhcpd.conf;service isc-dhcp-server restart;";
+			$sCommandList .= "dd if=/dev/zero of=/dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img;";
+			$sCommandList .= "lvremove -f /dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img;exit;";
+			$sCommandList = escapeshellarg($sCommandList);
+			$sLog[] = array("command" => "VPS Termination via Screen", "result" => $sSSH->exec("screen -dm -S {$sVPS->sContainerId} bash -c {$sCommandList};"));
+			$sSave = VPS::save_vps_logs($sLog, $sVPS);
+			$sTerminate = $database->CachedQuery("DELETE FROM vps WHERE `id` = :VPSId", array('VPSId' => $sVPS->sId));
+			$sCleanIPs = $database->CachedQuery("UPDATE ipaddresses SET `vps_id` = 0 WHERE `vps_id` = :VPSId", array('VPSId' => $sVPS->sId));
+			return $sArray = array("json" => 1, "type" => "error", "result" => "This VPS has been terminated.", "reload" => 1);
+		} else {
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.", "reload" => 1);
+		}
+	}
+	
+	public function kvm_terminate($sUser, $sVPS, $sRequested){
+		return true;
 	}
 }

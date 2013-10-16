@@ -81,3 +81,7 @@ function generate_mac(){
 		return $sMac;
 	}
 }
+
+function SortPrimaryIP($a, $b) {
+	return strcmp($b['primary'], $a['primary']);
+}

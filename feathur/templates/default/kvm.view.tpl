@@ -19,6 +19,7 @@
 					if (data.hostname === undefined){
 						uptime();
 					} else {
+						$("#Statistics").html(data.content);
 						$("#Status").html('<img src="./templates/status/' + data.result + '.png" style="width:100%;">');
 						$("#VPSHostname").html('(' + data.hostname + ')');
 					}
@@ -101,7 +102,7 @@
 				var disk = $('#AdminDisk').attr('value');
 				var cpulimit = $('#AdminCPULimit').attr('value');
 				var bandwidthlimit = $('#AdminBandwidthLimit').attr('value');
-				$.getJSON("view.php?id={%?vps[id]}&action=update&ram=" + ram + "&disk=" + disk + "cpulimit=" + cpulimit + "&bandwidth=" + bandwidthlimit,function(result){
+				$.getJSON("view.php?id={%?vps[id]}&action=update&ram=" + ram + "&disk=" + disk + "&cpulimit=" + cpulimit + "&bandwidth=" + bandwidthlimit,function(result){
 					$('#AdminNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
 				});
 			});
@@ -160,7 +161,7 @@
 			<li><a href="#tabs-2">Settings</a></li>
 			{%if UserPermissions == 7}<li><a href="#tabs-3">Admin</a></li>{%/if}
 		</ul>
-		<div id="tabs-1" style="height:300px;">
+		<div id="tabs-1" style="height:500px;">
 			<table>
 				<tr>
 					<td style="width:20px;">

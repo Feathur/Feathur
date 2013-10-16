@@ -58,8 +58,7 @@ class VPS extends CPHPDatabaseRecordClass {
 	
 	public static function list_ipspace($sVPS){
 		global $database;
-		$sIPs = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `vps_id` = :VPSId", array('VPSId' => $sVPS->sId));
-		if(!empty($sIPs)){
+		if($sIPs = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `vps_id` = :VPSId", array('VPSId' => $sVPS->sId))){
 			foreach($sIPs->data as $key => $value){
 				if($value["ip_address"] == $sVPS->sPrimaryIP){
 					$sPrimary = 1;
@@ -68,7 +67,8 @@ class VPS extends CPHPDatabaseRecordClass {
 				}
 				$sIPAddresses[] = array("id" => $value["id"], "ip" => $value["ip_address"], "primary" => $sPrimary, "block" => $value["block_id"]);
 			}
-		return $sIPAddresses;
+			usort($sIPAddresses, 'SortPrimaryIP');
+			return $sIPAddresses;
 		}
 	}
 	
