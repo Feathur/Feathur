@@ -134,12 +134,13 @@ INSERT INTO `settings` (`id`, `setting_name`, `setting_value`, `setting_group`) 
 (21, 'panel_url', 'localhost', 'site_settings'),
 (22, 'maintenance', '0', 'site_settings'),
 (23, 'automatic_updates', '1', 'site_settings'),
-(24, 'current_version', '0.5.6.2', 'site_settings'),
+(24, 'current_version', '0.5.6.4', 'site_settings'),
 (25, 'last_update_check', '0', 'site_settings'),
 (26, 'last_template_sync', '0', 'site_settings'),
 (27, 'sendgrid', '0', 'site_settings'),
 (28, 'sendgrid_username', '', 'site_settings'),
-(29, 'sendgrid_password', '', 'site_settings');
+(29, 'sendgrid_password', '', 'site_settings'),
+(50, 'update_type', 'develop', 'site_settings');
 
 CREATE TABLE IF NOT EXISTS `statistics` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
@@ -197,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `vps` (
   `suspended` int(2) NOT NULL,
   `suspending_admin` int(8) NOT NULL,
   `bandwidth_usage` int(65) NOT NULL,
-  `mac_address` varchar(65) NOT NULL,
+  `mac` varchar(65) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=90 ;
 

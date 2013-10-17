@@ -9,13 +9,14 @@ $sType = $_GET['type'];
 
 $sAutomaticUpdates = Core::GetSetting('automatic_updates');
 $sCurrentVersion = Core::GetSetting('current_version');
-$sURL = "http://repo.feathur.com/version.php";
+$sUpdateType = Core::GetSetting('update_type');
+$sURL = "https://raw.github.com/BlueVM/Feathur/{$sUpdateType->sValue}/version.txt";
 $sCurl = curl_init();
 curl_setopt($sCurl, CURLOPT_URL, $sURL);
 curl_setopt($sCurl, CURLOPT_RETURNTRANSFER, 1);
-$sVersion = json_decode(curl_exec($sCurl), true);
+$sVersion = curl_exec($sCurl);
 curl_close($sCurl);
-if($sCurrentVersion->sValue != $sVersion["version"]){
+if($sCurrentVersion->sValue != $sVersion){
 	$sOutOfDate = 1;
 }
 
@@ -34,9 +35,9 @@ if($sAction == force){
 	$sKey = new Crypt_RSA();
 	$sKey->loadKey(file_get_contents($cphp_config->settings->rootkey));
 	if($sSSH->login("root", $sKey)) {
-		$sSSH->exec("wget http://repo.feathur.com/update.sh;bash update.sh;rm -rf update.sh");
+		$sSSH->exec("cd /var/feathur/; git pull; cd /var/feathur/feathur/; php update.php; rm -rf update.php;");
 		$sLastUpdate = Core::UpdateSetting('last_update_check', time());
-		$sUpdateVersion = Core::UpdateSetting('current_version', $sVersion["version"]);
+		$sUpdateVersion = Core::UpdateSetting('current_version', $sVersion);
 		$sErrors[] = array("green" => "Force update completed!");
 	}
 	$sJson = 1;
@@ -44,18 +45,23 @@ if($sAction == force){
 
 $sAutomaticUpdates = Core::GetSetting('automatic_updates');
 $sCurrentVersion = Core::GetSetting('current_version');
-$sURL = "http://repo.feathur.com/version.php";
+$sUpdateType = Core::GetSetting('update_type');
+$sURL = "https://raw.github.com/BlueVM/Feathur/{$sUpdateType->sValue}/version.txt";
 $sCurl = curl_init();
 curl_setopt($sCurl, CURLOPT_URL, $sURL);
 curl_setopt($sCurl, CURLOPT_RETURNTRANSFER, 1);
 $sVersion = json_decode(curl_exec($sCurl), true);
 curl_close($sCurl);
-if($sCurrentVersion->sValue != $sVersion["version"]){
+if($sCurrentVersion->sValue != $sVersion){
 	$sOutOfDate = 1;
 }
 
+if(empty($sVersion)){
+	$sVersion = "";
+}
+
 $sContent .= Templater::AdvancedParse($sAdminTemplate->sValue.'/update', $locale->strings, array("AutomaticUpdates" => $sAutomaticUpdates->sValue,
-																								"CurrentVersion" => $sVersion["version"],
+																								"CurrentVersion" => $sVersion,
 																								"YourVersion" => $sCurrentVersion->sValue,
 																								"OutOfDate" => $sOutOfDate,
 																								"Errors" => $sErrors));

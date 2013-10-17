@@ -27,3 +27,6 @@ $sAdd->execute();
 
 $sAdd = $database->prepare("ALTER TABLE `vps` CHANGE `mac` `mac` TEXT;");
 $sAdd->execute();
+
+$sAdd = $database->prepare("INSERT INTO `settings` (`id`, `setting_name`, `setting_value`, `setting_group`) VALUES (50, 'update_type', 'develop', 'site_settings')");
+$sAdd->execute();
