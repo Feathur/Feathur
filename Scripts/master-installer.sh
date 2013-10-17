@@ -180,15 +180,7 @@ status "Base Config: 1 / 11"
 
 mkdir /var/feathur/
 cd /var/feathur/
-wget http://repo.feathur.com/index.php
-
-if grep -q Invalid "index.php"; then
-status "Unfortunately this server does not have a valid master license."
-die "Unfortunately this server does not have a valid master license.";
-fi
-
-mv index.php feathur.zip
-unzip feathur.zip
+git clone -b develop https://github.com/BlueVM/Feathur.git /var/feathur/
 
 cd ~/feathur-install/
 status "Base Config: 2 / 11"
@@ -202,8 +194,10 @@ mkdir /home/root/
 mkdir /var/feathur/data/templates/
 mkdir /var/feathur/data/keys
 mkdir /var/feathur/data/templates/openvz
+mkdir /var/feathur/data/templates/kvm
 chmod 777 /var/feathur/data/templates/
 chmod 777 /var/feathur/data/templates/openvz
+chmod 777 /var/feathur/data/templates/kvm
 chmod 777 /var/feathur/data/keys
 
 cd ~/feathur-install/
@@ -232,7 +226,7 @@ sed -i 's/hostnameforinstallhere/'${user_host}'/g' /var/feathur/data/config.json
 ssh-keygen -t rsa -N "" -f ~/feathur-install/id_rsa
 mkdir ~/.ssh/
 cat id_rsa.pub >> ~/.ssh/authorized_keys
-mv id_rsa /var/feathur/data/
+cp id_rsa /var/feathur/data/
 setfacl -Rm user:www-data:rwx /var/feathur/*
 
 cd ~/feathur-install/
@@ -250,7 +244,7 @@ salt=`< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-32};`
 mysqladmin -u root password $mysqlpassword
 
 while ! mysql -u root -p$mysqlpassword  -e ";" ; do
-       status "Unfortunatly mysql failed to install correctly. Feathur installation aborting (Error #2)".
+       status "Unfortunately mysql failed to install correctly. Feathur installation aborting (Error #2)".
 done
 
 mysql -u root --password="$mysqlpassword" --execute="CREATE DATABASE IF NOT EXISTS panel;CREATE DATABASE IF NOT EXISTS dns;DROP DATABASE test;"

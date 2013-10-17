@@ -286,8 +286,17 @@ class kvm {
 		}
 			
 		$sVPSConfig .= "<target dev='hdc'/><readonly/></disk>";
-		$sMacs = explode(",", $sVPS->sMac);
-		$sVPSConfig .= "<interface type='bridge'><source bridge='br0'/><target dev='kvm{$sVPS->sContainerId}.0'/><mac address='{$sMacs["0"]}'/></interface>";
+		
+		$sIPCount = count($sIPList);
+		$sMacList = explode(",", $sVPS->sMac);
+		$sCurrent = 0;
+		if($sIPCount >= 1){
+			foreach($sIPList as $sKey => $sValue){
+				$sVPSConfig .= "<interface type='bridge'><source bridge='br0'/><target dev='kvm{$sVPS->sContainerId}.{$sCurrent}'/><mac address='{$sMacList[$sCurrent]}'/></interface>";
+				$sCurrent++;
+			}
+		}
+		
 		$sVPSConfig .= "<graphics type='vnc' port='{$sVPS->sVNCPort}' passwd='' listen='127.0.0.1'/>";
 		$sVPSConfig .= "<input type='tablet'/><input type='mouse'/></devices><features><acpi/><apic/></features></domain>";
 		$sVPSConfig = escapeshellarg($sVPSConfig);
@@ -430,6 +439,7 @@ class kvm {
 	
 	public function kvm_primaryip($sUser, $sVPS, $sRequested){
 		$sIP = new IP($sRequested["GET"]["ip"]);
+		$sUpdate = $this->kvm_config($sUser, $sVPS, $sRequested);
 		$sUpdate = $this->kvm_dhcp($sUser, $sVPS, $sRequested);
 		return $sArray = array("json" => 1, "type" => "success", "result" => "Primary IP changed to {$sIP->sIPAddress}");
 	}
@@ -491,17 +501,11 @@ class kvm {
 		$sSSH = Server::server_connect($sServer);
 		$sMacList = explode(",", $sVPS->sMac);
 		$sCurrent = 0;
-		if($sIPCount > 1){
+		if($sIPCount >= 1){
 			foreach($sIPList as $sKey => $sValue){
 				$sBlock = new Block($sValue["block"]);
 				$sDHCP .= "host kvm{$sVPS->sContainerId}.{$sCurrent} { hardware ethernet {$sMacList[$sCurrent]}; option routers {$sBlock->sGateway}; option subnet-mask {$sBlock->sNetmask}; fixed-address {$sValue["ip"]}; option domain-name-servers {$sVPS->sNameserver}; } ";
 				$sCurrent++;
-			}
-			$sDHCP = escapeshellarg($sDHCP);
-		} elseif($sIPCount == 1){
-			foreach($sIPList as $sKey => $sValue){
-				$sBlock = new Block($sValue["block"]);
-				$sDHCP .= "host kvm{$sVPS->sContainerId}.{$sCurrent} { hardware ethernet {$sMacList[$sCurrent]}; option routers {$sBlock->sGateway}; option subnet-mask {$sBlock->sNetmask}; fixed-address {$sValue["ip"]}; option domain-name-servers {$sVPS->sNameserver}; } ";
 			}
 			$sDHCP = escapeshellarg($sDHCP);
 		} else {
@@ -565,6 +569,7 @@ class kvm {
 			global $database;
 			$sIPs = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `vps_id` = :VPSId", array('VPSId' => $sVPS->sId));
 			$sTotal = count($sIPs->data);
+			$sCreate = $this->kvm_config($sUser, $sVPS, $sRequested);
 			$sReload = $this->kvm_dhcp($sUser, $sVPS, $sRequested);
 			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS now has: {$sTotal} IPv4", "reload" => 1);
 		} else {
