@@ -35,4 +35,4 @@ Installation requirements:
 - Basic Linux Knowledge
 
 Run the following command on your server:
-cd ~ && wget --no-check-certificate https://raw.github.com/BlueVM/Feathur/develop/Scripts/master-installer.sh && bash neon-installer.sh
+cd ~ && wget --no-check-certificate https://raw.github.com/BlueVM/Feathur/develop/Scripts/master-installer.sh && bash master-installer.sh
