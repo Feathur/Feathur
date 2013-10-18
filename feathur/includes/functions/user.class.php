@@ -91,6 +91,8 @@ class User extends CPHPDatabaseRecordClass {
 				if(empty($sUser->sSalt)){
 					$sUser->generate_salt($sUser);
 				}
+				$sUser->uActivationCode = random_string(120);
+				$sUser->uForgot = random_string(120);
 				$sUser->uPassword = $sUser->hash_password($sNewPassword, $sUser->sSalt);
 				$sUser->InsertIntoDatabase();
 				return true;
