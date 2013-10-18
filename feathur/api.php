@@ -8,14 +8,14 @@ if((!empty($_POST['email'])) && (!empty($_POST['password']))){
 		die();
 	}
 } else {
-	echo json_encode(array("json" => 1, "type" => "error", "result" => "The username and password can not be blank!"));
+	echo json_encode(array("json" => 1, "type" => "result", "result" => "The username and password can not be blank!"));
 	die();
 }
 
 $sAction = $_POST['action'];
 
 if(empty($sAction)){
-	echo json_encode(array("json" => 1, "type" => "error", "result" => "You must submit an action!"));
+	echo json_encode(array("json" => 1, "type" => "result", "result" => "You must submit an action!"));
 	die();
 }
 
@@ -33,7 +33,7 @@ if($sUser->sPermissions == 7){
 				$sServer = new Server($sServers->data[0]["id"]);
 				$sRequested["POST"]["server"] = $sServers->data[0]["id"];
 			} else {
-				echo json_encode(array("red" => "Unfortunatly no server matches your query."));
+				echo json_encode(array("result" => "Unfortunatly no server matches your query."));
 				die();
 			}
 		}
@@ -58,7 +58,7 @@ if($sUser->sPermissions == 7){
 			if($sTemplates = $database->CachedQuery("SELECT * FROM templates ORDER BY id ASC", array())){
 				$sRequested["POST"]["template"] = $sTemplates->data[0]["id"];
 			} else {
-				echo json_encode(array("red" => "Unfortunatly no templates exist, vps creation failed!"));
+				echo json_encode(array("result" => "Unfortunatly no templates exist, vps creation failed!"));
 				die();
 			}
 		}
@@ -87,22 +87,22 @@ if($sUser->sPermissions == 7){
 				$sServerType = new $sServer->sType;
 				$sMethod = "database_{$sServer->sType}_terminate";
 				$sSecond = "{$sServer->sType}_terminate";
-				$sTerminate = $sServerType->$sMethod($sActionUser, $sVPS, $sRequested);
+				$sTerminate = $sServerType->$sMethod($sUser, $sVPS, $sRequested);
 				if(is_array($sTerminate)){
-					echo json_encode($sCreate);
+					echo json_encode($sTerminate);
 					die();
 				}
-				$sFinish = $sServerType->$sSecond($sActionUser, $sVPS, $sRequested);
+				$sFinish = $sServerType->$sSecond($sUser, $sVPS, $sRequested);
 				if(is_array($sFinish)){
 					echo json_encode($sFinish);
 					die();
 				}
 			} else {
-				echo json_encode(array("red" => "The VPS Id is either invalid or does not belong to this user."));
+				echo json_encode(array("result" => "The VPS Id is either invalid or does not belong to this user."));
 				die();
 			}
 		} else {
-			echo json_encode(array("red" => "Invalid user email, manual termination required."));
+			echo json_encode(array("result" => "Invalid user email, manual termination required."));
 			die();
 		}
 	}
@@ -116,22 +116,22 @@ if($sUser->sPermissions == 7){
 				$sServerType = new $sServer->sType;
 				$sMethod = "database_{$sServer->sType}_suspend";
 				$sSecond = "{$sServer->sType}_suspend";
-				$sTerminate = $sServerType->$sMethod($sActionUser, $sVPS, $sRequested);
-				if(is_array($sTerminate)){
-					echo json_encode($sCreate);
+				$sSuspend = $sServerType->$sMethod($sUser, $sVPS, $sRequested);
+				if(is_array($sSuspend)){
+					echo json_encode($sSuspend);
 					die();
 				}
-				$sFinish = $sServerType->$sSecond($sActionUser, $sVPS, $sRequested);
+				$sFinish = $sServerType->$sSecond($sUser, $sVPS, $sRequested);
 				if(is_array($sFinish)){
 					echo json_encode($sFinish);
 					die();
 				}
 			} else {
-				echo json_encode(array("red" => "The VPS Id is either invalid or does not belong to this user."));
+				echo json_encode(array("result" => "The VPS Id is either invalid or does not belong to this user."));
 				die();
 			}
 		} else {
-			echo json_encode(array("red" => "Invalid user email, manual suspension required."));
+			echo json_encode(array("result" => "Invalid user email, manual suspension required."));
 			die();
 		}
 	}
@@ -145,22 +145,22 @@ if($sUser->sPermissions == 7){
 				$sServerType = new $sServer->sType;
 				$sMethod = "database_{$sServer->sType}_unsuspend";
 				$sSecond = "{$sServer->sType}_unsuspend";
-				$sTerminate = $sServerType->$sMethod($sActionUser, $sVPS, $sRequested);
-				if(is_array($sTerminate)){
-					echo json_encode($sCreate);
+				$sUnsuspend = $sServerType->$sMethod($sUser, $sVPS, $sRequested);
+				if(is_array($sUnsuspend)){
+					echo json_encode($sUnsuspend);
 					die();
 				}
-				$sFinish = $sServerType->$sSecond($sActionUser, $sVPS, $sRequested);
+				$sFinish = $sServerType->$sSecond($sUser, $sVPS, $sRequested);
 				if(is_array($sFinish)){
 					echo json_encode($sFinish);
 					die();
 				}
 			} else {
-				echo json_encode(array("red" => "The VPS Id is either invalid or does not belong to this user."));
+				echo json_encode(array("result" => "The VPS Id is either invalid or does not belong to this user."));
 				die();
 			}
 		} else {
-			echo json_encode(array("red" => "Invalid user email, manual unsuspension required."));
+			echo json_encode(array("result" => "Invalid user email, manual unsuspension required."));
 			die();
 		}
 	}
