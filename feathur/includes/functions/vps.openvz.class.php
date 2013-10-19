@@ -834,6 +834,9 @@ class openvz {
 			$sUsedRAM = preg_replace("/[^0-9]/", "", $sRAM[0]) - preg_replace("/[^0-9]/", "", $sRAM[1]);
 			$sTotalRAM = preg_replace("/[^0-9]/", "", $sRAM[0]);
 			$sUsedSWAP = ((preg_replace("/[^0-9]/", "", $sRAM[11])) - (preg_replace("/[^0-9]/", "", $sRAM[12])));
+			if($sUsedSWAP < 0){
+				$sUsedSWAP = ((preg_replace("/[^0-9]/", "", $sRAM[12])) - (preg_replace("/[^0-9]/", "", $sRAM[13])));
+			}
 			$sTotalSWAP = $sVPS->sSWAP;
 			$sDisk = $sSSH->exec("vzctl exec {$sVPS->sContainerId} df");
 			$sDisk = explode("\n", trim($sDisk));
