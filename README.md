@@ -11,7 +11,7 @@ using or downloading Feathur (in whole
 or in part) you agree to abide by the terms
 set forth in the license provided.
 
-#### SETUP DIRECTIONS (FULL INSTALLER) - DEBIAN 6
+##### SETUP DIRECTIONS (FULL INSTALLER) - DEBIAN 6
 
 As a precaution I would like to take the
 time to make sure that if you have a copy
@@ -33,4 +33,5 @@ Installation requirements:
 * Basic Linux Knowledge
 
 Run the following command on your server:
-    cd ~ && wget --no-check-certificate https://raw.github.com/BlueVM/Feathur/develop/Scripts/master-installer.sh && bash master-installer.sh
+
+		cd ~ && wget --no-check-certificate https://raw.github.com/BlueVM/Feathur/develop/Scripts/master-installer.sh && bash master-installer.sh
