@@ -1,0 +1,38 @@
+--------------------------------------------
+        Feathur License Version 1.0
+--------------------------------------------
+By using Feathur (in whole or in part) you agree to the following terms:
+
+1. All code, scripts, art and other work which are part of Feathur are owned by (and copyright) Feathur LLC. By using Feathur (in whole or in part) you agree to give credit to the owner of said code as prescribed by the owner. This includes, but is not limited to:
+	A. All HTML/PHP/CSS/JS pages will contain a visible link to Feathur's website (http://feathur.com).
+	B. Any code which is taken from Feathur must include a visible notice that said code came from Feathur (either in the form of comments or a link to Feathur's website (http://feathur.com). You may distribute the code freely.
+	C. If you alter, transform, or build upon this work, you may distribute the resulting work only under the same license as this one. 
+
+2. Feathur is free for personal use, you may however choose contribute to our project by paying a monthly license fee for each server you run Feathur on ($3.50 / server / mo).
+
+3. Feathur is free for commercial use provided that:
+	A. You can not sell or sublicense Feathur.
+	B. You have less than 5 servers (virtual/physical/other) running on Feathur at any point in time.
+	C. All links remain where they are and the license checking system is not modified or disabled. (See #1 above).
+	
+4. Feathur is NOT free for commercial use if:
+	A. You wish to sell or sublicense Feathur.
+	B. You have more than 5 servers (virtual/physical/other) running on Feathur at any point in time.
+	C. You wish to remove links to Feathur.
+	D. If you intend to use Feathur (in whole or in part) to improve the code of other control panels.
+	
+5. If your copy of Feathur falls under any of the conditions in #4 you agree to purchase a license for Feathur from http://feathur.com for each server that you install Feathur on.
+	
+6. You understand that:
+	A. Any of the above conditions can be waived if you get permission from Feathur LLC.
+	B. This license may change at any time for any reason. Should the license change you may continue using any code provided by Feathur which was created before the license change. Under the understanding that:
+		1. If you choose to update your copy of Feathur after the license change the new license terms apply to your copy in it's entirety.
+		2. All code created prior to 10/20/2013 falls under this license.
+		3. You must have had a running copy of said code prior to the the date the new license takes effect.
+	C. Failure to follow the terms of this license may result in legal action.
+
+7. You agree to indemnify and hold harmless Feathur LLC and the employees and agents of any of the aforementioned (each an "Indemnified Party") against any losses, legal fees, claims, data-loss, damages, liabilities, penalties, actions, proceedings or judgements (collectively, "Losses") to which an Indemnified Party may become subject and which losses arise out of, or relate to this Agreement or your own use of the code, designs, suggestions or any unmentioned products or services, and will reimburse an Indemnified Party for all legal and other expenses, including attorneys' fees incurred by such Indemnified Party in connection with investigating, defending or settling any loss whether or not in connection with pending or threatened litigation in which such Indemnified Party is a party.
+
+8. FEATHUR LLC, EMPLOYEES OR AGENTS OF THE AFOREMENTIONED SHALL NOT BE LIABLE FOR (i) ANY INDIRECT, INCIDENTAL, SPECIAL OR CONSEQUENTIAL DAMAGES, OR FOR ANY LOSS OF PROFITS OR LOSS OF REVENUE RESULTING FROM THE USE OF THE COMPANY'S SERVICES AND PRODUCTS BY CUSTOMER OR ANY THIRD PARTIES, OR (ii) ANY LOSS OF DATA RESULTING FROM DELAYS, NONDELIVERIES, OR SERVICE INTERRUPTIONS COMPANY PROVIDES THE SERVICES AND PRODUCTS AS IS, WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS OR IMPLIED COMPANY DISCLAIMS ALL IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE CUSTOMER SHALL BE SOLELY RESPONSIBLE FOR THE SELECTION, USE AND SUITABILITY OF THE SERVICES AND PRODUCTS AND COMPANY SHALL HAVE NO LIABILITY THEREFORE. 
+
+9. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 

@@ -5,8 +5,8 @@ designed to be used to administrate OpenVZ
 and KVM VPS. Feathur supports multiple nodes
 using a master and slave type functionality.
 
-Feathur is released under the Feathur Use
-License Version 1.0. By viewing, editing,
+Feathur is released under the Feathur License 
+Version 1.0. By viewing, editing,
 using or downloading Feathur (in whole
 or in part) you agree to abide by the terms
 set forth in the license provided.
