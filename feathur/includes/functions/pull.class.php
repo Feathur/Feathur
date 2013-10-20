@@ -70,95 +70,6 @@ class Pull {
 			}
 		}
 		
-		$sPullTime = time() - $sPullDifference->sValue;
-		$sTCPPull = $database->CachedQuery("SELECT * FROM servers WHERE `status_type` = :Type AND `last_check` < :PullTime", array(
-			':Type' => "tcp_ping",
-			':PullTime' => $sPullTime,
-		), 10);
-		
-		if(isset($sTCPPull)){
-			foreach($sTCPPull->data as $value){
-				$sTCPQuery[$value["id"]] = $value["url"].':'.$value["port"];
-			}
-		}
-		
-		if(isset($sTCPQuery)){
-			$sData = $this->StandardUptimePull($sTCPQuery);
-			foreach($sData as $key => $value){
-				if(!empty($value)){
-					$sServer = new Server($key);
-					if($sServer->uUpSince == 0){
-						$sServer->uUpSince = time();
-					}
-					$sServer->uDownSince = 0;
-					$sServer->uStatus = 1;
-					$sServer->uStatusWarning = 0;
-					$sServer->uLastCheck = time();
-					$sServer->InsertIntoDatabase();
-
-					$sHistory = $this->HistoryCreate($key, "1");
-				} else {
-					$sServer = new Server($key);
-					if($sServer->sStatusWarning == 0){
-						$sServer->uStatusWarning = 1;
-						$sServer->InsertIntoDatabase();
-					} else {
-						if($sServer->sDownSince == 0){
-							$sServer->uDownSince = time();
-						}
-						$sServer->uUpSince = 0;
-						$sServer->uStatus = 0;
-						$sServer->uLastCheck = time();
-						$sServer->InsertIntoDatabase();
-					
-						$sHistory = $this->HistoryCreate($key, "0");
-					}
-				}
-			}
-		}
-		
-		$sPullTime = time() - $sPullDifference->sValue;
-		$sICMPPull = $database->CachedQuery("SELECT * FROM servers WHERE `status_type` = :Type AND `last_check` < :PullTime", array(
-			':Type' => "icmp_ping",
-			':PullTime' => $sPullTime,
-		), 10);
-		
-		if(isset($sICMPPull)){
-			foreach($sICMPPull->data as $value){
-				$sReturn = $this->pingAddress(gethostbyname($value["url"]));
-
-				if($sReturn === true){
-					$sServer = new Server($value["id"]);
-					if($sServer->uUpSince == 0){
-						$sServer->uUpSince = time();
-					}
-					$sServer->uDownSince = 0;
-					$sServer->uStatus = 1;
-					$sServer->uStatusWarning = 0;
-					$sServer->uLastCheck = time();
-					$sServer->InsertIntoDatabase();
-
-					$sHistory = $this->HistoryCreate($key, "1");
-				} else {
-					$sServer = new Server($value["id"]);
-					if($sServer->sStatusWarning == 0){
-						$sServer->uStatusWarning = 1;
-						$sServer->InsertIntoDatabase();
-					} else {
-						if($sServer->sDownSince == 0){
-							$sServer->uDownSince = time();
-						}
-						$sServer->uUpSince = 0;
-						$sServer->uStatus = 0;
-						$sServer->uLastCheck = time();
-						$sServer->InsertIntoDatabase();
-					
-						$sHistory = $this->HistoryCreate($key, "0");
-					}
-				}
-			}
-		}
-		
 		$this->CleanStatistics();
 		$this->CleanHistory();
 	}
@@ -258,13 +169,5 @@ class Pull {
 		$sStatisticsCheck = $database->CachedQuery("DELETE FROM statistics WHERE `timestamp` < :MaxStatistics", array(
 			':MaxStatistics' => $sStatistics,
 		), 10);	
-	}
-	public function PingAddress($sIP) {
-		$sResult = exec("ping -c 1 -w 1 $sIP", $sOutcome, $sStatus);
-		if($sStatus == 0){
-			return true;
-		} else {
-			return false;
-		}
 	}
 }

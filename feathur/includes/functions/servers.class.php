@@ -69,12 +69,6 @@ class Server extends CPHPDatabaseRecordClass {
 		),
 	);
 	
-	public static function server_execute($sServer, $sSSH, $sCommand){
-		$sLog[] = array("command" => $sCommand, "result" => $sSSH->exec($sCommand));
-		$sSave = ServerLogs::save_server_logs($sLog, $sServer);
-		return $sResult = array("content" => $sLog["result"]);
-	}
-	
 	public static function server_add($uName, $uHostname, $uSuper, $uKey, $uType, $uStatus, $uLocation){
 		if(!empty($uName)){
 			if(!empty($uHostname)){

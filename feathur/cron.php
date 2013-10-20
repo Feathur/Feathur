@@ -1,54 +1,52 @@
 <?php
+// Check to make sure that this script isn't being executed remotely.
+if(!(php_sapi_name() == 'cli')){
+	die("Unfortunately this script must be executed via CLI.");
+}
+
 chdir('/var/feathur/feathur/');
 include('./includes/loader.php');
-$sRandom = rand(1, 5);
-echo "Waiting {$sRandom} seconds...";
-sleep($sRandom);
-$sTimestamp = time();
 error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE);
+$sTime = time();
 
-function running($sTimestamp){
-	return $sCurrent = time() - $sTimestamp;
+$sLocalSSH = new Net_SSH2('127.0.0.1');
+$sLocalKey = new Crypt_RSA();
+$sLocalKey->loadKey(file_get_contents($cphp_config->settings->rootkey));
+if(!($sLocalSSH->login("root", $sLocalKey))) {
+	die("Cannot connect to this server, check local key.");
 }
 
-function cleanup($sTimestamp){
-	$sCurrent = time() - $sTimestamp;
-	if($sCurrent > 60){
-		die("Ended cron early due to time constraints.");
+// Check for lock file.
+$sLock = $sLocalSSH->exec("cat /var/feathur/data/cron.lock");
+if(strpos($sLock, 'No such file or directory') === false) {
+	die("Another cron is currently running.");
+}
+
+$sCommandList .= "echo \"{$sTime}\" > /var/feathur/data/cron.lock;";
+
+// Last Template Sync Check
+$sTemplateSync = Core::GetSetting('last_template_sync');
+$sBefore = time() - (60 * 5);
+if($sTemplateSync < $sBefore){
+
+	if($sOpenVZ = $database->CachedQuery("SELECT * FROM servers WHERE `type` = 'openvz'", array())){
+		foreach($sOpenVZ->data as $sValue){
+			$sServer = new Server($sValue["id"]);
+			$sCommandList .= "rsync -avz -e \"ssh -o StrictHostKeyChecking=no -i /var/feathur/data/keys/{$sServer->sKey}\" /var/feathur/data/templates/openvz/* root@{$sServer->sIPAddress}:/vz/template/cache/;";
+		}
 	}
-}
-
-$sCurrent = running($sTimestamp);
-echo "Starting Pull: {$sCurrent} seconds";
-cleanup($sTimestamp);
-
-// Check system uptime
-$sPull = new Pull;
-$sData = $sPull->Start();
-
-$sCurrent = running($sTimestamp);
-echo "End of Pull: {$sCurrent} seconds";
-cleanup($sTimestamp);
-
-// Template sync.
-$sLastTemplateSync = Core::GetSetting('last_template_sync');
-$sTimeAgo = time() - (60 * 5);
-if($sLastTemplateSync->sValue < $sTimeAgo){
-	$sLastTemplateSync = Core::UpdateSetting('last_template_sync', time());
-	if($sServers = $database->CachedQuery("SELECT * FROM servers", array())){
-		foreach($sServers->data as $value){
-			$sServer = new Server($value["id"]);
-			$sTemplateType = "update_{$sServer->sType}_templates";
-			$sLocalSSH = new Net_SSH2('127.0.0.1');
-			$sLocalKey = new Crypt_RSA();
-			$sLocalKey->loadKey(file_get_contents($cphp_config->settings->rootkey));
-			if($sLocalSSH->login("root", $sLocalKey)) {
-				$sTemplateUpdate = VPS::$sTemplateType($sServer, $sLocalSSH);
-			}
+	
+	if($sKVM = $database->CachedQuery("SELECT * FROM servers WHERE `type` = 'kvm'", array())){
+		foreach($sKVM->data as $sValue){
+			$sServer = new Server($sValue["id"]);
+			$sCommandList .= "rsync -avz -e \"ssh -o StrictHostKeyChecking=no -i /var/feathur/data/keys/{$sServer->sKey}\" /var/feathur/data/templates/kvm/* root@{$sServer->sIPAddress}:/var/feathur/data/templates/kvm/;";
 		}
 	}
 }
 
-$sCurrent = running($sTimestamp);
-echo "Finishing Template Syncing: {$sCurrent} seconds";
-cleanup($sTimestamp);
+$sCommandList .= "rm -rf /var/feathur/data/cron.lock";
+$sCommandList = escapeshellarg($sCommandList);
+$sLocalSSH->exec("screen -dm -S cron bash -c {$sCommandList};");
+
+
+
