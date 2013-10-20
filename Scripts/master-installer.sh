@@ -195,10 +195,6 @@ mkdir /var/feathur/data/templates/
 mkdir /var/feathur/data/keys
 mkdir /var/feathur/data/templates/openvz
 mkdir /var/feathur/data/templates/kvm
-chmod 777 /var/feathur/data/templates/
-chmod 777 /var/feathur/data/templates/openvz
-chmod 777 /var/feathur/data/templates/kvm
-chmod 777 /var/feathur/data/keys
 
 cd ~/feathur-install/
 status "Base Config: 3 / 11"
@@ -227,7 +223,8 @@ ssh-keygen -t rsa -N "" -f ~/feathur-install/id_rsa
 mkdir ~/.ssh/
 cat id_rsa.pub >> ~/.ssh/authorized_keys
 cp id_rsa /var/feathur/data/
-setfacl -Rm user:www-data:rwx /var/feathur/*
+setfacl -Rm user:www-data:rx /var/feathur/*
+setfacl -Rm user:www-data:rwx /var/feathur/data/*
 
 cd ~/feathur-install/
 status "Base Config: 5 / 11"

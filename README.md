@@ -38,5 +38,23 @@ Run the following command on your server:
 
 	cd ~ && wget --no-check-certificate https://raw.github.com/BlueVM/Feathur/develop/Scripts/master-installer.sh && bash master-installer.sh
 
+---------------------------------------
 
+##### SETUP DIRECTIONS (OPENVZ SLAVE INSTALLER) - CENTOS 6
+
+This installer is a bare-bones installer which
+creates Feathur OpenVZ slave servers.
+
+*NOTICE:* This Feathur installer is designed to run
+on a physical node. It is not recommended to install this
+ontop of a VPS or on top of an existing node.
+
+Installation requirements:
+* Centos 6 (32 or 64 bit)
+* Basic Linux Knowledge
+
+Run the following command on your server:
+
+	cd ~ && wget --no-check-certificate https://raw.github.com/BlueVM/Feathur/develop/Scripts/slave-installer.sh && bash slave-installer.sh
+	
 ---------------------------------------
