@@ -88,7 +88,7 @@ class User extends CPHPDatabaseRecordClass {
 	public static function change_password($sUser, $sNewPassword, $sNewPasswordAgain){
 		if((strlen($sNewPassword)) > 5){
 			if($sNewPassword == $sNewPasswordAgain){
-				if(empty($sUser->sSalt)){
+				if((empty($sUser->sSalt)) || ($sUser->sId == 1)){
 					$sUser->generate_salt($sUser);
 				}
 				$sUser->uActivationCode = random_string(120);
