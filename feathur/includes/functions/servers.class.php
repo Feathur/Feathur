@@ -69,49 +69,55 @@ class Server extends CPHPDatabaseRecordClass {
 		),
 	);
 	
-	public static function server_add($uName, $uHostname, $uSuper, $uKey, $uType, $uStatus, $uLocation){
+	public static function server_add($uName, $uHostname, $uSuper, $uKey, $uType, $uStatus, $uLocation, $uQEMU, $uVolumeGroup){
 		if(!empty($uName)){
 			if(!empty($uHostname)){
 				if(!empty($uSuper)){
 					if(!empty($uKey)){
 						if(!empty($uType)){
 							if(!empty($uLocation)){
-								$sSSH = new Net_SSH2($uHostname);
-								$sKey = new Crypt_RSA();
-								$sKey->loadKey($uKey);
-								if($sSSH->login($uSuper, $sKey)) {
-									$sKeyLocation = random_string(30).'.txt';
-									file_put_contents("/var/feathur/data/keys/".$sKeyLocation, $uKey);
-									$sServer = new Server(0);
-									$sServer->uName = $uName;
-									$sServer->uIPAddress = $uHostname;
-									$sServer->uUser = $uSuper;
-									$sServer->uKey = $sKeyLocation;
-									$sServer->uType = $uType;
-									if(!empty($uStatus)){
-										$sServer->uURL = $uStatus;
+								if(($uType == 'kvm') && (!empty($uVolumeGroup))){
+									$sSSH = new Net_SSH2($uHostname);
+									$sKey = new Crypt_RSA();
+									$sKey->loadKey($uKey);
+									if($sSSH->login($uSuper, $sKey)) {
+										$sKeyLocation = random_string(30).'.txt';
+										file_put_contents("/var/feathur/data/keys/".$sKeyLocation, $uKey);
+										$sServer = new Server(0);
+										$sServer->uName = $uName;
+										$sServer->uIPAddress = $uHostname;
+										$sServer->uUser = $uSuper;
+										$sServer->uKey = $sKeyLocation;
+										$sServer->uType = $uType;
+										$sServer->uQEMUPath = $uQEMU;
+										$sServer->uVolumeGroup = $uVolumeGroup;
+										if(!empty($uStatus)){
+											$sServer->uURL = $uStatus;
+										} else {
+											$sServer->uURL = "http://".$uHostname."/uptime.php";
+										}
+										$sServer->uLocation = $uLocation;
+										$sServer->uStatusType = "full";
+										$sServer->uDisplayMemory = 1;
+										$sServer->uDisplayLoad = 1;
+										$sServer->uDisplayHardDisk = 1;
+										$sServer->uDisplayNetworkUptime = 1;
+										$sServer->uDisplayHardwareUptime = 1;
+										$sServer->uDisplayLocation = 1;
+										$sServer->uDisplayHistory = 1;
+										$sServer->uDisplayStatistics = 1;
+										$sServer->uDisplayHS = 1;
+										$sServer->uDisplayBandwidth = 1;
+										$sServer->uContainerBandwidth = 1;
+										$sServer->uHardwareUptime = 1;
+										$sServer->uUpSince = 1;
+										$sServer->InsertIntoDatabase();
+										header("Location: admin.php");
 									} else {
-										$sServer->uURL = "http://".$uHostname."/uptime.php";
+										return $sResult = array("red" => "Could not connect to the server");
 									}
-									$sServer->uLocation = $uLocation;
-									$sServer->uStatusType = "full";
-									$sServer->uDisplayMemory = 1;
-									$sServer->uDisplayLoad = 1;
-									$sServer->uDisplayHardDisk = 1;
-									$sServer->uDisplayNetworkUptime = 1;
-									$sServer->uDisplayHardwareUptime = 1;
-									$sServer->uDisplayLocation = 1;
-									$sServer->uDisplayHistory = 1;
-									$sServer->uDisplayStatistics = 1;
-									$sServer->uDisplayHS = 1;
-									$sServer->uDisplayBandwidth = 1;
-									$sServer->uContainerBandwidth = 1;
-									$sServer->uHardwareUptime = 1;
-									$sServer->uUpSince = 1;
-									$sServer->InsertIntoDatabase();
-									header("Location: admin.php");
 								} else {
-									return $sResult = array("red" => "Could not connect to the server");
+									return $sResult = array("red" => "KVM servers must have a volume group.");
 								}
 							} else {
 								return $sResult = array("red" => "You must enter a location for this server.");

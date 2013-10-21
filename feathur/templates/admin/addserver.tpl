@@ -30,9 +30,7 @@
 					<span class="st-labeltext">Server Type</span>	
 					<select name="type" id="ServerType" class="uniform">
 						<option value="openvz">OpenVZ</option>
-						<option value="lxc">LXC (Unsupported)</option>
-						<option value="kvm">KVM (Unsupported)</option>
-						<option value="xen">Xen (Unsupported)</option>
+						<option value="kvm">KVM</option>
 					</select>
 				</div>
 				<div class="st-form-line">	
@@ -43,6 +41,16 @@
 				<div class="st-form-line">	
 					<span class="st-labeltext">Location:</span>	
 					<input id="location" type="text" name="location" style="width:500px;">
+					<div class="clear"></div>
+				</div>
+				<div class="st-form-line">	
+					<span class="st-labeltext">Volume Group (KVM Only, Ex: vg_1232324):</span>	
+					<input id="volume_group" type="text" name="volume_group" style="width:500px;">
+					<div class="clear"></div>
+				</div>
+				<div class="st-form-line">	
+					<span class="st-labeltext">QEMU Path (KVM Only, leave blank for default):</span>	
+					<input id="qemu" type="text" name="qemu" style="width:500px;">
 					<div class="clear"></div>
 				</div>
 				<div class="st-form-line">
