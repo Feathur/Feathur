@@ -106,6 +106,8 @@ class Server extends CPHPDatabaseRecordClass {
 									$sServer->uDisplayHS = 1;
 									$sServer->uDisplayBandwidth = 1;
 									$sServer->uContainerBandwidth = 1;
+									$sServer->uHardwareUptime = 1;
+									$sServer->uUpSince = 1;
 									$sServer->InsertIntoDatabase();
 									header("Location: admin.php");
 								} else {
