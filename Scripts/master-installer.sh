@@ -62,8 +62,14 @@ function check_sanity {
 
 	if [ ! -f /etc/debian_version ]
 	then
-		status "Feathur must be installed as root. Please log in as root and try again."
-		die "Feathur must be installed on Debian 6.0."
+		status "Feathur must be installed on Debian 6."
+		die "Feathur must be installed on Debian 6."
+	fi
+
+	if [ ! 6 == $(awk -F. '{print $1}' /etc/debian_version) ]
+	then
+		status "Feathur must be installed on Debian 6."
+		die "Feathur must be installed on Debian 6."
 	fi
 }
 
@@ -136,21 +142,15 @@ status "Beginning installation phase 1 of 2"
 ############################################################
 
 echo "deb http://dotdeb.feathur.com/dotdeb stable all" >> /etc/apt/sources.list
-wget http://dotdeb.feathur.com/dotdeb/dotdeb.gpg
-cat dotdeb.gpg | apt-key add -
-rm -rf dotdeb.gpg
+wget -qO - http://dotdeb.feathur.com/dotdeb/dotdeb.gpg | apt-key add -
 apt-get update
 y=$(($y + 1));
-status "Install: $y of 32"
+status "Installing necessary software:"
 
-install="nginx php5 vim openssl php5-mysql zip unzip sqlite3 php-mdb2-driver-mysql php5-sqlite php5-curl php-pear php5-dev acl libcurl4-openssl-dev php5-gd php5-imagick php5-imap php5-mcrypt php5-xmlrpc php5-xsl php5-fpm libpcre3-dev build-essential php-apc git-core pdns-server pdns-backend-mysql host mysql-server phpmyadmin"
+DEBIAN_FRONTEND=noninteractive apt-get -q -y install nginx php5 vim openssl php5-mysql zip unzip sqlite3 php-mdb2-driver-mysql php5-sqlite php5-curl php-pear php5-dev acl libcurl4-openssl-dev php5-gd php5-imagick php5-imap php5-mcrypt php5-xmlrpc php5-xsl php5-fpm libpcre3-dev build-essential php-apc git-core pdns-server pdns-backend-mysql host mysql-server phpmyadmin
+apt-get clean
 
-for program in $install
-do
-	install $program
-	y=$(($y + 1));
-	status "Install: $y of 32"
-done
+status "Necessary software installation complete."
 
 ############################################################
 # Perform Installation Checks
@@ -203,7 +203,7 @@ status "Base Config: 3 / 11"
 # Generate Passwords
 ############################################################
 
-mysqlpassword=`< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-32};`
+mysqlpassword=$(< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-32};)
 
 cd ~/feathur-install/
 status "Base Config: 4 / 11"
@@ -237,7 +237,7 @@ mv /etc/my.cnf /etc/my.cnf.backup
 cp /var/feathur/feathur/includes/configs/my.cnf /etc/my.cnf
 /etc/init.d/mysql start
 
-salt=`< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-32};`
+salt=$(< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-32};)
 mysqladmin -u root password $mysqlpassword
 
 while ! mysql -u root -p$mysqlpassword  -e ";" ; do
@@ -322,7 +322,7 @@ aptitude -y purge ~i~napache
 /etc/init.d/nginx start
 /etc/init.d/pdns start
 /etc/init.d/php5-fpm start
-ipaddress=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | grep -v '127.0.0.2' | cut -d: -f2 | awk '{ print $1}'`;
+ipaddress=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | grep -v '127.0.0.2' | cut -d: -f2 | awk '{ print $1}');
 (crontab -l 2>/dev/null; echo "* * * * * php /var/feathur/feathur/cron.php") | crontab -
 
 status "=========FEATHUR_INSTALL_COMPLETE========"

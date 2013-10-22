@@ -28,5 +28,11 @@ $sAdd->execute();
 $sAdd = $database->prepare("ALTER TABLE `vps` CHANGE `mac` `mac` TEXT;");
 $sAdd->execute();
 
-$sAdd = $database->prepare("INSERT INTO `settings` (`id`, `setting_name`, `setting_value`, `setting_group`) VALUES (50, 'update_type', 'develop', 'site_settings')");
-$sAdd->execute();
+if(!$sUpdateType = $database->CachedQuery("SELECT * FROM settings WHERE `setting_name` = 'update_type'", array())){
+	$sAdd = $database->prepare("INSERT INTO `settings` (`setting_name`, `setting_value`, `setting_group`) VALUES ('update_type', 'develop', 'site_settings')");
+	$sAdd->execute();
+}
+if(!$sBandwidthAccounting = $database->CachedQuery("SELECT * FROM settings WHERE `setting_name` = 'bandwidth_accounting'", array())){
+	$sAdd = $database->prepare("INSERT INTO `settings` (`setting_name`, `setting_value`, `setting_group`) VALUES ('bandwidth_accounting', 'both', 'site_settings')");
+	$sAdd->execute();
+}

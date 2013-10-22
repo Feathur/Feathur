@@ -20,7 +20,6 @@ class VPS extends CPHPDatabaseRecordClass {
 			'UserId' => "user_id",
 			'ContainerId' => "container_id",
 			'ServerId' => "server_id",
-			'ContainerId' => "container_id",
 			'RAM' => "ram",
 			'SWAP' => "swap",
 			'Disk' => "disk",

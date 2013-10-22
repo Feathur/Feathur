@@ -12,13 +12,6 @@ service httpd restart
 cd /var/www/html/
 wget https://raw.github.com/BlueVM/Feathur/develop/Scripts/uptime.php
 cd /
-mkdir scripts
-cd /scripts/
-wget https://raw.github.com/BlueVM/Feathur/develop/Scripts/list-ips.txt
-wget https://raw.github.com/BlueVM/Feathur/develop/Scripts/count-traffic.txt
-mv list-ips.txt list-ips.sh
-mv count-traffic.txt count-traffic.sh
-mkdir traffic
 cd ~
 mkdir ~/.ssh/
 ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa

@@ -62,7 +62,7 @@ function ConvertTime($ss) {
 
 function formatBytes($sSize, $sPrecision = 2){
 	$sBase = log($sSize) / log(1024);
-	$sSuffixes = array('', 'KB', 'MB', 'GB', 'TB');   
+	$sSuffixes = array('B', 'KB', 'MB', 'GB', 'TB');   
 
 	return round(pow(1024, $sBase - floor($sBase)), $sPrecision) . $sSuffixes[floor($sBase)];
 }

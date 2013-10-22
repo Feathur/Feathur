@@ -153,7 +153,7 @@ class Server extends CPHPDatabaseRecordClass {
     			echo json_encode(array("result" => 'Unable to connect to the host node, please contact customer serivce.'));
     			die();
 		} else {
-			$sSSH->setTimeout(5);
+			$sSSH->setTimeout(30);
 			return $sSSH;
 		}
 	}
