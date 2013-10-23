@@ -126,13 +126,6 @@ if(strpos($sLock, 'No such file or directory') !== false) {
 				
 				$sServerConnect->exec("pkill pmacctd;pmacctd -c src_host,dst_host -f /usr/local/etc/pmacctd.conf;");
 				
-				foreach($sBandwidthData as $sKey => $sValue){
-					$sVPS = new VPS($sKey);
-					if($sValue > $sVPS->sBandwidthUsage){
-						$sVPS->uBandwidthUsage = $sValue;
-						$sVPS->InsertIntoDatabase();
-					}
-				}
 				unset($sTotalBandwidth);
 				unset($sTotalIPs);
 				$sServer->uBandwidthTimestamp = time();
