@@ -70,7 +70,7 @@ if(strpos($sLock, 'No such file or directory') !== false) {
 	$sLock = $sLocalSSH->exec("echo \"{$sTime}\" > /var/feathur/data/bandwidth.lock;");
 	$sBandwidthAccounting = Core::GetSetting('bandwidth_accounting');
 	$sBefore = (time() - (60 * 5));
-	if($sOpenVZ = $database->CachedQuery("SELECT * FROM servers WHERE `type` = 'openvz' && `bandwidth_timestamp` < :Before", array("Before" => $sBefore))){
+	if($sOpenVZ = $database->CachedQuery("SELECT * FROM servers WHERE `type` = 'openvz' && `bandwidth_timestamp` < :Before LIMIT 20", array("Before" => $sBefore))){
 		foreach($sOpenVZ->data as $sValue){
 			$sServer = new Server($sValue["id"]);
 			$sServerConnect = $sServer->server_connect($sServer);
@@ -81,24 +81,17 @@ if(strpos($sLock, 'No such file or directory') !== false) {
 				$sCommandList = escapeshellarg("rm -rf *bandwidth.sh*;wget http://feathur.com/scripts/openvz-bandwidth.sh;bash openvz-bandwidth.sh;");
 				$sExecute = $sServerConnect->exec("screen -dm -S cron bash -c {$sCommandList};");
 			} else {
+			
 				echo "Running bandwidth query on server {$sServer->sName}\n";
 				$sExecute = $sServerConnect->exec("cd /var/feathur/data/;bash bandwidth.sh;");
 				$sBandwidth = $sServerConnect->exec("cat /var/feathur/data/bandwidth.txt;");
 				
 				$sBandwidth = explode("\n", $sBandwidth);
 				foreach($sBandwidth as $sIP){
-					$sOriginal = $sIP;
 					$sIP = explode(" ", $sIP);
 					if((isset($sIP[1])) && (isset($sIP[2]))){
-						
-						if($sIP[1] < 0){
-							$sIP[1] = -$sIP[1];
-						}
-						
-						if($sIP[2] < 0){
-							$sIP[2] = -$sIP[2];
-						}
-						
+						$sIP[1] = round((($sIP[1] / 1024) / 1024), 4);
+						$sIP[2] = round((($sIP[1] / 1024) / 1024), 4);
 						if($sBandwidthAccounting == 'both'){
 							$sBandwidthUsed = $sIP[1] + $sIP[2];
 						} elseif($sBandwidthAccounting == 'up'){
@@ -117,36 +110,30 @@ if(strpos($sLock, 'No such file or directory') !== false) {
 					if($sIPData = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `ip_address` = :IP", array("IP" => $sIP[0]))){
 						if(!empty($sIPData->data[0]["vps_id"])){
 							$sVPS = new VPS($sIPData->data[0]["vps_id"]);
-							echo "Bandwidth logged for {$sIP[0]} => {$sBandwidthUsed}\n";
-							
-							if($sBandwidthUsed < 0){
-								$sBandwidthUsed = -$sBandwidthUsed;
+							if(!empty($sBandwidthData[$sVPS->sId])){
+								$sBandwidthData[$sVPS->sId] = $sBandwidthData[$sVPS->sId] + $sBandwidthUsed + $sVPS->sBandwidthUsage;
+							} else {
+								$sBandwidthData[$sVPS->sId] = $sBandwidthUsed + $sVPS->sBandwidthUsage;
 							}
-							
-							if($sVPS->sBandwidthUsage < 0){
-								$sVPS->uBandwidthUsage = -$sVPS->sBandwidthUsage;
-								$sVPS->InsertIntoDatabase();
-							}
-							
-							$sVPS->uBandwidthUsage = $sVPS->sBandwidthUsage + $sBandwidthUsed;
-							$sVPS->InsertIntoDatabase();
-							unset($sBandwidthUsed);
-							
+							echo "{$sVPS->sId} ({$sIP[0]}) => Old: {$sVPS->sBandwidthUsage} | New: {$sBandwidthData[$sVPS->sId]} | Added: {$sBandwidthUsed}\n";
 						} else {
 							$sLog[] = array("result" => "For some reason the IP {$sIPData->data[0]["ip_address"]} is generating traffic, but it isn't assigned to a VPS. You might want to take a look into this.", "command" => "Automated bandwidth checker.");
 							$sSaveLog = ServerLogs::save_server_logs($sLog, $sServer);
 							unset($sLog);
 						}
 					}
+					unset($sBandwidthUsed);
 					$sTotalIPs++;
 				}
-				echo "Cleaning up from {$sServer->sName}'s bandwidth calculations.\n";
-				$sCleanup = $sServerConnect->exec("cd /var/feathur/data/;rm -rf bandwidth.txt;bash bandwidth.sh");
-				if((empty($sTotalBandwidth)) && ($sTotalIPs > 3)){
-					$sLog[] = array("result" => "For some reason the server {$sServer->sName} is reporting no traffic on any VPS. If you have a limited number of VPS on this server, if this is the first time seeing this error or if you have no VPS on this server please ignore this error message.", "command" => "Automated bandwidth checker.");
-					$sSaveLog = ServerLogs::save_server_logs($sLog, $sServer);
-					unset($sLog);
-					$sStartup = $sServerConnect->exec("pmacctd -c src_host,dst_host -f /usr/local/etc/pmacctd.conf");
+				
+				$sServerConnect->exec("pkill pmacctd;pmacctd -c src_host,dst_host -f /usr/local/etc/pmacctd.conf;");
+				
+				foreach($sBandwidthData as $sKey => $sValue){
+					$sVPS = new VPS($sKey);
+					if($sValue > $sVPS->sBandwidthUsage){
+						$sVPS->uBandwidthUsage = $sValue;
+						$sVPS->InsertIntoDatabase();
+					}
 				}
 				unset($sTotalBandwidth);
 				unset($sTotalIPs);

@@ -907,9 +907,9 @@ class openvz {
 			}
 		
 			if($sVPS->sBandwidthUsage > 0){
-				$sBandwidthUsage = FormatBytes($sVPS->sBandwidthUsage, 0);
+				$sBandwidthUsage = FormatBytes($sVPS->sBandwidthUsage, 2);
 			} else {
-				$sBandwidthUsage = "0 KB";
+				$sBandwidthUsage = "0 MB";
 			}
 			
 			$sPercentBandwidth = round(((100 / ($sVPS->sBandwidthLimit * 1024 * 1024 * 1024)) * $sVPS->sBandwidthUsage), 0);
