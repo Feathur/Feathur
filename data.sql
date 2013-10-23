@@ -189,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `vps` (
   `disk` varchar(8) NOT NULL,
   `cpuunits` int(8) NOT NULL,
   `cpulimit` int(8) NOT NULL,
-  `bandwidthlimit` varchar(65) NOT NULL,
+  `bandwidthlimit` decimal(65,4) NOT NULL,
   `nameserver` varchar(65) NOT NULL,
   `numiptent` int(8) NOT NULL,
   `numproc` int(8) NOT NULL,
