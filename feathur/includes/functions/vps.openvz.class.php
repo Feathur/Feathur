@@ -912,7 +912,7 @@ class openvz {
 				$sBandwidthUsage = "0 MB";
 			}
 			
-			$sPercentBandwidth = round(((100 / ($sVPS->sBandwidthLimit * 1024 * 1024 * 1024)) * $sVPS->sBandwidthUsage), 0);
+			$sPercentBandwidth = round(((100 / ($sVPS->sBandwidthLimit * 1024)) * $sVPS->sBandwidthUsage), 0);
 			if(empty($sPercentBandwidth)){
 				$sPercentBandwidth = 0;
 			}
@@ -934,8 +934,8 @@ class openvz {
 					"percent_cpu" => $sPercentCPU,
 					"load_average" => "$sCPU[0] $sCPU[1] $sCPU[2]",
 					"bandwidth_usage" => $sBandwidthUsage,
-					"bandwidth_limit" => FormatBytes($sVPS->sBandwidthLimit * 1024 * 1024 * 1024, 0),
-					"percent_bandwidth" => round(((100 / ($sVPS->sBandwidthLimit * 1024 * 1024 * 1024)) * $sVPS->sBandwidthUsage), 0),
+					"bandwidth_limit" => FormatBytes($sVPS->sBandwidthLimit * 1024, 0),
+					"percent_bandwidth" => round(((100 / ($sVPS->sBandwidthLimit * 1024)) * $sVPS->sBandwidthUsage), 0),
 					"operating_system" => $sTemplateName,
 					"hostname" => $sVPS->sHostname,
 					"primary_ip" => $sVPS->sPrimaryIP
