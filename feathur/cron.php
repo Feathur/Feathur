@@ -110,12 +110,10 @@ if(strpos($sLock, 'No such file or directory') !== false) {
 					if($sIPData = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `ip_address` = :IP", array("IP" => $sIP[0]))){
 						if(!empty($sIPData->data[0]["vps_id"])){
 							$sVPS = new VPS($sIPData->data[0]["vps_id"]);
-							if(!empty($sBandwidthData[$sVPS->sId])){
-								$sBandwidthData[$sVPS->sId] = $sBandwidthData[$sVPS->sId] + $sBandwidthUsed + $sVPS->sBandwidthUsage;
-							} else {
-								$sBandwidthData[$sVPS->sId] = $sBandwidthUsed + $sVPS->sBandwidthUsage;
-							}
-							echo "{$sVPS->sId} ({$sIP[0]}) => Old: {$sVPS->sBandwidthUsage} | New: {$sBandwidthData[$sVPS->sId]} | Added: {$sBandwidthUsed}\n";
+							$sPreUpdate = $sVPS->sBandwidthUsage;
+							$sVPS->uBandwidthUsage = $sBandwidthUsed + $sPreUpdate;
+							$sVPS->InsertIntoDatabase();
+							echo "{$sVPS->sId} ({$sIP[0]}) => Old: {$sPreUpdate} | New: {$sBandwidthData[$sVPS->sId]} | Added: {$sBandwidthUsed}\n";
 						} else {
 							$sLog[] = array("result" => "For some reason the IP {$sIPData->data[0]["ip_address"]} is generating traffic, but it isn't assigned to a VPS. You might want to take a look into this.", "command" => "Automated bandwidth checker.");
 							$sSaveLog = ServerLogs::save_server_logs($sLog, $sServer);
