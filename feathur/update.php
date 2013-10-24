@@ -36,3 +36,18 @@ if(!$sBandwidthAccounting = $database->CachedQuery("SELECT * FROM settings WHERE
 	$sAdd = $database->prepare("INSERT INTO `settings` (`setting_name`, `setting_value`, `setting_group`) VALUES ('bandwidth_accounting', 'both', 'site_settings')");
 	$sAdd->execute();
 }
+
+$sAdd = $database->prepare("ALTER TABLE `vps` ADD `virtio_network` INT(2)");
+$sAdd->execute();
+
+$sAdd = $database->prepare("ALTER TABLE `vps` ADD `virtio_disk` INT(2)");
+$sAdd->execute();
+
+$sAdd = $database->prepare("ALTER TABLE `vps` ADD `mac` TEXT");
+$sAdd->execute();
+
+$sAdd = $database->prepare("ALTER TABLE `vps` ADD `vnc_port` INT(16)");
+$sAdd->execute();
+
+$sAdd = $database->prepare("ALTER TABLE `vps` ADD `boot_order` INT(2)");
+$sAdd->execute();
