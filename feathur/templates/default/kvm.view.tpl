@@ -302,9 +302,14 @@
 						<td width="30%">Select ISO:</td>
 						<td width="70%">
 							<select id="SelectedTemplate" style="width:100%">
-								{%foreach template in Templates}
-									<option value="{%?template[id]}" {%if template[primary] == 1}selected="selected"{%/if}>{%?template[name]}</option>
-								{%/foreach}
+								{%if isset|Templates == true}
+									{%foreach template in Templates}
+										<option value="{%?template[id]}" {%if template[primary] == 1}selected="selected"{%/if}>{%?template[name]}</option>
+									{%/foreach}
+								{%/if}
+								{%if isset|Templates == false}
+									<option value="">None Available</option>
+								{%/if}
 							</select>
 						</td>
 					</tr>
