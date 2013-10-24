@@ -1,14 +1,4 @@
-<div id="LoadingImage" align="right" style="padding-right:10px;margin-top:10px;visibility:hidden;"><img src="./templates/default/img/loading/9.gif"></img></div>
-{%if isset|Errors == true}
-	{%foreach error in Errors}
-		<div align="center">
-        	<div class="albox errorbox" style="width:60%;">
-				<b>Error :</b> {%?error[red]}
-				<a href="#" class="close tips" title="close">close</a>
-			</div>
-		</div>
-	{%/foreach}
-{%/if}
+<div align="center"><div id="Notice"></div></div>
 {%if isempty|Virtualization == true}
 	<div align="center">
 		<br><br>
@@ -65,10 +55,9 @@
 					}
 					else {
 						$.modal.close();
-						$("#LoadingImage").css({visibility: "visible"});
+						$('#Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
 						$.getJSON("admin.php?view=templates&type=openvz&action=addtemplate&name=" + name + "&url=" + url,function(result){
-							$("#page").html(result.content);
-							$("#LoadingImage").css({visibility: "hidden"});
+							$('#Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
 						});
 					}
 				});
@@ -82,10 +71,9 @@
 				$("#ConfirmDelete").click(function() {
 					var deleteid = $("#DeleteFormValue").text();
 					$.modal.close();
-					$("#LoadingImage").css({visibility: "visible"});
+					$('#Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
 					$.getJSON("admin.php?view=templates&type=openvz&action=removetemplate&id=" + deleteid,function(result){
-						$("#page").html(result.content);
-						$("#LoadingImage").css({visibility: "hidden"});
+						$('#Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
 					});
 				});
 				$("#CancelDelete").click(function() {
@@ -102,10 +90,9 @@
 					var editid = $("#EditFormValue").text();
 					var name = $("#EditFormName").val();
 					$.modal.close();
-					$("#LoadingImage").css({visibility: "visible"});
+					$('#Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
 					$.getJSON("admin.php?view=templates&type=openvz&action=updatetemplate&id=" + editid + "&name=" + name,function(result){
-						$("#page").html(result.content);
-						$("#LoadingImage").css({visibility: "hidden"});
+						$('#Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
 					});
 				});
 			});
@@ -224,10 +211,9 @@
 					}
 					else {
 						$.modal.close();
-						$("#LoadingImage").css({visibility: "visible"});
+						$('#Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
 						$.getJSON("admin.php?view=templates&type=kvm&action=addtemplate&name=" + name + "&url=" + url,function(result){
-							$("#page").html(result.content);
-							$("#LoadingImage").css({visibility: "hidden"});
+							$('#Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
 						});
 					}
 				});
@@ -241,10 +227,9 @@
 				$("#ConfirmDelete").click(function() {
 					var deleteid = $("#DeleteFormValue").text();
 					$.modal.close();
-					$("#LoadingImage").css({visibility: "visible"});
+					$('#Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
 					$.getJSON("admin.php?view=templates&type=kvm&action=removetemplate&id=" + deleteid,function(result){
-						$("#page").html(result.content);
-						$("#LoadingImage").css({visibility: "hidden"});
+						$('#Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
 					});
 				});
 				$("#CancelDelete").click(function() {
@@ -261,10 +246,9 @@
 					var editid = $("#EditFormValue").text();
 					var name = $("#EditFormName").val();
 					$.modal.close();
-					$("#LoadingImage").css({visibility: "visible"});
+					$('#Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
 					$.getJSON("admin.php?view=templates&type=kvm&action=updatetemplate&id=" + editid + "&name=" + name,function(result){
-						$("#page").html(result.content);
-						$("#LoadingImage").css({visibility: "hidden"});
+						$('#Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
 					});
 				});
 			});
