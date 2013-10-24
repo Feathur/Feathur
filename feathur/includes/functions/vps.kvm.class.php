@@ -29,94 +29,90 @@ class kvm {
 				if((!empty($uUser)) && (is_numeric($uUser))){
 					if((!empty($uRAM)) && (is_numeric($uRAM))){
 						if((!empty($uDisk)) && (is_numeric($uDisk))){
-							if((!empty($uIPAddresses)) && (is_numeric($uIPAddresses))){
-								if((!empty($uCPULimit)) && (is_numeric($uCPULimit))){
-									if((!empty($uBandwidthLimit)) && (is_numeric($uBandwidthLimit))){
-										$sServer = new Server($uServer);
-										$sOwner = new User($uUser);
-										
-										if(!empty($uTemplate)){
-											$sTemplate = new Template($uTemplate);
-										}
-										
-										$sIPCheck = VPS::check_ipspace($sServer->sId, $uIPAddresses);
-										if(is_array($sIPCheck)){
-											return $sIPCheck;
-										}
-			
-			
-										if(empty($uHostname)){
-											$uHostname = "vps.example.com";
-										}
-											
-										if(empty($uNameserver)){
-											$uNameserver = "8.8.8.8";
-										}
-										
-										while($sTotalMacs < $uIPAddresses){
-											if(empty($sTotalMacs)){
-												$sMac = generate_mac();
-											} else {
-												$sMac .= ",".generate_mac();
-											}
-											$sTotalMacs++;
-										}
-										
-										// VPS Database setup
-										$sVPSId = Core::GetSetting('container_id');
-										$sUpdate = Core::UpdateSetting('container_id', ($sVPSId->sValue + 1));
-										$sVPS = new VPS(0);
-										$sVPS->uType = $sServer->sType;
-										$sVPS->uHostname = $uHostname;
-										$sVPS->uNameserver = $uNameserver;
-										$sVPS->uUserId = $sOwner->sId;
-										$sVPS->uServerId = $sServer->sId;
-										$sVPS->uContainerId = $sVPSId->sValue;
-										$sVPS->uRAM = $uRAM;
-										$sVPS->uDisk = $uDisk;
-										$sVPS->uMac = $sMac;
-										$sVPS->uCPULimit = $uCPULimit;
-										if(!empty($uTemplate)){
-											$sVPS->uTemplateId = $sTemplate->sId;
-										}
-										$sVPS->uBandwidthLimit = $uBandwidthLimit;
-										$sVPS->uVNCPort = ($sVPS->sId + 5900);
-										$sVPS->uBootOrder = "hd";
-										$sVPS->InsertIntoDatabase();
-										
-										if($sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId", array('ServerId' => $sServer->sId))){
-											foreach($sBlocks->data as $key => $value){
-												if($sIPs = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `block_id` = :BlockId AND `vps_id` = 0", array('BlockId' => $value["block_id"]))){
-													foreach($sIPs->data as $subvalue){
-														if($sCurrentIPs < $uIPAddresses){
-															$sIPList[] = array("id" => $subvalue["id"], "ip_address" => $subvalue["ip_address"], "block" => $subvalue["block_id"]);
-															$sUpdate = $database->CachedQuery("UPDATE ipaddresses SET `vps_id` = :VPSId WHERE `id` = :Id", array('VPSId' => $sVPS->sId, 'Id' => $subvalue["id"]));
-															if(empty($sFirst)){
-																$sVPS->uPrimaryIP = $subvalue["ip_address"];
-																$sVPS->InsertIntoDatabase();
-																$sFirst = 1;
-															}
-															$sCurrentIPs++;
-														}
-													}
-												}																					
-											}
-										}
-										$sRequested["POST"]["VPS"] = $sVPS->sId;
-										$sRequested["POST"]["IPList"] = $sIPList;
-										
-										if(!empty($sAPI)){
-											return $sVPS->sId;
-										}
-										return true;
-									} else {
-										return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the bandwidth limit!");
+							if((!empty($uCPULimit)) && (is_numeric($uCPULimit))){
+								if((!empty($uBandwidthLimit)) && (is_numeric($uBandwidthLimit))){
+									$sServer = new Server($uServer);
+									$sOwner = new User($uUser);
+									
+									if(!empty($uTemplate)){
+										$sTemplate = new Template($uTemplate);
 									}
+									
+									$sIPCheck = VPS::check_ipspace($sServer->sId, $uIPAddresses);
+									if(is_array($sIPCheck)){
+										return $sIPCheck;
+									}
+		
+		
+									if(empty($uHostname)){
+										$uHostname = "vps.example.com";
+									}
+										
+									if(empty($uNameserver)){
+										$uNameserver = "8.8.8.8";
+									}
+									
+									while($sTotalMacs < $uIPAddresses){
+										if(empty($sTotalMacs)){
+											$sMac = generate_mac();
+										} else {
+											$sMac .= ",".generate_mac();
+										}
+										$sTotalMacs++;
+									}
+									
+									// VPS Database setup
+									$sVPSId = Core::GetSetting('container_id');
+									$sUpdate = Core::UpdateSetting('container_id', ($sVPSId->sValue + 1));
+									$sVPS = new VPS(0);
+									$sVPS->uType = $sServer->sType;
+									$sVPS->uHostname = $uHostname;
+									$sVPS->uNameserver = $uNameserver;
+									$sVPS->uUserId = $sOwner->sId;
+									$sVPS->uServerId = $sServer->sId;
+									$sVPS->uContainerId = $sVPSId->sValue;
+									$sVPS->uRAM = $uRAM;
+									$sVPS->uDisk = $uDisk;
+									$sVPS->uMac = $sMac;
+									$sVPS->uCPULimit = $uCPULimit;
+									if(!empty($uTemplate)){
+										$sVPS->uTemplateId = $sTemplate->sId;
+									}
+									$sVPS->uBandwidthLimit = $uBandwidthLimit;
+									$sVPS->uVNCPort = ($sVPS->sId + 5900);
+									$sVPS->uBootOrder = "hd";
+									$sVPS->InsertIntoDatabase();
+									
+									if($sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId", array('ServerId' => $sServer->sId))){
+										foreach($sBlocks->data as $key => $value){
+											if($sIPs = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `block_id` = :BlockId AND `vps_id` = 0", array('BlockId' => $value["block_id"]))){
+												foreach($sIPs->data as $subvalue){
+													if($sCurrentIPs < $uIPAddresses){
+														$sIPList[] = array("id" => $subvalue["id"], "ip_address" => $subvalue["ip_address"], "block" => $subvalue["block_id"]);
+														$sUpdate = $database->CachedQuery("UPDATE ipaddresses SET `vps_id` = :VPSId WHERE `id` = :Id", array('VPSId' => $sVPS->sId, 'Id' => $subvalue["id"]));
+														if(empty($sFirst)){
+															$sVPS->uPrimaryIP = $subvalue["ip_address"];
+															$sVPS->InsertIntoDatabase();
+															$sFirst = 1;
+														}
+														$sCurrentIPs++;
+													}
+												}
+											}																					
+										}
+									}
+									$sRequested["POST"]["VPS"] = $sVPS->sId;
+									$sRequested["POST"]["IPList"] = $sIPList;
+									
+									if(!empty($sAPI)){
+										return $sVPS->sId;
+									}
+									return true;
 								} else {
-									return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the CPU limit!");
+									return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the bandwidth limit!");
 								}
 							} else {
-								return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the number of IP Addresses!");
+								return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the CPU limit!");
 							}
 						} else {
 							return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the disk limit!");
