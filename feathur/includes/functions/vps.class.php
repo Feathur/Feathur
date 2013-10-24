@@ -44,6 +44,18 @@ class VPS extends CPHPDatabaseRecordClass {
 		),
 	);
 	
+	public static function localhost_connect(){
+		global $cphp_config;
+		$sSSH = new Net_SSH2('127.0.0.1');
+		$sKey = new Crypt_RSA();
+		$sKey->loadKey(file_get_contents($cphp_config->settings->rootkey));
+		if($sSSH->login("root", $sKey)) {
+			return $sSSH;
+		} else {
+			return $sErrors = array("Could not connect to the local host.");
+		}
+	}
+	
 	public static function save_vps_logs($sLogs, $sVPS){
 		foreach($sLogs as $key => $value){
 			$sLog = new VPSLogs(0);
