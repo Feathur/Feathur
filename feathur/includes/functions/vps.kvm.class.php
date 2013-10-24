@@ -79,7 +79,7 @@ class kvm {
 										$sVPS->uTemplateId = $sTemplate->sId;
 									}
 									$sVPS->uBandwidthLimit = $uBandwidthLimit;
-									$sVPS->uVNCPort = ($sVPS->sId + 5900);
+									$sVPS->uVNCPort = ($sVPSId->sValue + 5900);
 									$sVPS->uBootOrder = "hd";
 									$sVPS->InsertIntoDatabase();
 									
