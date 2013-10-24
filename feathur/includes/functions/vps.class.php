@@ -165,18 +165,23 @@ class VPS extends CPHPDatabaseRecordClass {
 				$sList = ".iso";
 			}
 			$sName = preg_replace("/[^a-z0-9_-\s]+/i", "", $uName);
+			$sPath = str_replace($sList, "", basename($uURL));
+			if($sExists = $database->CachedQuery("SELECT * FROM templates WHERE `path` LIKE :TemplatePath && `type` = :Type", array('TemplatePath' => "%".$sPath."%", 'Type' => $uType))){
+				$sPath .= random_string(6);
+			}
 			$sTemplate = new Template(0);
 			$sTemplate->uName = $sName;
-			$sTemplate->uPath = str_replace($sList, "", basename($uURL));
+			$sTemplate->uPath = $sPath;
 			$sTemplate->uType = $uType;
 			$sTemplate->InsertIntoDatabase();
 			$sDownload = $sLocalSSH->exec("cd /var/feathur/data/templates/;mkdir {$sTemplate->sType};cd {$sTemplate->sType};wget_output=$(wget -O {$sTemplate->sPath}{$sList} \"{$uURL}\")");
 			$sRandoCalrissian = random_string(12);
-			$sCheckDownload = $sLocalSSH->exec("cd /var/feathur/data/templates/{$sTemplate->sType};if [ -f {$sTemplate->sPath}{$sList} ]; do echo \"{$sRandoCalrissian}\"; fi");
+			$sCheckDownload = $sLocalSSH->exec("cd /var/feathur/data/templates/{$sTemplate->sType};if [ -f {$sTemplate->sPath}{$sList} ]; do echo \"{$sRandoCalrissian}\"; fi;if [ $(ls -l {$sTemplate->sPath}{$sList} | awk '{print $5}') == 0 ]; do echo {$sRandoCalrissian}; fi");
 			if(strpos($sCheckDownload, $sRandoCalrissian) !== false) {
 				return $sArray = array("json" => 1, "type" => "success", "result" => "Template added, should be syncing to the servers here shortly.", "reload" => "1");
 			} else {
 				$sClean = $database->CachedQuery("DELETE FROM templates WHERE `id` = :Id", array('Id' => $sTemplate->sId));
+				$sData = $sLocalSSH->exec("cd /var/feathur/data/templates/{$sTemplate->sType};rm -rf {$sTemplate->sPath}{$sList};");
 				return $sArray = array("json" => 1, "type" => "error", "result" => "There was an issue downloading the template/iso.");
 			}
 		}
