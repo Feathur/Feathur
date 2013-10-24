@@ -106,7 +106,7 @@ class kvm {
 										$sRequested["POST"]["IPList"] = $sIPList;
 										
 										if(!empty($sAPI)){
-											return $sVPS;
+											return $sVPS->sId;
 										}
 										return true;
 									} else {
