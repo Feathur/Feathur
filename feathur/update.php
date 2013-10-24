@@ -49,5 +49,7 @@ $sAdd->execute();
 $sAdd = $database->prepare("ALTER TABLE `vps` ADD `vnc_port` INT(16)");
 $sAdd->execute();
 
-$sAdd = $database->prepare("ALTER TABLE `vps` ADD `boot_order` INT(2)");
+$sAdd = $database->prepare("ALTER TABLE `vps` ADD `boot_order` VARCHAR(65)");
 $sAdd->execute();
+
+$sAdd = $database->prepare("ALTER TABLE `vps` CHANGE `boot_order` `boot_order` VARCHAR(65);");
