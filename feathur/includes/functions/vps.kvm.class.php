@@ -37,12 +37,12 @@ class kvm {
 									if(!empty($uTemplate)){
 										$sTemplate = new Template($uTemplate);
 									}
-									
-									$sIPCheck = VPS::check_ipspace($sServer->sId, $uIPAddresses);
-									if(is_array($sIPCheck)){
-										return $sIPCheck;
+									if(empty($sAPI)){
+										$sIPCheck = VPS::check_ipspace($sServer->sId, $uIPAddresses);
+										if(is_array($sIPCheck)){
+											return $sIPCheck;
+										}
 									}
-		
 		
 									if(empty($uHostname)){
 										$uHostname = "vps.example.com";
