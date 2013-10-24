@@ -43,12 +43,20 @@ class CachedPDO extends PDO
 				{
 					$type = $this->GuessType($value);
 					
-					if(preg_match("/^[0-9]+$/", $value) && $type == PDO::PARAM_STR)
+					if(preg_match("/^[0-9]+$/", $value) && is_string($value))
 					{
 						/* PDO library apparently thinks it's part of a strongly typed language and doesn't do any typecasting.
 						 * We'll do it ourselves then. */
-						 $value = (int) $value;
-						 $type = PDO::PARAM_INT;
+						$int_value = (int) $value;
+						 
+						if($int_value < PHP_INT_MAX)
+						{
+							/* We only want to cast to integer if the result doesn't exceed INT_MAX, to avoid overflows. The
+							 * only way to do this appears to be aborting when it *equals* or exceeds INT_MAX, as an overflow
+							 * would occur during this check also. */
+							$value = $int_value;
+							$type = PDO::PARAM_INT;
+						}
 					}
 					
 					if($type == PDO::PARAM_STR)
