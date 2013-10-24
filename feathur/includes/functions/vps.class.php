@@ -170,11 +170,11 @@ class VPS extends CPHPDatabaseRecordClass {
 			$sTemplate->uPath = str_replace($sList, "", basename($uURL));
 			$sTemplate->uType = $uType;
 			$sTemplate->InsertIntoDatabase();
-			$sDownload = $sLocalSSH->exec("cd /var/feathur/data/templates/;mkdir {$sTemplate->sType};cd {$sTemplate->sType};wget_output=$(wget -O {$sTemplate->sPath}{$sList} \"{$sURL}\")");
+			$sDownload = $sLocalSSH->exec("cd /var/feathur/data/templates/;mkdir {$sTemplate->sType};cd {$sTemplate->sType};wget_output=$(wget -O {$sTemplate->sPath}{$sList} \"{$uURL}\")");
 			$sRandoCalrissian = random_string(12);
 			$sCheckDownload = $sLocalSSH->exec("cd /var/feathur/data/templates/{$sTemplate->sType};if [ -f {$sTemplate->sPath}{$sList} ]; do echo \"{$sRandoCalrissian}\"; fi");
 			if(strpos($sCheckDownload, $sRandoCalrissian) !== false) {
-				return $sArray = array("json" => 1, "type" => "success", "result" => "Template added, should be syncing to the servers here shortly.");
+				return $sArray = array("json" => 1, "type" => "success", "result" => "Template added, should be syncing to the servers here shortly.", "reload" => "1");
 			} else {
 				$sClean = $database->CachedQuery("DELETE FROM templates WHERE `id` = :Id", array('Id' => $sTemplate->sId));
 				return $sArray = array("json" => 1, "type" => "error", "result" => "There was an issue downloading the template/iso.");
@@ -194,7 +194,7 @@ class VPS extends CPHPDatabaseRecordClass {
 			}
 			$sRemoveFile = $sLocalSSH->exec("cd /var/feathur/data/templates/{$sTemplate->sType};rm -rf {$sTemplate->sPath}{$sList};");
 			$sClean = $database->CachedQuery("DELETE FROM templates WHERE `id` = :Id", array('Id' => $sTemplate->sId));
-			return $sArray = array("json" => 1, "type" => "success", "result" => "Template/ISO has been deleted.");
+			return $sArray = array("json" => 1, "type" => "success", "result" => "Template/ISO has been deleted.", "reload" => "1");
 		} else {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "There is no template matching that id.");
 		}

@@ -58,6 +58,9 @@
 						$('#Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
 						$.getJSON("admin.php?view=templates&type=openvz&action=addtemplate&name=" + name + "&url=" + url,function(result){
 							$('#Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
+							if(result.reload == 1){
+								location.reload();
+							}
 						});
 					}
 				});
@@ -74,6 +77,9 @@
 					$('#Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
 					$.getJSON("admin.php?view=templates&type=openvz&action=removetemplate&id=" + deleteid,function(result){
 						$('#Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
+						if(result.reload == 1){
+							location.reload();
+						}
 					});
 				});
 				$("#CancelDelete").click(function() {
@@ -93,6 +99,9 @@
 					$('#Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
 					$.getJSON("admin.php?view=templates&type=openvz&action=updatetemplate&id=" + editid + "&name=" + name,function(result){
 						$('#Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
+						if(result.reload == 1){
+							location.reload();
+						}
 					});
 				});
 			});
@@ -214,6 +223,9 @@
 						$('#Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
 						$.getJSON("admin.php?view=templates&type=kvm&action=addtemplate&name=" + name + "&url=" + url,function(result){
 							$('#Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
+							if(result.reload == 1){
+								location.reload();
+							}
 						});
 					}
 				});
@@ -230,6 +242,9 @@
 					$('#Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
 					$.getJSON("admin.php?view=templates&type=kvm&action=removetemplate&id=" + deleteid,function(result){
 						$('#Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
+						if(result.reload == 1){
+							location.reload();
+						}
 					});
 				});
 				$("#CancelDelete").click(function() {
@@ -249,6 +264,9 @@
 					$('#Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
 					$.getJSON("admin.php?view=templates&type=kvm&action=updatetemplate&id=" + editid + "&name=" + name,function(result){
 						$('#Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
+						if(result.reload == 1){
+							location.reload();
+						}
 					});
 				});
 			});

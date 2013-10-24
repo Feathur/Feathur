@@ -11,17 +11,18 @@ if($sAction == addtemplate){
 	if((!empty($_GET['type'])) && (!empty($_GET['url']))){
 		$sAdd = VPS::add_template(VPS::localhost_connect(), $_GET['name'], $_GET['url'], $_GET['type']);
 		if(is_array($sAdd)){
-			$sErrors[] = $sAdd;
+			echo json_encode($sAdd);
+			die();
 		}
 	}
-	$sJson = 1;
 }
 
 if($sAction == removetemplate){
 	if(!empty($_GET['id'])){
 		$sRemove = VPS::remove_template(VPS::localhost_connect(), $_GET['id']);
 			if(is_array($sRemove)){
-				$sErrors[] = $sRemove;
+				echo json_encode($sRemove);
+				die();
 			}
 	}
 	$sJson = 1;
@@ -33,9 +34,9 @@ if($sAction == updatetemplate){
 		$sTemplate->uName = $_GET['name'];
 		$sTemplate->InsertIntoDatabase();
 	} else {
-		$sErrors[] = array("red" => "You must specify a name for the template!");
+		echo json_encode(array("result" => "You must specify a name for the template!", "type" => "error", "json" => "1"));
+		die();
 	}
-	$sJson = 1;
 }
 
 if(empty($sType)){
@@ -48,9 +49,4 @@ if(empty($sType)){
 	}
 	
 	$sContent .= Templater::AdvancedParse($sAdminTemplate->sValue.'/templates', $locale->strings, array("Virtualization" => $sType, "TemplateList" => $sTemplateList, "Errors" => $sErrors));
-}
-
-if($sJson == 1){
-	echo json_encode(array("content" => $sContent));
-	die();
 }
