@@ -53,3 +53,4 @@ $sAdd = $database->prepare("ALTER TABLE `vps` ADD `boot_order` VARCHAR(65)");
 $sAdd->execute();
 
 $sAdd = $database->prepare("ALTER TABLE `vps` CHANGE `boot_order` `boot_order` VARCHAR(65);");
+$sAdd->execute();
