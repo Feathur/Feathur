@@ -1,4 +1,8 @@
 <?php
+if(!(php_sapi_name() == 'cli')){
+	die("Unfortunately this script must be executed via CLI.");
+}
+
 error_reporting(E_ALL ^ E_NOTICE);
 // Query: SELECT nname, vpsid, contactemail, syncserver, username, coma_vmipaddress_a, hostname FROM vps WHERE syncserver='s1.c12.ny.bluevm.com' && resourceplan_used LIKE '%blue1%';
 $sUsername = "admin@bluevm.com";

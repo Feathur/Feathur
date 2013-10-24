@@ -10,7 +10,7 @@ class kvm {
 		}
 	}
 
-	public function database_kvm_create($sUser, $sRequested){
+	public function database_kvm_create($sUser, $sRequested, $sAPI = 0){
 		$sUserPermissions = $sUser->sPermissions;
 		if($sUserPermissions == 7){
 			global $database;
@@ -104,6 +104,10 @@ class kvm {
 										}
 										$sRequested["POST"]["VPS"] = $sVPS->sId;
 										$sRequested["POST"]["IPList"] = $sIPList;
+										
+										if(!empty($sAPI)){
+											return $sVPS;
+										}
 										return true;
 									} else {
 										return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the bandwidth limit!");
