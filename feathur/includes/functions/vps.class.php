@@ -156,6 +156,7 @@ class VPS extends CPHPDatabaseRecordClass {
 	}
 	
 	public static function add_template($sLocalSSH, $uName, $uURL, $uType){
+		global $database;
 		if(filter_var($uURL, FILTER_VALIDATE_URL) === FALSE) {
 			return $sError = array("red" => "Invalid URL for the template to download");
 		} else {
