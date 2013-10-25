@@ -1,7 +1,7 @@
 <?php
 class openvz {
 
-	public function database_openvz_create($sUser, $sRequested){
+	public function database_openvz_create($sUser, $sRequested, $sAPI = 0){
 		$sUserPermissions = $sUser->sPermissions;
 		if($sUserPermissions == 7){
 			global $database;
