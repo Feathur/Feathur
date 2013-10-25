@@ -225,7 +225,7 @@ class kvm {
 				$sLog[] = array("command" => "virsh qemu-monitor-command kvm{$sVPS->sContainerId} --hmp change vnc :{$sVNCPort};virsh qemu-monitor-command kvm{$sVPS->sContainerId} --hmp change vnc password obfuscated;", "result" => $sSSH->exec("virsh qemu-monitor-command kvm{$sVPS->sContainerId} --hmp change vnc :{$sVNCPort};virsh qemu-monitor-command kvm{$sVPS->sContainerId} --hmp change vnc password {$sPassword};"));
 				$sSuccess = "VNC password set, you can now connect.";
 			} else {
-				$sChange = $this->kvm_config($sUser, $sVPS, $sRequested);
+				$sChange = $this->kvm_config($sUser, $sVPS, $sRequested, $sPassword);
 				$sSuccess = "Reboot your VPS, then you can connect to VNC.";
 			}
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
