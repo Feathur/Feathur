@@ -27,7 +27,7 @@ $sTemplateSync = $sTemplateSync->sValue;
 if($sTemplateSync < $sBefore){
 
 	$sLock = $sLocalSSH->exec("cat /var/feathur/data/template.lock;");
-	if(strpos($sLock, 'No such file or directory') === false) {
+	if(strpos($sLock, 'No such file or directory') !== false) {
 
 		// Issue template lock.
 		$sLock = $sLocalSSH->exec("cd /var/feathur/data;touch template.lock;");
