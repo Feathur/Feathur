@@ -276,7 +276,7 @@ if($sConverterType == 1){
 								$sServerConnect = $sServer->server_connect($sServer);
 								$sUpdate = $sServerConnect->exec($sCommandList);
 								
-								$sStatus = $sSSH->exec("vzctl status {$sVPS->sContainerId};");
+								$sStatus = $sServerConnect->exec("vzctl status {$sVPS->sContainerId};");
 								if(strpos($sStatus, 'running') !== false) {
 									echo "VPS Old: {$sValue["vserverid"]} now Feathurized: {$sVPS->sId}\n";
 								} else {

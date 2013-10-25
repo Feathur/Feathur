@@ -52,10 +52,10 @@ if($sUser->sPermissions == 7){
 		}
 		
 		// Get template info.
-		if($sTemplates = $database->CachedQuery("SELECT * FROM templates WHERE `name` = :Template", array(':Template' => $_POST['template']))){
+		if($sTemplates = $database->CachedQuery("SELECT * FROM templates WHERE `name` = :Template AND `type` = :Type", array(':Template' => $_POST['template'], ':Type' => $sServer->sType))){
 			$sRequested["POST"]["template"] = $sTemplates->data[0]["id"];
 		} else {
-			if($sTemplates = $database->CachedQuery("SELECT * FROM templates ORDER BY id ASC", array())){
+			if($sTemplates = $database->CachedQuery("SELECT * FROM templates WHERE `type` = :Type ORDER BY id ASC", array(':Type' => $sServer->sType))){
 				$sRequested["POST"]["template"] = $sTemplates->data[0]["id"];
 			} else {
 				echo json_encode(array("result" => "Unfortunatly no templates exist, vps creation failed!"));
