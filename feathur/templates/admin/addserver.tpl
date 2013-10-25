@@ -6,6 +6,7 @@
 				<div id="Status" style="padding:4px;padding-left:5px;width:95%;">{%?error[content]}</div>
 				<div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div>
 			</div>
+			<br><br>
 		{%/foreach}
 	{%/if}
 	<form name="input" action="admin.php?view=addserver&action=submitserver" method="post">

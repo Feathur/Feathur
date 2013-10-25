@@ -76,7 +76,7 @@ class Server extends CPHPDatabaseRecordClass {
 					if(!empty($uKey)){
 						if(!empty($uType)){
 							if(!empty($uLocation)){
-								if(($uType == 'kvm') && (!empty($uVolumeGroup))){
+								if(($uType != 'kvm') || (!empty($uVolumeGroup))){
 									$sSSH = new Net_SSH2($uHostname);
 									$sKey = new Crypt_RSA();
 									$sKey->loadKey($uKey);
