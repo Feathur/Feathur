@@ -312,7 +312,7 @@ class kvm {
 			$sVPSConfig .= "<graphics type='vnc' port='{$sVNCPort}' passwd='' listen='127.0.0.1'/>";
 		} else {
 			$sPassword = escapeshellarg($sPassword);
-			$sVPSConfig .= "<graphics type='vnc' port='{$sVNCPort}' passwd={$sPassword} listen='0.0.0.0'/>";
+			$sVPSConfig .= "<graphics type='vnc' port='{$sVPS->sVNCPort}' passwd={$sPassword} listen='0.0.0.0'/>";
 		}
 		$sVPSConfig .= "<input type='tablet'/><input type='mouse'/></devices><features><acpi/><apic/></features></domain>";
 		$sVPSConfig = escapeshellarg($sVPSConfig);
