@@ -13,4 +13,4 @@ if($sAction == submitserver){
 	}
 }
 
-$sContent = Templater::AdvancedParse($sAdminTemplate->sValue.'/addserver', $locale->strings, array());
+$sContent = Templater::AdvancedParse($sAdminTemplate->sValue.'/addserver', $locale->strings, array("Errors" => $sErrors));

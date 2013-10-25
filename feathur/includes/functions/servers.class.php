@@ -114,28 +114,28 @@ class Server extends CPHPDatabaseRecordClass {
 										$sServer->InsertIntoDatabase();
 										header("Location: admin.php");
 									} else {
-										return $sResult = array("red" => "Could not connect to the server");
+										return $sResult = array("content" => "Could not connect to the server", "type" => "error", "json" => "1");
 									}
 								} else {
-									return $sResult = array("red" => "KVM servers must have a volume group.");
+									return $sResult = array("content" => "KVM servers must have a volume group.", "type" => "error", "json" => "1");
 								}
 							} else {
-								return $sResult = array("red" => "You must enter a location for this server.");
+								return $sResult = array("content" => "You must enter a location for this server.", "type" => "error", "json" => "1");
 							}
 						} else {
-							return $sResult = array("red" => "You must select a server type.");
+							return $sResult = array("content" => "You must select a server type.", "type" => "error", "json" => "1");
 						}
 					} else {
-						return $sResult = array("red" => "You must enter a SSH key.");
+						return $sResult = array("content" => "You must enter a SSH key.", "type" => "error", "json" => "1");
 					}
 				} else {
-					return $sResult = array("red" => "You must enter a super user (Eg: root)");
+					return $sResult = array("content" => "You must enter a super user (Eg: root)", "type" => "error", "json" => "1");
 				}
 			} else {
-				return $sResult = array("red" => "You must enter an IP or Hostname");
+				return $sResult = array("content" => "You must enter an IP or Hostname", "type" => "error", "json" => "1");
 			}
 		} else {
-			return $sResult = array("red" => "You must give the server a name.");
+			return $sResult = array("content" => "You must give the server a name.", "type" => "error", "json" => "1");
 		}
 	}
 	

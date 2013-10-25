@@ -1,5 +1,13 @@
 <br><div align="center">First run the feathur installer, then fill out the form bellow.</div><br>
 <div align="center">
+	{%if isset|Errors == true}
+		{%foreach error in Errors}
+			<div style="z-index: 670;width:60%;height:25px;" class="albox small-{%?error[type]}">
+				<div id="Status" style="padding:4px;padding-left:5px;width:95%;">{%?error[result]}</div>
+				<div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div>
+			</div>
+		{%/foreach}
+	{%/if}
 	<form name="input" action="admin.php?view=addserver&action=submitserver" method="post">
 		<div class="simplebox grid740" style="text-align:left;">
 			<div class="titleh">

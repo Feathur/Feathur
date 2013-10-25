@@ -13,7 +13,6 @@ class openvz {
 			$uSWAP = $sRequested["POST"]["swap"];
 			$uDisk = $sRequested["POST"]["disk"];
 			$uInodes = $sRequested["POST"]["inodes"];
-			$uSWAP = $sRequested["POST"]["swap"];
 			$uNumProc = $sRequested["POST"]["numproc"];
 			$uNumIPTent = $sRequested["POST"]["numiptent"];
 			$uIPAddresses = $sRequested["POST"]["ipaddresses"];
@@ -102,6 +101,10 @@ class openvz {
 																	
 																	$sRequested["POST"]["VPS"] = $sVPS->sId;
 																	$sRequested["POST"]["IPList"] = $sIPList;
+																	
+																	if(!empty($sAPI)){
+																		return $sVPS->sId;
+																	}
 																	return true;
 																} else {
 																	return $sArray = array("json" => 1, "type" => "error", "result" => "Unable to connect to the node selected!");
