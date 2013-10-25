@@ -36,7 +36,7 @@ if($sTemplateSync < $sBefore){
 		if($sOpenVZ = $database->CachedQuery("SELECT * FROM servers WHERE `type` = 'openvz'", array())){
 			foreach($sOpenVZ->data as $sValue){
 				$sServer = new Server($sValue["id"]);
-				$sCommandList .= "rsync -avz -e \"ssh -o StrictHostKeyChecking=no -i /var/feathur/data/keys/{$sServer->sKey}\" /var/feathur/data/templates/openvz/* root@{$sServer->sIPAddress}:/vz/template/cache/;";
+				$sCommandList .= "echo \"{$sServer->sName} Starting...\n\";rsync -avz -e \"ssh -o StrictHostKeyChecking=no -i /var/feathur/data/keys/{$sServer->sKey}\" /var/feathur/data/templates/openvz/* root@{$sServer->sIPAddress}:/vz/template/cache/;";
 			}
 			echo "Issuing commands to sync OpenVZ templates.\n";
 		}
@@ -44,7 +44,7 @@ if($sTemplateSync < $sBefore){
 		if($sKVM = $database->CachedQuery("SELECT * FROM servers WHERE `type` = 'kvm'", array())){
 			foreach($sKVM->data as $sValue){
 				$sServer = new Server($sValue["id"]);
-				$sCommandList .= "rsync -avz -e \"ssh -o StrictHostKeyChecking=no -i /var/feathur/data/keys/{$sServer->sKey}\" /var/feathur/data/templates/kvm/* root@{$sServer->sIPAddress}:/var/feathur/data/templates/kvm/;";
+				$sCommandList .= "echo \"{$sServer->sName} Starting...\n\";rsync -avz -e \"ssh -o StrictHostKeyChecking=no -i /var/feathur/data/keys/{$sServer->sKey}\" /var/feathur/data/templates/kvm/* root@{$sServer->sIPAddress}:/var/feathur/data/templates/kvm/;";
 			}
 			echo "Issuing commands to sync KVM templates.\n";
 		}
