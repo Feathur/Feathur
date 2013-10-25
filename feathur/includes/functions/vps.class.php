@@ -165,7 +165,7 @@ class VPS extends CPHPDatabaseRecordClass {
 			} elseif($uType == 'kvm'){
 				$sList = ".iso";
 			}
-			$sName = preg_replace("/[^a-z0-9_-\s]+/i", "", $uName);
+			$sName = preg_replace("/[^a-z0-9._-\s]+/i", "", $uName);
 			$sPath = str_replace($sList, "", basename($uURL));
 			if($sExists = $database->CachedQuery("SELECT * FROM templates WHERE `path` LIKE :TemplatePath && `type` = :Type", array('TemplatePath' => "%".$sPath."%", 'Type' => $uType))){
 				$sPath .= random_string(6);
