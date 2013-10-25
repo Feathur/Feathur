@@ -213,13 +213,23 @@ class kvm {
 	
 	public function kvm_password($sUser, $sVPS, $sRequested){
 		if((!empty($sRequested["POST"]["password"])) && ((strlen($sRequested["POST"]["password"])) >= 5)){
-			$sPassword = escapeshellarg($sRequested["POST"]["password"]);
 			$sServer = new Server($sVPS->sServerId);
 			$sSSH = Server::server_connect($sServer);
-			$sVNCPort = ($sVPS->sVNCPort - 5900);
-			$sLog[] = array("command" => "virsh qemu-monitor-command kvm{$sVPS->sContainerId} --hmp change vnc :{$sVNCPort};virsh qemu-monitor-command kvm{$sVPS->sContainerId} --hmp change vnc password obfuscated;", "result" => $sSSH->exec("virsh qemu-monitor-command kvm{$sVPS->sContainerId} --hmp change vnc :{$sVNCPort};virsh qemu-monitor-command kvm{$sVPS->sContainerId} --hmp change vnc password {$sPassword};"));
+			// Check to see if virsh is at least version 1.0. Password setting is bugged on previous versions.
+			// Rather not save password to text file if we don't have to, but will if need be.
+			$sLog[] = array("command" => "virsh --version", "result" => $sSSH->exec("virsh --version"));
+			$sVersion = explode(".", $sLog[0]["result"]);
+			if($sVersion[0] == 1){
+				$sVNCPort = ($sVPS->sVNCPort - 5900);
+				$sPassword = escapeshellarg($sRequested["POST"]["password"]);
+				$sLog[] = array("command" => "virsh qemu-monitor-command kvm{$sVPS->sContainerId} --hmp change vnc :{$sVNCPort};virsh qemu-monitor-command kvm{$sVPS->sContainerId} --hmp change vnc password obfuscated;", "result" => $sSSH->exec("virsh qemu-monitor-command kvm{$sVPS->sContainerId} --hmp change vnc :{$sVNCPort};virsh qemu-monitor-command kvm{$sVPS->sContainerId} --hmp change vnc password {$sPassword};"));
+				$sSuccess = "VNC password set, you can now connect.";
+			} else {
+				$sChange = $this->kvm_config($sUser, $sVPS, $sRequested);
+				$sSuccess = "Reboot your VPS, then you can connect to VNC."
+			}
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
-			return $sArray = array("json" => 1, "type" => "success", "result" => "VNC password set, you can now connect!");
+			return $sArray = array("json" => 1, "type" => "success", "result" => $sSuccess);
 		} else {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Your password must be at least 5 characters!");
 		}
@@ -237,7 +247,7 @@ class kvm {
 		}
 	}
 	
-	public function kvm_mount($sUser, $sVPS, $sRequested){
+	public function kvm_mount($sUser, $sVPS, $sRequested, $sPassword = 0){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
 		$sTemplate = new Template($sVPS->sTemplateId);
@@ -297,7 +307,13 @@ class kvm {
 			}
 		}
 		
-		$sVPSConfig .= "<graphics type='vnc' port='{$sVPS->sVNCPort}' passwd='' listen='127.0.0.1'/>";
+		if(empty($sPassword)){
+			$sVNCPort = ($sVPS->sVNCPort - 5900);
+			$sVPSConfig .= "<graphics type='vnc' port='{$sVNCPort}' passwd='' listen='127.0.0.1'/>";
+		} else {
+			$sPassword = escapeshellarg($sPassword);
+			$sVPSConfig .= "<graphics type='vnc' port='{$sVNCPort}' passwd={$sPassword} listen='0.0.0.0'/>";
+		}
 		$sVPSConfig .= "<input type='tablet'/><input type='mouse'/></devices><features><acpi/><apic/></features></domain>";
 		$sVPSConfig = escapeshellarg($sVPSConfig);
 			
