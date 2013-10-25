@@ -33,8 +33,10 @@ if($sAction == updatetemplate){
 		$sUpdateTemplate = new Template($_GET['id']);
 		$sUpdateTemplate->uName = $_GET['name'];
 		$sUpdateTemplate->InsertIntoDatabase();
+		echo json_encode(array("result" => "Template name updated.", "type" => "success", "json" => "1"));
+		die();
 	} else {
-		echo json_encode(array("result" => "You must specify a name for the template!", "type" => "error", "json" => "1"));
+		echo json_encode(array("result" => "You must specify a name for the template.", "type" => "error", "json" => "1"));
 		die();
 	}
 }
