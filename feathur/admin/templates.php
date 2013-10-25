@@ -30,9 +30,9 @@ if($sAction == removetemplate){
 
 if($sAction == updatetemplate){
 	if((!empty($_GET['name'])) && (is_numeric($_GET['id']))){
-		$sTemplate = new Template($_GET['id']);
-		$sTemplate->uName = $_GET['name'];
-		$sTemplate->InsertIntoDatabase();
+		$sUpdateTemplate = new Template($_GET['id']);
+		$sUpdateTemplate->uName = $_GET['name'];
+		$sUpdateTemplate->InsertIntoDatabase();
 	} else {
 		echo json_encode(array("result" => "You must specify a name for the template!", "type" => "error", "json" => "1"));
 		die();
