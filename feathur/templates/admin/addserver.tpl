@@ -3,7 +3,7 @@
 	{%if isset|Errors == true}
 		{%foreach error in Errors}
 			<div style="z-index: 670;width:60%;height:25px;" class="albox small-{%?error[type]}">
-				<div id="Status" style="padding:4px;padding-left:5px;width:95%;">{%?error[result]}</div>
+				<div id="Status" style="padding:4px;padding-left:5px;width:95%;">{%?error[content]}</div>
 				<div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div>
 			</div>
 		{%/foreach}
