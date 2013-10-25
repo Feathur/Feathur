@@ -247,7 +247,7 @@ class kvm {
 		}
 	}
 	
-	public function kvm_mount($sUser, $sVPS, $sRequested, $sPassword = 0){
+	public function kvm_mount($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
 		$sTemplate = new Template($sVPS->sTemplateId);
@@ -256,7 +256,7 @@ class kvm {
 		return $sArray = array("json" => 1, "type" => "success", "result" => "{$sTemplate->sName} has been mounted!");
 	}
 	
-	public function kvm_config($sUser, $sVPS, $sRequested){
+	public function kvm_config($sUser, $sVPS, $sRequested, $sPassword = 0){
 		$sCheck = $this->kvm_check_suspended($sVPS);
 		if($sCheck == true){
 			echo json_encode(array("result" => "This VPS is Suspended!", "type" => "success", "json" => 1));
