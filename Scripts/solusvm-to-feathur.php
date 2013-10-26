@@ -5,7 +5,7 @@ $sEmail = "";
 $sPassword = "";
 
 // Default template id if OpenVZ. (Usually 1, but check database to be sure.)
-$sDefaultTemplate = "1";
+$sDefaultTemplate = "";
 
 // Converter Type allows for three types of conversions:
 // 1 = Convert a single node to Feathur. (Will create an account for each user and add their VPS to it.)
@@ -171,6 +171,7 @@ if($sConverterType == 1){
 								$sCreateDHCP = $sServerType->kvm_dhcp($sUser, $sVPS, $sRequested);
 								
 								echo "Shutting down VPS under SolusVM's control, renaming LV...\n";
+								$sServerConnect = $sServer->server_connect($sServer);
 								$sShutdown = $sServerConnect->exec("virsh destroy kvm{$sKVMData["xid"]};lvrename {$sServer->sVolumeGroup} kvm{$sKVMData["xid"]}_img kvm{$sVPS->sContainerId}_img;");
 								
 								echo "Starting up VPS under Feathur's control.\n";
