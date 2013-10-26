@@ -11,7 +11,9 @@
 				<div align="center">
 					<a href="https://safeornot.net/contact" target="_blank">Vlad from Safe Or Not (Security & Code Auditing)</a><br><br>
 					<a href="http://ubernerd.us/" target="_blank">Rallias (Systems Administration & Security)</a><br><br>
-					<a href="http://phpseclib.sourceforge.net/" target="_blank">phpseclib (PHP SSH Framework)</a>
+					<a href="http://phpseclib.sourceforge.net/" target="_blank">phpseclib (PHP SSH Framework)</a><br><br>
+					<a href="https://github.com/joepie91/cphp" target="_blank">joepie91 for cPHP Framework</a><br><br>
+					Patrick Nommensen (UI / Website / Support)
 				</div>
 				<br><br>
 				Feathur is released under the <a href="https://github.com/BlueVM/Feathur/blob/develop/License.v1.txt">Feathur License Version 1.0</a>.
