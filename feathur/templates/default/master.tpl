@@ -164,9 +164,9 @@
 									<li{%if Page == update} class="active"{%/if}><a href="admin.php?view=update"><img src="templates/default/img/icons/sidemenu/network.png" width="16" height="16" alt="icon"/>Update Settings</a></li>
 								</ul>
 				</li>
-				<li><a href="./phpmyadmin/"><img src="img/icons/sidemenu/pma.png" width="16" height="16" alt="icon"/>PHPMyAdmin</a></li>
+				<li><a href="./phpmyadmin/"><img src="templates/default/img/icons/sidemenu/pma.png" width="16" height="16" alt="icon"/>PHPMyAdmin</a></li>
 			{%/if}
-				<li><a href="about.php"><img src="img/icons/sidemenu/info.png" width="16" height="16" alt="icon"/>About Feathur</a></li>
+				<li><a href="about.php"><img src="templates/default/img/icons/sidemenu/info.png" width="16" height="16" alt="icon"/>About Feathur</a></li>
                 </ul>
             </div>
             <!-- end sidemenu -->
