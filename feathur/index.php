@@ -8,7 +8,7 @@ if(!empty($sUser)){
 	die();
 }
 
-if($sAction == login){
+if($sAction == 'login'){
 	$sErrors[] = User::login($_POST['email'], $_POST['password']);
 }
 
