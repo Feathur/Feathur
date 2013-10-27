@@ -183,8 +183,8 @@ class kvm {
 	public function kvm_boot($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
-		$sVNCPassword = $this->kvm_reset_password($sVPS, $_SESSION['vnc_password'], $_SESSION['vnc_vps']);
-		$sLog[] = array("command" => "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPassword}", "result" => $sSSH->exec("virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPassword}"));
+		$sVNCPasswordCommand = $this->kvm_reset_password($sVPS, $_SESSION['vnc_password'], $_SESSION['vnc_vps']);
+		$sLog[] = array("command" => "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}", "result" => $sSSH->exec("virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}"));
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
 		if(strpos($sLog[0]["result"], 'already exists') !== false) {
 			return $sArray = array("json" => 1, "type" => "caution", "result" => "VPS is already running!");
@@ -222,8 +222,8 @@ class kvm {
 	public function kvm_reboot($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
-		$sVNCPassword = $this->kvm_reset_password($sVPS, $_SESSION['vnc_password'], $_SESSION['vnc_vps']);
-		$sLog[] = array("command" => "virsh destroy kvm{$sVPS->sContainerId};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPassword}", "result" => $sSSH->exec("virsh destroy kvm{$sVPS->sContainerId};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPassword}"));
+		$sVNCPasswordCommand = $this->kvm_reset_password($sVPS, $_SESSION['vnc_password'], $_SESSION['vnc_vps']);
+		$sLog[] = array("command" => "virsh destroy kvm{$sVPS->sContainerId};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}", "result" => $sSSH->exec("virsh destroy kvm{$sVPS->sContainerId};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}"));
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
 		if(strpos($sLog[0]["result"], 'No such file') !== false) {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "VPS is disabled, contact support!");
