@@ -151,6 +151,31 @@ class kvm {
 		}
 	}
 	
+	public function kvm_reset_password($sVPS, $sSessionPassword, $sSessionVPS){
+		if(isset($sSessionPassword)){
+			if($sSessionVPS == $sVPS->sId){
+				$sServer = new Server($sVPS->sServerId);
+				$sSSH = Server::server_connect($sServer);
+				// Check to see if virsh is at least version 1.0. Password setting is bugged on previous versions.
+				// Rather not save password to text file if we don't have to, but will if need be.
+				$sLog[] = array("command" => "virsh --version", "result" => $sSSH->exec("virsh --version"));
+				$sVersion = explode(".", $sLog[0]["result"]);
+				if($sVersion[0] == 1){
+					$sVNCPort = ($sVPS->sVNCPort - 5900);
+					$sPassword = escapeshellarg($sSessionPassword);
+					return $sCommand = "virsh qemu-monitor-command kvm{$sVPS->sContainerId} --hmp change vnc :{$sVNCPort};virsh qemu-monitor-command kvm{$sVPS->sContainerId} --hmp change vnc password {$sPassword};";
+				} else {
+					$sChange = $this->kvm_config($sUser, $sVPS, $sRequested, $sSessionPassword);
+					return "";
+				}
+			} else {
+				return "";
+			}
+		} else {
+			return "";
+		}
+	}
+	
 	public function database_kvm_boot($sUser, $sVPS, $sRequested){
 		return true;
 	}
@@ -158,7 +183,8 @@ class kvm {
 	public function kvm_boot($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
-		$sLog[] = array("command" => "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;", "result" => $sSSH->exec("virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;"));
+		$sVNCPassword = $this->kvm_reset_password($sVPS, $_SESSION['vnc_password'], $_SESSION['vnc_vps']);
+		$sLog[] = array("command" => "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPassword}", "result" => $sSSH->exec("virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPassword}"));
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
 		if(strpos($sLog[0]["result"], 'already exists') !== false) {
 			return $sArray = array("json" => 1, "type" => "caution", "result" => "VPS is already running!");
@@ -196,7 +222,8 @@ class kvm {
 	public function kvm_reboot($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
-		$sLog[] = array("command" => "virsh destroy kvm{$sVPS->sContainerId};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;", "result" => $sSSH->exec("virsh destroy kvm{$sVPS->sContainerId};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;"));
+		$sVNCPassword = $this->kvm_reset_password($sVPS, $_SESSION['vnc_password'], $_SESSION['vnc_vps']);
+		$sLog[] = array("command" => "virsh destroy kvm{$sVPS->sContainerId};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPassword}", "result" => $sSSH->exec("virsh destroy kvm{$sVPS->sContainerId};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPassword}"));
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
 		if(strpos($sLog[0]["result"], 'No such file') !== false) {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "VPS is disabled, contact support!");
@@ -215,6 +242,8 @@ class kvm {
 		if((!empty($sRequested["POST"]["password"])) && ((strlen($sRequested["POST"]["password"])) >= 5)){
 			$sServer = new Server($sVPS->sServerId);
 			$sSSH = Server::server_connect($sServer);
+			$_SESSION["vnc_password"] = $sRequested["POST"]["password"];
+			$_SESSION["vnc_vps"] = $sVPS->sId;
 			// Check to see if virsh is at least version 1.0. Password setting is bugged on previous versions.
 			// Rather not save password to text file if we don't have to, but will if need be.
 			$sLog[] = array("command" => "virsh --version", "result" => $sSSH->exec("virsh --version"));
@@ -263,6 +292,7 @@ class kvm {
 			echo json_encode(array("result" => "This VPS is Suspended!", "type" => "success", "json" => 1));
 			die();
 		}
+		
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
 		$sIPList = VPS::list_ipspace($sVPS);
