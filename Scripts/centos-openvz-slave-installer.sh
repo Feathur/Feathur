@@ -5,7 +5,7 @@ wget http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
 sudo rpm -Uvh remi-release-6*.rpm epel-release-6*.rpm
 sed -i 's/SELINUX=.*/SELINUX=disabled/' /etc/sysconfig/selinux
 setenforce 0
-yum -y install php pigz screen vim vzkernel vzctl
+yum -y install php pigz screen vim vzkernel vzctl rsync
 echo "SELINUX=disabled" > /etc/sysconfig/selinux
 echo "SELINUXTYPE=targeted" >> /etc/sysconfig/selinux
 service httpd restart
