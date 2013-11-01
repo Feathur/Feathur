@@ -22,7 +22,7 @@ status "====================================="
 status "     Welcome to Feathur Installation"
 status "====================================="
 status " "
-status "Feathur KVM slave CentOS installation."
+status "Feathur KVM slave Ubuntu installation."
 status " "
 status "Feathur will install KVM along with"
 status "several other tools for VPS management."
@@ -37,7 +37,7 @@ sleep 10
 status "Feathur needs a bit of information before"
 status "beginning the installation."
 status " "
-status "What is the name of your trunk interface (Ex: p1p1):"
+status "What is the name of your trunk interface (Ex: eth0):"
 read trunkinterface
 status "What is the name of your volumegroup (Ex: volgroup00):"
 read volumegroup
