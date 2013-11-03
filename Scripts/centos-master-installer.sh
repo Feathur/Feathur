@@ -83,7 +83,7 @@ gpgcheck=0
 enabled=1' > /etc/yum.repos.d/nginx.repo
 
 yum -y install http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-yum -y install php-fpm nginx vim openssl php-mysql zip unzip pdns pdns-backend-mysql php-mcrypt php-WWW-Curl git
+yum -y install php-fpm nginx mysql-server vim openssl php-mysql zip unzip pdns pdns-backend-mysql php-mcrypt php-WWW-Curl git
 service nginx start
 chkconfig nginx on
 
