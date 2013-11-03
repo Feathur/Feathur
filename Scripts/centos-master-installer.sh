@@ -1,5 +1,7 @@
 #!/bin/bash
 
+exec 3>&1 > ~/feathur-install/install.log 2>&1
+
 function status {
 	echo $1;
 	echo $1 >&3
