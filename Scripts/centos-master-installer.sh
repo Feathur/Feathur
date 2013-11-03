@@ -5,37 +5,6 @@ function status {
 	echo $1 >&3
 }
 
-function install {
-	DEBIAN_FRONTEND=noninteractive apt-get -q -y install "$1"
-	apt-get clean
-}
-
-function remove {
-	/etc/init.d/"$1" stop
-	service "$1" stop
-	export DEBIAN_PRIORITY=critical
-	export DEBIAN_FRONTEND=noninteractive
-	apt-get -q -y remove "$1"
-	apt-get clean
-}
-
-function slaughter_httpd {
-	pkill apache
-	pkill apache2
-	yum remove -y purge ~i~napache
-	apt-get --purge -y autoremove apache*
-	apt-get remove apache2-utils
-	
-	kill -9 $( lsof -i:80 -t )
-	x=$(($x + 1));
-	
-	update-rc.d -f apache2 remove
-	update-rc.d -f apache remove
-	update-rc.d -f nginx remove
-	update-rc.d -f lighttpd remove
-	update-rc.d -f httpd remove
-}
-
 function check_installs {
 	if ! type -p $1 > /dev/null; then
 		status "Unfortunately $1 failed to install. Feathur install aborting."
@@ -99,7 +68,7 @@ status " "
 status "What email would you like to use for your administrative account?"
 read user_email
 
-yum remove httpd mysql* php* nginx lighttpd php-fpm vsftpd proftpd exim qmail postfix sendmail
+yum -y remove httpd mysql* php* nginx lighttpd php-fpm vsftpd proftpd exim qmail postfix sendmail
 
 mkdir ~/feathur-install/
 cd ~/feathur-install/
@@ -111,8 +80,8 @@ baseurl=http://nginx.org/packages/centos/6/$basearch/
 gpgcheck=0
 enabled=1' > /etc/yum.repos.d/nginx.repo
 
-yum install http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-yum install php-fpm nginx vim openssl php-mysql zip unzip pdns pdns-backend-mysql php-mcrypt php-WWW-Curl git
+yum -y install http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+yum -y install php-fpm nginx vim openssl php-mysql zip unzip pdns pdns-backend-mysql php-mcrypt php-WWW-Curl git
 service nginx start
 chkconfig nginx on
 
