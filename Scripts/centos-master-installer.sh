@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir ~/feathur-install/
 exec 3>&1 > ~/feathur-install/install.log 2>&1
 
 function status {
@@ -72,7 +73,6 @@ read user_email
 
 yum -y remove httpd mysql* php* nginx lighttpd php-fpm vsftpd proftpd exim qmail postfix sendmail
 
-mkdir ~/feathur-install/
 cd ~/feathur-install/
 touch ~/feathur-install/install.log
 exec 3>&1 > ~/feathur-install/install.log 2>&1
@@ -113,7 +113,7 @@ chmod -R 700 *
 
 mv /etc/my.cnf /etc/my.cnf.backup
 cp /var/feathur/feathur/includes/configs/my.cnf /etc/my.cnf
-/etc/init.d/mysql start
+/etc/init.d/mysqld start
 
 salt=$(< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-32};)
 mysqladmin -u root password $mysqlpassword
