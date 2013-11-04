@@ -147,7 +147,14 @@ apt-get update
 y=$(($y + 1));
 status "Installing necessary software:"
 
-DEBIAN_FRONTEND=noninteractive apt-get -q -y install nginx php5 vim openssl php5-mysql zip unzip sqlite3 php-mdb2-driver-mysql php5-sqlite php5-curl php-pear php5-dev acl libcurl4-openssl-dev php5-gd php5-imagick php5-imap php5-mcrypt php5-xmlrpc php5-xsl php5-fpm libpcre3-dev build-essential php-apc git-core pdns-server pdns-backend-mysql host mysql-server phpmyadmin rsync
+install="nginx php5 vim openssl php5-mysql zip unzip sqlite3 php-mdb2-driver-mysql php5-sqlite php5-curl php-pear php5-dev acl libcurl4-openssl-dev php5-gd php5-imagick php5-imap php5-mcrypt php5-xmlrpc php5-xsl php5-fpm libpcre3-dev build-essential php-apc git-core pdns-server pdns-backend-mysql host mysql-server phpmyadmin rsync"
+
+for program in $install
+do
+	install $program
+	y=$(($y + 1));
+	status "Cleanup Phase: $y of 33"
+done
 apt-get clean
 
 status "Necessary software installation complete."
