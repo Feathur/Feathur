@@ -1,6 +1,7 @@
 #!/bin/bash
 
 mkdir ~/feathur-install/
+touch ~/feathur-install/install.log
 exec 3>&1 > ~/feathur-install/install.log 2>&1
 
 function status {
@@ -43,6 +44,7 @@ function die {
 
 check_sanity
 
+
 status "====================================="
 status "     Welcome to Feathur Installation"
 status "====================================="
@@ -71,28 +73,56 @@ status " "
 status "What email would you like to use for your administrative account?"
 read user_email
 
-yum -y remove httpd mysql* php* nginx lighttpd php-fpm vsftpd proftpd exim qmail postfix sendmail
+status " "
+status "Removing excess programs..."
+service httpd stop
+yum -y remove httpd mysql* php* nginx lighttpd php-fpm vsftpd proftpd exim qmail postfix sendmail git pdns*
 
-cd ~/feathur-install/
-touch ~/feathur-install/install.log
-exec 3>&1 > ~/feathur-install/install.log 2>&1
+status "Installing essential programs..."
 echo '[nginx]
 name=nginx repo
 baseurl=http://nginx.org/packages/centos/6/$basearch/
 gpgcheck=0
 enabled=1' > /etc/yum.repos.d/nginx.repo
+status "Install: 1 of 3"
 
 yum -y install http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-yum -y install php-fpm nginx mysql-server vim openssl php-mysql zip unzip pdns pdns-backend-mysql php-mcrypt php-WWW-Curl git
-service nginx start
-chkconfig nginx on
+yum -y update
+yum -y install php php-fpm nginx mysql-server vim openssl php-mysql zip unzip pdns pdns-backend-mysql php-mcrypt rsync wget gcc make gcc-c++ zlib-devel perl-ExtUtils-Embed gettext curl-devel
+status "Install: 2 of 3"
+
+cd ~/feathur-install/
+wget http://git-core.googlecode.com/files/git-1.8.1.1.tar.gz
+tar -zxvf git-1.8.1.1.tar.gz
+cd git-1.8.1.1
+./configure
+make
+make install
+ln -s /root/git-1.8.1.1/git /usr/bin/
+status "Install: 3 of 3"
 
 service mysqld stop
 service php-fpm stop
+
+status " "
+status "Installing and configuring Feathur..."
+cd ~
+git clone -b develop https://github.com/BlueVM/Feathur.git /var/feathur
 mkdir -p /var/feathur/data/{templates/{openvz,kvm},keys}
 touch /var/feathur/data/log.txt
 mkdir /home/root/
-git clone -b develop https://github.com/BlueVM/Feathur.git /var/feathur
+status "Configuring: 1 of 4"
+
+cd ~/feathur-install/
+ssh-keygen -t rsa -N "" -f ~/feathur-install/id_rsa
+mkdir ~/.ssh/
+cat id_rsa.pub >> ~/.ssh/authorized_keys
+cp id_rsa /var/feathur/data/
+cd /var/feathur/
+useradd www-data
+chown -R nginx *
+chmod -R 700 *
+status "Configuring: 2 of 4"
 
 mysqlpassword=$(< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-32};)
 
@@ -103,31 +133,22 @@ sed -i 's/databasenamehere/panel/g' /var/feathur/data/config.json
 sed -i 's/randomlygeneratedsalthere/'${salt}'/g' /var/feathur/data/config.json
 sed -i 's/hostnameforinstallhere/'${user_host}'/g' /var/feathur/data/config.json
 
-ssh-keygen -t rsa -N "" -f ~/feathur-install/id_rsa
-mkdir ~/.ssh/
-cat id_rsa.pub >> ~/.ssh/authorized_keys
-cp id_rsa /var/feathur/data/
-cd /var/feathur/
-chown -R www-data *
-chmod -R 700 *
-
-mv /etc/my.cnf /etc/my.cnf.backup
-cp /var/feathur/feathur/includes/configs/my.cnf /etc/my.cnf
 /etc/init.d/mysqld start
-
 salt=$(< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-32};)
 mysqladmin -u root password $mysqlpassword
 
 while ! mysql -u root -p$mysqlpassword  -e ";" ; do
        echo "Unfortunately mysql failed to install correctly. Feathur installation aborting (Error #2)".
 done
-
 mysql -u root --password="$mysqlpassword" --execute="CREATE DATABASE IF NOT EXISTS panel;CREATE DATABASE IF NOT EXISTS dns;DROP DATABASE test;"
 sed -i 's/admin@company.com/'${user_email}'/g' /var/feathur/data.sql
 mysql -u root --password="$mysqlpassword" panel < /var/feathur/data.sql
 
+cd ~/feathur-install/
+status "Configuring: 3 of 4"
+
 mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.old
-cp /var/feathur/feathur/includes/config/php.conf /etc/php-fpm.d/www.conf
+cp /var/feathur/feathur/includes/configs/php.conf /etc/php-fpm.d/www.conf
 mv /etc/php.d/apc.ini /etc/php.d/apc.old
 cp /var/feathur/feathur/includes/configs/php.ini /etc/php.ini
 
@@ -138,7 +159,8 @@ openssl rsa -in feathur.key -out feathur.pem
 openssl req -new -key feathur.pem -subj "/C=US/ST=Oregon/L=Portland/O=IT/CN=www.feathur.com" -out feathur.csr
 openssl x509 -req -days 365 -in feathur.csr -signkey feathur.pem -out feathur.crt
 
-mv /var/feathur/includes/configs/nginx.feathur.conf /etc/nginx/conf.d/
+rm -rf /etc/nginx/conf.d/*
+cp /var/feathur/feathur/includes/configs/nginx.feathur.conf /etc/nginx/conf.d/
 
 mv /etc/powerdns/pdns.conf /etc/powerdns/pdns.old
 cp /var/feathur/feathur/includes/configs/pdns.conf /etc/powerdns/pdns.conf
@@ -148,10 +170,11 @@ sed -i 's/databaseusernamehere/root/g' /etc/powerdns/pdns.conf
 
 service nginx restart
 service pdns start
-service php5-fpm start
+service php-fpm start
 ipaddress=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | grep -v '127.0.0.2' | cut -d: -f2 | awk '{ print $1}');
 (crontab -l 2>/dev/null; echo "* * * * * php /var/feathur/feathur/cron.php") | crontab -
-
+status "Configuring: 4 of 4"
+status " "
 status "=========FEATHUR_INSTALL_COMPLETE========"
 status "Mysql Root Password: $mysqlpassword"
 status "You can now login at https://$ipaddress:2026"
