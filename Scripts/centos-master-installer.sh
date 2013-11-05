@@ -119,7 +119,6 @@ mkdir ~/.ssh/
 cat id_rsa.pub >> ~/.ssh/authorized_keys
 cp id_rsa /var/feathur/data/
 cd /var/feathur/
-useradd www-data
 chown -R nginx *
 chmod -R 700 *
 status "Configuring: 2 of 4"
@@ -160,7 +159,7 @@ openssl req -new -key feathur.pem -subj "/C=US/ST=Oregon/L=Portland/O=IT/CN=www.
 openssl x509 -req -days 365 -in feathur.csr -signkey feathur.pem -out feathur.crt
 
 rm -rf /etc/nginx/conf.d/*
-cp /var/feathur/feathur/includes/configs/nginx.feathur.conf /etc/nginx/conf.d/
+cp /var/feathur/feathur/includes/configs/nginx.feathur.centos.conf /etc/nginx/conf.d/
 
 mv /etc/powerdns/pdns.conf /etc/powerdns/pdns.old
 cp /var/feathur/feathur/includes/configs/pdns.conf /etc/powerdns/pdns.conf
