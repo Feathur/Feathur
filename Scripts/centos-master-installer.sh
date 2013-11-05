@@ -163,11 +163,11 @@ openssl x509 -req -days 365 -in feathur.csr -signkey feathur.pem -out feathur.cr
 rm -rf /etc/nginx/conf.d/*
 cp /var/feathur/feathur/includes/configs/nginx.feathur.centos.conf /etc/nginx/conf.d/
 
-mv /etc/powerdns/pdns.conf /etc/powerdns/pdns.old
-cp /var/feathur/feathur/includes/configs/pdns.conf /etc/powerdns/pdns.conf
-sed -i 's/databasenamehere/dns/g' /etc/powerdns/pdns.conf
-sed -i 's/databasepasswordhere/'${mysqlpassword}'/g' /etc/powerdns/pdns.conf
-sed -i 's/databaseusernamehere/root/g' /etc/powerdns/pdns.conf
+mv /etc/pdns/pdns.conf /etc/powerdns/pdns.old
+cp /var/feathur/feathur/includes/configs/pdns.conf /etc/pdns/pdns.conf
+sed -i 's/databasenamehere/dns/g' /etc/pdns/pdns.conf
+sed -i 's/databasepasswordhere/'${mysqlpassword}'/g' /etc/pdns/pdns.conf
+sed -i 's/databaseusernamehere/root/g' /etc/pdns/pdns.conf
 
 cd /var/feathur/
 chown -R nginx *
