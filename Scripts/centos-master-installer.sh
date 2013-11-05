@@ -173,7 +173,7 @@ cd /var/feathur/
 chown -R nginx *
 chmod -R 700 *
 
-yum --enablerepo=remi,remi-test install phpmyadmin
+yum -y --enablerepo=remi,remi-test install phpmyadmin
 ln -s /usr/share/phpMyAdmin /var/feathur/feathur/phpmyadmin
 chown -R nginx /usr/share/phpMyAdmin
 
@@ -184,7 +184,7 @@ sed -i 's/databasepasswordhere/'${mysqlpassword}'/g' /usr/share/phpMyAdmin/pma.p
 chown -R nginx /usr/share/phpMyAdmin
 chown -R nginx /etc/phpMyAdmin
 
-service nginx rerestart
+service nginx restart
 service pdns restart
 service php-fpm restart
 ipaddress=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | grep -v '127.0.0.2' | cut -d: -f2 | awk '{ print $1}');
