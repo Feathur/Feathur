@@ -13,48 +13,6 @@ set forth in the license provided.
 
 ---------------------------------------
 
-##### SETUP DIRECTIONS (FULL INSTALLER) - DEBIAN 6
-
-As a precaution I would like to take the
-time to make sure that if you have a copy
-of nginx, mysql, php or apache installed
-on your server please DO NOT install Feathur.
-Feathur's installer will overwrite any
-configuration you have, delete files and
-folders you may need and may destroy
-anything and everything on your server.
-
-*NOTICE:* This Feathur installer is designed to
-run on a VPS and is not designed to be installed
-ontop of an OpenVZ or KVM node. If you wish to
-install Feathur directly on the node itself
-please use a different installer.
-
-Installation requirements:
-* Debian 6 (32 or 64 bit)
-* Basic Linux Knowledge
-
-Run the following command on your server:
-
-	cd ~ && wget --no-check-certificate https://raw.github.com/BlueVM/Feathur/develop/Scripts/master-installer.sh && bash master-installer.sh
-
----------------------------------------
-
-##### SETUP DIRECTIONS (OPENVZ SLAVE INSTALLER) - CENTOS 6
-
-This installer is a bare-bones installer which
-creates Feathur OpenVZ slave servers.
-
-*NOTICE:* This Feathur installer is designed to run
-on a physical node. It is not recommended to install this
-ontop of a VPS or on top of an existing node.
-
-Installation requirements:
-* Centos 6 (32 or 64 bit)
-* Basic Linux Knowledge
-
-Run the following command on your server:
-
-	cd ~ && wget --no-check-certificate https://raw.github.com/BlueVM/Feathur/develop/Scripts/slave-installer.sh && bash slave-installer.sh
-	
----------------------------------------
+For setup directions and other information about
+Feathur. Check out our wiki at:
+https://github.com/BlueVM/Feathur/wiki/
