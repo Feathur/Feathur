@@ -292,7 +292,6 @@ status "Base Config: 8 / 11"
 rm -rf /etc/nginx/sites-enabled/* 
 mv /var/feathur/feathur/includes/configs/nginx.feathur.conf /etc/nginx/sites-enabled/nginx.feathur.conf 
 
-
 cd ~/feathur-install/
 status "Base Config: 9 / 11"
 

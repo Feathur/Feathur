@@ -88,7 +88,8 @@ status "Install: 1 of 3"
 
 yum -y install http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 yum -y update
-yum -y install php php-fpm nginx mysql-server vim openssl php-mysql zip unzip pdns pdns-backend-mysql php-mcrypt rsync wget gcc make gcc-c++ zlib-devel perl-ExtUtils-Embed gettext curl-devel
+yum -y install php php-fpm nginx mysql-server vim openssl php-mysql zip unzip pdns pdns-backend-mysql sendmail php-mcrypt rsync wget gcc make gcc-c++ zlib-devel perl-ExtUtils-Embed gettext curl-devel php-mbstring
+
 status "Install: 2 of 3"
 
 cd ~/feathur-install/
@@ -148,6 +149,7 @@ status "Configuring: 3 of 4"
 
 mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.old
 cp /var/feathur/feathur/includes/configs/php.conf /etc/php-fpm.d/www.conf
+sed -i 's/www-data/nginx/g' /etc/php-fpm.d/www.conf
 mv /etc/php.d/apc.ini /etc/php.d/apc.old
 cp /var/feathur/feathur/includes/configs/php.ini /etc/php.ini
 
@@ -167,12 +169,28 @@ sed -i 's/databasenamehere/dns/g' /etc/powerdns/pdns.conf
 sed -i 's/databasepasswordhere/'${mysqlpassword}'/g' /etc/powerdns/pdns.conf
 sed -i 's/databaseusernamehere/root/g' /etc/powerdns/pdns.conf
 
-service nginx restart
-service pdns start
-service php-fpm start
+cd /var/feathur/
+chown -R nginx *
+chmod -R 700 *
+
+yum --enablerepo=remi,remi-test install phpmyadmin
+ln -s /usr/share/phpMyAdmin /var/feathur/feathur/phpmyadmin
+chown -R nginx /usr/share/phpMyAdmin
+
+mv /etc/phpMyAdmin/config.inc.php /etc/phpMyAdmin/config.old.inc.php
+cp /var/feathur/feathur/includes/configs/pma.php /usr/share/phpMyAdmin/
+cp /var/feathur/feathur/includes/configs/pma.config.inc.php /etc/phpMyAdmin/config.inc.php
+sed -i 's/databasepasswordhere/'${mysqlpassword}'/g' /usr/share/phpMyAdmin/pma.php
+chown -R nginx /usr/share/phpMyAdmin
+chown -R nginx /etc/phpMyAdmin
+
+service nginx rerestart
+service pdns restart
+service php-fpm restart
 ipaddress=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | grep -v '127.0.0.2' | cut -d: -f2 | awk '{ print $1}');
 (crontab -l 2>/dev/null; echo "* * * * * php /var/feathur/feathur/cron.php") | crontab -
 status "Configuring: 4 of 4"
+
 status " "
 status "=========FEATHUR_INSTALL_COMPLETE========"
 status "Mysql Root Password: $mysqlpassword"
