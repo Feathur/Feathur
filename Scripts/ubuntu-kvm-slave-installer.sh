@@ -52,13 +52,12 @@ vgcreate $volumegroup $volumegroupbackingvolume
 
 mkdir -p /var/feathur/data
 
-cp /etc/network/interfaces /etc/network/interfaces.backup
 perl -0777 -i.original -pe "s/auto $trunkinterface\niface $trunkinterface inet static/auto $trunkinterface\niface $trunkinterface inet manual\n\nauto br0\niface br0 inet static\n\tbridge_ports $trunknterface/" /etc/network/interfaces
 service networking restart
 if [[ `ping -c 3 8.8.8.8 | wc -l` == 5 ]]
 then
 	rm /etc/network/interfaces
-	mv /etc/network/interfaces.backup /etc/network/interfaces
+	mv /etc/network/interfaces.original /etc/network/interfaces
 	service network restart
 	status "Error configuring network for bridge. Reverting."
 	exit 1;
