@@ -24,12 +24,16 @@ if($sAction == force){
 	if($sSSH->login("root", $sKey)) {
 		$sOldVersion = Core::GetSetting('current_version');
 		$sSSH->exec("cd /var/feathur/; git pull; cd /var/feathur/feathur/; php update.php; rm -rf update.php;");
+		$sVersion = $sSSH->exec("cat /var/feathur/version.txt");
 		$sLastUpdate = Core::UpdateSetting('last_update_check', time());
+		$sNewVersion = Core::UpdateSetting('current_version', $sVersion);
 		$sCurrentVersion = Core::GetSetting('current_version');
 		if($sCurrentVersion->sValue != $sOldVersion->sValue){
 			$sErrors[] = array("result" => "Force update completed.", "type" => "success");
+		} elseif($sCurrentVersion->sValue == $sOldVersion->sValue) {
+			$sErrors[] = array("result" => "Force update failed, no updates available.", "type" => "error");
 		} else {
-			$sErrors[] = array("result" => "Force update completed!", "type" => "error");
+			$sErrors[] = array("result" => "Force update failed, unknown error.", "type" => "error");
 		}
 	}
 	$sJson = 1;

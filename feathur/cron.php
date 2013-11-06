@@ -145,6 +145,33 @@ if(strpos($sLock, 'No such file or directory') !== false) {
 	echo "Another bandwidth cron is currently running, skipping bandwidth calculations.\n";
 }
 
+// License
+// Please don't remove or edit this code, a lot of work went into Feathur.
+// Thank us for our work by leaving this code here or by paying for a license.
+// While I realize this won't stop anyone who really wants to disable the "alert" system, it might prevent someone who knows nothing about PHP.
+echo "License update...";
+eval(base64_decode("JHNIb3N0ID0gQ29yZTo6R2V0U2V0dGluZygncGFuZWxfdXJsJyk7DQokc1VSTCA9ICJodHRwOi8vY2hlY2suZmVhdGh1ci5jb20vYXBpLnBocD9ob3N0PXskc0hvc3QtPnNWYWx1ZX0iOw0KJHNDdXJsID0gY3VybF9pbml0KCk7DQpjdXJsX3NldG9wdCgkc0N1cmwsIENVUkxPUFRfVVJMLCAkc1VSTCk7DQpjdXJsX3NldG9wdCgkc0N1cmwsIENVUkxPUFRfUkVUVVJOVFJBTlNGRVIsIDEpOw0KJHNMaWNlbnNlID0ganNvbl9kZWNvZGUoY3VybF9leGVjKCRzQ3VybCkpOw0KY3VybF9jbG9zZSgkc0N1cmwpOw0KaWYoJHNMaWNlbnNlWyJ0eXBlIl0gPT0gJ3N1Y2Nlc3MnKXsNCgkkc1VwZGF0ZUxpY2Vuc2UgPSBDb3JlOjpVcGRhdGVTZXR0aW5nKCdsaWNlbnNlJywgIjEiKTsNCn0gZWxzZSB7DQoJJHNVcGRhdGVMaWNlbnNlID0gQ29yZTo6VXBkYXRlU2V0dGluZygnbGljZW5zZScsICIwIik7DQp9"));
+
+echo "Checking for updates if available...";
+$sAutomaticUpdates = Core::GetSetting('automatic_updates');
+$sAutomaticUpdates = $sAutomaticUpdates->sValue;
+$sLastUpdateCheck = Core::GetSetting('last_update_check');
+$sLastUpdateCheck = $sLastUpdateCheck->sValue;
+$sTimeAgo = time - (15 * 60);
+if($sLastUpdateCheck < $sTimeAgo){
+	if($sAutomaticUpdates == 1){
+		$sSSH = new Net_SSH2('127.0.0.1');
+		$sKey = new Crypt_RSA();
+		$sKey->loadKey(file_get_contents($cphp_config->settings->rootkey));
+		if($sSSH->login("root", $sKey)) {
+			$sSSH->exec("cd /var/feathur/; git pull; cd /var/feathur/feathur/; php update.php; rm -rf update.php;");
+			$sVersion = $sSSH->exec("cat /var/feathur/version.txt");
+			$sLastUpdate = Core::UpdateSetting('last_update_check', time());
+			$sNewVersion = Core::UpdateSetting('current_version', $sVersion);
+		}
+	}
+}
+
 // Release cron locks.
 $sLock = $sLocalSSH->exec("rm -rf /var/feathur/data/bandwidth.lock");
 
