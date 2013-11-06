@@ -37,7 +37,9 @@ sleep 10
 status "Feathur needs a bit of information before"
 status "beginning the installation."
 status " "
-status "What is the name of your trunk interface (Ex: eth0):"
+status "What is the name of your trunk interface?"
+possibleOptions=$(for i in `ifconfig -a | grep Link | grep -v inet 6 | grep Ethernet | awk '{print $1}'`; do echo -n $i; done)
+status "Possible options: $possibleOptions";
 read trunkinterface
 status "What is the name of your volumegroup (Ex: volgroup00):"
 read volumegroup
@@ -52,13 +54,13 @@ vgcreate $volumegroup $volumegroupbackingvolume
 
 mkdir -p /var/feathur/data
 
-perl -0777 -i.original -pe "s/auto $trunkinterface\niface $trunkinterface inet static/auto $trunkinterface\niface $trunkinterface inet manual\n\nauto br0\niface br0 inet static\n\tbridge_ports $trunknterface/" /etc/network/interfaces
+perl -0777 -i.original -pe "s/auto $trunkinterface\niface $trunkinterface inet static/auto $trunkinterface\niface $trunkinterface inet manual\n\nauto br0\niface br0 inet static\n\tbridge_ports $trunkinterface/" /etc/network/interfaces
 service networking restart
 if [[ `ping -c 3 8.8.8.8 | wc -l` == 5 ]]
 then
 	rm /etc/network/interfaces
 	mv /etc/network/interfaces.original /etc/network/interfaces
-	service network restart
+	service networking restart
 	status "Error configuring network for bridge. Reverting."
 	exit 1;
 fi
