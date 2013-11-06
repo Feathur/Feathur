@@ -61,7 +61,7 @@ service network restart
 if [[ `ping -c 3 8.8.8.8 | wc -l` == 5 ]]
 then
 	rm -Rf /etc/sysconfig/network-scripts/
-	mv /etc/sysconfig/network-scripts/interfaces.backup /etc/sysconfig/network-scripts
+	mv /etc/sysconfig/network-scripts.backup /etc/sysconfig/network-scripts
 	service network restart
 	echo "Error configuring network for bridge. Reverting."
 fi
