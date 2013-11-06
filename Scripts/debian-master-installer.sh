@@ -144,7 +144,6 @@ status "Beginning installation phase 1 of 2"
 echo "deb http://dotdeb.feathur.com/dotdeb stable all" >> /etc/apt/sources.list
 wget -qO - http://dotdeb.feathur.com/dotdeb/dotdeb.gpg | apt-key add -
 apt-get update
-y=$(($y + 1));
 status "Installing necessary software:"
 
 install="nginx php5 vim openssl php5-mysql zip unzip sqlite3 php-mdb2-driver-mysql php5-sqlite php5-curl php-pear php5-dev acl libcurl4-openssl-dev php5-gd php5-imagick php5-imap php5-mcrypt php5-xmlrpc php5-xsl php5-fpm libpcre3-dev build-essential php-apc git-core pdns-server pdns-backend-mysql host mysql-server phpmyadmin rsync sendmail"
@@ -153,7 +152,7 @@ for program in $install
 do
 	install $program
 	y=$(($y + 1));
-	status "Cleanup Phase: $y of 34"
+	status "Install Phase: $y of 34"
 done
 apt-get clean
 
@@ -303,7 +302,8 @@ mv /etc/phpmyadmin/config.inc.php /etc/phpmyadmin/config.old.inc.php
 cp /var/feathur/feathur/includes/configs/pma.php /usr/share/phpmyadmin/
 cp /var/feathur/feathur/includes/configs/pma.config.inc.php /etc/phpmyadmin/config.inc.php
 sed -i 's/databasepasswordhere/'${mysqlpassword}'/g' /usr/share/phpmyadmin/pma.php
-
+chown -R www-data /etc/phpmyadmin
+chown -R www-data /usr/share/phpmyadmin
 cd ~/feathur-install/
 status "Base Config: 10 / 11"
 
