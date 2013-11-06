@@ -53,7 +53,7 @@ vgcreate $volumegroup $volumegroupbackingvolume
 mkdir -p /var/feathur/data
 
 cp /etc/network/interfaces /etc/network/interfaces.backup
-perl -0777 -i.original -pe "s/auto $trunkinterface\niface $trunkinterface inet static/auto $trunkinterface\niface $trunkinterface inet manual\n\nauto br0\niface br0 inet static\nbridge_ports $trunkInterface" /etc/network/interfaces
+perl -0777 -i.original -pe "s/auto $trunkinterface\niface $trunkinterface inet static/auto $trunkinterface\niface $trunkinterface inet manual\n\nauto br0\niface br0 inet static\nbridge_ports $trunkInterface/" /etc/network/interfaces
 service networking restart
 if [[ `ping -c 3 8.8.8.8 | wc -l` == 5 ]]
 then
