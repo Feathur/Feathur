@@ -176,6 +176,14 @@
 
         <!-- START PAGE -->
         <div id="page" style="margin:0;">
+			{%if isset|License == true}
+				{%if isempty|License == true}
+					{%if UserPermissions == 7}
+						<div align="center"><a href="http://feathur.com" target="_blank">This copy of Feathur is unlicensed. Consider purchasing a license.</a></div>
+						<br><br>
+					{%/if}
+				{%/if}
+			{%/if}
 		{%?Content}
 	</div>
 		

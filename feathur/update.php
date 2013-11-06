@@ -36,6 +36,10 @@ if(!$sBandwidthAccounting = $database->CachedQuery("SELECT * FROM settings WHERE
 	$sAdd = $database->prepare("INSERT INTO `settings` (`setting_name`, `setting_value`, `setting_group`) VALUES ('bandwidth_accounting', 'both', 'site_settings')");
 	$sAdd->execute();
 }
+if(!$sLicense = $database->CachedQuery("SELECT * FROM settings WHERE `setting_name` = 'license'", array())){
+	$sAdd = $database->prepare("INSERT INTO `settings` (`setting_name`, `setting_value`, `setting_group`) VALUES ('license', '0', 'site_settings')");
+	$sAdd->execute();
+}
 
 $sAdd = $database->prepare("ALTER TABLE `vps` ADD `virtio_network` INT(2)");
 $sAdd->execute();

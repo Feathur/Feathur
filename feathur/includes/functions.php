@@ -88,3 +88,24 @@ function generate_mac(){
 function SortPrimaryIP($a, $b) {
 	return strcmp($b['primary'], $a['primary']);
 }
+
+function check_updates(){
+	$sCurrentVersion = Core::GetSetting('current_version');
+	$sCurrentVersionClean = preg_replace('/[.]/', '', $sCurrentVersion->sValue);
+	$sURL = "https://raw.github.com/BlueVM/Feathur/develop/version.txt";
+	$sCurl = curl_init();
+	curl_setopt($sCurl, CURLOPT_URL, $sURL);
+	curl_setopt($sCurl, CURLOPT_RETURNTRANSFER, 1);
+	$sVersion = curl_exec($sCurl);
+	$sVersionCompare = preg_replace('/[.]/', '', $sVersion);
+	curl_close($sCurl);
+	if(ctype_digit($sVersionCompare)){
+		if($sVersionCompare > $sCurrentVersionClean){
+			return array("your_version" => $sCurrentVersion->sValue, "current_version" => $sVersion, "update" => "0");
+		} else {
+			return array("your_version" => $sCurrentVersion->sValue, "current_version" => $sVersion, "update" => "1");
+		}
+	} else {
+		return array("your_version" => $sCurrentVersion->sValue, "current_version" => "Github Down", "update" => "0");
+	}
+}
