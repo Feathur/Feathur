@@ -46,7 +46,7 @@ read volumegroupbackingvolume
 status " "
 status "Beginning installation..."
 ## ACTION ##
-apt-get -y install bridge-utils isc-dhcp-server libvirt-bin libvirt0 qemu-kvm vnstat lvm2 rsync perl
+apt-get -y install bridge-utils isc-dhcp-server libvirt-bin libvirt0 qemu-kvm vnstat lvm2 rsync perl apache2 php5-common libapache2-mod-php5 php5-cli
 
 vgcreate $volumegroup $volumegroupbackingvolume
 
@@ -64,6 +64,8 @@ then
 	exit 1;
 fi
 
+cd /var/www/html/
+wget https://raw.github.com/BlueVM/Feathur/develop/Scripts/uptime.php
 cd /
 cd ~
 mkdir ~/.ssh/
