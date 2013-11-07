@@ -84,23 +84,13 @@ name=nginx repo
 baseurl=http://nginx.org/packages/centos/6/$basearch/
 gpgcheck=0
 enabled=1' > /etc/yum.repos.d/nginx.repo
-status "Install: 1 of 3"
+status "Install: 1 of 2"
 
 yum -y install http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 yum -y update
-yum -y install php php-fpm nginx mysql-server vim openssl php-mysql zip unzip pdns pdns-backend-mysql sendmail php-mcrypt rsync wget gcc make gcc-c++ zlib-devel perl-ExtUtils-Embed gettext curl-devel php-mbstring
+yum -y install php php-fpm nginx mysql-server vim openssl php-mysql zip unzip pdns pdns-backend-mysql sendmail php-mcrypt rsync wget gcc make gcc-c++ zlib-devel perl-ExtUtils-Embed gettext curl-devel php-mbstring git
 
-status "Install: 2 of 3"
-
-cd ~/feathur-install/
-wget http://git-core.googlecode.com/files/git-1.8.1.1.tar.gz
-tar -zxvf git-1.8.1.1.tar.gz
-cd git-1.8.1.1
-./configure
-make
-make install
-ln -s /root/git-1.8.1.1/git /usr/bin/
-status "Install: 3 of 3"
+status "Install: 2 of 2"
 
 service mysqld stop
 service php-fpm stop
@@ -173,7 +163,7 @@ cd /var/feathur/
 chown -R nginx *
 chmod -R 700 *
 
-yum -y --enablerepo=remi,remi-test install phpmyadmin
+yum -y install phpmyadmin
 ln -s /usr/share/phpMyAdmin /var/feathur/feathur/phpmyadmin
 chown -R nginx /usr/share/phpMyAdmin
 
@@ -187,7 +177,7 @@ chown -R nginx /etc/phpMyAdmin
 service nginx restart
 service pdns restart
 service php-fpm restart
-ipaddress=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | grep -v '127.0.0.2' | cut -d: -f2 | awk '{ print $1}');
+ipaddress=$(ifconfig  | grep 'inet addr:'| egrep -v '(127.0.0.1|127.0.0.2)' | cut -d: -f2 | awk '{print $1}');
 (crontab -l 2>/dev/null; echo "* * * * * php /var/feathur/feathur/cron.php") | crontab -
 status "Configuring: 4 of 4"
 
