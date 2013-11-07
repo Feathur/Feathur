@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS `servers` (
   `container_bandwidth` int(2) NOT NULL,
   `bandwidth_timestamp` int(32) NOT NULL,
   `volume_group` varchar(65) NOT NULL,
+  `qemu_path` varchar(65) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
@@ -203,6 +204,8 @@ CREATE TABLE IF NOT EXISTS `vps` (
   `mac` varchar(65) NOT NULL,
   `vnc_port` int(16) NOT NULL,
   `boot_order` varchar(65) NOT NULL,
+  `virtio_network` int(2) NOT NULL,
+  `virtio_disk` int(2) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=90 ;
 
