@@ -329,7 +329,7 @@ aptitude -y purge ~i~napache
 /etc/init.d/nginx start
 /etc/init.d/pdns start
 /etc/init.d/php5-fpm start
-ipaddress=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | grep -v '127.0.0.2' | cut -d: -f2 | awk '{ print $1}');
+ipaddress=$(ifconfig  | grep 'inet addr:'| egrep -v '(127.0.0.1|127.0.0.2)' | cut -d: -f2 | awk '{print $1}');
 (crontab -l 2>/dev/null; echo "* * * * * php /var/feathur/feathur/cron.php") | crontab -
 
 status "=========FEATHUR_INSTALL_COMPLETE========"
