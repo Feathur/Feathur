@@ -37,7 +37,9 @@ sleep 10
 status "Feathur needs a bit of information before"
 status "beginning the installation."
 status " "
-status "What is the name of your trunk interface (Ex: eth0):"
+status "What is the name of your trunk interface?"
+possibleOptions=$(for i in $(ifconfig -a | grep Link | grep -v inet 6 | grep Ethernet | awk '{print $1}'); do echo -n $i; done)
+status "Possible options: $possibleOptions";
 read trunkinterface
 status "What is the name of your volumegroup (Ex: volgroup00):"
 read volumegroup
@@ -46,21 +48,21 @@ read volumegroupbackingvolume
 status " "
 status "Beginning installation..."
 ## ACTION ##
-yum -y install bridge-utils dhcp libvirt qemu-kvm vnstat lvm2 httpd php rsync screen
+yum -y install bridge-utils dhcp libvirt qemu-kvm vnstat lvm2 httpd php rsync screen wget nano
 
 vgcreate $volumegroup $volumegroupbackingvolume
 
 mkdir -p /var/feathur/data
 
 cp -R /etc/sysconfig/network-scripts /etc/sysconfig/network-scripts.backup
-$trunkconfig=`cat /etc/sysconfig/network-scripts/ifcfg-$trunkinterface | grep -v NM_CONTROLLED | grep -v IPADDR | grep -v GATEWAY | grep -v NETMASK | grep -v BROADCAST | grep -v BOOTPROTO; echo 'BRIDGE="br0"'`
-$bridgeconfig = `cat /etc/sysconfig/network-scripts/ifcfg-$trunkinterface | grep -v NM_CONTROLLED | grep -v DEVICE | grep -v TYPE; echo 'INTERFACE="br0"'; echo 'TYPE="Bridge"'`
+trunkconfig=$(egrep -v "(NM_CONTROLLED|IPADDR|GATEWAY|NETMASK|BROADCAST|BOOTPROTO)" /etc/sysconfig/network-scripts/ifcfg-$trunkinterface; echo 'BRIDGE="br0"')
+bridgeconfig=$(egrep -v "(NM_CONTROLLED|DEVICE|TYPE)" /etc/sysconfig/network-scripts/ifcfg-$trunkinterface; echo 'INTERFACE="br0"'; echo 'TYPE="Bridge"')
 echo "$trunkconfig" > /etc/sysconfig/network-scripts/ifcfg-$trunkinterface
 echo "$bridgeconfig" > /etc/sysconfig/network-scripts/ifcfg-br0
 service network restart
-if [[ `ping -c 3 8.8.8.8 | wc -l` != 5 ]]
+if [[ $(ping -c 3 8.8.8.8 | wc -l) != 5 ]]
 then
-	rm -Rf /etc/sysconfig/network-scripts/
+	/bin/rm -Rf /etc/sysconfig/network-scripts/
 	mv /etc/sysconfig/network-scripts.backup /etc/sysconfig/network-scripts
 	service network restart
 	echo "Error configuring network for bridge. Reverting."
@@ -74,7 +76,7 @@ mkdir ~/.ssh/
 ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
 cd ~/.ssh/
 cat id_rsa.pub >> ~/.ssh/authorized_keys
-key=`cat id_rsa`
+key=$(cat id_rsa)
 status "Feathur SSH Key:"
 status " "
 status "$key"
