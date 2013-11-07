@@ -6,7 +6,7 @@ if($_SESSION['permissions'] == 7){
 	$_SESSION['PMA_single_signon_password'] = 'databasepasswordhere';
 	$_SESSION['PMA_single_signon_user'] = "root";
 } else {
-	die("Not a privledged user!");
+	die("Not a privileged user!");
 }
 $_SESSION['PMA_single_signon_host'] = 'localhost';
 session_write_close();
