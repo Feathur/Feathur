@@ -25,7 +25,7 @@ class User extends CPHPDatabaseRecordClass {
 		global  $database;
 		$sUserIP = $_SERVER['REMOTE_ADDR'];
 		$sTimeAgo = (time() - 600);
-		if($sCheckAttempts = $database->CachedQuery("SELECT * FROM attempts WHERE `ip_address` = :UserIP AND timestamp < :TimeAgo AND type = :Type", array('UserIP' => $sUserIP, 'TimeAgo' => $sTimeAgo, 'Type' => $sType))){
+		if($sCheckAttempts = $database->CachedQuery("SELECT * FROM attempts WHERE `ip_address` = :UserIP AND timestamp > :TimeAgo AND type = :Type", array('UserIP' => $sUserIP, 'TimeAgo' => $sTimeAgo, 'Type' => $sType))){
 			$sAttempts = count($sCheckAttempts);
 			if($sAttempts > 3){
 				return $sError = array("content" => "You've made too many failed {$sType} requests in the last 10 minutes.");
