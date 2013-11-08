@@ -48,11 +48,11 @@ class User extends CPHPDatabaseRecordClass {
 	
 	public static function login($uEmail, $uPassword, $sAPI = 0){
 		global $database;
-		$sAttempt = $this->check_attempts("login");
+		$sAttempt = User::check_attempts("login");
 		if(is_array($sAttempt)){
 			return $sAttempt;
 		}
-		$sAttempt = $this->add_attempt("login");
+		$sAttempt = User::add_attempt("login");
 		if((!empty($uEmail)) && (!empty($uPassword))){
 			$sGetSalt = $database->CachedQuery("SELECT * FROM accounts WHERE `email_address` = :EmailAddress", array('EmailAddress' => $uEmail));
 			$uPassword = User::hash_password($uPassword, $sGetSalt->data[0]["salt"]);
@@ -136,11 +136,11 @@ class User extends CPHPDatabaseRecordClass {
 	
 	public static function forgot($uEmail){
 		global $database;
-		$sAttempt = $this->check_attempts("forgot password");
+		$sAttempt = User::check_attempts("forgot password");
 		if(is_array($sAttempt)){
 			return $sAttempt;
 		}
-		$sAttempt = $this->add_attempt("forgot password");
+		$sAttempt = User::add_attempt("forgot password");
 		if($sResult = $database->CachedQuery("SELECT * FROM accounts WHERE `email_address` = :EmailAddress", array('EmailAddress' => $uEmail))){
 			$sForgotCode = random_string(120);
 			$sUser = new User($sResult->data[0]["id"]);
