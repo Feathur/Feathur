@@ -55,11 +55,14 @@ class User extends CPHPDatabaseRecordClass {
 	
 	public static function login($uEmail, $uPassword, $sAPI = 0){
 		global $database;
-		$sAttempt = User::check_attempts("login");
-		if(is_array($sAttempt)){
-			return $sAttempt;
+		if(empty($sAPI)){
+			$sAttempt = User::check_attempts("login");
+			if(is_array($sAttempt)){
+				return $sAttempt;
+			}
+			$sAttempt = User::add_attempt("login");
 		}
-		$sAttempt = User::add_attempt("login");
+		
 		if((!empty($uEmail)) && (!empty($uPassword))){
 			$sGetSalt = $database->CachedQuery("SELECT * FROM accounts WHERE `email_address` = :EmailAddress", array('EmailAddress' => $uEmail));
 			$uPassword = User::hash_password($uPassword, $sGetSalt->data[0]["salt"]);
