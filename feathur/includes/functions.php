@@ -18,6 +18,7 @@ include('./includes/functions/history.class.php');
 include('./includes/functions/statistics.class.php');
 include('./includes/functions/rdns.class.php');
 include('./includes/functions/transfer.class.php');
+include('./includes/functions/attempts.class.php');
 
 function ConvertTime($ss) {
 	$sSeconds = $ss%60;

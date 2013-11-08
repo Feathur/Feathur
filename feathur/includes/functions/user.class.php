@@ -21,8 +21,38 @@ class User extends CPHPDatabaseRecordClass {
 		),
 	);
 	
+	public static function check_attempts($sType){
+		global  $database;
+		$sUserIP = $_SERVER['REMOTE_ADDR'];
+		$sTimeAgo = (time() - 600);
+		if($sCheckAttempts = $database->CachedQuery("SELECT * FROM attempts WHERE `ip_address` = :UserIP AND timestamp < :TimeAgo AND type = :Type", array('UserIP' => $sUserIP, 'TimeAgo' => $sTimeAgo, 'Type' => $sType))){
+			$sAttempts = count($sCheckAttempts);
+			if($sAttempts > 3){
+				return $sError = array("content" => "You've made too many failed {$sType} requests in the last 10 minutes.");
+			}
+		}
+		return true;
+	}
+	
+	public static function add_attempt($sType){
+		global $database;
+		$sUserIP = $_SERVER['REMOTE_ADDR'];
+		$sTime = time();
+		$sAttempt = new Attempt(0);
+		$sAttempt->uType = $sType;
+		$sAttempt->uIPAddress = $sUserIP;
+		$sAttempt->uTimestamp = $sTime;
+		$sAttempt->InsertIntoDatabase();
+		return true;
+	}
+	
 	public static function login($uEmail, $uPassword, $sAPI = 0){
 		global $database;
+		$sAttempt = $this->check_attempts("login");
+		if(is_array($sAttempt)){
+			return $sAttempt;
+		}
+		$sAttempt = $this->add_attempt("login");
 		if((!empty($uEmail)) && (!empty($uPassword))){
 			$sGetSalt = $database->CachedQuery("SELECT * FROM accounts WHERE `email_address` = :EmailAddress", array('EmailAddress' => $uEmail));
 			$uPassword = User::hash_password($uPassword, $sGetSalt->data[0]["salt"]);
@@ -106,6 +136,11 @@ class User extends CPHPDatabaseRecordClass {
 	
 	public static function forgot($uEmail){
 		global $database;
+		$sAttempt = $this->check_attempts("forgot password");
+		if(is_array($sAttempt)){
+			return $sAttempt;
+		}
+		$sAttempt = $this->add_attempt("forgot password");
 		if($sResult = $database->CachedQuery("SELECT * FROM accounts WHERE `email_address` = :EmailAddress", array('EmailAddress' => $uEmail))){
 			$sForgotCode = random_string(120);
 			$sUser = new User($sResult->data[0]["id"]);
@@ -113,9 +148,7 @@ class User extends CPHPDatabaseRecordClass {
 			$sUser->InsertIntoDatabase();
 			$sVariable = array("email" => urlencode($sUser->sEmailAddress), "forgot_code" => urlencode($sForgotCode));
 			$sSend = Core::SendEmail($sUser->sEmailAddress, "Feathur Forgot Password", "forgot", $sVariable);
-			return $sResult = array("content" => "Please check your email for a reset link!", "type" => "succesbox");
-		} else {
-			return $sResult = array("content" => "User with that email not found!", "type" => "errorbox");
 		}
+		return $sResult = array("content" => "Check your email for an activation link.", "type" => "succesbox");
 	}
 }

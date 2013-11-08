@@ -218,6 +218,13 @@ CREATE TABLE IF NOT EXISTS `vps_logs` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=356 ;
 
+CREATE TABLE IF NOT EXISTS `attempts` (
+`id` INT( 16 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`ip_address` VARCHAR( 65 ) NOT NULL ,
+`timestamp` INT( 16 ) NOT NULL ,
+`type` VARCHAR( 65 ) NOT NULL
+) ENGINE = MYISAM ;
+
 USE dns;
 
 create table domains (
