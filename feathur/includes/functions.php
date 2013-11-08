@@ -98,13 +98,9 @@ function check_updates(){
 	curl_setopt($sCurl, CURLOPT_RETURNTRANSFER, 1);
 	$sVersion = preg_replace('/\s+/', '', curl_exec($sCurl));
 	curl_close($sCurl);
-	if(ctype_digit($sVersionCompare)){
-		if($sVersion != $sCurrentVersion){
-			return array("your_version" => $sCurrentVersion->sValue, "current_version" => $sVersion, "update" => "0");
-		} else {
-			return array("your_version" => $sCurrentVersion->sValue, "current_version" => $sVersion, "update" => "1");
-		}
+	if($sVersion != $sCurrentVersion){
+		return array("your_version" => $sCurrentVersion->sValue, "current_version" => $sVersion, "update" => "0");
 	} else {
-		return array("your_version" => $sCurrentVersion->sValue, "current_version" => "Github Down", "update" => "0");
+		return array("your_version" => $sCurrentVersion->sValue, "current_version" => $sVersion, "update" => "1");
 	}
 }
