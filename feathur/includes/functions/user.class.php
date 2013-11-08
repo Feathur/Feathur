@@ -35,7 +35,7 @@ class User extends CPHPDatabaseRecordClass {
 					$sResult = "result";
 					$sErrorType = "error";
 				}
-				return $sError = array("{$sResult}" => "You've made too many failed {$sType} requests in the last 10 minutes.", "type" => "{$sErrorType}");
+				return $sError = array("{$sResult}" => "You've made too many {$sType} requests in the last 10 minutes.", "type" => "{$sErrorType}");
 			}
 		}
 		return true;
