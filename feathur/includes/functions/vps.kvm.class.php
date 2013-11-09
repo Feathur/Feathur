@@ -307,8 +307,8 @@ class kvm {
 		}
 		
 		$sQEMUPath = $sServer->sQEMUPath;
-		if(empty($sQEMUPath)){
-			$sQEMUPath = "/usr/bin/qemu";
+		if(!empty($sQEMUPath)){
+			$sQEMUPath = "<emulator>{$sQEMUPath}</emulator>";
 		}
 			
 		$sVPSConfig .= "<domain type='kvm'>";
@@ -320,7 +320,7 @@ class kvm {
 		$sVPSConfig .= "<cpu><topology sockets='1' cores='{$sCPUs}' threads='1'/></cpu>";
 		$sVPSConfig .= "<os><type machine='pc'>hvm</type><boot dev='{$sVPS->sBootOrder}'/></os>";
 		$sVPSConfig .= "<clock sync='localtime'/>";
-		$sVPSConfig .= "<devices><emulator>{$sQEMUPath}</emulator><disk type='file' device='disk'><source file='/dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img'/><target dev='hda' bus='ide'/></disk><disk type='file' device='cdrom'>";
+		$sVPSConfig .= "<devices>{$sQEMUPath}<disk type='file' device='disk'><source file='/dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img'/><target dev='hda' bus='ide'/></disk><disk type='file' device='cdrom'>";
 			
 		if(isset($sTemplate)){
 			$sVPSConfig .= "<source file='/var/feathur/data/templates/kvm/{$sTemplate->sPath}.iso'/>";
