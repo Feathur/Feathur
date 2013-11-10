@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `blocks` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
   `name` varchar(65) NOT NULL,
   `gateway` varchar(65) NOT NULL,
-  `netblock` varchar(65) NOT NULL,
+  `netmask` varchar(65) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
