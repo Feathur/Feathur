@@ -201,6 +201,7 @@ CREATE TABLE IF NOT EXISTS `vps` (
   `suspended` int(2) NOT NULL,
   `suspending_admin` int(8) NOT NULL,
   `bandwidth_usage` int(65) NOT NULL,
+  `rebuilding` int(8) NOT NULL,
   `mac` varchar(65) NOT NULL,
   `vnc_port` int(16) NOT NULL,
   `boot_order` varchar(65) NOT NULL,

@@ -24,3 +24,6 @@ $sAdd->execute();
 
 $sAdd = $database->prepare("ALTER TABLE `blocks` CHANGE `netblock` `netmask` VARCHAR(65)");
 $sAdd->execute();
+
+$sAdd = $database->prepare("ALTER TABLE `vps` ADD `rebuilding` INT(2)");
+$sAdd->execute();
