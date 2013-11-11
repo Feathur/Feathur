@@ -5,8 +5,8 @@ if(!(php_sapi_name() == 'cli')){
 
 error_reporting(E_ALL ^ E_NOTICE);
 // Query: SELECT nname, vpsid, contactemail, syncserver, username, coma_vmipaddress_a, hostname FROM vps WHERE syncserver='s1.c12.ny.bluevm.com' && resourceplan_used LIKE '%blue1%';
-$sUsername = "admin@bluevm.com";
-$sPassword = "L%R$)@)a3a471a1b04c";
+$sUsername = "email";
+$sPassword = "password";
 $sServerId = 31;
 $sDefaultTemplateId = 3;
 
