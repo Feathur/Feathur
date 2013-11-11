@@ -17,7 +17,7 @@ By using Feathur (in whole or in part) you agree to the following terms:
 	D. You are free to sell VPS to end users with Feathur without purchasing a license provided that the conditions of 3B are met.
 	
 4. Feathur is NOT free for commercial use if:
-	A. You wish to sell or sublicense any code, scripts or art work to any third party wishing to use Feathur (in whole or in part) on their own servers. If you wish to sell or sublicense any code, scripts or art work to any third party you must receive express written permission from Feathur LLC.
+	A. You wish to sell or sublicense any code, scripts or art work to any third party wishing to use Feathur (in whole or in part) on their own servers. If you wish to sell or sublicense any code, scripts or artwork to any third party you must receive express written permission from Feathur LLC.
 	B. You have more than 5 servers (virtual/physical/other) running on Feathur at any point in time.
 	C. You wish to remove links to Feathur.
 	D. If you intend to use Feathur (in whole or in part) to improve the code of other control panels.
@@ -27,7 +27,7 @@ By using Feathur (in whole or in part) you agree to the following terms:
 6. You understand that:
 	A. Any of the above conditions can be waived if you get permission from Feathur LLC.
 	B. This license may change at any time for any reason. Should the license change you may continue using any code provided by Feathur which was created before the license change. Under the understanding that:
-		1. If you choose to update your copy of Feathur after the license change the new license terms apply to your copy in it's entirety.
+		1. If you choose to update your copy of Feathur after the license change the new license terms apply to your copy in its entirety.
 		2. All code created prior to 10/20/2013 falls under this license.
 		3. You must have had a running copy of said code prior to the the date the new license takes effect.
 	C. Failure to follow the terms of this license may result in legal action.
