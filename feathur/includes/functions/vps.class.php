@@ -76,7 +76,8 @@ class VPS extends CPHPDatabaseRecordClass {
 				} else {
 					$sPrimary = 0;
 				}
-				$sIPAddresses[] = array("id" => $value["id"], "ip" => $value["ip_address"], "primary" => $sPrimary, "block" => $value["block_id"]);
+				$sBlock = new Block($value["block_id"]);
+				$sIPAddresses[] = array("id" => $value["id"], "ip" => $value["ip_address"], "primary" => $sPrimary, "block" => $value["block_id"], "gateway" => $sBlock->sGateway, "netmask" => $sBlock->sNetmask);
 			}
 			usort($sIPAddresses, 'SortPrimaryIP');
 			return $sIPAddresses;

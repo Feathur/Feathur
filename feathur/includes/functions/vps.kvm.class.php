@@ -413,7 +413,8 @@ class kvm {
 		}
 		
 		$sMac = explode(",", $sVPS->sMac);
-			
+		$sIPList = VPS::list_ipspace($sVPS);
+		
 		$sStatistics = array("info" => array("ram" => $sVPS->sRAM, 
 											"disk" => $sVPS->sDisk, 
 											"cpulimit" => $sVPS->sCPULimit,
@@ -423,6 +424,8 @@ class kvm {
 											"template" => $sTemplateName,
 											"hostname" => $sVPS->sHostname,
 											"primary_ip" => $sVPS->sPrimaryIP,
+											"gateway" => $sIPList[0]["gateway"],
+											"netmask" => $sIPList[0]["netmask"],
 											"mac" => $sMac[0],
 							));
 		$sStatistics = Templater::AdvancedParse($sTemplate->sValue.'/'.$sVPS->sType.'.statistics', $locale->strings, array("Statistics" => $sStatistics));
