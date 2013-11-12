@@ -1,0 +1,5 @@
+subnet 0.0.0.0 netmask 0.0.0.0 {
+	authoritative;
+	default-lease-time 21600000;
+	max-lease-time 432000000;
+}
