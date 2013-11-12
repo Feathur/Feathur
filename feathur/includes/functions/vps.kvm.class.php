@@ -333,7 +333,7 @@ class kvm {
 		$sCurrent = 0;
 		if($sIPCount >= 1){
 			foreach($sIPList as $sKey => $sValue){
-				$sVPSConfig .= "<interface type='bridge'><source bridge='br0'/><target dev='kvm{$sVPS->sContainerId}.{$sCurrent}'/><mac address='{$sMacList[$sCurrent]}'/></interface>";
+				$sVPSConfig .= "<interface type='bridge'><source bridge='br0'/><target dev='kvm{$sVPS->sContainerId}.{$sCurrent}'/><mac address='{$sMacList[$sCurrent]}'/><model type='e1000' /></interface>";
 				$sCurrent++;
 			}
 		}
