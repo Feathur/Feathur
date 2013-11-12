@@ -407,7 +407,7 @@ class kvm {
 			$sBandwidthUsage = "0 KB";
 		}
 			
-		$sPercentBandwidth = round(((100 / ($sVPS->sBandwidthLimit * 1024 * 1024 * 1024)) * $sVPS->sBandwidthUsage), 0);
+		$sPercentBandwidth = round(((100 / ($sVPS->sBandwidthLimit * 1024 * 1024)) * $sVPS->sBandwidthUsage), 0);
 		if(empty($sPercentBandwidth)){
 			$sPercentBandwidth = 0;
 		}
@@ -419,8 +419,8 @@ class kvm {
 											"disk" => $sVPS->sDisk, 
 											"cpulimit" => $sVPS->sCPULimit,
 											"bandwidth_usage" => $sBandwidthUsage,
-											"bandwidth_limit" => FormatBytes($sVPS->sBandwidthLimit * 1024 * 1024, 0),
-											"percent_bandwidth" => round(((100 / ($sVPS->sBandwidthLimit * 1024 * 1024)) * $sVPS->sBandwidthUsage), 0),
+											"bandwidth_limit" => FormatBytes($sVPS->sBandwidthLimit * 1024, 0),
+											"percent_bandwidth" => round(((100 / ($sVPS->sBandwidthLimit * 1024)) * $sVPS->sBandwidthUsage), 0),
 											"template" => $sTemplateName,
 											"hostname" => $sVPS->sHostname,
 											"primary_ip" => $sVPS->sPrimaryIP,
