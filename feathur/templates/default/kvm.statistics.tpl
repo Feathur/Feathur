@@ -45,12 +45,12 @@
 					<td width="60%">{%?info[primary_ip]}</td>
 				</tr>
 				<tr>
-					<td width="40%" style="padding:0px;margin:0px;padding-left:5px;"><strong>Gateway:</strong></td>
-					<td width="60%" style="padding:0px;margin:0px;padding-left:5px;">{%?info[gateway]}</td>
+					<td width="40%" style="padding:0px;margin:0px;padding-left:15px;"><strong>Gateway:</strong></td>
+					<td width="60%" style="padding:0px;margin:0px;padding-left:15px;">{%?info[gateway]}</td>
 				</tr>
 				<tr style="padding:0px;margin:0px;">
-					<td width="40%" style="padding:0px;margin:0px;padding-left:5px;"><strong>Subnet Mask:</strong></td>
-					<td width="60%" style="padding:0px;margin:0px;padding-left:5px;">{%?info[netmask]}</td>
+					<td width="40%" style="padding:0px;margin:0px;padding-left:15px;"><strong>Subnet Mask:</strong></td>
+					<td width="60%" style="padding:0px;margin:0px;padding-left:15px;">{%?info[netmask]}</td>
 				</tr>
 			</table>
 		</div>
