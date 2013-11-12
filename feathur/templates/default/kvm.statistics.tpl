@@ -45,8 +45,12 @@
 					<td width="60%">{%?info[primary_ip]}</td>
 				</tr>
 				<tr>
-					<td width="40%"><strong>Gateway / Subnet Mask:</strong></td>
-					<td width="60%">{%?info[gateway]} / {%?info[netmask]}</td>
+					<td width="40%" style="padding:0px;margin:0px;">Gateway:</td>
+					<td width="60%">{%?info[gateway]}</td>
+				</tr>
+				<tr>
+					<td width="40%" style="padding:0px;margin:0px;">Subnet Mask:</td>
+					<td width="60%">{%?info[netmask]}</td>
 				</tr>
 			</table>
 		</div>
