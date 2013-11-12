@@ -44,12 +44,12 @@
 					<td width="40%"><strong>Primary IP:</strong></td>
 					<td width="60%">{%?info[primary_ip]}</td>
 				</tr>
-				<tr>
-					<td width="40%" style="padding:0px;margin:0px;">Gateway:</td>
+				<tr style="padding:0px;margin:0px;">
+					<td width="40%"><strong>Gateway:</strong></td>
 					<td width="60%">{%?info[gateway]}</td>
 				</tr>
-				<tr>
-					<td width="40%" style="padding:0px;margin:0px;">Subnet Mask:</td>
+				<tr style="padding:0px;margin:0px;">
+					<td width="40%"><strong>Subnet Mask:</strong></td>
 					<td width="60%">{%?info[netmask]}</td>
 				</tr>
 			</table>
