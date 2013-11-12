@@ -17,7 +17,7 @@
 				<td width="40%"><strong>CPU Cores:</strong></td>
 				<td width="60%">{%?info[cpulimit]} Cores</td>
 			</tr>
-			<tr><td width="40%" style="padding:0px;margin:0px;"><div align="center"><strong>Bandwidth Usage:</strong></div></td>
+			<tr><td width="40%" style="padding:0px;margin:0px;padding-left:12px;"><strong>Bandwidth Usage:</strong></td>
 				<td width="60%" rowspan="2">
 					<div class="progress progress-{%if info[percent_bandwidth] < 50}success{%/if}{%if info[percent_bandwidth] < 80}{%if info[percent_bandwidth] > 50}warning{%/if}{%/if}{%if info[percent_bandwidth] < 101}{%if info[percent_bandwidth] > 79}danger{%/if}{%/if}{%if info[percent_bandwidth] > 100}danger progress-striped active{%/if}" style="margin-bottom:0;">
 						<div class="bar" style="width: {%?info[percent_bandwidth]}%">{%if info[percent_bandwidth] > 25}{%?info[percent_bandwidth]}%{%/if}</div>
@@ -45,12 +45,12 @@
 					<td width="60%">{%?info[primary_ip]}</td>
 				</tr>
 				<tr>
-					<td width="40%" style="padding:0px;margin:0px;padding-left:15px;"><strong>Gateway:</strong></td>
-					<td width="60%" style="padding:0px;margin:0px;padding-left:15px;">{%?info[gateway]}</td>
+					<td width="40%" style="padding:0px;margin:0px;padding-left:12px;"><strong>Gateway:</strong></td>
+					<td width="60%" style="padding:0px;margin:0px;padding-left:12px;">{%?info[gateway]}</td>
 				</tr>
 				<tr style="padding:0px;margin:0px;">
-					<td width="40%" style="padding:0px;margin:0px;padding-left:15px;"><strong>Subnet Mask:</strong></td>
-					<td width="60%" style="padding:0px;margin:0px;padding-left:15px;">{%?info[netmask]}</td>
+					<td width="40%" style="padding:0px;margin:0px;padding-left:12px;"><strong>Subnet Mask:</strong></td>
+					<td width="60%" style="padding:0px;margin:0px;padding-left:12px;">{%?info[netmask]}</td>
 				</tr>
 			</table>
 		</div>
