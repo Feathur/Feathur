@@ -320,7 +320,19 @@ class kvm {
 		$sVPSConfig .= "<cpu><topology sockets='1' cores='{$sCPUs}' threads='1'/></cpu>";
 		$sVPSConfig .= "<os><type machine='pc'>hvm</type><boot dev='{$sVPS->sBootOrder}'/></os>";
 		$sVPSConfig .= "<clock sync='localtime'/>";
-		$sVPSConfig .= "<devices>{$sQEMUPath}<disk type='file' device='disk'><source file='/dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img'/><target dev='hda' bus='ide'/></disk><disk type='file' device='cdrom'>";
+		
+		$sDiskDriver = $sVPS->sDiskDriver;
+		if((empty($sDiskDriver)) || ($sDiskDriver == 'ide')){
+			$sTarget = "<target dev='hda' bus='ide'/>";
+		} elseif($sDiskDriver == 'scsi'){
+			$sTarget = "<target dev='sdg' bus='scsi'/>";
+		} elseif($sDiskDriver == 'virtio'){
+			$sTarget = "<target dev='vda' bus='virtio'/>";
+		} else {
+			$sTarget = "<target dev='hda' bus='ide'/>";
+		}
+		
+		$sVPSConfig .= "<devices>{$sQEMUPath}<disk type='file' device='disk'><source file='/dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img'/>{$sTarget}</disk><disk type='file' device='cdrom'>";
 			
 		if(isset($sTemplate)){
 			$sVPSConfig .= "<source file='/var/feathur/data/templates/kvm/{$sTemplate->sPath}.iso'/>";
@@ -814,6 +826,28 @@ class kvm {
 	}
 	
 	public function kvm_changenic($sUser, $sVPS, $sRequested){
+		return true;
+	}
+	
+	public function database_kvm_changedisk($sUser, $sVPS, $sRequested){
+		$sDiskList = array("ide", "scsi", "virtio");
+		foreach($sDiskList as $sDisk){
+			if($sDisk == $sRequested["GET"]["disk"]){
+				$sVPS->uDiskDriver = $sDisk;
+				$sVPS->InsertIntoDatabase();
+				$sUpdated = 1;
+			}
+		}
+		
+		if($sUpdated == 1){
+			$sUpdate = $this->kvm_config($sUser, $sVPS, $sRequested);
+			return $sArray = array("json" => 1, "type" => "success", "result" => "Disk driver has been updated, reboot required.");
+		}
+		
+		return $sArray = array("json" => 1, "type" => "error", "result" => "No disk driver matching that name found.", "reload" => 1);
+	}
+	
+	public function kvm_changedisk($sUser, $sVPS, $sRequested){
 		return true;
 	}
 }

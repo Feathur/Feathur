@@ -62,6 +62,13 @@
 				$('#SettingNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');  
 			});
 		});
+		$("#ChangeDisk").click(function() {
+			var disk = $('#SelectedDisk').val();
+			$('#SettingNotice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
+			$.getJSON("view.php?id={%?vps[id]}&action=changedisk&disk=" + disk,function(result){
+				$('#SettingNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');  
+			});
+		});
 		$(function() {
 			$("#tabs").tabs();
 		});
@@ -418,6 +425,30 @@
 						<td colspan="2">
 							<div align="center">
 								<button class="small blue" id="ChangeNIC">Change Network Card</button>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="simplebox grid340-left">
+				<div class="titleh">
+					<h3>Disk Driver</h3>
+				</div>
+				<table class="tablesorter">
+					<tr>
+						<td width="30%">Disk Driver:</td>
+						<td width="70%">
+							<select id="SelectedDisk" style="width:100%">
+								<option value="scsi" {%if isset|vps[disk_driver] == true}{%if vps[disk_driver] == scsi}selected="selected"{%/if}{%/if}>SCSI</option>
+								<option value="ide" {%if isset|vps[disk_driver] == true}{%if vps[disk_driver] == ide}selected="selected"{%/if}{%/if}{%if isset|vps[disk_driver] == false}selected="selected"{%/if}>IDE (Recommended)</option>
+								<option value="virtio" {%if isset|vps[disk_driver] == true}{%if vps[disk_driver] == virtio}selected="selected"{%/if}{%/if}>VirtIO</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<div align="center">
+								<button class="small blue" id="ChangeDisk">Change Disk Driver</button>
 							</div>
 						</td>
 					</tr>
