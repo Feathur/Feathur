@@ -430,7 +430,7 @@
 					</tr>
 				</table>
 			</div>
-			<div class="simplebox grid340-left">
+			<div class="simplebox grid340-right">
 				<div class="titleh">
 					<h3>Disk Driver</h3>
 				</div>
