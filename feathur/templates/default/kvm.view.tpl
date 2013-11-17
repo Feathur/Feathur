@@ -55,6 +55,13 @@
 				$('#SettingNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');  
 			});
 		});
+		$("#ChangeNIC").click(function() {
+			var nic = $('#SelectedNIC').val();
+			$('#SettingNotice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
+			$.getJSON("view.php?id={%?vps[id]}&action=changenic&nic=" + nic,function(result){
+				$('#SettingNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');  
+			});
+		});
 		$(function() {
 			$("#tabs").tabs();
 		});
@@ -385,6 +392,32 @@
 						<td colspan="2" style="height:100%;vertical-align:bottom;">
 							<div align="center">
 								<button class="small blue" id="ChangePrimaryIP">Change Primary IP</button>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="simplebox grid340-right">
+				<div class="titleh">
+					<h3>Network Card</h3>
+				</div>
+				<table class="tablesorter">
+					<tr>
+						<td width="30%">Network Card:</td>
+						<td width="70%">
+							<select id="SelectedNIC" style="width:100%">
+								<option value="rtl8139" {%if isset|vps[network_driver] == true}{%if vps[network_driver] == rtl8139}selected="selected"{%/if}{%/if}>Realtek 8139</option>
+								<option value="e1000" {%if isset|vps[network_driver] == true}{%if vps[network_driver] == e1000}selected="selected"{%/if}{%/if}{%if isset|vps[network_driver] == false}selected="selected"{%/if}>Intel (Recommended)</option>
+								<option value="virtio" {%if isset|vps[network_driver] == true}{%if vps[network_driver] == virtio}selected="selected"{%/if}{%/if}>VirtIO</option>
+								<option value="ne2k_pci" {%if isset|vps[network_driver] == true}{%if vps[network_driver] == ne2k_pci}selected="selected"{%/if}{%/if}>Realtek 8029</option>
+								<option value="pcnet" {%if isset|vps[network_driver] == true}{%if vps[network_driver] == pcnet}selected="selected"{%/if}{%/if}>PCNet</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<div align="center">
+								<button class="small blue" id="ChangeNIC">Change Network Card</button>
 							</div>
 						</td>
 					</tr>

@@ -16,6 +16,8 @@ class VPS extends CPHPDatabaseRecordClass {
 			'BandwidthUsage' => "bandwidth_usage",
 			'Mac' => "mac",
 			'BootOrder' => "boot_order",
+			'NetworkDriver' => "network_driver",
+			'DiskDriver' => "disk_driver",
 		),
 		'numeric' => array(
 			'UserId' => "user_id",
@@ -38,8 +40,6 @@ class VPS extends CPHPDatabaseRecordClass {
 			'PPP' => "ppp",
 			'IPTables' => "iptables",
 			'Rebuilding' => "rebuilding",
-			'VirtioNetwork' => "virtio_network",
-			'VirtioDisk' => "virtio_disk",
 			'VNCPort' => "vnc_port",
 		),
 	);

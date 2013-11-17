@@ -328,12 +328,17 @@ class kvm {
 			
 		$sVPSConfig .= "<target dev='hdc'/><readonly/></disk>";
 		
+		if(empty($sVPS->sNetworkDriver)){
+			$sVPS->uNetworkDriver = "e1000";
+			$sVPS->InsertIntoDatabase();
+		}
+		
 		$sIPCount = count($sIPList);
 		$sMacList = explode(",", $sVPS->sMac);
 		$sCurrent = 0;
 		if($sIPCount >= 1){
 			foreach($sIPList as $sKey => $sValue){
-				$sVPSConfig .= "<interface type='bridge'><source bridge='br0'/><target dev='kvm{$sVPS->sContainerId}.{$sCurrent}'/><mac address='{$sMacList[$sCurrent]}'/><model type='e1000' /></interface>";
+				$sVPSConfig .= "<interface type='bridge'><source bridge='br0'/><target dev='kvm{$sVPS->sContainerId}.{$sCurrent}'/><mac address='{$sMacList[$sCurrent]}'/><model type='{$sVPS->sNetworkDriver}' /></interface>";
 				$sCurrent++;
 			}
 		}
@@ -786,6 +791,28 @@ class kvm {
 	}
 	
 	public function kvm_terminate($sUser, $sVPS, $sRequested){
+		return true;
+	}
+	
+	public function database_kvm_changenic($sUser, $sVPS, $sRequested){
+		$sNICList = array("rtl8139", "e1000", "virtio", "ne2k_pci", "pcnet");
+		foreach($sNICList as $sNIC){
+			if($sNIC == $sRequested["GET"]["nic"]){
+				$sVPS->uNetworkDriver = $sNIC;
+				$sVPS->InsertIntoDatabase();
+				$sUpdated = 1;
+			}
+		}
+		
+		if($sUpdated == 1){
+			$sUpdate = $this->kvm_config($sUser, $sVPS, $sRequested);
+			return $sArray = array("json" => 1, "type" => "success", "result" => "Network card is now {$sVPS->sNetworkDriver}, reboot required.");
+		}
+		
+		return $sArray = array("json" => 1, "type" => "error", "result" => "No network card matching that name found.", "reload" => 1);
+	}
+	
+	public function kvm_changenic($sUser, $sVPS, $sRequested){
 		return true;
 	}
 }
