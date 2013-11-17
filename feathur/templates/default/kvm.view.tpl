@@ -224,7 +224,7 @@
 				</tr>
 			</table>
 		</div>
-		<div id="tabs-2" style="height:900px;">
+		<div id="tabs-2" style="height:1100px;">
 			<table style="width:100%;">
 				<tr>
 					<td width="25%" align="left">
@@ -397,7 +397,7 @@
 					</tr>
 				</table>
 			</div>
-			<div class="simplebox grid340-right">
+			<div class="simplebox grid340-left">
 				<div class="titleh">
 					<h3>Network Card</h3>
 				</div>

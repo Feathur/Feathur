@@ -328,7 +328,8 @@ class kvm {
 			
 		$sVPSConfig .= "<target dev='hdc'/><readonly/></disk>";
 		
-		if(empty($sVPS->sNetworkDriver)){
+		$sNetworkDriver = $sVPS->sNetworkDriver;
+		if(empty($sNetworkDriver)){
 			$sVPS->uNetworkDriver = "e1000";
 			$sVPS->InsertIntoDatabase();
 		}
@@ -806,7 +807,7 @@ class kvm {
 		
 		if($sUpdated == 1){
 			$sUpdate = $this->kvm_config($sUser, $sVPS, $sRequested);
-			return $sArray = array("json" => 1, "type" => "success", "result" => "Network card is now {$sVPS->sNetworkDriver}, reboot required.");
+			return $sArray = array("json" => 1, "type" => "success", "result" => "Network card has been updated, reboot required.");
 		}
 		
 		return $sArray = array("json" => 1, "type" => "error", "result" => "No network card matching that name found.", "reload" => 1);
