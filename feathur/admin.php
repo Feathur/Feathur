@@ -19,20 +19,8 @@ if($sUser->sPermissions != 7){
 	die();
 }
 
-if($sView == 'createvps'){
-	include("./admin/createvps.php");
-} elseif($sView == 'addserver'){
-	include("./admin/addserver.php");
-} elseif($sView == 'templates'){
-	include("./admin/templates.php");
-} elseif($sView == 'list'){
-	include("./admin/list.php");
-} elseif($sView == 'adduser'){
-	include("./admin/adduser.php");
-} elseif($sView == 'ippools'){
-	include("./admin/ippools.php");
-} elseif($sView == 'update'){
-	include("./admin/update.php");
+if(file_exists('./admin/'.$sView.'.php')) {
+	include('./admin/'.$sView.'.php');
 } else {
 	include("./admin/dashboard.php");
 }
