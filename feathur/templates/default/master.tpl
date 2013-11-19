@@ -159,6 +159,7 @@
 				<li class="subtitle">
                     			<a class="action tips-right" href="#" title="Settings"><img src="templates/default/img/icons/sidemenu/key.png" width="16" height="16" alt="icon"/>Settings<img src="templates/default/img/arrow-down.png" width="7" height="4" alt="arrow" class="arrow" /></a>
                     			<ul class="submenu" id="settings">
+									<li{%if Page == settings} class="active"{%/if}><a href="admin.php?view=settings"><img src="templates/default/img/icons/sidemenu/gear.png" width="16" height="16" alt="icon"/>Feathur Settings</a></li>
                     				<li{%if Page == templates} class="active"{%/if}><a href="admin.php?view=templates"><img src="templates/default/img/icons/sidemenu/zip.png" width="16" height="16" alt="icon"/>Template Manager</a></li>
 									<li{%if Page == ippools} class="active"{%/if}><a href="admin.php?view=ippools"><img src="templates/default/img/icons/sidemenu/network.png" width="16" height="16" alt="icon"/>IP Pools</a></li>
 									<li{%if Page == update} class="active"{%/if}><a href="admin.php?view=update"><img src="templates/default/img/icons/sidemenu/network.png" width="16" height="16" alt="icon"/>Update Settings</a></li>
