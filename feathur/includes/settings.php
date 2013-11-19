@@ -29,6 +29,10 @@ NewTemplater::SetGlobalVariable("Description", $sDescription->sValue);
 $sHistoryDifference = Core::GetSetting('history_difference');
 NewTemplater::SetGlobalVariable("HistoryDifference", $sHistoryDifference->sValue);
 
+// Refresh Time
+$sRefreshTime = Core::GetSetting('refresh_time');
+NewTemplater::SetGlobalVariable("RefreshTime", $sRefreshTime->sValue);
+
 // Max History
 $sMaxHistory = Core::GetSetting('max_history');
 NewTemplater::SetGlobalVariable("MaxHistory", $sMaxHistory->sValue);
