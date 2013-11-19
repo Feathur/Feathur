@@ -25,21 +25,9 @@ NewTemplater::SetGlobalVariable("AdminTemplate", $sAdminTemplate->sValue);
 $sDescription = Core::GetSetting('description');
 NewTemplater::SetGlobalVariable("Description", $sDescription->sValue);
 
-// Maximum return time for a pull
-$sMaxReturn = Core::GetSetting('max_return');
-NewTemplater::SetGlobalVariable("MaxReturn", $sMaxReturn->sValue);
-
-// Pull Difference
-$sPullDifference = Core::GetSetting('pull_difference');
-NewTemplater::SetGlobalVariable("PullDifference", $sPullDifference->sValue);
-
 // History Difference
 $sHistoryDifference = Core::GetSetting('history_difference');
 NewTemplater::SetGlobalVariable("HistoryDifference", $sHistoryDifference->sValue);
-
-// Refresh Time
-$sRefreshTime = Core::GetSetting('refresh_time');
-NewTemplater::SetGlobalVariable("RefreshTime", $sRefreshTime->sValue);
 
 // Max History
 $sMaxHistory = Core::GetSetting('max_history');
@@ -48,14 +36,6 @@ NewTemplater::SetGlobalVariable("MaxHistory", $sMaxHistory->sValue);
 // Max Statistics
 $sMaxStatistics = Core::GetSetting('max_statistics');
 NewTemplater::SetGlobalVariable("MaxStatistics", $sMaxStatistics->sValue);
-
-// Graph Limit
-$sGraphLimit = Core::GetSetting('graph_limit');
-NewTemplater::SetGlobalVariable("GraphLimit", $sGraphLimit->sValue);
-
-// Allow User Notifications
-$sAllowUserNotifications = Core::GetSetting('allow_user_notifications');
-NewTemplater::SetGlobalVariable("AllowUserNotifications", $sAllowUserNotifications->sValue);
 
 // Panel URL
 $sPanelURL = Core::GetSetting('panel_url');
