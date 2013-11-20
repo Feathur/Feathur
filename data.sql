@@ -138,7 +138,8 @@ INSERT INTO `settings` (`id`, `setting_name`, `setting_value`, `setting_group`) 
 (17, 'sendgrid_password', '', 'site_settings'),
 (18, 'update_type', 'develop', 'site_settings'),
 (19, 'bandwidth_accounting', 'both', 'site_settings'),
-(20, 'license', '0', 'site_settings');
+(20, 'license', '0', 'site_settings'),
+(20, 'refresh_time', '10', 'site_settings');
 
 CREATE TABLE IF NOT EXISTS `statistics` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
