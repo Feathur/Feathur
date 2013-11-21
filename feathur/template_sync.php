@@ -8,7 +8,7 @@ if($sTemplate = $database->CachedQuery("SELECT * FROM `templates` WHERE `path` =
 	header('Content-type: application/iso');
 	header('Content-Disposition: attachment; filename="'.$sTemplate->sPath.'.iso"');
 	ob_end_clean();
-	@fpassthru("/var/feathur/data/templates/kvm/{$sTemplate->sPath}.iso");
+	fpassthru("/var/feathur/data/templates/kvm/{$sTemplate->sPath}.iso");
 
 } else {
 	die();
