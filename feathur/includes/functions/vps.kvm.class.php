@@ -192,7 +192,7 @@ class kvm {
 			$sTemplate = new Template($sVPS->sTemplateId);
 			$sPanelURL = Core::GetSetting('panel_url');
 			$sRandom = random_string(10);
-			$sCommands = "mkdir -p /var/feathur/data/templates/kvm;cd /var/feathur/data/templates/kvm/;wget --no-check-certificate http://{$sPanelURL->sValue}/template_sync.php?template={$sTemplate->sPath};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}rm -rf {$sRandom}.sh;";
+			$sCommands = "mkdir -p /var/feathur/data/templates/kvm;cd /var/feathur/data/templates/kvm/;wget --no-check-certificate http://{$sPanelURL->sValue}/template_sync.php?template={$sTemplate->sPath};mv /template_sync.php?template={$sTemplate->sPath} {$sTemplate->sPath}.iso;virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}rm -rf {$sRandom}.sh;";
 			$sCommands = escapeshellarg($sCommands);
 			$sPush = $sSSH->exec("echo {$sCommands} >> {$sRandom}.sh; screen -dm -S sync bash {$sRandom}.sh;");
 			return $sArray = array("json" => 1, "type" => "success", "result" => "ISO Syncing VPS will start in ~3 minutes...");
