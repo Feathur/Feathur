@@ -193,8 +193,7 @@ class kvm {
 			$sPanelURL = Core::GetSetting('panel_url');
 			$sCommands = "mkdir -p /var/feathur/data/templates/kvm;cd /var/feathur/data/templates/kvm/;wget http://{$sPanelURL->sValue}/template_sync.php?template={$sTemplate->sPath};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}";
 			$sCommands = escapeshellarg($sCommands);
-			$sPush = $sSSH->exec("screen -dm -S cron bash -c {$sCommands}");
-			$sSave = VPS::save_vps_logs($sLog, $sVPS);
+			$sPush = $sSSH->exec("screen -dm -S sync {$sCommands};");
 			return $sArray = array("json" => 1, "type" => "success", "result" => "ISO Syncing VPS will start in ~3 minutes...");
 		} elseif(strpos($sLog[0]["result"], 'created from') !== false) { 
 			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS is currently starting up...");
@@ -236,8 +235,7 @@ class kvm {
 			$sPanelURL = Core::GetSetting('panel_url');
 			$sCommands = "mkdir -p /var/feathur/data/templates/kvm;cd /var/feathur/data/templates/kvm/;wget http://{$sPanelURL->sValue}/template_sync.php?template={$sTemplate->sPath};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}";
 			$sCommands = escapeshellarg($sCommands);
-			$sPush = $sSSH->exec("screen -dm -S cron bash -c {$sCommands}");
-			$sSave = VPS::save_vps_logs($sLog, $sVPS);
+			$sPush = $sSSH->exec("screen -dm -S cron {$sCommands};");
 			return $sArray = array("json" => 1, "type" => "success", "result" => "ISO Syncing VPS will start in ~3 minutes...");
 		} elseif(strpos($sLog[0]["result"], 'created from') !== false) { 
 			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS is being restarted now...");

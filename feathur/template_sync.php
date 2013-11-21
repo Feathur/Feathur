@@ -11,7 +11,7 @@ if($sTemplate = $database->CachedQuery("SELECT * FROM `templates` WHERE `path` =
 	ob_end_clean();
 	$sData = @fopen("/var/feathur/data/templates/kvm/{$sTemplate->sPath}.iso", "rb");
 	fpassthru($sData);
-
+	fclose($sData);
 } else {
 	die();
 }
