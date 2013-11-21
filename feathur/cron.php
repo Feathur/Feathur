@@ -41,14 +41,6 @@ if($sTemplateSync < $sBefore){
 			echo "Issuing commands to sync OpenVZ templates.\n";
 		}
 		
-		if($sKVM = $database->CachedQuery("SELECT * FROM servers WHERE `type` = 'kvm'", array())){
-			foreach($sKVM->data as $sValue){
-				$sServer = new Server($sValue["id"]);
-				$sCommandList .= "echo \"{$sServer->sName} Starting...\n\";rsync -avz -e \"ssh -o StrictHostKeyChecking=no -i /var/feathur/data/keys/{$sServer->sKey}\" /var/feathur/data/templates/kvm/* root@{$sServer->sIPAddress}:/var/feathur/data/templates/kvm/;";
-			}
-			echo "Issuing commands to sync KVM templates.\n";
-		}
-		
 		$sCommandList .= "rm -rf /var/feathur/data/template.lock;";
 		$sCommandList = escapeshellarg($sCommandList);
 		$sLocalSSH->exec("screen -dm -S cron bash -c {$sCommandList};");
