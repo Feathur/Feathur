@@ -191,9 +191,10 @@ class kvm {
 		} elseif(strpos($sLog[0]["result"], 'No such file') !== false) {
 			$sTemplate = new Template($sVPS->sTemplateId);
 			$sPanelURL = Core::GetSetting('panel_url');
-			$sCommands = "mkdir -p /var/feathur/data/templates/kvm;cd /var/feathur/data/templates/kvm/;wget http://{$sPanelURL->sValue}/template_sync.php?template={$sTemplate->sPath};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}";
+			$sRandom = random_string(10);
+			$sCommands = "mkdir -p /var/feathur/data/templates/kvm;cd /var/feathur/data/templates/kvm/;wget http://{$sPanelURL->sValue}/template_sync.php?template={$sTemplate->sPath};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand};rm -rf {$sRandom}.sh;";
 			$sCommands = escapeshellarg($sCommands);
-			$sPush = $sSSH->exec("screen -dm -S sync {$sCommands};");
+			$sPush = $sSSH->exec("echo {$sCommands} >> {$sRandom}.sh; screen -dm -S sync bash {$sRandom}.sh;");
 			return $sArray = array("json" => 1, "type" => "success", "result" => "ISO Syncing VPS will start in ~3 minutes...");
 		} elseif(strpos($sLog[0]["result"], 'created from') !== false) { 
 			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS is currently starting up...");
@@ -233,10 +234,11 @@ class kvm {
 		if(strpos($sLog[0]["result"], 'No such file') !== false) {
 			$sTemplate = new Template($sVPS->sTemplateId);
 			$sPanelURL = Core::GetSetting('panel_url');
-			$sCommands = "mkdir -p /var/feathur/data/templates/kvm;cd /var/feathur/data/templates/kvm/;wget http://{$sPanelURL->sValue}/template_sync.php?template={$sTemplate->sPath};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}";
+			$sRandom = random_string(10);
+			$sCommands = "mkdir -p /var/feathur/data/templates/kvm;cd /var/feathur/data/templates/kvm/;wget http://{$sPanelURL->sValue}/template_sync.php?template={$sTemplate->sPath};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand};rm -rf {$sRandom}.sh;";
 			$sCommands = escapeshellarg($sCommands);
-			$sPush = $sSSH->exec("screen -dm -S cron {$sCommands}");
-			return $sArray = array("json" => 1, "type" => "success", "result" => "ISO Syncing VPS will start in ~3 minutes...{$sPush}");
+			$sPush = $sSSH->exec("echo {$sCommands} >> {$sRandom}.sh; screen -dm -S sync bash {$sRandom}.sh;");
+			return $sArray = array("json" => 1, "type" => "success", "result" => "ISO Syncing VPS will start in ~3 minutes...");
 		} elseif(strpos($sLog[0]["result"], 'created from') !== false) { 
 			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS is being restarted now...");
 		} else {
