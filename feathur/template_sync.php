@@ -7,7 +7,9 @@ if($sTemplate = $database->CachedQuery("SELECT * FROM `templates` WHERE `path` =
 	$sTemplate = new Template($sTemplate->data[0]["id"]);
 	header('Content-type: application/iso');
 	header('Content-Disposition: attachment; filename="'.$sTemplate->sPath.'.iso"');
-	readfile("/var/feathur/data/templates/kvm/{$sTemplate->sPath}.iso");
+	ob_end_clean();
+	@fpassthru("/var/feathur/data/templates/kvm/{$sTemplate->sPath}.iso");
+
 } else {
 	die();
 }
