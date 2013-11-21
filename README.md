@@ -14,6 +14,12 @@ The license can be found at: https://raw.github.com/BlueVM/Feathur/develop/Licen
 
 ---------------------------------------
 
+If you intend on selling VPS from Feathur it is highly reccomended that you purchase a license. Feathur licenses remove the "unlicensed" notification from the panel, provide you with additional support and help to pay for Feathur's development and code auditing. 
+
+You can check so see if your provider has a license at: http://check.feathur.com/
+
+---------------------------------------
+
 For setup directions and other information about
 Feathur. Check out our wiki at:
 https://github.com/BlueVM/Feathur/wiki/
