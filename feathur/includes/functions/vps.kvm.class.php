@@ -235,6 +235,7 @@ class kvm {
 			$sPanelURL = Core::GetSetting('panel_url');
 			$sCommands = "mkdir -p /var/feathur/data/templates/kvm;cd /var/feathur/data/templates/kvm/;wget http://{$sPanelURL->sValue}/template_sync.php?template={$sTemplate->sPath};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}";
 			$sCommands = escapeshellarg($sCommands);
+			$sSSH = Server::server_connect($sServer);
 			$sPush = $sSSH->exec("screen -dm -S cron {$sCommands};");
 			return $sArray = array("json" => 1, "type" => "success", "result" => "ISO Syncing VPS will start in ~3 minutes...");
 		} elseif(strpos($sLog[0]["result"], 'created from') !== false) { 
