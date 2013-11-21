@@ -150,7 +150,21 @@ if(strpos($sLock, 'No such file or directory') !== false) {
 // Thank us for our work by leaving this code here or by paying for a license.
 // While I realize this won't stop anyone who really wants to disable the "alert" system, it might prevent someone who knows nothing about PHP.
 echo "License update...";
-eval(base64_decode("aWYoJHNTbGF2ZXMgPSAkZGF0YWJhc2UtPkNhY2hlZFF1ZXJ5KCJTRUxFQ1QgKiBGUk9NIHNlcnZlcnMiLCBhcnJheSgpKSl7DQoJJHNDb3VudFNsYXZlcyA9IGNvdW50KCRzU2xhdmVzLT5kYXRhKTsNCn0NCiRzSG9zdCA9IENvcmU6OkdldFNldHRpbmcoJ3BhbmVsX3VybCcpOw0KJHNVUkwgPSAiaHR0cDovL2NoZWNrLmZlYXRodXIuY29tL2FwaS5waHA/aG9zdD17JHNIb3N0LT5zVmFsdWV9JnNsYXZlcz17JHNDb3VudFNsYXZlc30iOw0KJHNDdXJsID0gY3VybF9pbml0KCk7DQpjdXJsX3NldG9wdCgkc0N1cmwsIENVUkxPUFRfVVJMLCAkc1VSTCk7DQpjdXJsX3NldG9wdCgkc0N1cmwsIENVUkxPUFRfUkVUVVJOVFJBTlNGRVIsIDEpOw0KJHNMaWNlbnNlID0ganNvbl9kZWNvZGUoY3VybF9leGVjKCRzQ3VybCksIHRydWUpOw0KY3VybF9jbG9zZSgkc0N1cmwpOw0KaWYoJHNMaWNlbnNlWyJ0eXBlIl0gPT0gJ3N1Y2Nlc3MnKXsNCgkkc1VwZGF0ZUxpY2Vuc2UgPSBDb3JlOjpVcGRhdGVTZXR0aW5nKCdsaWNlbnNlJywgIjEiKTsNCn0gZWxzZSB7DQoJJHNVcGRhdGVMaWNlbnNlID0gQ29yZTo6VXBkYXRlU2V0dGluZygnbGljZW5zZScsICIwIik7DQp9"));
+if($sSlaves = $database->CachedQuery("SELECT * FROM servers", array())){
+	$sCountSlaves = count($sSlaves->data);
+}
+$sHost = Core::GetSetting('panel_url');
+$sURL = "http://check.feathur.com/api.php?host={$sHost->sValue}&slaves={$sCountSlaves}";
+$sCurl = curl_init();
+curl_setopt($sCurl, CURLOPT_URL, $sURL);
+curl_setopt($sCurl, CURLOPT_RETURNTRANSFER, 1);
+$sLicense = json_decode(curl_exec($sCurl), true);
+curl_close($sCurl);
+if($sLicense["type"] == 'success'){
+	$sUpdateLicense = Core::UpdateSetting('license', "1");
+} else {
+	$sUpdateLicense = Core::UpdateSetting('license', "0");
+}
 
 echo "Checking for updates if available...";
 $sAutomaticUpdates = Core::GetSetting('automatic_updates');

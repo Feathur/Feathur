@@ -180,7 +180,7 @@
 			{%if isset|License == true}
 				{%if isempty|License == true}
 					{%if UserPermissions == 7}
-						<div align="center"><a href="http://feathur.com" target="_blank">This copy of Feathur is unlicensed. Consider purchasing a license.</a></div>
+						<div align="center"><br><a href="http://feathur.com" target="_blank">This copy of Feathur is unlicensed. Consider purchasing a license.</a></div>
 						<br><br>
 					{%/if}
 				{%/if}

@@ -49,7 +49,8 @@ NewTemplater::SetGlobalVariable("PanelURL", $sPanelURL->sValue);
 // Please don't remove or edit this code, a lot of work went into Feathur.
 // Thank us for our work by leaving this code here or by paying for a license.
 // While I realize this won't stop anyone who really wants to disable the "alert" system, it might prevent someone who knows nothing about PHP.
-eval(base64_decode("JHNMaWNlbnNlID0gQ29yZTo6R2V0U2V0dGluZygnbGljZW5zZScpOw0KTmV3VGVtcGxhdGVyOjpTZXRHbG9iYWxWYXJpYWJsZSgiTGljZW5zZSIsICRzTGljZW5zZS0+c1ZhbHVlKTs="));
+$sLicense = Core::GetSetting('license');
+NewTemplater::SetGlobalVariable("License", $sLicense->sValue);
 
 // Send Grid
 if($sNewSetting = $database->CachedQuery("SELECT * FROM settings WHERE `setting_name` = 'sendgrid'", array())){
