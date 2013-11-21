@@ -10,7 +10,7 @@ viewing, editing, using or downloading Feathur
 (in whole or in part) you agree to abide by
 the terms set forth in the license provided.
 
-The license can be found at:
+The license can be found at: https://raw.github.com/BlueVM/Feathur/develop/License.txt
 
 ---------------------------------------
 
