@@ -380,7 +380,7 @@ class kvm {
 				$sMac = $sMacList[$sCurrent];
 			}
 			$sVPSConfig .= "<interface type='bridge'><source bridge='pb{$sVPS->sUserId}'/><target dev='kvm{$sVPS->sContainerId}.{$sCurrent}'/><mac address='{$sMac}'/><model type='{$sVPS->sNetworkDriver}' /></interface>";
-			$sPrivateNetworkCommands = "brctl addbr pb{$sVPS->sUserId}; brctl addif pb{$sVPS->sUserId} kvm{$sVPS->sContainerID}.{$sCurrent};";
+			$sPrivateNetworkCommands = "brctl addbr pb{$sVPS->sUserId}; brctl addif pb{$sVPS->sUserId} kvm{$sVPS->sContainerId}.{$sCurrent};";
 		}
 		
 		if(empty($sPassword)){
