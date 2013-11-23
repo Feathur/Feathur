@@ -185,7 +185,7 @@ class kvm {
 		$sSSH = Server::server_connect($sServer);
 		$sVNCPasswordCommand = $this->kvm_reset_password($sVPS, $_SESSION['vnc_password'], $_SESSION['vnc_vps']);
 		$sBalance = escapeshellarg(file_get_contents('/var/feathur/Scripts/vm-balancer.py'));
-		$sLog[] = array("command" => "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}", "result" => $sSSH->exec("virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}echo {$sBalance} > /var/feathur/data/balancer.py;cd /var/feathur/data/;python balancer.py;"));
+		$sLog[] = array("command" => "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}", "result" => $sSSH->exec("virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}echo {$sBalance} > /var/feathur/data/balancer.py;screen -dmS reduce python /var/feathur/data/balancer.py;"));
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
 		if(strpos($sLog[0]["result"], 'already exists') !== false) {
 			return $sArray = array("json" => 1, "type" => "caution", "result" => "VPS is already running!");
@@ -231,7 +231,7 @@ class kvm {
 		$sSSH = Server::server_connect($sServer);
 		$sVNCPasswordCommand = $this->kvm_reset_password($sVPS, $_SESSION['vnc_password'], $_SESSION['vnc_vps']);
 		$sBalance = escapeshellarg(file_get_contents('/var/feathur/Scripts/vm-balancer.py'));
-		$sLog[] = array("command" => "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}", "result" => $sSSH->exec("virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}echo {$sBalance} > /var/feathur/data/balancer.py;cd /var/feathur/data/;python balancer.py;"));
+		$sLog[] = array("command" => "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}", "result" => $sSSH->exec("virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}echo {$sBalance} > /var/feathur/data/balancer.py;screen -dmS reduce python /var/feathur/data/balancer.py;"));
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
 		if(strpos($sLog[0]["result"], 'No such file') !== false) {
 			$sTemplate = new Template($sVPS->sTemplateId);
