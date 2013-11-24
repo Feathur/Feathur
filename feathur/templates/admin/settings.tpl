@@ -12,7 +12,7 @@
 				 $('#sendgrid-info').hide('slow'); 
 			}
 		});
-		$('#sengrid').change();
+		$('#sendgrid').change();
 	});
 </script>
 <br><br>
