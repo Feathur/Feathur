@@ -12,7 +12,23 @@
 				 $('#sendgrid-info').hide('slow'); 
 			}
 		});
+		
 		$('#sendgrid').change();
+		
+		$("#SettingSubmit").submit(function(event) {
+			event.preventDefault();
+			$("#Notice").html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
+			var values = $(this).serialize();
+			$.ajax({
+				url: "admin.php?view=settings&submit=1",
+				type: "post",
+				data: values,
+				success: function(data){
+					var result = $.parseJSON(data);
+					$('#Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div><br><input type="submit" name="button" id="button" value="Submit" class="st-button"/>');
+				}
+			});
+		});
 	});
 </script>
 <br><br>
@@ -24,7 +40,7 @@
 			<li><a href="#tabs-3">Bandwidth</a></li>
 			<li><a href="#tabs-4">Templates</a></li>
 		</ul>
-		<form id="form2" name="form2" method="post" action="">
+		<form id="settings" name="settings" method="post" action="">
 			<div id="tabs-1" align="left">
 				<p>
 					<div class="st-form-line">	
@@ -108,6 +124,10 @@
 					</div>
 				</p>
 			</div>
-		</form>
-	</div>
+		</div>
+		<br><br>
+		<div id="Notice" class="button-box">
+			<input type="submit" name="button" id="button" value="Submit" class="st-button"/>
+		</div>
+	</form>
 </div>
