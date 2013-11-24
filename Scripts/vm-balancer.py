@@ -5,6 +5,10 @@
 # Version 0.1
 
 import os
+
+os.system("apt-get -y install cpuset numactl")
+os.system("cd /etc/yum.repos.d/;wget http://download.opensuse.org/repositories/home:/tsariounov:/cpuset/CentOS_CentOS-6/home:tsariounov:cpuset.repo;yum -y update;yum -y install cpuset numactl")
+
 import sys
 import subprocess
 
