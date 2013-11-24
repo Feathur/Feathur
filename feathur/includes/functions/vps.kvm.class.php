@@ -370,6 +370,21 @@ class kvm {
 			}
 		}
 		
+		$sPrivateNetwork = $sVPS->sPrivateNetwork;
+		if($sPrivateNetwork == 1){
+			if(empty($sMacList[$sCurrent])){
+				$sMac = $sVPS->sMac;
+				$sNewMac = generate_mac();
+				$sVPS->uMac = $sMac.','.$sNewMac;
+				$sVPS->InsertIntoDatabase();
+				$sMac = $sNewMac;
+			} else {
+				$sMac = $sMacList[$sCurrent];
+			}
+			$sVPSConfig .= "<interface type='bridge'><source bridge='pb{$sVPS->sUserId}'/><target dev='kvm{$sVPS->sContainerId}.{$sCurrent}'/><mac address='{$sMac}'/><model type='{$sVPS->sNetworkDriver}' /></interface>";
+			$sPrivateNetworkCommands = "brctl addbr pb{$sVPS->sUserId}; brctl addif pb{$sVPS->sUserId} kvm{$sVPS->sContainerId}.{$sCurrent};";
+		}
+		
 		if(empty($sPassword)){
 			$sVNCPort = ($sVPS->sVNCPort - 5900);
 			$sVPSConfig .= "<graphics type='vnc' port='{$sVNCPort}' passwd='' listen='127.0.0.1'/>";
@@ -385,7 +400,7 @@ class kvm {
 		$sDHCP = escapeshellarg($sDHCP);
 		
 		$sHead = escapeshellarg(file_get_contents('/var/feathur/feathur/includes/configs/dhcp.head'));
-		$sCommandList .= "mkdir /var/feathur/;mkdir /var/feathur/configs/;echo {$sVPSConfig} > /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml; echo {$sHead} > /var/feathur/configs/dhcp.head;echo {$sDHCP} > /var/feathur/configs/kvm{$sVPS->sContainerId}-dhcp.conf;cat /var/feathur/configs/dhcpd.head /var/feathur/configs/*-dhcp.conf > /etc/dhcp/dhcpd.conf;service isc-dhcp-server restart;";
+		$sCommandList .= "mkdir /var/feathur/;mkdir /var/feathur/configs/;echo {$sVPSConfig} > /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml; echo {$sHead} > /var/feathur/configs/dhcp.head;echo {$sDHCP} > /var/feathur/configs/kvm{$sVPS->sContainerId}-dhcp.conf;cat /var/feathur/configs/dhcpd.head /var/feathur/configs/*-dhcp.conf > /etc/dhcp/dhcpd.conf;service isc-dhcp-server restart;{$sPrivateNetworkCommands}";
 		
 		if($sRequested["GET"]["diskchanged"] == 1){
 			$sCommandList .= "lvextend --size {$sVPS->sDisk}G /dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img;";

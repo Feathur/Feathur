@@ -41,6 +41,7 @@ class VPS extends CPHPDatabaseRecordClass {
 			'IPTables' => "iptables",
 			'Rebuilding' => "rebuilding",
 			'VNCPort' => "vnc_port",
+			'PrivateNetwork' => "private_network",
 		),
 	);
 	
