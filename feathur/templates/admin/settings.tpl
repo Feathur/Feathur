@@ -70,7 +70,7 @@
 					<div id="sendgrid-info">
 						<div class="st-form-line">	
 							<span class="st-labeltext">Sendgrid Username: </span>
-							<input name="sendgrid_username" type="text" class="st-forminput" id="sendgrid_username" style="width:400px" value="{%if isset|SendgridUsername == true}{%?SendGridUsername}{%/if}" /> 
+							<input name="sendgrid_username" type="text" class="st-forminput" id="sendgrid_username" style="width:400px" value="{%if isset|SendgridUsername == true}{%?SendgridUsername}{%/if}" /> 
 							<div class="clear"></div>
 						</div>
 						<div class="st-form-line">	
