@@ -48,7 +48,10 @@ read volumegroupbackingvolume
 status " "
 status "Beginning installation..."
 ## ACTION ##
-yum -y install bridge-utils dhcp libvirt qemu-kvm vnstat lvm2 httpd php rsync screen wget nano
+yum -y install bridge-utils dhcp libvirt qemu-kvm vnstat lvm2 httpd php rsync screen wget nano 
+
+cd /etc/yum.repos.d/;wget http://download.opensuse.org/repositories/home:/tsariounov:/cpuset/CentOS_CentOS-6/home:tsariounov:cpuset.repo;
+cd ~/feathur-install/
 
 vgcreate $volumegroup $volumegroupbackingvolume
 

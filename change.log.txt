@@ -1,0 +1,19 @@
+==============================
+0.6.2.6 - November 21, 2013
+==============================
+- Patches to PDNS for CentOS
+- Patches to improve KVM stability.
+
+==============================
+0.6.2.5 - November 21, 2013
+==============================
+- Implemented several KVM patches.
+- Removed KVM ISO pushing.
+- Added KVM ISO pulling and detection.
+
+==============================
+0.6.2.4 - November 20, 2013
+==============================
+- Feathur now released under AGPL.
+- Patches to misc KVM bugs.
+- Fixes to make installers work better.

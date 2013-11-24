@@ -45,19 +45,42 @@ NewTemplater::SetGlobalVariable("MaxStatistics", $sMaxStatistics->sValue);
 $sPanelURL = Core::GetSetting('panel_url');
 NewTemplater::SetGlobalVariable("PanelURL", $sPanelURL->sValue);
 
-// License
+// Maintenance
+$sMaintanance = Core::GetSetting('maintenance');
+NewTemplater::SetGlobalVariable("Maintanance", $sMaintanance->sValue);
+
+// Update Type
+$sMaintanance = Core::GetSetting('update_type');
+NewTemplater::SetGlobalVariable("UpdateType", $sUpdateType->sValue);
+
+// Sendgrid
+$sSendgrid = Core::GetSetting('sendgrid');
+NewTemplater::SetGlobalVariable("Sendgrid", $sSendgrid->sValue);
+
+// Sendgrid User
+$sSendgridUsername = Core::GetSetting('sendgrid_username');
+NewTemplater::SetGlobalVariable("SendgridUsername", $sSendgridUsername->sValue);
+
+// Check For Sendgrid Password
+$sSendgridPassword = Core::GetSetting('sendgrid_password');
+$sSendgridPassword = $sSendgridPassword->sValue;
+if(!empty($sSendgridPassword)){
+	NewTemplater::SetGlobalVariable("SendgridPassword", "1");
+}
+
+// Bandwidth Accounting
+$sBandwidthAccounting = Core::GetSetting('bandwidth_accounting');
+NewTemplater::SetGlobalVariable("BandwidthAccounting", $sBandwidthAccounting->sValue);
+
+// License Setting
 // Please don't remove or edit this code, a lot of work went into Feathur.
 // Thank us for our work by leaving this code here or by paying for a license.
 // While I realize this won't stop anyone who really wants to disable the "alert" system, it might prevent someone who knows nothing about PHP.
 $sLicense = Core::GetSetting('license');
 NewTemplater::SetGlobalVariable("License", $sLicense->sValue);
 
-// Send Grid
-if($sNewSetting = $database->CachedQuery("SELECT * FROM settings WHERE `setting_name` = 'sendgrid'", array())){
-	$sSendGrid = Core::GetSetting('sendgrid');
-	if($sSendGrid->sValue == 1){
-		include("./includes/library/sendgrid/SendGrid_loader.php");
-	}
+if($sSendGrid->sValue == 1){
+	include("./includes/library/sendgrid/SendGrid_loader.php");
 }
 
 if(isset($_SESSION["user_id"])){
@@ -92,14 +115,3 @@ if(isset($_SESSION["user_id"])){
 	}
 	NewTemplater::SetGlobalVariable("UserVPS", $sVPS);
 }
-
-function ErrorHandler($errno, $errstr, $errfile, $errline) {
-	error_reporting(0);
-	global $sTemplate;
-	$sErrors[] = array("red" => 'Unable to connect to the host node, please contact <a href="https://bluevm.com" target="_blank">BlueVM Customer Support</a>.');
-	$sView = Templater::AdvancedParse($sTemplate->sValue.'/error', $locale->strings, array());
-	echo Templater::AdvancedParse($sTemplate->sValue.'/master', $locale->strings, array("Content" => $sView, "Page" => "error", "Errors" => $sErrors));
-	die();
-}
-
-set_error_handler('ErrorHandler', E_USER_NOTICE);
