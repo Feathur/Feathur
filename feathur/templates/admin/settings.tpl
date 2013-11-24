@@ -50,6 +50,7 @@
 						<select name="update_type" id="update_type" class="uniform">
 							<option value="develop">Development</option>
 							<option value="develop-develop">Testing (not recommended)</option>
+						</select>
 						<div class="clear"></div>
 					</div>
 				</p>
@@ -61,6 +62,7 @@
 						<select name="sendgrid" id="sendgrid" class="uniform">
 							<option value="0" {%if isset|sendgrid == false}selected="selected"{%/if}>Sendmail</option>
 							<option value="1" {%if isset|sendgrid == true}{%if empty|sendgrid == true}selected="selected"{%/if}{%/if}>Send Grid</option>
+						</select>
 						<div class="clear"></div>
 					</div>
 					<div id="sendgrid-info">
