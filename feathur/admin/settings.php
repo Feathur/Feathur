@@ -11,7 +11,11 @@ if(!empty($sRequested["GET"]["submit"])){
 	$sUpdateType = Core::UpdateSetting('update_type', preg_replace('/[^a-zA-Z0-9\s]/', ' ', $sRequested["POST"]["update_type"]));
 	$sSendgrid = Core::UpdateSetting('sendgrid', preg_replace('/[^0-9]/', ' ', $sRequested["POST"]["sendgrid"]));
 	$sSendgridUsername = Core::UpdateSetting('sendgrid_username', preg_replace('/[^a-zA-Z0-9\s]/', ' ', $sRequested["POST"]["sendgrid_username"]));
-	$sSendgridPassword = Core::UpdateSetting('sendgrid_password', $sRequested["POST"]["sendgrid_password"]);
+	
+	if((!empty($sRequested["POST"]["sendgrid_password"])) && ($sRequested["POST"]["sendgrid_password"] != 'password')){
+		$sSendgridPassword = Core::UpdateSetting('sendgrid_password', $sRequested["POST"]["sendgrid_password"]);
+	}
+	
 	$sBandwidthAccounting = Core::UpdateSetting('bandwidth_accounting', preg_replace('/[^a-z]/', ' ', $sRequested["POST"]["bandwidth_accounting"]));
 	$sTemplate = Core::UpdateSetting('template', preg_replace('/[^a-zA-Z0-9\s]/', ' ', $sRequested["POST"]["template"]));
 	$sAdminTemplate = Core::UpdateSetting('admin_template', preg_replace('/[^a-zA-Z0-9\s]/', ' ', $sRequested["POST"]["admin_template"]));

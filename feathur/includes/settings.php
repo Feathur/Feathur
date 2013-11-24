@@ -63,8 +63,9 @@ NewTemplater::SetGlobalVariable("SendgridUsername", $sSendgridUsername->sValue);
 
 // Check For Sendgrid Password
 $sSendgridPassword = Core::GetSetting('sendgrid_password');
-if(!empty($sSendgridPassword->sValue)){
-	NewTemplater::SetGlobalVariable("SendgridPassword", 1);
+$sSendgridPassword = $sSendgridPassword->sValue;
+if(!empty($sSendgridPassword)){
+	NewTemplater::SetGlobalVariable("SendgridPassword", "1");
 }
 
 // Bandwidth Accounting
@@ -114,14 +115,3 @@ if(isset($_SESSION["user_id"])){
 	}
 	NewTemplater::SetGlobalVariable("UserVPS", $sVPS);
 }
-
-function ErrorHandler($errno, $errstr, $errfile, $errline) {
-	error_reporting(0);
-	global $sTemplate;
-	$sErrors[] = array("red" => 'Unable to connect to the host node, please contact <a href="https://bluevm.com" target="_blank">BlueVM Customer Support</a>.');
-	$sView = Templater::AdvancedParse($sTemplate->sValue.'/error', $locale->strings, array());
-	echo Templater::AdvancedParse($sTemplate->sValue.'/master', $locale->strings, array("Content" => $sView, "Page" => "error", "Errors" => $sErrors));
-	die();
-}
-
-set_error_handler('ErrorHandler', E_USER_NOTICE);
