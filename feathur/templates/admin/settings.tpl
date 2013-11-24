@@ -2,16 +2,18 @@
 	$(function() {
 		$( "#tabs" ).tabs();
 	});
-	$('#sendgrid-info').css('display','none');
-    $('#sendgrid').change(function(){
-        if(document.getElementById('sendgrid').value == 1){
-            $('#sendgrid-info').show('slow');    
-        } else 
-            if(document.getElementById('sendgrid').value == 0){
-             $('#sendgrid-info').hide('slow'); 
-        }
-    });
-    $('#sengrid').change();
+	$(document).ready(function(){
+		$('#sendgrid-info').css('display','none');
+		$('#sendgrid').change(function(){
+			if(document.getElementById('sendgrid').value == 1){
+				$('#sendgrid-info').show('slow');    
+			} else 
+				if(document.getElementById('sendgrid').value == 0){
+				 $('#sendgrid-info').hide('slow'); 
+			}
+		});
+		$('#sengrid').change();
+	});
 </script>
 <br><br>
 <div align="center">
@@ -27,17 +29,17 @@
 				<p>
 					<div class="st-form-line">	
 						<span class="st-labeltext">Title: </span>
-						<input name="title" type="text" class="st-forminput" id="title" style="width:510px" value="" /> 
+						<input name="title" type="text" class="st-forminput" id="title" style="width:400px" value="" /> 
 						<div class="clear"></div>
 					</div>
 					<div class="st-form-line">	
 						<span class="st-labeltext">Description: </span>
-						<input name="description" type="text" class="st-forminput" id="description" style="width:510px" value="" /> 
+						<input name="description" type="text" class="st-forminput" id="description" style="width:400px" value="" /> 
 						<div class="clear"></div>
 					</div>
 					<div class="st-form-line">	
 						<span class="st-labeltext">Panel URL (without http://): </span>
-						<input name="panel_url" type="text" class="st-forminput" id="panel_url" style="width:510px" value="" /> 
+						<input name="panel_url" type="text" class="st-forminput" id="panel_url" style="width:400px" value="" /> 
 						<div class="clear"></div>
 					</div>
 					<div class="st-form-line">	
@@ -68,12 +70,12 @@
 					<div id="sendgrid-info">
 						<div class="st-form-line">	
 							<span class="st-labeltext">Sendgrid Username: </span>
-							<input name="sendgrid_username" type="text" class="st-forminput" id="sendgrid_username" style="width:510px" value="" /> 
+							<input name="sendgrid_username" type="text" class="st-forminput" id="sendgrid_username" style="width:400px" value="" /> 
 							<div class="clear"></div>
 						</div>
 						<div class="st-form-line">	
 							<span class="st-labeltext">Sendgrid Password: </span>
-							<input name="sendgrid_password" type="password" class="st-forminput" {%if isset|sendgrid_password == true}value="password"{%/if} id="sendgrid_password" style="width:510px" value="" /> 
+							<input name="sendgrid_password" type="password" class="st-forminput" {%if isset|sendgrid_password == true}value="password"{%/if} id="sendgrid_password" style="width:400px" value="" /> 
 							<div class="clear"></div>
 						</div>
 					</div>
