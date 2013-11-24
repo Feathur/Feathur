@@ -59,7 +59,7 @@ NewTemplater::SetGlobalVariable("Sendgrid", $sSendgrid->sValue);
 
 // Sendgrid User
 $sSendgridUsername = Core::GetSetting('sendgrid_username');
-NewTemplater::SetGlobalVariable("SendgridUsername", $sSendGridUsername->sValue);
+NewTemplater::SetGlobalVariable("SendgridUsername", $sSendgridUsername->sValue);
 
 // Check For Sendgrid Password
 $sSendgridPassword = Core::GetSetting('sendgrid_password');

@@ -75,7 +75,7 @@
 						</div>
 						<div class="st-form-line">	
 							<span class="st-labeltext">Sendgrid Password: </span>
-							<input name="sendgrid_password" type="password" class="st-forminput" {%if isset|sendgrid_password == true}value="password"{%/if} id="sendgrid_password" style="width:400px" value="" /> 
+							<input name="sendgrid_password" type="password" class="st-forminput" {%if isset|SendgridPassword == true}value="password"{%/if} id="sendgrid_password" style="width:400px" /> 
 							<div class="clear"></div>
 						</div>
 					</div>
