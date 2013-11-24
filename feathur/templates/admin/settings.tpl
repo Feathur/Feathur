@@ -82,10 +82,31 @@
 				</p>
 			</div>
 			<div id="tabs-3">
-				<p></p>
+				<p>
+					<div class="st-form-line">	
+						<span class="st-labeltext">Bandwidth Accounting: </span>
+						<select name="bandwidth_accounting" id="bandwidth_accounting" class="uniform">
+							<option value="upload" {%if isset|BandwidthAccounting == true}{%if BandwidthAccounting == upload}selected="selected"{%/if}{%/if}>Upload Only</option>
+							<option value="download" {%if isset|BandwidthAccounting == true}{%if BandwidthAccounting == download}selected="selected"{%/if}{%/if}>Download Only</option>
+							<option value="both" {%if isset|BandwidthAccounting == true}{%if BandwidthAccounting == both}selected="selected"{%/if}{%/if}>Both (Upload and Download)</option>
+						</select>
+						<div class="clear"></div>
+					</div>
+				</p>
 			</div>
 			<div id="tabs-4">
-				<p></p>
+				<p>
+					<div class="st-form-line">	
+						<span class="st-labeltext">User Template: </span>
+						<input name="template" type="text" class="st-forminput" id="template" style="width:400px" value="{%Template}" /> 
+						<div class="clear"></div>
+					</div>
+					<div class="st-form-line">	
+						<span class="st-labeltext">Admin Template: </span>
+						<input name="admin_template" type="text" class="st-forminput" id="admin_template" style="width:400px" value="{%AdminTemplate}" /> 
+						<div class="clear"></div>
+					</div>
+				</p>
 			</div>
 		</form>
 	</div>
