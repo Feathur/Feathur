@@ -127,7 +127,7 @@
 		</div>
 		<br><br>
 		<div id="Notice" class="button-box">
-			<input type="submit" name="button" id="button" value="Submit" class="st-button"/>
+			<input type="submit" name="button" id="SettingSubmit" value="Submit" class="st-button"/>
 		</div>
 	</form>
 </div>
