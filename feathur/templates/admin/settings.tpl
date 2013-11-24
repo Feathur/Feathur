@@ -62,8 +62,8 @@
 					<div class="st-form-line">	
 						<span class="st-labeltext">Mail Sender Type:</span>
 						<select name="sendgrid" id="sendgrid" class="uniform">
-							<option value="0" {%if isset|sendgrid == false}selected="selected"{%/if}>Sendmail</option>
-							<option value="1" {%if isset|sendgrid == true}{%if empty|sendgrid == false}selected="selected"{%/if}{%/if}>Send Grid</option>
+							<option value="0" {%if isset|Sendgrid == false}selected="selected"{%/if}>Sendmail</option>
+							<option value="1" {%if isset|Sendgrid == true}{%if empty|Sendgrid == false}selected="selected"{%/if}{%/if}>Send Grid</option>
 						</select>
 						<div class="clear"></div>
 					</div>
