@@ -15,7 +15,7 @@
 		
 		$('#sendgrid').change();
 		
-		$("#SettingSubmit").submit(function(event) {
+		$("#SettingsForm").submit(function(event) {
 			event.preventDefault();
 			$("#Notice").html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
 			var values = $(this).serialize();
@@ -40,7 +40,7 @@
 			<li><a href="#tabs-3">Bandwidth</a></li>
 			<li><a href="#tabs-4">Templates</a></li>
 		</ul>
-		<form id="settings" name="settings" method="post" action="">
+		<form id="SettingsForm" name="settings" method="post" action="">
 			<div id="tabs-1" align="left">
 				<p>
 					<div class="st-form-line">	
