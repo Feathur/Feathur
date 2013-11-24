@@ -98,12 +98,12 @@
 				<p>
 					<div class="st-form-line">	
 						<span class="st-labeltext">User Template: </span>
-						<input name="template" type="text" class="st-forminput" id="template" style="width:400px" value="{%Template}" /> 
+						<input name="template" type="text" class="st-forminput" id="template" style="width:400px" value="{%?Template}" /> 
 						<div class="clear"></div>
 					</div>
 					<div class="st-form-line">	
 						<span class="st-labeltext">Admin Template: </span>
-						<input name="admin_template" type="text" class="st-forminput" id="admin_template" style="width:400px" value="{%AdminTemplate}" /> 
+						<input name="admin_template" type="text" class="st-forminput" id="admin_template" style="width:400px" value="{%?AdminTemplate}" /> 
 						<div class="clear"></div>
 					</div>
 				</p>
