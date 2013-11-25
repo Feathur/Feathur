@@ -159,6 +159,10 @@ class User extends CPHPDatabaseRecordClass {
 			$sVariable = array("email" => urlencode($sUser->sEmailAddress), "forgot_code" => urlencode($sForgotCode));
 			$sSend = Core::SendEmail($sUser->sEmailAddress, "Feathur Forgot Password", "forgot", $sVariable);
 		}
-		return $sResult = array("content" => "Check your email for an activation link.", "type" => "succesbox");
+		if(!is_array($sSend)){
+			return $sResult = array("content" => "Check your email for an activation link.", "type" => "succesbox");
+		} else {
+			return $sResult = array("content" => $sSend["content"], "type" => "alertbox");
+		}
 	}
 }

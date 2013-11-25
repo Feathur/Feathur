@@ -17,8 +17,9 @@ class Core {
 		global $sPanelURL;
 		global $locale;
 		$sEmail = Templater::AdvancedParse('/email/'.$sTemplate, $locale->strings, array("EmailVars" => array("entry" => $sVariable)));
-		$sSendGrid = Core::GetSetting('sendgrid');
-		if($sSendGrid->sValue == 1){
+		$sSendgrid = Core::GetSetting('sendgrid');
+		$sSendgrid = $sSendgrid->sValue;
+		if($sSendgrid == 1){
 			$sSendGridUser = Core::GetSetting('sendgrid_username');
 			$sSendGridPass = Core::GetSetting('sendgrid_password');
 			$sSendGridUser = $sSendGridUser->sValue;
