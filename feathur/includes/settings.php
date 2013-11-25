@@ -79,7 +79,7 @@ NewTemplater::SetGlobalVariable("BandwidthAccounting", $sBandwidthAccounting->sV
 $sLicense = Core::GetSetting('license');
 NewTemplater::SetGlobalVariable("License", $sLicense->sValue);
 
-if($sSendGrid->sValue == 1){
+if($sSendgrid->sValue == 1){
 	include("./includes/library/sendgrid/SendGrid_loader.php");
 }
 
