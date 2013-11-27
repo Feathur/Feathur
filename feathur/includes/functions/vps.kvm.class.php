@@ -189,7 +189,7 @@ class kvm {
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
 		if(strpos($sLog[0]["result"], 'already exists') !== false) {
 			return $sArray = array("json" => 1, "type" => "caution", "result" => "VPS is already running!");
-		} elseif(strpos($sLog[0]["result"], 'No such file') !== false) {
+		} elseif((strpos($sLog[0]["result"], 'No such file') !== false) && (strpos($sLog[0]["result"], 'iso') !== false)) {
 			$sTemplate = new Template($sVPS->sTemplateId);
 			$sPanelURL = Core::GetSetting('panel_url');
 			$sRandom = random_string(10);
@@ -197,10 +197,12 @@ class kvm {
 			$sCommands = escapeshellarg($sCommands);
 			$sPush = $sSSH->exec("echo {$sCommands} >> {$sRandom}.sh; screen -dm -S sync bash {$sRandom}.sh;");
 			return $sArray = array("json" => 1, "type" => "success", "result" => "ISO Syncing VPS will start in ~3 minutes...");
+		} elseif((strpos($sLog[0]["result"], 'No such file') !== false) && (strpos($sLog[0]["result"], 'img') !== false)){
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Virtual interfaces missing, please contact support.");
 		} elseif(strpos($sLog[0]["result"], 'created from') !== false) { 
 			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS is currently starting up...");
 		} else {
-			return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured, contact support!");
+			return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured, contact support.");
 		}
 	}
 	
@@ -233,14 +235,16 @@ class kvm {
 		$sBalance = escapeshellarg(file_get_contents('/var/feathur/Scripts/vm-balancer.py'));
 		$sLog[] = array("command" => "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}", "result" => $sSSH->exec("virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}echo {$sBalance} > /var/feathur/data/balancer.py;screen -dmS reduce python /var/feathur/data/balancer.py;"));
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
-		if(strpos($sLog[0]["result"], 'No such file') !== false) {
+		if((strpos($sLog[0]["result"], 'No such file') !== false) && (strpos($sLog[0]["result"], 'iso') !== false)) {
 			$sTemplate = new Template($sVPS->sTemplateId);
 			$sPanelURL = Core::GetSetting('panel_url');
 			$sRandom = random_string(10);
-			$sCommands = "mkdir -p /var/feathur/data/templates/kvm;cd /var/feathur/data/templates/kvm/;wget --no-check-certificate http://{$sPanelURL->sValue}/template_sync.php?template={$sTemplate->sPath};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}rm -rf {$sRandom}.sh;";
+			$sCommands = "mkdir -p /var/feathur/data/templates/kvm;cd /var/feathur/data/templates/kvm/;wget --no-check-certificate http://{$sPanelURL->sValue}/template_sync.php?template={$sTemplate->sPath};mv template_sync.php?template={$sTemplate->sPath} {$sTemplate->sPath}.iso;virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}rm -rf {$sRandom}.sh;";
 			$sCommands = escapeshellarg($sCommands);
 			$sPush = $sSSH->exec("echo {$sCommands} >> {$sRandom}.sh; screen -dm -S sync bash {$sRandom}.sh;");
 			return $sArray = array("json" => 1, "type" => "success", "result" => "ISO Syncing VPS will start in ~3 minutes...");
+		} elseif((strpos($sLog[0]["result"], 'No such file') !== false) && (strpos($sLog[0]["result"], 'img') !== false)){
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Virtual interfaces missing, please contact support.");
 		} elseif(strpos($sLog[0]["result"], 'created from') !== false) { 
 			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS is being restarted now...");
 		} else {
