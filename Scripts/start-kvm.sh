@@ -26,7 +26,7 @@ then
 	if [[ "$startup" == *"$isomissing"* ]]
 	then
 	
-		if [ ! -f "$isotemp" ];
+		if [ -f "$isotemp" ];
 		then
 			echo 2;
 			exit 1;
