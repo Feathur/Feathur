@@ -25,12 +25,12 @@ then
 		then
 			if [[ "$4" == *"feathurpassword"* ]]
 			then
-				screen -dmS template bash -c "mkdir -p /var/feathur/data/templates/kvm/;cd /var/feathur/data/templates/kvm/;echo '$2/template_sync.php?template=$3';wget '$2/template_sync.php?template=$3';mv template_sync.php?template=$3 $3.iso;virsh create /var/feathur/configs/kvm$1-vps.xml;cd /var/feathur/data/templates/kvm/;rm -rf *index.html*;rm -rf *template_sync*;cd /var/feathur/data/;python /var/feathur/data/balancer.py;sleep 600;"
+				screen -dmS template bash -c "mkdir -p /var/feathur/data/templates/kvm/;cd /var/feathur/data/templates/kvm/;wget '$2/template_sync.php?template=$3';mv template_sync.php?template=$3 $3.iso;virsh create /var/feathur/configs/kvm$1-vps.xml;cd /var/feathur/data/templates/kvm/;rm -rf *index.html*;rm -rf *template_sync*;cd /var/feathur/data/;python /var/feathur/data/balancer.py;sleep 600;"
 			else
-				screen -dmS template bash -c "mkdir -p /var/feathur/data/templates/kvm/;cd /var/feathur/data/templates/kvm/;echo '$2/template_sync.php?template=$3';wget '$2/template_sync.php?template=$3';mv template_sync.php?template=$3 $3.iso;virsh create /var/feathur/configs/kvm$1-vps.xml;virsh qemu-monitor-command kvm$1 --hmp change vnc :$5;virsh qemu-monitor-command kvm$1 --hmp change vnc password $4;cd /var/feathur/data/templates/kvm/;rm -rf *index.html*;rm -rf *template_sync*;cd /var/feathur/data/;python /var/feathur/data/balancer.py;sleep 600;"
+				screen -dmS template bash -c "mkdir -p /var/feathur/data/templates/kvm/;cd /var/feathur/data/templates/kvm/;wget '$2/template_sync.php?template=$3';mv template_sync.php?template=$3 $3.iso;virsh create /var/feathur/configs/kvm$1-vps.xml;virsh qemu-monitor-command kvm$1 --hmp change vnc :$5;virsh qemu-monitor-command kvm$1 --hmp change vnc password $4;cd /var/feathur/data/templates/kvm/;rm -rf *index.html*;rm -rf *template_sync*;cd /var/feathur/data/;python /var/feathur/data/balancer.py;sleep 600;"
 			fi
 		else
-			screen -dmS template bash -c "mkdir -p /var/feathur/data/templates/kvm/;cd /var/feathur/data/templates/kvm/;wget $2/template_sync.php?template=$3;mv template_sync.php?template=$3 $3.iso;virsh create /var/feathur/configs/kvm$1-vps.xml;cd /var/feathur/data/templates/kvm/;rm -rf *index.html*;rm -rf *template_sync*;cd /var/feathur/data/;python /var/feathur/data/balancer.py;sleep 600;"
+			screen -dmS template bash -c "mkdir -p /var/feathur/data/templates/kvm/;cd /var/feathur/data/templates/kvm/;wget '$2/template_sync.php?template=$3';mv template_sync.php?template=$3 $3.iso;virsh create /var/feathur/configs/kvm$1-vps.xml;cd /var/feathur/data/templates/kvm/;rm -rf *index.html*;rm -rf *template_sync*;cd /var/feathur/data/;python /var/feathur/data/balancer.py;sleep 600;"
 		fi	
 		echo 2;
 		exit 1;
