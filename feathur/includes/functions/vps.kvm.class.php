@@ -239,8 +239,8 @@ class kvm {
 	public function kvm_reboot($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
-		$sShutdown = kvm_shutdown($sUser, $sVPS, $sRequested);
-		$sStartup = kvm_boot($sUser, $sVPS, $sRequested);
+		$sShutdown = $this->kvm_shutdown($sUser, $sVPS, $sRequested);
+		$sStartup = $this->kvm_boot($sUser, $sVPS, $sRequested);
 		if(is_array($sStartup)){
 			return $sStartup;
 		}
