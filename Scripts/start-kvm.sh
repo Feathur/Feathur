@@ -7,7 +7,7 @@ isomissing='iso'
 diskmissing='img'
 created='created from'
 
-url=${2//%20/.}
+url=${2// /.}
 startup=$(virsh create /var/feathur/configs/kvm$1-vps.xml 2>&1)
 ver=$(virsh --version 2>&1)
 version=${ver:0:1}
