@@ -201,18 +201,18 @@ class kvm {
 		}
 		
 		if($sStart == 2){
-			return $sArray = array("json" => 1, "type" => "success", "result" => "ISO Syncing VPS will start in ~3 minutes...");
+			return $sArray = array("json" => 1, "type" => "success", "result" => "ISO Syncing VPS will start in ~3 minutes.");
 		}
 		
 		if($sStart == 3){
-			return $sArray = array("json" => 1, "type" => "error", "result" => "Virtual interfaces missing, please contact support.");
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Virtual device missing, contact support.");
 		}
 		
 		if($sStart = 4){
 			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS is being restarted now...");
 		} 
 		
-		return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured. Please contact support.");
+		return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured. Pease contact support.");
 	}
 	
 	public function database_kvm_shutdown($sUser, $sVPS, $sRequested){
