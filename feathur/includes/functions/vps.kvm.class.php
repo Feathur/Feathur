@@ -158,8 +158,14 @@ class kvm {
 	public function kvm_boot($sUser, $sVPS, $sRequested){
 		
 		// Load up settings.
-		$sTemplate = new Template($sVPS->sTemplateId);
-		$sTemplatePath = escapeshellarg($sTemplate->sPath);
+		$sVPSTemplate = $sVPS->sTemplateId;
+		if(!empty($sVPSTemplate)){
+			$sTemplate = new Template($sVPS->sTemplateId);
+			$sVPSTemplate = $sTemplate->sPath;
+		} else {
+			$sVPSTemplate = "404";
+		}
+		
 		$sPanelURL = Core::GetSetting('panel_url');
 		$sVNCPort = ($sVPS->sVNCPort - 5900);
 		
@@ -193,7 +199,7 @@ class kvm {
 		$sDumpCode = $sSSH->exec("mkdir -p /var/feathur/data;echo {$sStartupCode} > /var/feathur/data/start-kvm.sh;echo {$sBalance} > /var/feathur/data/vm-balancer.py");
 		
 		// Start VPS.
-		$sStart = $sSSH->exec("cd /var/feathur/data/;bash start-kvm.sh {$sVPS->sContainerId} {$sPanelURL} {$sTemplatePath} {$sVNCPassword} {$sVNCPort}");
+		$sStart = $sSSH->exec("cd /var/feathur/data/;bash start-kvm.sh {$sVPS->sContainerId} {$sPanelURL} {$sVPSTemplate} {$sVNCPassword} {$sVNCPort}");
 		
 		// Return output.
 		if($sStart == 1){
