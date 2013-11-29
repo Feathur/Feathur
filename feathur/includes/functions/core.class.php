@@ -15,6 +15,7 @@ class Core {
 	
 	public static function SendEmail($sTo, $sSubject, $sTemplate, $sVariable){
 		global $sPanelURL;
+		global $sPanelMode;
 		global $locale;
 		$sEmail = Templater::AdvancedParse('/email/'.$sTemplate, $locale->strings, array("EmailVars" => array("entry" => $sVariable)));
 		$sSendgrid = Core::GetSetting('sendgrid');
