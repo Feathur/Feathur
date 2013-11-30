@@ -151,57 +151,74 @@ class kvm {
 		}
 	}
 	
-	public function kvm_reset_password($sVPS, $sSessionPassword, $sSessionVPS){
-		if(isset($sSessionPassword)){
-			if($sSessionVPS == $sVPS->sId){
-				$sServer = new Server($sVPS->sServerId);
-				$sSSH = Server::server_connect($sServer);
-				// Check to see if virsh is at least version 1.0. Password setting is bugged on previous versions.
-				// Rather not save password to text file if we don't have to, but will if need be.
-				$sLog[] = array("command" => "virsh --version", "result" => $sSSH->exec("virsh --version"));
-				$sVersion = explode(".", $sLog[0]["result"]);
-				if($sVersion[0] == 1){
-					$sVNCPort = ($sVPS->sVNCPort - 5900);
-					$sPassword = escapeshellarg($sSessionPassword);
-					return $sCommand = "virsh qemu-monitor-command kvm{$sVPS->sContainerId} --hmp change vnc :{$sVNCPort};virsh qemu-monitor-command kvm{$sVPS->sContainerId} --hmp change vnc password {$sPassword};";
-				} else {
-					$sChange = $this->kvm_config($sUser, $sVPS, $sRequested, $sSessionPassword);
-					return "";
-				}
-			} else {
-				return "";
-			}
-		} else {
-			return "";
-		}
-	}
-	
 	public function database_kvm_boot($sUser, $sVPS, $sRequested){
 		return true;
 	}
 	
 	public function kvm_boot($sUser, $sVPS, $sRequested){
+		
+		// Load up settings.
+		$sVPSTemplate = $sVPS->sTemplateId;
+		if(!empty($sVPSTemplate)){
+			$sTemplate = new Template($sVPS->sTemplateId);
+			$sVPSTemplate = $sTemplate->sPath;
+		} else {
+			$sVPSTemplate = "404";
+		}
+		
+		$sPanelURL = Core::GetSetting('panel_url');
+		$sVNCPort = ($sVPS->sVNCPort - 5900);
+		
+		$sVNCPassword = $_SESSION['vnc_password'];
+		if(empty($sVNCPassword)){
+			$sVNCPassword = "feathurpassword";
+		}
+		$sVNCPassword = escapeshellarg($sVNCPassword);
+		
+		$sPanelMode = Core::GetSetting('panel_mode');
+		$sPanelMode = $sPanelMode->sValue;
+		if(empty($sPanelMode)){
+			$sPanelMode = "https://";
+		}
+		$sPanelURL = escapeshellarg("{$sPanelMode}{$sPanelURL->sValue}");
+		
+		// Connect to server.
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
-		$sVNCPasswordCommand = $this->kvm_reset_password($sVPS, $_SESSION['vnc_password'], $_SESSION['vnc_vps']);
-		$sBalance = escapeshellarg(file_get_contents('/var/feathur/Scripts/vm-balancer.py'));
-		$sLog[] = array("command" => "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}", "result" => $sSSH->exec("virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}echo {$sBalance} > /var/feathur/data/balancer.py;screen -dmS reduce python /var/feathur/data/balancer.py;"));
-		$sSave = VPS::save_vps_logs($sLog, $sVPS);
-		if(strpos($sLog[0]["result"], 'already exists') !== false) {
-			return $sArray = array("json" => 1, "type" => "caution", "result" => "VPS is already running!");
-		} elseif(strpos($sLog[0]["result"], 'No such file') !== false) {
-			$sTemplate = new Template($sVPS->sTemplateId);
-			$sPanelURL = Core::GetSetting('panel_url');
-			$sRandom = random_string(10);
-			$sCommands = "mkdir -p /var/feathur/data/templates/kvm;cd /var/feathur/data/templates/kvm/;wget --no-check-certificate http://{$sPanelURL->sValue}/template_sync.php?template={$sTemplate->sPath};mv template_sync.php?template={$sTemplate->sPath} {$sTemplate->sPath}.iso;virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}rm -rf {$sRandom}.sh;";
-			$sCommands = escapeshellarg($sCommands);
-			$sPush = $sSSH->exec("echo {$sCommands} >> {$sRandom}.sh; screen -dm -S sync bash {$sRandom}.sh;");
-			return $sArray = array("json" => 1, "type" => "success", "result" => "ISO Syncing VPS will start in ~3 minutes...");
-		} elseif(strpos($sLog[0]["result"], 'created from') !== false) { 
-			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS is currently starting up...");
-		} else {
-			return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured, contact support!");
+		
+		// Check Virsh Version. If less than 1.0 force config update to ensure VNC password remains.
+		$sVersion = $sSSH->exec("virsh --version");
+		$sVersion = explode(".", $sVersion);
+		if($sVersion[0] != 1){
+			$sChange = $this->kvm_config($sUser, $sVPS, $sRequested, $_SESSION['vnc_password']);
 		}
+		
+		// Dump necessary code on server.
+		$sStartupCode = escapeshellarg(file_get_contents('/var/feathur/Scripts/start-kvm.sh'));
+		$sBalance = escapeshellarg(file_get_contents('/var/feathur/Scripts/vm-balancer.py'));
+		$sDumpCode = $sSSH->exec("mkdir -p /var/feathur/data;echo {$sStartupCode} > /var/feathur/data/start-kvm.sh;echo {$sBalance} > /var/feathur/data/vm-balancer.py");
+		
+		// Start VPS.
+		$sStart = $sSSH->exec("cd /var/feathur/data/;bash start-kvm.sh {$sVPS->sContainerId} {$sPanelURL} {$sVPSTemplate} {$sVNCPassword} {$sVNCPort}");
+		
+		// Return output.
+		if($sStart == 1){
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Your VPS is already booted...");
+		}
+		
+		if($sStart == 2){
+			return $sArray = array("json" => 1, "type" => "success", "result" => "ISO Syncing VPS will start in ~3 minutes.");
+		}
+		
+		if($sStart == 3){
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Virtual device missing, contact support.");
+		}
+		
+		if($sStart = 4){
+			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS is being restarted now...");
+		} 
+		
+		return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured. Pease contact support.");
 	}
 	
 	public function database_kvm_shutdown($sUser, $sVPS, $sRequested){
@@ -229,23 +246,13 @@ class kvm {
 	public function kvm_reboot($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
-		$sVNCPasswordCommand = $this->kvm_reset_password($sVPS, $_SESSION['vnc_password'], $_SESSION['vnc_vps']);
-		$sBalance = escapeshellarg(file_get_contents('/var/feathur/Scripts/vm-balancer.py'));
-		$sLog[] = array("command" => "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}", "result" => $sSSH->exec("virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}echo {$sBalance} > /var/feathur/data/balancer.py;screen -dmS reduce python /var/feathur/data/balancer.py;"));
-		$sSave = VPS::save_vps_logs($sLog, $sVPS);
-		if(strpos($sLog[0]["result"], 'No such file') !== false) {
-			$sTemplate = new Template($sVPS->sTemplateId);
-			$sPanelURL = Core::GetSetting('panel_url');
-			$sRandom = random_string(10);
-			$sCommands = "mkdir -p /var/feathur/data/templates/kvm;cd /var/feathur/data/templates/kvm/;wget --no-check-certificate http://{$sPanelURL->sValue}/template_sync.php?template={$sTemplate->sPath};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;{$sVNCPasswordCommand}rm -rf {$sRandom}.sh;";
-			$sCommands = escapeshellarg($sCommands);
-			$sPush = $sSSH->exec("echo {$sCommands} >> {$sRandom}.sh; screen -dm -S sync bash {$sRandom}.sh;");
-			return $sArray = array("json" => 1, "type" => "success", "result" => "ISO Syncing VPS will start in ~3 minutes...");
-		} elseif(strpos($sLog[0]["result"], 'created from') !== false) { 
-			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS is being restarted now...");
-		} else {
-			return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured, contact support!");
+		$sShutdown = $this->kvm_shutdown($sUser, $sVPS, $sRequested);
+		$sStartup = $this->kvm_boot($sUser, $sVPS, $sRequested);
+		if(is_array($sStartup)){
+			return $sStartup;
 		}
+		
+		return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured. Please contact support.");
 	}
 	
 	public function database_kvm_password($sUser, $sVPS, $sRequested){

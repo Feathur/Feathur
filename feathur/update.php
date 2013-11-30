@@ -45,3 +45,8 @@ if(!$sFindBlock = $database->CachedQuery("SELECT * FROM settings WHERE `setting_
 
 $sAdd = $database->prepare("ALTER TABLE `vps` ADD `private_network` INT(2);");
 $sAdd->execute();
+
+if(!$sFindBlock = $database->CachedQuery("SELECT * FROM settings WHERE `setting_name` LIKE :Setting", array('Setting' => "panel_mode"))){
+	$sAdd = $database->prepare("INSERT INTO settings(setting_name, setting_value, setting_group) VALUES('panel_mode', 'https://', 'site_settings')");
+	$sAdd->execute();
+}

@@ -53,6 +53,10 @@ NewTemplater::SetGlobalVariable("Maintanance", $sMaintanance->sValue);
 $sMaintanance = Core::GetSetting('update_type');
 NewTemplater::SetGlobalVariable("UpdateType", $sUpdateType->sValue);
 
+// Panel Mode
+$sPanelMode = Core::GetSetting('panel_mode');
+NewTemplater::SetGlobalVariable("PanelMode", $sPanelMode->sValue);
+
 // Sendgrid
 $sSendgrid = Core::GetSetting('sendgrid');
 NewTemplater::SetGlobalVariable("Sendgrid", $sSendgrid->sValue);
@@ -79,7 +83,7 @@ NewTemplater::SetGlobalVariable("BandwidthAccounting", $sBandwidthAccounting->sV
 $sLicense = Core::GetSetting('license');
 NewTemplater::SetGlobalVariable("License", $sLicense->sValue);
 
-if($sSendGrid->sValue == 1){
+if($sSendgrid->sValue == 1){
 	include("./includes/library/sendgrid/SendGrid_loader.php");
 }
 
