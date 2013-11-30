@@ -58,18 +58,18 @@ $sPanelMode = Core::GetSetting('panel_mode');
 NewTemplater::SetGlobalVariable("PanelMode", $sPanelMode->sValue);
 
 // Sendgrid
-$sSendgrid = Core::GetSetting('sendgrid');
-NewTemplater::SetGlobalVariable("Sendgrid", $sSendgrid->sValue);
+$sMail = Core::GetSetting('mail');
+NewTemplater::SetGlobalVariable("Mail", $sMail->sValue);
 
 // Sendgrid User
-$sSendgridUsername = Core::GetSetting('sendgrid_username');
-NewTemplater::SetGlobalVariable("SendgridUsername", $sSendgridUsername->sValue);
+$sMailUsername = Core::GetSetting('mail_username');
+NewTemplater::SetGlobalVariable("MailUsername", $sMailUsername->sValue);
 
 // Check For Sendgrid Password
-$sSendgridPassword = Core::GetSetting('sendgrid_password');
-$sSendgridPassword = $sSendgridPassword->sValue;
-if(!empty($sSendgridPassword)){
-	NewTemplater::SetGlobalVariable("SendgridPassword", "1");
+$sMailPassword = Core::GetSetting('mail_password');
+$sMailPassword = $sMailPassword->sValue;
+if(!empty($sMailPassword)){
+	NewTemplater::SetGlobalVariable("MailPassword", "1");
 }
 
 // Bandwidth Accounting
@@ -83,8 +83,10 @@ NewTemplater::SetGlobalVariable("BandwidthAccounting", $sBandwidthAccounting->sV
 $sLicense = Core::GetSetting('license');
 NewTemplater::SetGlobalVariable("License", $sLicense->sValue);
 
-if($sSendgrid->sValue == 1){
+if($sMail->sValue == 1){
 	include("./includes/library/sendgrid/SendGrid_loader.php");
+} elseif($sMail->sValue == 2){
+	include("./includes/library/mandril/mandril.php");
 }
 
 if(isset($_SESSION["user_id"])){

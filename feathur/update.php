@@ -32,21 +32,32 @@ if(version_compare($sCurrentVersion->sValue, '0.6.1.9', '<')) {
 	$sAdd->execute();
 }
 
-$sAdd = $database->prepare("ALTER TABLE `vps` CHANGE `virtio_disk` `disk_driver` VARCHAR(65)");
-$sAdd->execute();
-
-$sAdd = $database->prepare("ALTER TABLE `vps` CHANGE `virtio_network` `network_driver` VARCHAR(65)");
-$sAdd->execute();
-
-if(!$sFindBlock = $database->CachedQuery("SELECT * FROM settings WHERE `setting_name` LIKE :Setting", array('Setting' => "refresh_time"))){
-	$sAdd = $database->prepare("INSERT INTO settings(setting_name, setting_value, setting_group) VALUES('refresh_time', '10', 'site_settings')");
+if(version_compare($sCurrentVersion->sValue, '0.6.2.0', '<')) {
+	$sAdd = $database->prepare("ALTER TABLE `vps` CHANGE `virtio_disk` `disk_driver` VARCHAR(65)");
 	$sAdd->execute();
+
+	$sAdd = $database->prepare("ALTER TABLE `vps` CHANGE `virtio_network` `network_driver` VARCHAR(65)");
+	$sAdd->execute();
+
+	if(!$sFindBlock = $database->CachedQuery("SELECT * FROM settings WHERE `setting_name` LIKE :Setting", array('Setting' => "refresh_time"))){
+		$sAdd = $database->prepare("INSERT INTO settings(setting_name, setting_value, setting_group) VALUES('refresh_time', '10', 'site_settings')");
+		$sAdd->execute();
+	}
+
+	$sAdd = $database->prepare("ALTER TABLE `vps` ADD `private_network` INT(2);");
+	$sAdd->execute();
+
+	if(!$sFindBlock = $database->CachedQuery("SELECT * FROM settings WHERE `setting_name` LIKE :Setting", array('Setting' => "panel_mode"))){
+		$sAdd = $database->prepare("INSERT INTO settings(setting_name, setting_value, setting_group) VALUES('panel_mode', 'https://', 'site_settings')");
+		$sAdd->execute();
+	}
 }
 
-$sAdd = $database->prepare("ALTER TABLE `vps` ADD `private_network` INT(2);");
+$sAdd = $database->prepare("UPDATE `settings` SET `setting_name` = 'mail' WHERE `setting_name` = 'sendgrid'");
 $sAdd->execute();
 
-if(!$sFindBlock = $database->CachedQuery("SELECT * FROM settings WHERE `setting_name` LIKE :Setting", array('Setting' => "panel_mode"))){
-	$sAdd = $database->prepare("INSERT INTO settings(setting_name, setting_value, setting_group) VALUES('panel_mode', 'https://', 'site_settings')");
-	$sAdd->execute();
-}
+$sAdd = $database->prepare("UPDATE `settings` SET `setting_name` = 'mail_username' WHERE `setting_name` = 'sendgrid_username'");
+$sAdd->execute();
+
+$sAdd = $database->prepare("UPDATE `settings` SET `setting_name` = 'mail_password' WHERE `setting_name` = 'sendgrid_password'");
+$sAdd->execute();

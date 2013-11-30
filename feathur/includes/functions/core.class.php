@@ -16,13 +16,14 @@ class Core {
 	public static function SendEmail($sTo, $sSubject, $sTemplate, $sVariable){
 		global $sPanelURL;
 		global $sPanelMode;
+		global $sTitle;
 		global $locale;
 		$sEmail = Templater::AdvancedParse('/email/'.$sTemplate, $locale->strings, array("EmailVars" => array("entry" => $sVariable)));
-		$sSendgrid = Core::GetSetting('sendgrid');
-		$sSendgrid = $sSendgrid->sValue;
-		if($sSendgrid == 1){
-			$sSendGridUser = Core::GetSetting('sendgrid_username');
-			$sSendGridPass = Core::GetSetting('sendgrid_password');
+		$sMail = Core::GetSetting('mail');
+		$sMail = $sMail->sValue;
+		if($sMail == 1){
+			$sSendGridUser = Core::GetSetting('mail_username');
+			$sSendGridPass = Core::GetSetting('mail_password');
 			$sSendGridUser = $sSendGridUser->sValue;
 			$sSendGridPass = $sSendGridPass->sValue;
 			if((!empty($sSendGridUser)) && (!empty($sSendGridPass))){
@@ -33,6 +34,42 @@ class Core {
 				return true;
 			} else {
 				return $sReturn = array("content" => "Unfortunately Send Grid is incorrectly configured!");
+			}
+		} elseif($sMail == 2){
+			$sMandrillUser = Core::GetSetting('mail_username');
+			$sMandrillPass = Core::GetSetting('mail_password');
+			$sMandrillUser = $sMandrillUser->sValue;
+			$sMandrillPass = $sMandrillPass->sValue;
+			
+			try {
+				$sMandrill = new Mandrill($sMandrillPass);
+				$sMessage = array(
+					'html' => $sEmail,
+					'subject' => $sSubject,
+					'from_email' => "noreply@{$sPanelURL->sValue}",
+					'from_name' => "{$sTitle}",
+					'to' => array(
+						array(
+							'email' => $sTo,
+							'type' => 'to'
+						)
+					),
+					'important' => true,
+					'track_opens' => null,
+					'track_clicks' => null,
+					'auto_text' => null,
+					'auto_html' => null,
+					'inline_css' => null,
+					'url_strip_qs' => null,
+					'preserve_recipients' => null,
+					'view_content_link' => null,
+					'tracking_domain' => null,
+					'signing_domain' => null,
+					'return_path_domain' => null,
+					'merge' => true,
+				);
+			} catch(Mandrill_Error $e) {
+				return $sReturn = array("content" => "Unfortunatly the email failed to send, please check your Mandrill settings.");
 			}
 		} else {
 			$sHeaders = "MIME-Version: 1.0" . "\r\n";
