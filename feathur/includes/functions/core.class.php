@@ -71,8 +71,12 @@ class Core {
 					'return_path_domain' => null,
 					'merge' => true,
 				);
-			} catch(Mandrill_Error $e) {
-				return $sReturn = array("content" => "Unfortunatly the email failed to send, please check your Mandrill settings.");
+				$sAsync = false;
+				$sIPPool = 'Main Pool';
+				$sSendAt = "0";
+				$sResult = $sMandrill->messages->send($sMessage, $sAsync, $sIPPool, $sSendAt);
+			} catch (Exception $e) {
+				return $sReturn = array("content" => "Mandril Error: {$e}");
 			}
 		} else {
 			$sHeaders = "MIME-Version: 1.0" . "\r\n";
