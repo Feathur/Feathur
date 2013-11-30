@@ -1,5 +1,7 @@
 <?php
+date_default_timezone_set('UTC');
 $sTimestamp = time();
+
 // Get prerequisites.
 $sId = $_GET['id'];
 $sAction = $_GET['action'];
