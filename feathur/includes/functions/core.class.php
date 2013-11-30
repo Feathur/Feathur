@@ -50,7 +50,7 @@ class Core {
 					'html' => $sEmail,
 					'subject' => $sSubject,
 					'from_email' => "noreply@{$sPanelURL->sValue}",
-					'from_name' => "{$sTitle}",
+					'from_name' => "{$sTitle->sValue}",
 					'to' => array(
 						array(
 							'email' => $sTo,
