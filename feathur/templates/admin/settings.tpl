@@ -9,7 +9,6 @@
 				$('#mail-info').show('slow');
 			} else if(document.getElementById('mail').value == 2){
 				 $('#mail-info').show('slow'); 
-			}
 			} else if(document.getElementById('mail').value == 0){
 				 $('#mail-info').hide('slow'); 
 			}
