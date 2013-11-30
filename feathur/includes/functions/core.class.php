@@ -73,8 +73,7 @@ class Core {
 				);
 				$sAsync = false;
 				$sIPPool = 'Main Pool';
-				$sSendAt = "null";
-				$sResult = $sMandrill->messages->send($sMessage, $sAsync, $sIPPool, $sSendAt);
+				$sResult = $sMandrill->messages->send($sMessage, $sAsync, $sIPPool);
 			} catch (Exception $e) {
 				return $sReturn = array("content" => "Mandril Error: {$e}");
 			}
