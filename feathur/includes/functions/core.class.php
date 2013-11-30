@@ -78,6 +78,7 @@ class Core {
 			} catch (Exception $e) {
 				return $sReturn = array("content" => "Mandril Error: {$e}");
 			}
+			return true;
 		} else {
 			$sHeaders = "MIME-Version: 1.0" . "\r\n";
 			$sHeaders .= "Content-type:text/html;charset=iso-8859-1" . "\r\n";
