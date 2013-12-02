@@ -3,8 +3,11 @@ class Core {
 
 	static function GetSetting($setting){
 		global $database;
-		$result = $database->CachedQuery("SELECT * FROM settings WHERE `setting_name` = :Setting", array(':Setting'	=> $setting));
-		return new Setting($result);
+		if($result = $database->CachedQuery("SELECT * FROM settings WHERE `setting_name` = :Setting", array(':Setting'	=> $setting))){
+			return new Setting($result);
+		} else {
+			return false;
+		}
 	}
 	
 	static function UpdateSetting($setting, $value){
@@ -16,13 +19,14 @@ class Core {
 	public static function SendEmail($sTo, $sSubject, $sTemplate, $sVariable){
 		global $sPanelURL;
 		global $sPanelMode;
+		global $sTitle;
 		global $locale;
 		$sEmail = Templater::AdvancedParse('/email/'.$sTemplate, $locale->strings, array("EmailVars" => array("entry" => $sVariable)));
-		$sSendgrid = Core::GetSetting('sendgrid');
-		$sSendgrid = $sSendgrid->sValue;
-		if($sSendgrid == 1){
-			$sSendGridUser = Core::GetSetting('sendgrid_username');
-			$sSendGridPass = Core::GetSetting('sendgrid_password');
+		$sMail = Core::GetSetting('mail');
+		$sMail = $sMail->sValue;
+		if($sMail == 1){
+			$sSendGridUser = Core::GetSetting('mail_username');
+			$sSendGridPass = Core::GetSetting('mail_password');
 			$sSendGridUser = $sSendGridUser->sValue;
 			$sSendGridPass = $sSendGridPass->sValue;
 			if((!empty($sSendGridUser)) && (!empty($sSendGridPass))){
@@ -34,6 +38,47 @@ class Core {
 			} else {
 				return $sReturn = array("content" => "Unfortunately Send Grid is incorrectly configured!");
 			}
+		} elseif($sMail == 2){
+			$sMandrillUser = Core::GetSetting('mail_username');
+			$sMandrillPass = Core::GetSetting('mail_password');
+			$sMandrillUser = $sMandrillUser->sValue;
+			$sMandrillPass = $sMandrillPass->sValue;
+			
+			try {
+				$sMandrill = new Mandrill($sMandrillPass);
+				$sMessage = array(
+					'html' => $sEmail,
+					'subject' => $sSubject,
+					'from_email' => "noreply@{$sPanelURL->sValue}",
+					'from_name' => "{$sTitle->sValue}",
+					'to' => array(
+						array(
+							'email' => $sTo,
+							'type' => 'to'
+						)
+					),
+					'important' => true,
+					'track_opens' => null,
+					'track_clicks' => null,
+					'auto_text' => null,
+					'auto_html' => null,
+					'inline_css' => null,
+					'url_strip_qs' => null,
+					'preserve_recipients' => null,
+					'view_content_link' => null,
+					'tracking_domain' => null,
+					'signing_domain' => null,
+					'return_path_domain' => null,
+					'merge' => true,
+				);
+				$sAsync = false;
+				$sIPPool = 'Main Pool';
+				$sSendAt = date("M d Y H:i:s", time());
+				$sResult = $sMandrill->messages->send($sMessage, $sAsync, $sIPPool, $sSendAt);
+			} catch (Exception $e) {
+				return $sReturn = array("content" => "Mandril Error: {$e}");
+			}
+			return true;
 		} else {
 			$sHeaders = "MIME-Version: 1.0" . "\r\n";
 			$sHeaders .= "Content-type:text/html;charset=iso-8859-1" . "\r\n";

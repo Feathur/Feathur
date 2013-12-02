@@ -3,17 +3,18 @@
 		$( "#tabs" ).tabs();
 	});
 	$(document).ready(function(){
-		$('#sendgrid-info').css('display','none');
-		$('#sendgrid').change(function(){
-			if(document.getElementById('sendgrid').value == 1){
-				$('#sendgrid-info').show('slow');    
-			} else 
-				if(document.getElementById('sendgrid').value == 0){
-				 $('#sendgrid-info').hide('slow'); 
+		$('#mail-info').css('display','none');
+		$('#mail').change(function(){
+			if(document.getElementById('mail').value == 1){
+				$('#mail-info').show('slow');
+			} else if(document.getElementById('mail').value == 2){
+				 $('#mail-info').show('slow'); 
+			} else if(document.getElementById('mail').value == 0){
+				 $('#mail-info').hide('slow'); 
 			}
 		});
 		
-		$('#sendgrid').change();
+		$('#mail').change();
 		
 		$("#SettingsForm").submit(function(event) {
 			event.preventDefault();
@@ -77,21 +78,22 @@
 				<p>
 					<div class="st-form-line">	
 						<span class="st-labeltext">Mail Sender Type:</span>
-						<select name="sendgrid" id="sendgrid" class="uniform">
-							<option value="0" {%if isset|Sendgrid == false}selected="selected"{%/if}>Sendmail</option>
-							<option value="1" {%if isset|Sendgrid == true}{%if isempty|Sendgrid == false}selected="selected"{%/if}{%/if}>Send Grid</option>
+						<select name="mail" id="mail" class="uniform">
+							<option value="0" {%if isset|Mail == false}selected="selected"{%/if}>Sendmail</option>
+							<option value="1" {%if isset|Mail == true}{%if Mail == 1}selected="selected"{%/if}{%/if}>Send Grid</option>
+							<option value="2" {%if isset|Mail == true}{%if Mail == 2}selected="selected"{%/if}{%/if}>Mandrill</option>
 						</select>
 						<div class="clear"></div>
 					</div>
-					<div id="sendgrid-info">
+					<div id="mail-info">
 						<div class="st-form-line">	
-							<span class="st-labeltext">Sendgrid Username: </span>
-							<input name="sendgrid_username" type="text" class="st-forminput" id="sendgrid_username" style="width:400px" value="{%if isset|SendgridUsername == true}{%?SendgridUsername}{%/if}" /> 
+							<span class="st-labeltext">SMTP Username: </span>
+							<input name="mail_username" type="text" class="st-forminput" id="mail_username" style="width:400px" value="{%if isset|MailUsername == true}{%?MailUsername}{%/if}" /> 
 							<div class="clear"></div>
 						</div>
 						<div class="st-form-line">	
-							<span class="st-labeltext">Sendgrid Password: </span>
-							<input name="sendgrid_password" type="password" class="st-forminput" {%if isset|SendgridPassword == true}value="password"{%/if} id="sendgrid_password" style="width:400px" /> 
+							<span class="st-labeltext">SMTP Password: </span>
+							<input name="mail_password" type="password" class="st-forminput" {%if isset|MailPassword == true}value="password"{%/if} id="mail_password" style="width:400px" /> 
 							<div class="clear"></div>
 						</div>
 					</div>
