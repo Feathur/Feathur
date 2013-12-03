@@ -1,4 +1,16 @@
-<div id="content" style="margin:10px;">
+<div id="Status" style="margin:10px;">
+	<script type="text/javascript">
+        function uptime() {
+                $(function() {
+                        $.getJSON("admin.php?json=1",function(result){
+                                $("#Status").html(result.content);
+                        });
+                });
+        }
+        {%if isset|Status == false}
+                setInterval(uptime, {%?RefreshTime}000);
+        {%/if}
+	</script>
 	<div align="center">Welcome to Feathur, here is a quick system report:</div><br><br>
 	{%if isset|Statistics == true}
 		{%foreach server in Statistics}
