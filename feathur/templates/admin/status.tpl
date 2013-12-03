@@ -14,13 +14,15 @@
 							});
 					});
 			}
-        {%if isset|Status == false}
-                setInterval(uptime, {%?RefreshTime}000);
+			{%if isset|Status == false}
+				setInterval(uptime, {%?RefreshTime}000);
 				setInterval(timerrx, 1000);
-        {%/if}
+			{%/if}
+		});
 	</script>
 	<div align="center">Welcome to Feathur, here is a quick system report:</div><br><br>
-	<div align="center" style="width:30px;display:inline;white-space:nowrap;">Last update: <a id="timer" style="white-space:nowrap;">0</a> seconds ago</div></div><br>
+	<div align="center" style="width:30px;display:inline;white-space:nowrap;">Last update: <a id="timer" style="white-space:nowrap;">0</a> seconds ago</div>
+	<br><br>
 	{%if isset|Statistics == true}
 		{%foreach server in Statistics}
 			<div class="simplebox grid360-{%if isempty|server[type] == true}right{%/if}{%if isempty|server[type] == false}left{%/if}" style="padding:3px;padding-bottom:10px;">
