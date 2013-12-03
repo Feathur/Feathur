@@ -28,7 +28,7 @@ if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 $sPage = "dashboard";
 $sPageType = "admin";
 
-$sContent = Templater::AdvancedParse($sAdminTemplate->sValue.'/status', $locale->strings, array("Statistics" => $sStatistics));
+$sContent = Templater::AdvancedParse($sAdminTemplate->sValue.'/status', $locale->strings, array("Statistics" => $sStatistics, "Status" => $sRequested["GET"]["json"]));
 
 if(!empty($sRequested["GET"]["json"])){
 	echo json_encode(array("content" => $sContent));
