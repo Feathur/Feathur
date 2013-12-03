@@ -24,7 +24,7 @@ class Pull {
 		$sUptime = explode(' ', $sSSH->exec("cat /proc/uptime"));
 		$sCPU = explode(' ', $sSSH->exec("cat /proc/loadavg"));	
 		$sRAM = explode('kB', $sSSH->exec("cat /proc/meminfo"));
-		$sUsedRAM = preg_replace("/[^0-9]/", "", $sRAM[0]) - preg_replace("/[^0-9]/", "", $sRAM[1]) - preg_replace("/[^0-9]/", "", $sRAM[2];
+		$sUsedRAM = (((preg_replace("/[^0-9]/", "", $sRAM[0])) - preg_replace("/[^0-9]/", "", $sRAM[1])) - preg_replace("/[^0-9]/", "", $sRAM[2]));
 		$sTotalRAM = preg_replace("/[^0-9]/", "", $sRAM[0]);
 
 		$sDisk = $sSSH->exec("df");
