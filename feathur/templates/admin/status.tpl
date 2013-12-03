@@ -1,4 +1,4 @@
-<div id="Status" style="margin:10px;">
+<div id="Status" style="margin:5px;">
 	<script type="text/javascript">
         function uptime() {
                 $(function() {
