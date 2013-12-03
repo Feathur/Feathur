@@ -55,13 +55,15 @@ if($sTemplateSync < $sBefore){
 // System status tracker.
 if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 	foreach($sServerList->data as $sServer){
-		if($sTotal %10 != 0) {
-			sleep(1);
+		if($sTotal == 10) {
+			$sCommandList = escapeshellarg($sCommandList);
+			$sLocalSSH->exec($sCommandList);
+			unset($sCommandList);
+			unset($sTotal);
+			echo "Launched a batch of uptime checkers.\n";
 		}
 		$sServer = new Server($sServer["id"]);
-		$sCommandList = "screen -dmS uptracker bash -c \"cd /var/feathur/feathur/scripts/;php pull_server.php {$sServer->sId};exit;\";";
-		$sCommandList = escapeshellarg($sCommandList);
-		$sLocalSSH->exec($sCommandList);
+		$sCommandList .= "screen -dmS uptracker bash -c \"cd /var/feathur/feathur/scripts/;php pull_server.php {$sServer->sId};exit;\";";
 		$sTotal++;
 		
 		$sBefore = (time() - (5 * 60));
@@ -72,8 +74,11 @@ if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 		}
 	}
 	
+	$sCommandList = escapeshellarg($sCommandList);
+	$sLocalSSH->exec($sCommandList);
 	unset($sCommandList);
-	echo "Issued commands check system uptime.\n";
+	unset($sTotal);
+	echo "Finished launching uptime checkers.\n";
 }
 
 
