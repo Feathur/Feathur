@@ -52,6 +52,32 @@ if($sTemplateSync < $sBefore){
 	echo "Another template sync is already in progress, skipping template sync.\n";
 }
 
+// System status tracker.
+if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
+	foreach($sServerList->data as $sServer){
+		if($sTotal %10 != 0) {
+			sleep(1);
+		}
+		$sServer = new Server($sServer["id"]);
+		$sCommandList = "screen -dmS uptracker \"cd /var/feathur/feathur/scripts/;php pull_server.php {$sServer->sId};exit;\";";
+		$sCommandList = escapeshellarg($sCommandList);
+		$sLocalSSH->exec($sCommandList);
+		$sTotal++;
+		
+		$sBefore = (time() - (5 * 60));
+		$sUptime = $sServer->sLastCheck;
+		if($sBefore > $sUptime){
+			$sServer->uStatus = false;
+			$sServer->InsertIntoDatabase();
+		}
+	}
+	
+	unset($sCommandList);
+	echo "Issued commands check system uptime.\n";
+}
+
+
+
 // Begin pulling bandwidth assuming that:
 // 2. A pull isn't still in progress (EG: template.lock)
 $sLock = $sLocalSSH->exec("cat /var/feathur/data/bandwidth.lock");
