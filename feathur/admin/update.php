@@ -23,7 +23,7 @@ if($sAction == force){
 	$sKey->loadKey(file_get_contents($cphp_config->settings->rootkey));
 	if($sSSH->login("root", $sKey)) {
 		$sOldVersion = file_get_contents('/var/feathur/version.txt');
-		$sSSH->exec("cd /var/feathur/; git pull; cd /var/feathur/feathur/; php update.php; rm -rf update.php;");
+		$sSSH->exec("cd /var/feathur/; git reset --hard; git pull; cd /var/feathur/feathur/; php update.php; rm -rf update.php;");
 		$sVersion = file_get_contents('/var/feathur/version.txt');
 		$sLastUpdate = Core::UpdateSetting('last_update_check', time());
 		$sCurrentVersion = file_get_contents('/var/feathur/version.txt');
