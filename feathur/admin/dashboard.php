@@ -32,4 +32,5 @@ $sContent = Templater::AdvancedParse($sAdminTemplate->sValue.'/status', $locale-
 
 if(!empty($sRequested["GET"]["json"])){
 	echo json_encode(array("content" => $sContent));
+	die();
 }
