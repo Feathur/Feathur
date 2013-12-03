@@ -11,7 +11,7 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 $sServer = $argv[1];
 if(!empty($sServer)){
-	$sPull = Pull:pull_status($sServer);
+	$sPull = Pull::pull_status($sServer);
 }
 
 die();
