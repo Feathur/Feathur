@@ -60,6 +60,7 @@ if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 			unset($sCommandList);
 			unset($sTotal);
 			echo "Launched a batch of uptime checkers.\n";
+			sleep(2);
 		}
 		$sServer = new Server($sServer["id"]);
 		$sCommandList .= "screen -dm -S uptracker bash -c 'cd /var/feathur/feathur/scripts/;php pull_server.php {$sServer->sId};exit;';";
