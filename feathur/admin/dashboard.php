@@ -15,8 +15,8 @@ if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 		
 		$sStatistics[] = array("name" => $sServer->sName,
 								"load_average" => $sServer->sLoadAverage,
-								"disk_usage" => (100 - (round(((100 / $sServer->sHardDiskTotal) * $sServer->sHardDiskFree)), 1)),
-								"ram_usage" => (100 - (round(((100 / $sServer->sTotalMemory) * $sServer->sFreeMemory)), 1)),
+								"disk_usage" => (100 - (round(((100 / $sServer->sHardDiskTotal) * $sServer->sHardDiskFree), 1))),
+								"ram_usage" => (100 - (round(((100 / $sServer->sTotalMemory) * $sServer->sFreeMemory), 1))),
 								"status" => $sServer->sStatus,
 								"uptime" => ConvertTime(round($sServer->sHardwareUptime, 0)),
 								"type" => $sType);
