@@ -1,17 +1,26 @@
 <div id="Status" style="margin:5px;">
 	<script type="text/javascript">
-        function uptime() {
-                $(function() {
-                        $.getJSON("admin.php?json=1",function(result){
-                                $("#Status").html(result.content);
-                        });
-                });
-        }
+		$(document).ready(function() {
+			var counttx = 0;
+			var counterrx=setInterval(timerrx, 1000);
+			function timerrx() {
+				counttx=counttx+1;
+				$('#timer').html(counttx);
+			}
+			function uptime() {
+					$(function() {
+							$.getJSON("admin.php?json=1",function(result){
+									$("#Status").html(result.content);
+									counttx=0;
+							});
+					});
+			}
         {%if isset|Status == false}
                 setInterval(uptime, {%?RefreshTime}000);
         {%/if}
 	</script>
 	<div align="center">Welcome to Feathur, here is a quick system report:</div><br><br>
+	<div align="center" style="width:30px;display:inline;white-space:nowrap;">Last update: <a id="timer" style="white-space:nowrap;">0</a> seconds ago</div><br>
 	{%if isset|Statistics == true}
 		{%foreach server in Statistics}
 			<div class="simplebox grid360-{%if isempty|server[type] == true}right{%/if}{%if isempty|server[type] == false}left{%/if}" style="padding:3px;padding-bottom:10px;">
