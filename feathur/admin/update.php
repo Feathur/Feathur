@@ -22,13 +22,12 @@ if($sAction == force){
 	$sKey = new Crypt_RSA();
 	$sKey->loadKey(file_get_contents($cphp_config->settings->rootkey));
 	if($sSSH->login("root", $sKey)) {
-		$sOldVersion = Core::GetSetting('current_version');
+		$sOldVersion = file_get_contents('/var/feathur/version.txt');
 		$sSSH->exec("cd /var/feathur/; git pull; cd /var/feathur/feathur/; php update.php; rm -rf update.php;");
-		$sVersion = $sSSH->exec("cat /var/feathur/version.txt");
+		$sVersion = file_get_contents('/var/feathur/version.txt');
 		$sLastUpdate = Core::UpdateSetting('last_update_check', time());
-		$sNewVersion = Core::UpdateSetting('current_version', $sVersion);
-		$sCurrentVersion = Core::GetSetting('current_version');
-		if($sCurrentVersion->sValue != $sOldVersion->sValue){
+		$sCurrentVersion = file_get_contents('/var/feathur/version.txt');
+		if($sCurrentVersion != $sOldVersion){
 			$sErrors[] = array("result" => "Force update completed.", "type" => "success");
 		} elseif($sCurrentVersion->sValue == $sOldVersion->sValue) {
 			$sErrors[] = array("result" => "Force update failed, no updates available.", "type" => "error");

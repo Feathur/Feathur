@@ -1,4 +1,11 @@
 ==============================
+0.6.2.9 - December 3, 2013
+==============================
+- New uptime tracking system based on SSH.
+- Cleanup of old tracking system
+- Cleanup of version checking system.
+
+==============================
 0.6.2.8 - December 1, 2013
 ==============================
 - Addition of Mandrill support.

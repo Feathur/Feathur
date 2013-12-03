@@ -91,7 +91,7 @@ function SortPrimaryIP($a, $b) {
 }
 
 function check_updates(){
-	$sCurrentVersion = Core::GetSetting('current_version');
+	$sCurrentVersion = file_get_contents('/var/feathur/version.txt');
 	$sURL = "https://raw.github.com/BlueVM/Feathur/develop/version.txt";
 	$sCurl = curl_init();
 	curl_setopt($sCurl, CURLOPT_URL, $sURL);
@@ -99,8 +99,8 @@ function check_updates(){
 	$sVersion = preg_replace('/\s+/', '', curl_exec($sCurl));
 	curl_close($sCurl);
 	if($sVersion != $sCurrentVersion){
-		return array("your_version" => $sCurrentVersion->sValue, "current_version" => $sVersion, "update" => "0");
+		return array("your_version" => $sCurrentVersion, "current_version" => $sVersion, "update" => "1");
 	} else {
-		return array("your_version" => $sCurrentVersion->sValue, "current_version" => $sVersion, "update" => "1");
+		return array("your_version" => $sCurrentVersion, "current_version" => $sVersion, "update" => "0");
 	}
 }
