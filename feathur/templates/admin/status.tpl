@@ -1,4 +1,4 @@
-<div id="content" style="margin:20px;">
+<div id="content" style="margin:10px;">
 	{%if isset|Statistics == true}
 		{%foreach server in Statistics}
 			<div class="simplebox grid360-{%if isempty|server[type] == true}right{%/if}{%if isempty|server[type] == false}left{%/if}" style="padding:10px;">
