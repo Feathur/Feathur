@@ -56,14 +56,13 @@ if($sTemplateSync < $sBefore){
 if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 	foreach($sServerList->data as $sServer){
 		if($sTotal == 10) {
-			$sCommandList = escapeshellarg($sCommandList);
 			$sLocalSSH->exec($sCommandList);
 			unset($sCommandList);
 			unset($sTotal);
 			echo "Launched a batch of uptime checkers.\n";
 		}
 		$sServer = new Server($sServer["id"]);
-		$sCommandList .= "screen -dmS uptracker bash -c 'cd /var/feathur/feathur/scripts/;php pull_server.php {$sServer->sId};exit;';";
+		$sCommandList .= "screen -dm -S uptracker bash -c 'cd /var/feathur/feathur/scripts/;php pull_server.php {$sServer->sId};exit;';";
 		$sTotal++;
 		
 		$sBefore = (time() - (5 * 60));
@@ -74,7 +73,6 @@ if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 		}
 	}
 	
-	$sCommandList = escapeshellarg($sCommandList);
 	$sLocalSSH->exec($sCommandList);
 	unset($sCommandList);
 	unset($sTotal);
