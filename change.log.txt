@@ -1,4 +1,18 @@
 ==============================
+0.6.2.8 - December 1, 2013
+==============================
+- Addition of Mandrill support.
+- Cleanup of Mail settings.
+- Improvements to mail system.
+
+==============================
+0.6.2.7 - November 28, 2013
+==============================
+- Patches to KVM startup.
+- Improvements to KVM template downloader.
+- Updates to KVM errors to improve accuracy.
+
+==============================
 0.6.2.6 - November 21, 2013
 ==============================
 - Patches to PDNS for CentOS
