@@ -21,6 +21,13 @@
 		});
 	</script>
 	<div align="center">Welcome to Feathur, here is a quick system report:</div><br><br>
+	{%if isset|Down == true}
+		<div class="albox errorbox">
+			Server(s) Down: {%foreach system in Down}{%?system[name]}, {%/foreach}
+			<a href="#" class="close tips" title="close">close</a>
+		</div>
+		<br><br>
+	{%/if}
 	<div style="width:30px;display:inline;white-space:nowrap;">Last update: <a id="timer" style="white-space:nowrap;">0</a> seconds ago</div>
 	<br><br>
 	{%if isset|Statistics == true}

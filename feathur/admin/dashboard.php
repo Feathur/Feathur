@@ -3,7 +3,7 @@ if($sUser->sPermissions != 7){
 	die("Sorry you've accessed our system without permission");
 }
 
-if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
+if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 	foreach($sServerList->data as $sServer){
 		$sServer = new Server($sServer["id"]);
 		
@@ -22,13 +22,17 @@ if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 								"status" => $sServer->sStatus,
 								"uptime" => ConvertTime(round($sServer->sHardwareUptime, 0)),
 								"type" => $sType);
+		
+		if(empty($sServer->sStatus)){
+			$sDown[] = array("name" => $sServer->sName);
+		}
 	}
 }
 
 $sPage = "dashboard";
 $sPageType = "admin";
 
-$sContent = Templater::AdvancedParse($sAdminTemplate->sValue.'/status', $locale->strings, array("Statistics" => $sStatistics, "Status" => $sRequested["GET"]["json"]));
+$sContent = Templater::AdvancedParse($sAdminTemplate->sValue.'/status', $locale->strings, array("Statistics" => $sStatistics, "Down" => $sDown, "Status" => $sRequested["GET"]["json"]));
 
 if(!empty($sRequested["GET"]["json"])){
 	echo json_encode(array("content" => $sContent));

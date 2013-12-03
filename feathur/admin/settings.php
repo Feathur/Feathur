@@ -10,7 +10,7 @@ if(!empty($sRequested["GET"]["submit"])){
 	$sMaintanance = Core::UpdateSetting('maintenance', preg_replace('/[^0-9]/', '', $sRequested["POST"]["maintanance"]));
 	$sUpdateType = Core::UpdateSetting('update_type', preg_replace('/[^a-zA-Z0-9\s]/', '', $sRequested["POST"]["update_type"]));
 	$sMailSetting = Core::UpdateSetting('mail', preg_replace('/[^0-9]/', '', $sRequested["POST"]["mail"]));
-	$sMailUsernameSetting = Core::UpdateSetting('mail_username', preg_replace('/[^a-zA-Z0-9\s]/', '', $sRequested["POST"]["mail_username"]));
+	$sMailUsernameSetting = Core::UpdateSetting('mail_username', $sRequested["POST"]["mail_username"]);
 	
 	if((!empty($sRequested["POST"]["mail_password"])) && ($sRequested["POST"]["mail_password"] != 'password')){
 		$sMailPasswordSetting = Core::UpdateSetting('mail_password', $sRequested["POST"]["mail_password"]);
