@@ -2,7 +2,6 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			var counttx = 0;
-			var counterrx=setInterval(timerrx, 1000);
 			function timerrx() {
 				counttx=counttx+1;
 				$('#timer').html(counttx);
@@ -17,6 +16,7 @@
 			}
         {%if isset|Status == false}
                 setInterval(uptime, {%?RefreshTime}000);
+				setInterval(timerrx, 1000);
         {%/if}
 	</script>
 	<div align="center">Welcome to Feathur, here is a quick system report:</div><br><br>
