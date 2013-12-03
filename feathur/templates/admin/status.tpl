@@ -1,4 +1,5 @@
 <div id="content" style="margin:10px;">
+	<div align="center">Welcome to Feathur, here is a quick system report:</div>
 	{%if isset|Statistics == true}
 		{%foreach server in Statistics}
 			<div class="simplebox grid360-{%if isempty|server[type] == true}right{%/if}{%if isempty|server[type] == false}left{%/if}" style="padding:5px;">
@@ -16,14 +17,14 @@
 					<div align="center" style="height:50px;">
 						Uptime: {%?server[uptime]}
 						<hr>
-						<div style="width:45%;float:left;">
+						<div style="width:40%;float:left;">
 							<strong>Memory Usage:</strong>
 							<div class="progress" style="padding:0;margin:0;">
 								<div class="bar bar-warning" style="width: {%?server[ram_usage]}%;padding-top:5px;">U</div>
 								<div class="bar bar-success" style="width: {%?server[ram_free]}%;padding-top:5px;">F</div>
 							</div>
 						</div>
-						<div style="width:45%;float:right;">
+						<div style="width:40%;float:right;">
 							<strong>Disk Usage:</strong>
 							<div class="progress" style="padding:0;margin:0;">
 								<div class="bar bar-warning" style="width: {%?server[disk_usage]}%;padding-top:5px;">U</div>
@@ -33,7 +34,7 @@
 					</div>
 				</div>
 			</div>
-			{%if isempty|server[type] == false}<div class="clear"></div>{%/if}
+			{%if isempty|server[type] == true}<div class="clear"></div>{%/if}
 		{%/foreach}
 	{%/if}
 	{%if isset|Statistics == false}
