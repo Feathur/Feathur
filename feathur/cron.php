@@ -68,7 +68,8 @@ if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 		
 		$sBefore = (time() - (5 * 60));
 		$sUptime = $sServer->sLastCheck;
-		if($sBefore > $sUptime){
+		$sStatus = $sServer->sStatus;
+		if(($sBefore > $sUptime) && ($sStatus === true)){
 			$sStatusWarning = $sServer->sStatusWarning;
 			if($sStatusWarning === false){
 				if($sAdminList = $database->CachedQuery("SELECT * FROM `accounts` WHERE `permissions` = :Permissions", array("Permissions" => 7))){
