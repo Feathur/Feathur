@@ -56,6 +56,7 @@ class Pull {
 		$sServer->uFreeMemory = ($sTotalRAM - $sUsedRAM);
 		$sServer->uBandwidth = $sBandwidth;
 		$sServer->uStatus = true;
+		$sServer->uStatusWarning = false;
 		$sServer->uHardwareUptime = $sUptime[0];
 		$sServer->uLastCheck = $sTimestamp;
 		$sServer->InsertIntoDatabase();
