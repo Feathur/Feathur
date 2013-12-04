@@ -13,12 +13,16 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 			$sType = 1;
 		}
 		
-		if((!empty($sServer->HardDiskFree)) && (!empty($sServer->HardDiskTotal))){
+		$sServerHDF = $sServer->HardDiskFree;
+		$sServerHDT = $sServer->HardDiskTotal;
+		if((!empty($sServerHDF)) && (!empty($sServerHDT))){
 			$sHardDiskUsed = (100 - (round(((100 / $sServer->sHardDiskTotal) * $sServer->sHardDiskFree), 1)));
 			$sHardDiskFree = (round(((100 / $sServer->sHardDiskTotal) * $sServer->sHardDiskFree), 1));
 		}
 		
-		if((!empty($sServer->TotalMemory)) && (!empty($sServer->FreeMemory))){
+		$sServerFM = $sServer->FreeMemory;
+		$sServerTM = $sServer->TotalMemory;
+		if((!empty($sServerTM)) && (!empty($sServerFM))){
 			$sRAMUsed = (100 - (round(((100 / $sServer->sTotalMemory) * $sServer->sFreeMemory), 1)));
 			$sRAMFree = (round(((100 / $sServer->sTotalMemory) * $sServer->sFreeMemory), 1));
 		}

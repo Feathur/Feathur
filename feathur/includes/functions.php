@@ -21,43 +21,46 @@ include('./includes/functions/transfer.class.php');
 include('./includes/functions/attempts.class.php');
 
 function ConvertTime($ss) {
-	$sSeconds = $ss%60;
-	$sMinutes = floor(($ss%3600)/60);
-	$sHours = floor(($ss%86400)/3600);
-	$sDays = floor(($ss%2592000)/86400);
-	$sMonths = floor($ss/2592000);
-	
-	if($sMonths > 0){
-		$sResult[] = "{$sMonths} Months";
-	}
-	
-	if($sDays > 0){
-		$sResult[] = "{$sDays} Days";
-	}
-	
-	if($sHours > 0){
-		$sResult[] = "{$sHours}h";
-	}
-	
-	if($sMinutes > 0){
-		$sResult[] = "{$sMinutes}m";
-	}
-	
-	if($sSeconds > 0){
-		$sResult[] = "{$sSeconds}s";
-	}
-	
-	$sTotal = count($sResult);
-	
-	foreach($sResult as $value){
-		$sCurrent++;
-		if($sCurrent != $sTotal){
-			$sReturn .= $value.', ';
-		} else {
-			$sReturn .= $value.' ';
+	if(!empty($ss)){
+		$sSeconds = $ss%60;
+		$sMinutes = floor(($ss%3600)/60);
+		$sHours = floor(($ss%86400)/3600);
+		$sDays = floor(($ss%2592000)/86400);
+		$sMonths = floor($ss/2592000);
+		
+		if($sMonths > 0){
+			$sResult[] = "{$sMonths} Months";
 		}
+		
+		if($sDays > 0){
+			$sResult[] = "{$sDays} Days";
+		}
+		
+		if($sHours > 0){
+			$sResult[] = "{$sHours}h";
+		}
+		
+		if($sMinutes > 0){
+			$sResult[] = "{$sMinutes}m";
+		}
+		
+		if($sSeconds > 0){
+			$sResult[] = "{$sSeconds}s";
+		}
+		
+		$sTotal = count($sResult);
+		
+		foreach($sResult as $value){
+			$sCurrent++;
+			if($sCurrent != $sTotal){
+				$sReturn .= $value.', ';
+			} else {
+				$sReturn .= $value.' ';
+			}
+		}
+	} else {
+		$sReturn = "0m 0s";
 	}
-	
 	return $sReturn;
 }
 
