@@ -13,12 +13,22 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 			$sType = 1;
 		}
 		
+		if((!empty($sServer->HardDiskFree)) && (!empty($sServer->HardDiskTotal))){
+			$sHardDiskUsed = (100 - (round(((100 / $sServer->sHardDiskTotal) * $sServer->sHardDiskFree), 1)));
+			$sHardDiskFree = (round(((100 / $sServer->sHardDiskTotal) * $sServer->sHardDiskFree), 1));
+		}
+		
+		if((!empty($sServer->TotalMemory)) && (!empty($sServer->FreeMemory))){
+			$sRAMUsed = (100 - (round(((100 / $sServer->sTotalMemory) * $sServer->sFreeMemory), 1)));
+			$sRAMFree = (round(((100 / $sServer->sTotalMemory) * $sServer->sFreeMemory), 1));
+		}
+		
 		$sStatistics[] = array("name" => $sServer->sName,
 								"load_average" => $sServer->sLoadAverage,
-								"disk_usage" => (100 - (round(((100 / $sServer->sHardDiskTotal) * $sServer->sHardDiskFree), 1))),
-								"disk_free" => (round(((100 / $sServer->sHardDiskTotal) * $sServer->sHardDiskFree), 1)),
-								"ram_usage" => (100 - (round(((100 / $sServer->sTotalMemory) * $sServer->sFreeMemory), 1))),
-								"ram_free" => (round(((100 / $sServer->sTotalMemory) * $sServer->sFreeMemory), 1)),
+								"disk_usage" => $sHardDiskUsed,
+								"disk_free" => $sHardDiskFree,
+								"ram_usage" => $sRAMUsed,
+								"ram_free" => $sRAMFree,
 								"status" => $sServer->sStatus,
 								"uptime" => ConvertTime(round($sServer->sHardwareUptime, 0)),
 								"type" => $sType);
