@@ -78,6 +78,7 @@ if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 					}
 				}
 				$sServer->uStatusWarning = true;
+				echo "Sent email about outage to administrators.\n";
 			}
 			$sServer->uStatus = false;
 			$sServer->InsertIntoDatabase();
