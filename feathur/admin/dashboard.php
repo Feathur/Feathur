@@ -40,6 +40,11 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 		if(empty($sServer->sStatus)){
 			$sDown[] = array("name" => $sServer->sName);
 		}
+		
+		unset($sHardDiskUsed);
+		unset($sHardDiskFree);
+		unset($sRAMUsed);
+		unset($sRAMFree);
 	}
 }
 

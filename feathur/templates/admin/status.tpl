@@ -36,7 +36,7 @@
 				<div class="titleh">
 					<h3>
 						<div style="width:49%;float:left;">
-							<img src="./templates/status/{%if isempty|server[status] == true}offline{%/if}{%if isempty|server[status] == false}online{%/if}.png" style="width:10px;height:10px;">{%if isempty|server[name] == false}{%?server[name]}{%/if}
+							<img src="./templates/status/{%if isempty|server[status] == true}offline{%/if}{%if isempty|server[status] == false}online{%/if}.png" style="width:10px;height:10px;">{%if isset|server[name] == true}{%?server[name]}{%/if}
 						</div>
 						{%if isempty|server[status] == false}
 							<div style="width:49%;float:right;padding-right:5px;" align="right">
@@ -53,15 +53,15 @@
 							<div style="width:40%;float:left;">
 								<strong>Memory Usage:</strong>
 								<div class="progress" style="padding:0;margin:0;">
-									<div class="bar bar-warning" style="width: {%if isempty|server[ram_usage] == false}{%?server[ram_usage]}{%/if}%;padding-top:5px;">U</div>
-									<div class="bar bar-success" style="width: {%if isempty|server[ram_free] == false}{%?server[ram_free]}{%/if}%;padding-top:5px;">F</div>
+									<div class="bar bar-warning" style="width: {%if isset|server[ram_usage] == true}{%?server[ram_usage]}{%/if}%;padding-top:5px;">U</div>
+									<div class="bar bar-success" style="width: {%if isset|server[ram_free] == true}{%?server[ram_free]}{%/if}%;padding-top:5px;">F</div>
 								</div>
 							</div>
 							<div style="width:40%;float:right;">
 								<strong>Disk Usage:</strong>
 								<div class="progress" style="padding:0;margin:0;">
-									<div class="bar bar-warning" style="width: {%if isempty|server[disk_usage] == false}{%?server[disk_usage]}{%/if}%;padding-top:5px;">U</div>
-									<div class="bar bar-success" style="width: {%if isempty|server[disk_free] == false}{%?server[disk_free]}{%/if}%;padding-top:5px;">F</div>
+									<div class="bar bar-warning" style="width: {%if isset|server[disk_usage] == true}{%?server[disk_usage]}{%/if}%;padding-top:5px;">U</div>
+									<div class="bar bar-success" style="width: {%if isset|server[disk_free] == true}{%?server[disk_free]}{%/if}%;padding-top:5px;">F</div>
 								</div>
 							</div>
 						{%/if}
