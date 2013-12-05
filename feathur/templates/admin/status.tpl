@@ -36,11 +36,11 @@
 				<div class="titleh">
 					<h3>
 						<div style="width:49%;float:left;">
-							<img src="./templates/status/{%if isempty|server[status] == true}offline{%/if}{%if isempty|server[status] == false}online{%/if}.png" style="width:10px;height:10px;">{%?server[name]}
+							<img src="./templates/status/{%if isempty|server[status] == true}offline{%/if}{%if isempty|server[status] == false}online{%/if}.png" style="width:10px;height:10px;">{%if isset|server[name] == true}{%?server[name]}{%/if}
 						</div>
 						{%if isempty|server[status] == false}
 							<div style="width:49%;float:right;padding-right:5px;" align="right">
-								Load: {%?server[load_average]}
+								Load: {%if isempty|server[load_average] == false}{%?server[load_average]}{%/if}
 							</div>
 						{%/if}
 					</h3>
@@ -48,7 +48,7 @@
 				<div class="body padding10">
 					<div align="center" style="height:50px;">
 						{%if isempty|server[status] == false}
-							Uptime: {%?server[uptime]}
+							Uptime: {%if isempty|server[uptime] == false}{%?server[uptime]}{%/if}
 							<hr>
 							<div style="width:40%;float:left;">
 								<strong>Memory Usage:</strong>

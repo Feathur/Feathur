@@ -139,7 +139,7 @@ class Server extends CPHPDatabaseRecordClass {
 		}
 	}
 	
-	public static function server_connect($sServer){
+	public static function server_connect($sServer, $sAPI = 0){
 		$sSSH = new Net_SSH2($sServer->sIPAddress);
 		
 		if($sServer->sPassword == 0){
@@ -148,13 +148,23 @@ class Server extends CPHPDatabaseRecordClass {
 		} else {
 			$sKey = file_get_contents('/var/feathur/data/keys'.$sServer->sKey);
 		}
-
-		if (!$sSSH->login($sServer->sUser, $sKey)) {
-    			echo json_encode(array("result" => 'Unable to connect to the host node, please contact customer serivce.'));
-    			die();
-		} else {
-			$sSSH->setTimeout(30);
-			return $sSSH;
+		try {
+			if (!$sSSH->login($sServer->sUser, $sKey)) {
+				if(!empty($sAPI)){
+					return $sResult = array("result" => 'Unable to connect to the host node, please contact customer serivce.');
+				}
+				echo json_encode(array("result" => 'Unable to connect to the host node, please contact customer serivce.'));
+				die();
+			} else {
+				$sSSH->setTimeout(30);
+				return $sSSH;
+			}
+		} catch (Exception $e) { 
+			if(!empty($sAPI)){
+				return $sResult = array("result" => 'Unable to connect to the host node, please contact customer serivce.');
+			}
+			echo json_encode(array("result" => 'Unable to connect to the host node, please contact customer serivce.'));
+			die();
 		}
 	}
 }

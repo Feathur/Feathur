@@ -20,7 +20,11 @@ class Pull {
 		
 		// Connect to Server
 		$sServer = new Server($sServer);
-		$sSSH = Server::server_connect($sServer);
+		$sSSH = Server::server_connect($sServer, "1");
+		if(is_array($sSSH)){
+			die();
+		}
+		
 		$sUptime = explode(' ', $sSSH->exec("cat /proc/uptime"));
 		$sCPU = explode(' ', $sSSH->exec("cat /proc/loadavg"));	
 		$sRAM = explode('kB', $sSSH->exec("cat /proc/meminfo"));
@@ -56,6 +60,7 @@ class Pull {
 		$sServer->uFreeMemory = ($sTotalRAM - $sUsedRAM);
 		$sServer->uBandwidth = $sBandwidth;
 		$sServer->uStatus = true;
+		$sServer->uStatusWarning = false;
 		$sServer->uHardwareUptime = $sUptime[0];
 		$sServer->uLastCheck = $sTimestamp;
 		$sServer->InsertIntoDatabase();
