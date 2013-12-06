@@ -29,7 +29,8 @@ class Pull {
 		$sCPU = explode(' ', $sSSH->exec("cat /proc/loadavg"));	
 		$sUsedRAM = $sSSH->exec("free | head -n 3 | tail -n 1 | awk '{print $3}'");
 		$sTotalRAM = $sSSH->exec("free | head -n 2 | tail -n 1 | awk '{print $2}'");
-
+		echo $sTotalRAM;
+		sleep(60);
 		$sDisk = $sSSH->exec("df");
 		$sDisk = explode("\n", trim($sDisk));
 		array_shift($sDisk);
