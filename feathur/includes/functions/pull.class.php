@@ -56,7 +56,7 @@ class Pull {
 		$sServer->uHardDiskTotal = $sDiskTotal;
 		$sServer->uHardDiskFree = ($sDiskTotal - $sDiskUsed);
 		$sServer->uTotalMemory = $sTotalRAM;
-		$sServer->uFreeMemory = ($sTotalRAM - $sUsedRAM);
+		$sServer->uFreeMemory = $sTotalRAM;
 		$sServer->uBandwidth = $sBandwidth;
 		$sServer->uStatus = true;
 		$sServer->uStatusWarning = false;
