@@ -1,4 +1,4 @@
-#### FEATHUR README UPDATED: OCTOBER 18, 2013
+#### FEATHUR README UPDATED: NOVEMBER 20, 2013
 
 Feathur is a VPS control panel which is
 designed to be used to administrate OpenVZ
