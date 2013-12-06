@@ -27,14 +27,9 @@ class Pull {
 		
 		$sUptime = explode(' ', $sSSH->exec("cat /proc/uptime"));
 		$sCPU = explode(' ', $sSSH->exec("cat /proc/loadavg"));	
-		$sUsedRAM = $sSSH->exec("free | head -n 3 | tail -n 1 | awk '{print $3}'");
-		$sTotalRAM = $sSSH->exec("free | head -n 2 | tail -n 1 | awk '{print $2}'");
-		
-		$file = 'ram.txt';
-		$current = file_get_contents($file);
-		$current .= "{$sTotalRAM}\n";
-		file_put_contents($file, $current);
-		
+		$sUsedRAM = preg_replace('/[^0-9]/', '', $sSSH->exec("free | head -n 3 | tail -n 1 | awk '{print $3}'"));
+		$sTotalRAM = preg_replace('/[^0-9]/', '', $sSSH->exec("free | head -n 2 | tail -n 1 | awk '{print $2}'"));
+
 		$sDisk = $sSSH->exec("df");
 		$sDisk = explode("\n", trim($sDisk));
 		array_shift($sDisk);
@@ -61,7 +56,7 @@ class Pull {
 		$sServer->uHardDiskTotal = $sDiskTotal;
 		$sServer->uHardDiskFree = ($sDiskTotal - $sDiskUsed);
 		$sServer->uTotalMemory = $sTotalRAM;
-		$sServer->uFreeMemory = $sTotalRAM;
+		$sServer->uFreeMemory = ($sTotalRAM - $sUsedRAM);
 		$sServer->uBandwidth = $sBandwidth;
 		$sServer->uStatus = true;
 		$sServer->uStatusWarning = false;
