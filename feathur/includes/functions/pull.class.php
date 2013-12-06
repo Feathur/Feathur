@@ -29,8 +29,17 @@ class Pull {
 		$sCPU = explode(' ', $sSSH->exec("cat /proc/loadavg"));	
 		$sUsedRAM = $sSSH->exec("free | head -n 3 | tail -n 1 | awk '{print $3}'");
 		$sTotalRAM = $sSSH->exec("free | head -n 2 | tail -n 1 | awk '{print $2}'");
-		echo $sTotalRAM;
-		sleep(60);
+		
+		$sLocalSSH = new Net_SSH2('127.0.0.1');
+		$sLocalKey = new Crypt_RSA();
+		$sLocalKey->loadKey(file_get_contents($cphp_config->settings->rootkey));
+		if(!($sLocalSSH->login("root", $sLocalKey))) {
+			die("Cannot connect to this server, check local key.");
+		}
+		
+		$sTotalRAMShell = escapeshellarg($sTotalRAM);
+		$sLocalSSH->exec("echo {$sTotalRAM} >> /var/feathur/data/total.txt");
+		
 		$sDisk = $sSSH->exec("df");
 		$sDisk = explode("\n", trim($sDisk));
 		array_shift($sDisk);
