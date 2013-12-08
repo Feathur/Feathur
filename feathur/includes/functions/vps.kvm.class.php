@@ -160,8 +160,15 @@ class kvm {
 		// Load up settings.
 		$sVPSTemplate = $sVPS->sTemplateId;
 		if(!empty($sVPSTemplate)){
-			$sTemplate = new Template($sVPS->sTemplateId);
-			$sVPSTemplate = $sTemplate->sPath;
+			try {
+				$sTemplate = new Template($sVPS->sTemplateId);
+				$sVPSTemplate = $sTemplate->sPath;
+			} catch (Exception $e) {
+				$sVPS->uTemplate = 0;
+				$sVPS->InsertIntoDatabase();
+				$sVPSTemplate = "404";
+				$sChange = $this->kvm_config($sUser, $sVPS, $sRequested, $_SESSION['vnc_password']);
+			}
 		} else {
 			$sVPSTemplate = "404";
 		}
@@ -321,10 +328,14 @@ class kvm {
 		$sHardLimit = ($sMemory + 51200);
 		$sCPUs = $sVPS->sCPULimit;
 		
-		
 		$sTemplateId = $sVPS->sTemplateId;
 		if(!empty($sTemplateId)){	
-			$sTemplate = new Template($sVPS->sTemplateId);
+			try {
+				$sTemplate = new Template($sVPS->sTemplateId);
+			} catch (Exception $e) {
+				$sVPS->uTemplate = 0;
+				$sVPS->InsertIntoDatabase();
+			}
 		}
 		
 		$sQEMUPath = $sServer->sQEMUPath;
