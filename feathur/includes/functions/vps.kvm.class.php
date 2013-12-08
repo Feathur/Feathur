@@ -160,8 +160,14 @@ class kvm {
 		// Load up settings.
 		$sVPSTemplate = $sVPS->sTemplateId;
 		if(!empty($sVPSTemplate)){
-			$sTemplate = new Template($sVPS->sTemplateId);
-			$sVPSTemplate = $sTemplate->sPath;
+			try {
+				$sTemplate = new Template($sVPS->sTemplateId);
+				$sVPSTemplate = $sTemplate->sPath;
+			} catch (Exception $e) {
+				$sVPS->uTemplate = 0;
+				$sVPS->InsertIntoDatabase();
+				$sVPSTemplate = "404";
+			}
 		} else {
 			$sVPSTemplate = "404";
 		}
