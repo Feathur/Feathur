@@ -135,6 +135,8 @@ class Pull {
 						$sChange = $sTotal;
 					}
 					
+					echo "{$sVPS->sId} - Total: {$sTotal} - Change: +{$sChange}\n";
+					
 					$sVPS->sBandwidthUsage = $sVPS->sBandwidthUsage + $sChange;
 					$sVPS->sLastBandwidth = $sTotal;
 					$sVPS->InsertIntoDatabase();
