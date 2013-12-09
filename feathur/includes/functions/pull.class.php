@@ -109,7 +109,6 @@ class Pull {
 			if($sListVPS = $database->CachedQuery("SELECT * FROM `vps` WHERE `server_id` = :ServerId", array("ServerId" => $sServer->sId))){
 				foreach($sListVPS->data as $sVPS){
 					$sVPS = new VPS($sVPS["id"]);
-					echo "Pulling bandwidth for {$sVPS->sId} - {$sVPS->sHostname}\n";
 					$sPullBandwidth = explode("\n", $sSSH->exec("vzctl exec {$sVPS->sContainerId} ifconfig $interface | grep 'RX bytes' | awk -F: '{print $2,$3}' | awk '{print $1,$6}';"));
 					foreach($sPullBandwidth as $sData){
 						$sData = explode(" ", $sData);
@@ -135,10 +134,10 @@ class Pull {
 						$sChange = $sTotal;
 					}
 					
-					echo "{$sVPS->sId} - Total: {$sTotal} - Change: +{$sChange}\n";
+					echo "Bandwidth for: {$sVPS->sId} - Total: {$sTotal} - Change: +{$sChange}\n";
 					
-					$sVPS->sBandwidthUsage = $sVPS->sBandwidthUsage + $sChange;
-					$sVPS->sLastBandwidth = $sTotal;
+					$sVPS->uBandwidthUsage = $sVPS->sBandwidthUsage + $sChange;
+					$sVPS->uLastBandwidth = $sTotal;
 					$sVPS->InsertIntoDatabase();
 					
 					unset($sPullBandwidth);
