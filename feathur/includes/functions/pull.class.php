@@ -129,10 +129,10 @@ class Pull {
 					}
 					
 					if($sVPS->sLastBandwidth < $sTotal){
-							$sChange = ($sTotal - $sVPS->sLastBandwidth);
+							$sChange = round(($sTotal - $sVPS->sLastBandwidth), 2);
 					} else {
 						if(!empty($sVPS->sBandwidthUsage)){
-							$sChange = $sTotal;
+							$sChange = round($sTotal, 2);
 						}
 					}
 					
