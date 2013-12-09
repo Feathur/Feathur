@@ -25,6 +25,7 @@ class Pull {
 			die();
 		}
 		
+		// Pull system stats.
 		$sUptime = explode(' ', $sSSH->exec("cat /proc/uptime"));
 		$sCPU = explode(' ', $sSSH->exec("cat /proc/loadavg"));	
 		$sUsedRAM = preg_replace('/[^0-9]/', '', $sSSH->exec("free | head -n 3 | tail -n 1 | awk '{print $3}'"));
@@ -51,19 +52,30 @@ class Pull {
 			}
 		}
 		
-		// Update server row
+		// Update server row.
+		// Check to make sure that the current bandwidth is higher than last bandwidth.
+		// If higher, update statuses, otherwise replace both values with current value.
+		// This prevents bandwidth accounting from becoming negative.
+		$sBandwidthNegative = $sServer->sBandwidth;
+		if($sNewBandwidth > $sBandwidthNegative){
+			$sServer->uPreviousCheck = $sServer->sLastCheck;
+			$sServer->uLastCheck = $sTimestamp;
+			$sServer->uLastBandwidth = $sServer->sBandwidth;
+			$sServer->uBandwidth = $sNewBandwidth;
+		} else {
+			$sServer->uPreviousCheck = $sTimestamp;
+			$sServer->uLastCheck = $sTimestamp;
+			$sServer->uLastBandwidth = $sNewBandwidth;
+			$sServer->uBandwidth = $sNewBandwidth;
+		}
 		$sServer->uLoadAverage = $sCPU[0];
 		$sServer->uHardDiskTotal = $sDiskTotal;
 		$sServer->uHardDiskFree = ($sDiskTotal - $sDiskUsed);
 		$sServer->uTotalMemory = $sTotalRAM;
 		$sServer->uFreeMemory = ($sTotalRAM - $sUsedRAM);
-		$sServer->uLastBandwidth = $sServer->sBandwidth;
-		$sServer->uBandwidth = $sNewBandwidth;
 		$sServer->uStatus = true;
 		$sServer->uStatusWarning = false;
 		$sServer->uHardwareUptime = $sUptime[0];
-		$sServer->uPreviousCheck = $sServer->sLastCheck;
-		$sServer->uLastCheck = $sTimestamp;
 		$sServer->InsertIntoDatabase();
 		
 		// Update history
