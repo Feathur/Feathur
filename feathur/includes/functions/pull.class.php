@@ -5,6 +5,7 @@ class Pull {
 		
 		echo "Setting up prerequisites...\n";
 		$sTimestamp = time();
+		global $database;
 		// Insert History
 		$sHistory = new History(0);
 		$sHistory->uServerId = $sServer;
