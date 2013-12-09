@@ -14,6 +14,7 @@ class VPS extends CPHPDatabaseRecordClass {
 			'PrimaryIP' => "primary_ip",
 			'Nameserver' => "nameserver",
 			'BandwidthUsage' => "bandwidth_usage",
+			'LastBandwidth' => "last_bandwidth",
 			'Mac' => "mac",
 			'BootOrder' => "boot_order",
 			'NetworkDriver' => "network_driver",

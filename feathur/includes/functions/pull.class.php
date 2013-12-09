@@ -95,6 +95,46 @@ class Pull {
 		$sStatistics->uBandwidth = $sNewBandwidth;
 		$sStatistics->InsertIntoDatabase();
 		
+		// Cleanup
+		unset($sPullBandwidth);
+		
+		// Bandwidth polling for each VPS on this server.
+		$sBandwidthAccounting = Core::GetSetting('bandwidth_accounting');
+		if($sServer->sType == 'openvz'){
+			if($sListVPS = $database->CachedQuery("SELECT * FROM `vps` WHERE `server_id` = :ServerId", array("ServerId" => $sServer->sId))){
+				foreach($sListVPS->data as $sVPS){
+					$sPullBandwidth = explode("\n", $sSSH->exec("vzctl exec {$sVPS->sContainerId} ifconfig $interface | grep 'RX bytes' | awk -F: '{print $2,$3}' | awk '{print $1,$6}';"));
+					foreach($sPullBandwidth as $sData){
+						$sData = explode(" ", $sData);
+						$sData[0] = round(((preg_replace('/[^0-9]/', '', $sData[0]) / 1024) / 1024), 2);
+						$sData[1] = round(((preg_replace('/[^0-9]/', '', $sData[1]) / 1024) / 1024), 2);
+						
+						if($sBandwidthAccounting->sValue == 'upload'){
+							$sTotal = $sTotal + $sData[0];
+						}
+						
+						if($sBandwidthAccounting->sValue == 'download'){
+							$sTotal = $sTotal + $sData[1];
+						}
+						
+						if($sBandwidthAccounting->sValue == 'both'){
+							$sTotal = $sTotal + $sData[0] + $sData[1];
+						}
+					}
+					
+					if($sVPS->sLastBandwidth < $sTotal){
+						$sChange = ($sTotal - $sVPS->sLastBandwidth);
+					} else {
+						$sChange = $sTotal;
+					}
+					
+					$sVPS->sBandwidthUsage = $sVPS->sBandwidthUsage + $sChange;
+					$sVPS->sLastBandwidth = $sTotal;
+					$sVPS->InsertIntoDatabase();
+				}
+			}
+		}
+		
 		return true;
 	}
 }

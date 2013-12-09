@@ -92,91 +92,14 @@ if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 	echo "Finished launching uptime checkers.\n";
 }
 
-
-
-// Begin pulling bandwidth assuming that:
-// 2. A pull isn't still in progress (EG: template.lock)
-$sLock = $sLocalSSH->exec("cat /var/feathur/data/bandwidth.lock");
-if(strpos($sLock, 'No such file or directory') !== false) {
-
-	// Issue bandwidth lock.
-	echo "Starting bandwidth calculations...\n";
-	$sLock = $sLocalSSH->exec("echo \"{$sTime}\" > /var/feathur/data/bandwidth.lock;");
-	$sBandwidthAccounting = Core::GetSetting('bandwidth_accounting');
-	$sBefore = (time() - (60 * 5));
-	if($sOpenVZ = $database->CachedQuery("SELECT * FROM servers WHERE `type` = 'openvz' && `bandwidth_timestamp` < :Before LIMIT 20", array("Before" => $sBefore))){
-		foreach($sOpenVZ->data as $sValue){
-			$sServer = new Server($sValue["id"]);
-			$sServerConnect = $sServer->server_connect($sServer);
-			
-			$sSetup = $sServerConnect->exec("cat /var/feathur/data/feathur-bandwidth.txt");
-			if(strpos($sSetup, 'No such file or directory') !== false) {
-				echo "Installing bandwidth monitor on server {$sServer->sName}\n";
-				$sCommandList = escapeshellarg("rm -rf *bandwidth.sh*;wget http://feathur.com/scripts/openvz-bandwidth.sh;bash openvz-bandwidth.sh;");
-				$sExecute = $sServerConnect->exec("screen -dm -S cron bash -c {$sCommandList};");
-			} else {
-			
-				echo "Running bandwidth query on server {$sServer->sName}\n";
-				$sExecute = $sServerConnect->exec("cd /var/feathur/data/;bash bandwidth.sh;");
-				$sBandwidth = $sServerConnect->exec("cat /var/feathur/data/bandwidth.txt;");
-				
-				$sBandwidth = explode("\n", $sBandwidth);
-				foreach($sBandwidth as $sIP){
-					$sIP = explode(" ", $sIP);
-					if((isset($sIP[1])) && (isset($sIP[2]))){
-						$sIP[1] = round((($sIP[1] / 1024) / 1024), 4);
-						$sIP[2] = round((($sIP[1] / 1024) / 1024), 4);
-						if($sBandwidthAccounting == 'both'){
-							$sBandwidthUsed = $sIP[1] + $sIP[2];
-						} elseif($sBandwidthAccounting == 'up'){
-							$sBandwidthUsed = $sIP[1];
-						} elseif($sBandwidthAccounting == 'down'){
-							$sBandwidthUsed = $sIP[2];
-						} else {
-							$sBandwidthUsed = $sIP[1] + $sIP[2];
-						}
-						
-						$sTotalBandwidth = $sTotalBandwidth + $sIP[1] + $sIP[2];
-					} else {
-						echo "Skipping blank line...\n";
-					}
-					try {
-						if($sIPData = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `ip_address` = :IP", array("IP" => $sIP[0]))){
-							if(!empty($sIPData->data[0]["vps_id"])){
-								$sVPS = new VPS($sIPData->data[0]["vps_id"]);
-								$sPreUpdate = $sVPS->sBandwidthUsage;
-								$sVPS->uBandwidthUsage = $sBandwidthUsed + $sPreUpdate;
-								$sVPS->InsertIntoDatabase();
-								echo "{$sVPS->sId} ({$sIP[0]}) => Old: {$sPreUpdate} | New: {$sVPS->sBandwidthUsage} | Added: {$sBandwidthUsed}\n";
-							} else {
-								$sLog[] = array("result" => "For some reason the IP {$sIPData->data[0]["ip_address"]} is generating traffic, but it isn't assigned to a VPS. You might want to take a look into this.", "command" => "Automated bandwidth checker.");
-								$sSaveLog = ServerLogs::save_server_logs($sLog, $sServer);
-								unset($sLog);
-							}
-						}
-					} catch (Exception $e) {
-						echo "Skipping IP {$sIP[0]}\n";
-					}
-					unset($sBandwidthUsed);
-					$sTotalIPs++;
-				}
-				
-				$sServerConnect->exec("pkill pmacctd;pmacctd -c src_host,dst_host -f /usr/local/etc/pmacctd.conf;");
-				
-				unset($sTotalBandwidth);
-				unset($sTotalIPs);
-				$sServer->uBandwidthTimestamp = time();
-				$sServer->InsertIntoDatabase();
-			}
-			$sCurrent++;
-		}
-		echo "Finishing up OpenVZ bandwidth accounting...\n";
-	} else {
-		echo "Skipping OpenVZ bandwidth accounting, no servers currently available.\n";
-	}
-
-} else {
-	echo "Another bandwidth cron is currently running, skipping bandwidth calculations.\n";
+// Reset bandwidth if today is the first day of the month and the last reset was more than 10 days ago.
+$sLastReset = Core::GetSetting('bandwidth_timestamp');
+$sTimeAgo = (time() - (((60 * 60) * 24) * 10));
+$sDayToday = date('j');
+if(($sLastReset->sValue < $sTimeAgo) && ($sDayToday == 1)){
+	$sReset = $database->prepare("UPDATE `vps` SET `bandwidth_usage` = '0'");
+	$sReset->execute();
+	$sUpdateReset = Core::UpdateSetting('bandwidth_timestamp', time());
 }
 
 // License
@@ -200,6 +123,8 @@ if($sLicense["type"] == 'success'){
 	$sUpdateLicense = Core::UpdateSetting('license', "0");
 }
 
+
+// Check for updates.
 echo "Checking for updates if available...";
 $sAutomaticUpdates = Core::GetSetting('automatic_updates');
 $sAutomaticUpdates = $sAutomaticUpdates->sValue;
