@@ -129,9 +129,11 @@ class Pull {
 					}
 					
 					if($sVPS->sLastBandwidth < $sTotal){
-						$sChange = ($sTotal - $sVPS->sLastBandwidth);
+							$sChange = ($sTotal - $sVPS->sLastBandwidth);
 					} else {
-						$sChange = $sTotal;
+						if(!empty($sVPS->sBandwidthUsage)){
+							$sChange = $sTotal;
+						}
 					}
 					
 					echo "Bandwidth for: {$sVPS->sId} - Total: {$sTotal} - Change: +{$sChange}\n";
