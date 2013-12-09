@@ -7,12 +7,14 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 	foreach($sServerList->data as $sServer){
 		$sServer = new Server($sServer["id"]);
 		
+		// Defines left or right in template.
 		if($sType == 1){
 			$sType = 0;
 		} else {
 			$sType = 1;
 		}
 		
+		// Calculates hard disk usage percentages.
 		$sServerHDF = $sServer->sHardDiskFree;
 		$sServerHDT = $sServer->sHardDiskTotal;
 		if((!empty($sServerHDF)) && (!empty($sServerHDT))){
@@ -23,6 +25,7 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 			$sHardDiskFree = 1;
 		}
 		
+		// Calculates memory usage percentages.
 		$sServerFM = $sServer->sFreeMemory;
 		$sServerTM = $sServer->sTotalMemory;
 		if((!empty($sServerTM)) && (!empty($sServerFM))){
@@ -33,16 +36,18 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 			$sRAMFree = 1;
 		}
 		
+		// Calculates bandwidth average usage in mbps.
+		$sBandwidthDifference = "N/A";
 		$sLastCheck = $sServer->sLastCheck;
 		$sPreviousCheck = $sServer->sPreviousCheck;
 		$sBandwidth = $sServer->sBandwidth;
 		$sLastBandwidth = $sServer->sLastBandwidth;
 		if((!empty($sLastCheck)) && (!empty($sPreviousCheck)) && (!empty($sBandwidth)) && (!empty($sLastBandwidth))){
 			$sTimeDifference = $sLastCheck - $sPreviousCheck;
-			$sBandwidthDifference = round((($sBandwidth - $sLastBandwidth) / $sTimeDifference), 2);
-			$sBandwidthDifference = "{$sBandwidthDifference} Mbps";
-		} else {
-			$sBandwidthDifference = "N/A";
+			if(!empty($sTimeDifference)){
+				$sBandwidthDifference = round((($sBandwidth - $sLastBandwidth) / $sTimeDifference), 2);
+				$sBandwidthDifference = "{$sBandwidthDifference} Mbps";
+			}
 		}
 		
 		$sStatistics[] = array("name" => $sServer->sName,
@@ -60,10 +65,16 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 			$sDown[] = array("name" => $sServer->sName);
 		}
 		
+		// Cleanup just in case.
 		unset($sHardDiskUsed);
 		unset($sHardDiskFree);
 		unset($sRAMUsed);
 		unset($sRAMFree);
+		unset($sLastCheck);
+		unset($sPreviousCheck);
+		unset($sBandwidth);
+		unset($sLastBandwidth);
+		unset($sBandwidthDifference);
 	}
 }
 
