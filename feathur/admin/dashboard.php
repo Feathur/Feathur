@@ -33,6 +33,18 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 			$sRAMFree = 1;
 		}
 		
+		$sLastCheck = $sServer->sLastCheck;
+		$sPreviousCheck = $sServer->sPreviousCheck;
+		$sBandwidth = $sServer->sBandwidth;
+		$sLastBandwidth = $sServer->sLastBandwidth;
+		if((!empty($sLastCheck)) && (!empty($sPreviousCheck)) && (!empty($sBandwidth)) && (!empty($sLastBandwidth))){
+			$sTimeDifference = $sLastCheck - $sPreviousCheck;
+			$sBandwidthDifference = round((($sBandwidth - $sLastBandwidth) / $sTimeDifference), 2);
+			$sBandwidthDifference = "{$sBandwidthDifference} Mbps";
+		} else {
+			$sBandwidthDifference = "N/A";
+		}
+		
 		$sStatistics[] = array("name" => $sServer->sName,
 								"load_average" => $sServer->sLoadAverage,
 								"disk_usage" => $sHardDiskUsed,
@@ -41,7 +53,8 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 								"ram_free" => $sRAMFree,
 								"status" => $sServer->sStatus,
 								"uptime" => ConvertTime(round($sServer->sHardwareUptime, 0)),
-								"type" => $sType);
+								"type" => $sType,
+								"bandwidth" => $sBandwidthDifference);
 		
 		if(empty($sServer->sStatus)){
 			$sDown[] = array("name" => $sServer->sName);

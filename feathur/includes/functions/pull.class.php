@@ -44,10 +44,10 @@ class Pull {
 		$sDiskTotal = $sDiskTotal / 1048576;
 		
 		$sPullBandwidth = explode("\n", $sSSH->exec("ifconfig $interface | grep 'RX bytes' | awk -F: '{print $2,$3}' | awk '{print $1,$6}'"));
-		foreach($sPullBandwidth as $value){
-			$value = explode(' ', $value);
-			foreach($value as $number){
-				$sBandwidth = $sBandwidth + $number;
+		foreach($sPullBandwidth as $sData){
+			if(empty($sNewBandwidth)){
+				$sData = explode(" ", $sData);
+				$sNewBandwidth = round(($sData[0] / 131072) + ($sData[1] / 131072), 2);
 			}
 		}
 		
@@ -57,10 +57,12 @@ class Pull {
 		$sServer->uHardDiskFree = ($sDiskTotal - $sDiskUsed);
 		$sServer->uTotalMemory = $sTotalRAM;
 		$sServer->uFreeMemory = ($sTotalRAM - $sUsedRAM);
-		$sServer->uBandwidth = $sBandwidth;
+		$sServer->uLastBandwidth = $sServer->sBandwidth;
+		$sServer->uBandwidth = $sNewBandwidth;
 		$sServer->uStatus = true;
 		$sServer->uStatusWarning = false;
 		$sServer->uHardwareUptime = $sUptime[0];
+		$sServer->uPreviousCheck = $sServer->sLastCheck;
 		$sServer->uLastCheck = $sTimestamp;
 		$sServer->InsertIntoDatabase();
 		
@@ -75,8 +77,8 @@ class Pull {
 		$sStatistics->uFreeMemory = ($sTotalRAM - $sUsedRAM);
 		$sStatistics->uLoadAverage = $sCPU[0];
 		$sStatistics->uHardDiskTotal = $sDiskTotal;
-		$sStatistics->uHardDiskUsed = ($sDiskTotal - $sDiskUsed);
-		$sStatistics->uBandwidth = $sBandwidth;
+		$sStatistics->uHardDiskFree = ($sDiskTotal - $sDiskUsed);
+		$sStatistics->uBandwidth = $sNewBandwidth;
 		$sStatistics->InsertIntoDatabase();
 		
 		return true;
