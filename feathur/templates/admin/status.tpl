@@ -35,7 +35,7 @@
 			<div class="simplebox grid360-{%if isempty|server[type] == true}right{%/if}{%if isempty|server[type] == false}left{%/if}" style="padding:3px;padding-bottom:10px;">
 				<div class="titleh">
 					<h3>
-						<div style="width:40%;float:left;">
+						<div style="width:39%;float:left;">
 							<img src="./templates/status/{%if isempty|server[status] == true}offline{%/if}{%if isempty|server[status] == false}online{%/if}.png" style="width:10px;height:10px;">{%if isset|server[name] == true}{%?server[name]}{%/if}
 						</div>
 						{%if isempty|server[status] == false}
