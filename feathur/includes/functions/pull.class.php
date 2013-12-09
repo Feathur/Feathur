@@ -3,6 +3,7 @@ class Pull {
 
 	public static function pull_status($sServer){
 		
+		echo "Setting up prerequisites...\n";
 		$sTimestamp = time();
 		// Insert History
 		$sHistory = new History(0);
@@ -26,6 +27,7 @@ class Pull {
 		}
 		
 		// Pull system stats.
+		echo "Connected to server...\n";
 		$sUptime = explode(' ', $sSSH->exec("cat /proc/uptime"));
 		$sCPU = explode(' ', $sSSH->exec("cat /proc/loadavg"));	
 		$sUsedRAM = preg_replace('/[^0-9]/', '', $sSSH->exec("free | head -n 3 | tail -n 1 | awk '{print $3}'"));
@@ -97,12 +99,15 @@ class Pull {
 		
 		// Cleanup
 		unset($sPullBandwidth);
+		echo "Server polling completed...\n";
 		
 		// Bandwidth polling for each VPS on this server.
 		$sBandwidthAccounting = Core::GetSetting('bandwidth_accounting');
+		echo "Beginning bandwidth accounting\n";
 		if($sServer->sType == 'openvz'){
 			if($sListVPS = $database->CachedQuery("SELECT * FROM `vps` WHERE `server_id` = :ServerId", array("ServerId" => $sServer->sId))){
 				foreach($sListVPS->data as $sVPS){
+					echo "Pulling bandwidth for {$sVPS->sId} - {$sVPS->sHostname}\n";
 					$sPullBandwidth = explode("\n", $sSSH->exec("vzctl exec {$sVPS->sContainerId} ifconfig $interface | grep 'RX bytes' | awk -F: '{print $2,$3}' | awk '{print $1,$6}';"));
 					foreach($sPullBandwidth as $sData){
 						$sData = explode(" ", $sData);
@@ -135,6 +140,7 @@ class Pull {
 			}
 		}
 		
+		echo "Completed.\n";
 		return true;
 	}
 }
