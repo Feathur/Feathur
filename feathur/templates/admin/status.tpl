@@ -28,6 +28,13 @@
 		</div>
 		<br><br>
 	{%/if}
+	{%if isset|High == true}
+		<div class="albox warningbox">
+		High bandwidth usage on: {%foreach system in High}{%?system[name]}, {%/foreach}
+			<a href="#" class="close tips" title="close">close</a>
+		</div>
+		<br><br>
+	{%/if}
 	<div style="width:30px;display:inline;white-space:nowrap;">Last update: <a id="timer" style="white-space:nowrap;">0</a> seconds ago</div>
 	<br><br>
 	{%if isset|Statistics == true}

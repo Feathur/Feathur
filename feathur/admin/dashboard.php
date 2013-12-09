@@ -46,6 +46,10 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 			$sTimeDifference = $sLastCheck - $sPreviousCheck;
 			if(!empty($sTimeDifference)){
 				$sBandwidthDifference = round((($sBandwidth - $sLastBandwidth) / $sTimeDifference), 2);
+				// Alert if bandwidth average over 100 mbps.
+				if($sBandwidthDifference > 100){
+					$sHigh[] = array("name" => $sServer->sName);
+				}
 				$sBandwidthDifference = "{$sBandwidthDifference} Mbps";
 			}
 		}
