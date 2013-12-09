@@ -13,8 +13,6 @@ class VPS extends CPHPDatabaseRecordClass {
 			'Hostname' => "hostname",
 			'PrimaryIP' => "primary_ip",
 			'Nameserver' => "nameserver",
-			'BandwidthUsage' => "bandwidth_usage",
-			'LastBandwidth' => "last_bandwidth",
 			'Mac' => "mac",
 			'BootOrder' => "boot_order",
 			'NetworkDriver' => "network_driver",
@@ -43,6 +41,8 @@ class VPS extends CPHPDatabaseRecordClass {
 			'Rebuilding' => "rebuilding",
 			'VNCPort' => "vnc_port",
 			'PrivateNetwork' => "private_network",
+			'BandwidthUsage' => "bandwidth_usage",
+			'LastBandwidth' => "last_bandwidth",
 		),
 	);
 	
