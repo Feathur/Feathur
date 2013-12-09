@@ -48,6 +48,8 @@ class Pull {
 		foreach($sPullBandwidth as $sData){
 			if(empty($sNewBandwidth)){
 				$sData = explode(" ", $sData);
+				$sData[0] = preg_replace('/[^0-9]/', '', $sData[0]);
+				$sData[1] = preg_replace('/[^0-9]/', '', $sData[1]);
 				$sNewBandwidth = round(($sData[0] / 131072) + ($sData[1] / 131072), 2);
 			}
 		}
