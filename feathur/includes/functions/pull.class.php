@@ -108,6 +108,7 @@ class Pull {
 		if($sServer->sType == 'openvz'){
 			if($sListVPS = $database->CachedQuery("SELECT * FROM `vps` WHERE `server_id` = :ServerId", array("ServerId" => $sServer->sId))){
 				foreach($sListVPS->data as $sVPS){
+					$sVPS = new VPS($sVPS["id"]);
 					echo "Pulling bandwidth for {$sVPS->sId} - {$sVPS->sHostname}\n";
 					$sPullBandwidth = explode("\n", $sSSH->exec("vzctl exec {$sVPS->sContainerId} ifconfig $interface | grep 'RX bytes' | awk -F: '{print $2,$3}' | awk '{print $1,$6}';"));
 					foreach($sPullBandwidth as $sData){
@@ -137,6 +138,11 @@ class Pull {
 					$sVPS->sBandwidthUsage = $sVPS->sBandwidthUsage + $sChange;
 					$sVPS->sLastBandwidth = $sTotal;
 					$sVPS->InsertIntoDatabase();
+					
+					unset($sPullBandwidth);
+					unset($sData);
+					unset($sTotal);
+					unset($sChange);
 				}
 			}
 		}
