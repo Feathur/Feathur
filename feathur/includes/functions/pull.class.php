@@ -164,7 +164,7 @@ class Pull {
 					$sVPSId = preg_replace('/[^0-9]/', '', $sData[0]);
 					try {
 						if(!empty($sVPSId)){
-							if($sListVPS = $database->CachedQuery("SELECT * FROM `vps` WHERE `container_id` = :ContainerId", array("ContainerId" => $sVPSId))){
+							if($sListVPS = $database->CachedQuery("SELECT * FROM `vps` WHERE `container_id` = :ContainerId AND `type` = :Type", array("ContainerId" => $sVPSId, "type" => "kvm"))){
 								$sVPS = new VPS($sListVPS->data[0]["id"]);
 							}
 						} else {
