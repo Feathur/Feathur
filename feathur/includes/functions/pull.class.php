@@ -156,12 +156,7 @@ class Pull {
 		// KVM Processing instructions
 		if($sServer->sType == 'kvm'){
 $sPullCommand = <<<COMMAND
-for i in `ip link show | grep mtu | awk '{print $2}' | awk -F: '{print $1}'`;
-do 
-	vpsid=$(echo $i | awk -F. '{print $1}' | awk -Fm '{print $2}');
-	vpsbw=`ifconfig $i | grep 'RX bytes' | awk -F: '{print $2,$3}' | awk '{print $1,$6}';`
-	echo "$vpsid $vpsbw";
-done
+for i in `ip link show | grep mtu | awk '{print $2}' | awk -F: '{print $1}'`; do  vpsid=$(echo $i | awk -F. '{print $1}' | awk -Fm '{print $2}'); vpsbw=`ifconfig $i | grep 'RX bytes' | awk -F: '{print $2,$3}' | awk '{print $1,$6}';`; echo "$vpsid $vpsbw"; done
 COMMAND;
 			$sPullCommand = escapeshellarg($sPullCommand);
 			$sPullBandwidth = $sSSH->exec("echo {$sPullCommand} > /var/feathur/data/bandwidth.check.sh; bash /var/feathur/data/bandwidth.check.sh;");
