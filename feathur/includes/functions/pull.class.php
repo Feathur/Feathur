@@ -156,7 +156,7 @@ class Pull {
 		if($sServer->sType == 'kvm'){
 			$sPullBandwidth = explode("\n", $sSSH->exec("for i in `ip link show | grep mtu | awk '{print $2}' | awk -F: '{print $1}'`; do echo -n \"$(echo $i | awk -F. '{print $1}' | awk -Fm '{print $2}') \"; ifconfig $i | grep 'RX bytes' | awk -F: '{print $2,$3}' | awk '{print $1,$6}'; done"));
 			foreach($sPullBandwidth as $sVPS => $sRow){
-				$sVPS = preg_replace('/[^0-9]/', '', $sData[0]);
+				$sVPS = preg_replace('/[^0-9]/', '', $sVPS);
 				try {
 					$sVPS = new VPS($sVPS);
 				} catch (Exception $e) {
