@@ -155,7 +155,7 @@ class Pull {
 		
 		// KVM Processing instructions
 		if($sServer->sType == 'kvm'){
-			$sPullBandwidth = explode("\n", $sSSH->exec("for i in `ip link show | grep mtu | awk '{print $2}' | awk -F: '{print $1}'`; do echo -n $(echo $i | awk -F. '{print $1}' | awk -Fm '{print $2}'); echo -n ' '; ifconfig $i | grep 'RX bytes' | awk -F: '{print $2,$3}' | awk '{print $1,$6}'; done"));
+			$sPullBandwidth = $sSSH->exec("for i in `ip link show | grep mtu | awk '{print $2}' | awk -F: '{print $1}'`; do echo -n $(echo $i | awk -F. '{print $1}' | awk -Fm '{print $2}'); echo -n ' '; ifconfig $i | grep 'RX bytes' | awk -F: '{print $2,$3}' | awk '{print $1,$6}'; done");
 			var_dump($sPullBandwidth);
 			foreach($sPullBandwidth as $sVPS => $sRow){
 				/*
