@@ -161,16 +161,16 @@ class Pull {
 				$sCheckValid = str_split($sRow);
 				if(ctype_digit($sCheckValid[0])){
 					$sData = explode(" ", $sRow);
-					$sVPS = preg_replace('/[^0-9]/', '', $sData[0]);
+					$sVPSId = preg_replace('/[^0-9]/', '', $sData[0]);
 					try {
-						if(!empty($sVPS)){
-							$sVPS = new VPS($sVPS);
+						if(!empty($sVPSId)){
+							$sVPS = new VPS($sVPSId);
 						} else {
-							echo "Skipping invalid VPS (1)\n";
+							echo "Skipping invalid VPS - {$sVPSId} - (1)\n";
 							continue;
 						}
 					} catch (Exception $e) {
-						echo "Skipping invalid VPS (2) \n";
+						echo "Skipping invalid VPS - {$sVPSId} - (2) \n";
 						continue;
 					}
 					
