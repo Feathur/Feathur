@@ -212,7 +212,7 @@ class Pull {
 						}
 					}
 					
-					echo "Bandwidth for: {$sVPS->sId} - Total: {$sTotal} - Change: +{$sChange}\n";
+					echo "Bandwidth for: {$sVPS->sId} - Last: {$sVPS->sLastBandwidth} - New: {$sTotal} - Change: +{$sChange}\n";
 					
 					$sVPS->uBandwidthUsage = $sVPS->sBandwidthUsage + $sChange;
 					$sVPS->uLastBandwidth = $sTotal;
