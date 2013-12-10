@@ -155,11 +155,11 @@ class Pull {
 		// KVM Processing instructions
 		if($sServer->sType == 'kvm'){
 			$sPullBandwidth = explode("\n", $sSSH->exec("for i in `ip link show | grep mtu | awk '{print $2}' | awk -F: '{print $1}'`; do echo -n \"$(echo $i | awk -F. '{print $1}' | awk -Fm '{print $2}') \"; ifconfig $i | grep 'RX bytes' | awk -F: '{print $2,$3}' | awk '{print $1,$6}'; done"));
+			var_dump($sPullBandwidth);
 			foreach($sPullBandwidth as $sRow){
 				$sCheckValid = str_split($sRow);
 				if(ctype_digit($sCheckValid[0])){
 					$sData = explode(" ", $sRow);
-					var_dump($sRow);
 					$sData[0] = preg_replace('/[^0-9]/', '', $sData[0]);
 					$sData[1] = round(((preg_replace('/[^0-9]/', '', $sData[1]) / 1024) / 1024), 2);
 					$sData[2] = round(((preg_replace('/[^0-9]/', '', $sData[2]) / 1024) / 1024), 2);
