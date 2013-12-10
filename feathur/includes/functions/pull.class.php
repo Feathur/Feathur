@@ -130,7 +130,8 @@ class Pull {
 						}
 					}
 					
-					if($sVPS->sLastBandwidth < $sTotal){
+					$sLastBandwidth = $sVPS->sLastBandwidth;
+					if($sLastBandwidth < $sTotal){
 							$sChange = round(($sTotal - $sVPS->sLastBandwidth), 2);
 					} else {
 						if(!empty($sVPS->sBandwidthUsage)){
@@ -202,10 +203,11 @@ class Pull {
 						$sTotal = $sTotal + $sData[2] + $sData[1];
 					}
 					
-					if($sVPS->sLastBandwidth < $sTotal){
+					$sLastBandwidth = ($sVPS->sLastBandwidth - 50);
+					if($sLastBandwidth < $sTotal){
 							$sChange = round(($sTotal - $sVPS->sLastBandwidth), 2);
 					} else {
-						if(!empty($sVPS->sBandwidthUsage)){
+						if((!empty($sVPS->sBandwidthUsage)) && ($sTotal < 2000)){
 							$sChange = round($sTotal, 2);
 						}
 					}
