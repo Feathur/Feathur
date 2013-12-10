@@ -157,7 +157,6 @@ class Pull {
 		// KVM Processing instructions
 		if($sServer->sType == 'kvm'){
 			$sPullBandwidth = explode("\n", $sSSH->exec('for i in `ip link show | grep mtu | awk \'{print $2}\' | awk -F: \'{print $1}\'`; do  vpsid=$(echo $i | awk -F. \'{print $1}\' | awk -Fm \'{print $2}\'); vpsbw=`ifconfig $i | grep \'RX bytes\' | awk -F: \'{print $2,$3}\' | awk \'{print $1,$6}\';`; echo "$vpsid $vpsbw"; done'));
-			var_dump($sPullBandwidth);
 			foreach($sPullBandwidth as $sRow){
 				$sCheckValid = str_split($sRow);
 				if(ctype_digit($sCheckValid[0])){
@@ -214,7 +213,9 @@ class Pull {
 					
 					echo "Bandwidth for: {$sVPS->sId} - Last: {$sVPS->sLastBandwidth} - New: {$sTotal} - Change: +{$sChange}\n";
 					
-					$sVPS->uBandwidthUsage = $sVPS->sBandwidthUsage + $sChange;
+					if($sChange < 5000){
+						$sVPS->uBandwidthUsage = $sVPS->sBandwidthUsage + $sChange;
+					}
 					$sVPS->uLastBandwidth = $sTotal;
 					$sVPS->InsertIntoDatabase();
 					
