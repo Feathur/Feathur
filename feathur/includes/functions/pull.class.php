@@ -164,8 +164,10 @@ class Pull {
 					$sVPSId = preg_replace('/[^0-9]/', '', $sData[0]);
 					try {
 						if(!empty($sVPSId)){
-							if($sListVPS = $database->CachedQuery("SELECT * FROM `vps` WHERE `container_id` = :ContainerId AND `type` = :Type", array("ContainerId" => $sVPSId, "type" => "kvm"))){
+							if($sListVPS = $database->CachedQuery("SELECT * FROM `vps` WHERE `container_id` = :ContainerId AND `type` = :Type AND `server_id` = :ServerId", array("ContainerId" => $sVPSId, "Type" => "kvm", "ServerId" => $sServer->sId))){
 								$sVPS = new VPS($sListVPS->data[0]["id"]);
+							} else {
+								echo "Skipping... no VPS found for this ID.\n";
 							}
 						} else {
 							echo "Skipping invalid VPS - {$sVPSId} - (1)\n";
