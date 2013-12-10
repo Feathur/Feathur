@@ -157,55 +157,58 @@ class Pull {
 		if($sServer->sType == 'kvm'){
 			$sPullBandwidth = explode("\n", $sSSH->exec('for i in `ip link show | grep mtu | awk \'{print $2}\' | awk -F: \'{print $1}\'`; do  vpsid=$(echo $i | awk -F. \'{print $1}\' | awk -Fm \'{print $2}\'); vpsbw=`ifconfig $i | grep \'RX bytes\' | awk -F: \'{print $2,$3}\' | awk \'{print $1,$6}\';`; echo "$vpsid $vpsbw"; done'));
 			var_dump($sPullBandwidth);
-			foreach($sPullBandwidth as $sVPS => $sRow){
-				/*
-				$sVPS = preg_replace('/[^0-9]/', '', $sVPS);
-				try {
-					if(!empty($sVPS)){
-						$sVPS = new VPS($sVPS);
-					} else {
-						echo "Skipping invalid VPS (1)\n";
+			foreach($sPullBandwidth as $sRow){
+				$sCheckValid = str_split($sRow);
+				if(ctype_digit($sCheckValid[0])){
+					$sData = explode(" ", $sRow);
+					$sVPS = preg_replace('/[^0-9]/', '', $sData[0]);
+					try {
+						if(!empty($sVPS)){
+							$sVPS = new VPS($sVPS);
+						} else {
+							echo "Skipping invalid VPS (1)\n";
+							continue;
+						}
+					} catch (Exception $e) {
+						echo "Skipping invalid VPS (2) \n";
 						continue;
 					}
-				} catch (Exception $e) {
-					echo "Skipping invalid VPS (2) \n";
-					continue;
-				}
-				
-				$sData = explode(" ", $sRow);
-				$sData[0] = round(((preg_replace('/[^0-9]/', '', $sData[0]) / 1024) / 1024), 2);
-				$sData[1] = round(((preg_replace('/[^0-9]/', '', $sData[1]) / 1024) / 1024), 2);
-				
-				if($sBandwidthAccounting->sValue == 'upload'){
-					$sTotal = $sTotal + $sData[1];
-				}
 					
-				if($sBandwidthAccounting->sValue == 'download'){
-					$sTotal = $sTotal + $sData[0];
-				}
+					$sData[1] = round(((preg_replace('/[^0-9]/', '', $sData[1]) / 1024) / 1024), 2);
+					$sData[2] = round(((preg_replace('/[^0-9]/', '', $sData[2]) / 1024) / 1024), 2);
 					
-				if($sBandwidthAccounting->sValue == 'both'){
-					$sTotal = $sTotal + $sData[0] + $sData[1];
-				}
-				
-				if($sVPS->sLastBandwidth < $sTotal){
-						$sChange = round(($sTotal - $sVPS->sLastBandwidth), 2);
-				} else {
-					if(!empty($sVPS->sBandwidthUsage)){
-						$sChange = round($sTotal, 2);
+					if($sBandwidthAccounting->sValue == 'upload'){
+						$sTotal = $sTotal + $sData[2];
 					}
+						
+					if($sBandwidthAccounting->sValue == 'download'){
+						$sTotal = $sTotal + $sData[1];
+					}
+						
+					if($sBandwidthAccounting->sValue == 'both'){
+						$sTotal = $sTotal + $sData[2] + $sData[1];
+					}
+					
+					if($sVPS->sLastBandwidth < $sTotal){
+							$sChange = round(($sTotal - $sVPS->sLastBandwidth), 2);
+					} else {
+						if(!empty($sVPS->sBandwidthUsage)){
+							$sChange = round($sTotal, 2);
+						}
+					}
+					
+					echo "Bandwidth for: {$sVPS->sId} - Total: {$sTotal} - Change: +{$sChange}\n";
+					
+					$sVPS->uBandwidthUsage = $sVPS->sBandwidthUsage + $sChange;
+					$sVPS->uLastBandwidth = $sTotal;
+					$sVPS->InsertIntoDatabase();
+					
+					unset($sData);
+					unset($sTotal);
+					unset($sChange);
+				} else {
+					echo "Skipping row... invalid.\n";
 				}
-				
-				echo "Bandwidth for: {$sVPS->sId} - Total: {$sTotal} - Change: +{$sChange}\n";
-				
-				$sVPS->uBandwidthUsage = $sVPS->sBandwidthUsage + $sChange;
-				$sVPS->uLastBandwidth = $sTotal;
-				$sVPS->InsertIntoDatabase();
-				
-				unset($sData);
-				unset($sTotal);
-				unset($sChange);
-				*/
 			}
 			unset($sPullBandwidth);
 		}
