@@ -158,9 +158,14 @@ class Pull {
 			foreach($sPullBandwidth as $sVPS => $sRow){
 				$sVPS = preg_replace('/[^0-9]/', '', $sVPS);
 				try {
-					$sVPS = new VPS($sVPS);
+					if(!empty($sVPS)){
+						$sVPS = new VPS($sVPS);
+					} else {
+						echo "Skipping invalid VPS (1)\n";
+						continue;
+					}
 				} catch (Exception $e) {
-					echo "Skipping invalid VPS\n";
+					echo "Skipping invalid VPS (2) \n";
 					continue;
 				}
 				
