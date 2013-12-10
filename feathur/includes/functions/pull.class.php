@@ -164,7 +164,9 @@ class Pull {
 					$sVPSId = preg_replace('/[^0-9]/', '', $sData[0]);
 					try {
 						if(!empty($sVPSId)){
-							$sVPS = new VPS($sVPSId);
+							if($sListVPS = $database->CachedQuery("SELECT * FROM `vps` WHERE `container_id` = :ContainerId", array("ContainerId" => $sVPSId))){
+								$sVPS = new VPS($sListVPS->data[0]["id"]);
+							}
 						} else {
 							echo "Skipping invalid VPS - {$sVPSId} - (1)\n";
 							continue;
