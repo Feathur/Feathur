@@ -1,5 +1,15 @@
 ==============================
-0.6.3.2 - December 3, 2013
+0.6.3.3 - December 10, 2013
+==============================
+- New (accurate) openvz bandwidth counter.
+- New (accurate) kvm bandwidth counter.
+- Misc patches to uptime tracker.
+- "High bandwidth usage" warning on uptime tracker.
+- Average 1 minute bandwidth usage in Mbps (uptime tracker).
+- 10 Misc patches to various systems.
+
+==============================
+0.6.3.2 - December 8, 2013
 ==============================
 - Fixed template missing startup errors (kvm).
 - Added debugging to template sync.
