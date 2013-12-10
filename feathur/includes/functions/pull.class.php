@@ -159,6 +159,7 @@ class Pull {
 				$sCheckValid = str_split($sRow);
 				if(ctype_digit($sCheckValid[0])){
 					$sData = explode(" ", $sRow);
+					var_dump($sData);
 					$sData[0] = preg_replace('/[^0-9]/', '', $sData[0]);
 					$sData[1] = round(((preg_replace('/[^0-9]/', '', $sData[1]) / 1024) / 1024), 2);
 					$sData[2] = round(((preg_replace('/[^0-9]/', '', $sData[2]) / 1024) / 1024), 2);
