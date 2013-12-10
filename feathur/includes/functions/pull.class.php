@@ -169,6 +169,7 @@ class Pull {
 					} catch (Exception $e) {
 						continue;
 					}
+					echo $sVPS->sId;
 					
 					if($sBandwidthAccounting->sValue == 'upload'){
 						$sTotal = $sTotal + $sData[2];
