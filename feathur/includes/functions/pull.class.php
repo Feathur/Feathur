@@ -168,13 +168,22 @@ class Pull {
 								$sVPS = new VPS($sListVPS->data[0]["id"]);
 							} else {
 								echo "Skipping... no VPS found for this ID.\n";
+								unset($sData);
+								unset($sTotal);
+								unset($sChange);
 							}
 						} else {
 							echo "Skipping invalid VPS - {$sVPSId} - (1)\n";
+							unset($sData);
+							unset($sTotal);
+							unset($sChange);
 							continue;
 						}
 					} catch (Exception $e) {
 						echo "Skipping invalid VPS - {$sVPSId} - (2) \n";
+						unset($sData);
+						unset($sTotal);
+						unset($sChange);
 						continue;
 					}
 					
