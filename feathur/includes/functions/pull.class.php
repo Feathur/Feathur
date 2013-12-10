@@ -144,11 +144,12 @@ class Pull {
 					$sVPS->uLastBandwidth = $sTotal;
 					$sVPS->InsertIntoDatabase();
 					
-					unset($sPullBandwidth);
+					
 					unset($sData);
 					unset($sTotal);
 					unset($sChange);
 				}
+				unset($sPullBandwidth);
 			}
 		}
 		
@@ -156,6 +157,9 @@ class Pull {
 		if($sServer->sType == 'kvm'){
 			$sPullBandwidth = explode("\n", $sSSH->exec("for i in `ip link show | grep mtu | awk '{print $2}' | awk -F: '{print $1}'`; do echo -n \"$(echo $i | awk -F. '{print $1}' | awk -Fm '{print $2}') \"; ifconfig $i | grep 'RX bytes' | awk -F: '{print $2,$3}' | awk '{print $1,$6}'; done"));
 			foreach($sPullBandwidth as $sVPS => $sRow){
+				var_dump($sVPS);
+				var_dump($sRow);
+				/*
 				$sVPS = preg_replace('/[^0-9]/', '', $sVPS);
 				try {
 					if(!empty($sVPS)){
@@ -199,11 +203,12 @@ class Pull {
 				$sVPS->uLastBandwidth = $sTotal;
 				$sVPS->InsertIntoDatabase();
 				
-				unset($sPullBandwidth);
 				unset($sData);
 				unset($sTotal);
 				unset($sChange);
+				*/
 			}
+			unset($sPullBandwidth);
 		}
 		
 		echo "Completed.\n";
