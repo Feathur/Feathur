@@ -163,7 +163,8 @@ do
 	echo "$vpsid $vpsbw";
 done
 COMMAND;
-			$sPullBandwidth = $sSSH->exec($sPullCommand);
+			$sPullCommand = escapeshellarg($sPullCommand);
+			$sPullBandwidth = $sSSH->exec("echo {$sPullCommand} > /var/feathur/data/bandwidth.check.sh; bash /var/feathur/data/bandwidth.check.sh;");
 			var_dump($sPullBandwidth);
 			foreach($sPullBandwidth as $sVPS => $sRow){
 				/*
