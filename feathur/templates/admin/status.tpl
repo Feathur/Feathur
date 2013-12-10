@@ -28,6 +28,13 @@
 		</div>
 		<br><br>
 	{%/if}
+	{%if isset|High == true}
+		<div class="albox warningbox">
+		High bandwidth usage on: {%foreach system in High}{%?system[name]}, {%/foreach}
+			<a href="#" class="close tips" title="close">close</a>
+		</div>
+		<br><br>
+	{%/if}
 	<div style="width:30px;display:inline;white-space:nowrap;">Last update: <a id="timer" style="white-space:nowrap;">0</a> seconds ago</div>
 	<br><br>
 	{%if isset|Statistics == true}
@@ -35,12 +42,14 @@
 			<div class="simplebox grid360-{%if isempty|server[type] == true}right{%/if}{%if isempty|server[type] == false}left{%/if}" style="padding:3px;padding-bottom:10px;">
 				<div class="titleh">
 					<h3>
-						<div style="width:49%;float:left;">
+						<div style="width:39%;float:left;">
 							<img src="./templates/status/{%if isempty|server[status] == true}offline{%/if}{%if isempty|server[status] == false}online{%/if}.png" style="width:10px;height:10px;">{%if isset|server[name] == true}{%?server[name]}{%/if}
 						</div>
 						{%if isempty|server[status] == false}
-							<div style="width:49%;float:right;padding-right:5px;" align="right">
-								Load: {%if isempty|server[load_average] == false}{%?server[load_average]}{%/if}
+							<div style="width:59%;float:right;padding-right:5px;" align="right">
+								{%if isempty|server[load_average] == false}Load: {%?server[load_average]}{%/if}
+								{%if isempty|server[load_average] == false}{%if isempty|server[bandwidth] == false}&nbsp;|&nbsp;{%/if}{%/if}
+								{%if isempty|server[bandwidth] == false}BW: {%?server[bandwidth]}{%/if}
 							</div>
 						{%/if}
 					</h3>

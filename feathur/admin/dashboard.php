@@ -7,12 +7,14 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 	foreach($sServerList->data as $sServer){
 		$sServer = new Server($sServer["id"]);
 		
+		// Defines left or right in template.
 		if($sType == 1){
 			$sType = 0;
 		} else {
 			$sType = 1;
 		}
 		
+		// Calculates hard disk usage percentages.
 		$sServerHDF = $sServer->sHardDiskFree;
 		$sServerHDT = $sServer->sHardDiskTotal;
 		if((!empty($sServerHDF)) && (!empty($sServerHDT))){
@@ -23,6 +25,7 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 			$sHardDiskFree = 1;
 		}
 		
+		// Calculates memory usage percentages.
 		$sServerFM = $sServer->sFreeMemory;
 		$sServerTM = $sServer->sTotalMemory;
 		if((!empty($sServerTM)) && (!empty($sServerFM))){
@@ -33,6 +36,24 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 			$sRAMFree = 1;
 		}
 		
+		// Calculates bandwidth average usage in mbps.
+		$sBandwidthDifference = "N/A";
+		$sLastCheck = $sServer->sLastCheck;
+		$sPreviousCheck = $sServer->sPreviousCheck;
+		$sBandwidth = $sServer->sBandwidth;
+		$sLastBandwidth = $sServer->sLastBandwidth;
+		if((!empty($sLastCheck)) && (!empty($sPreviousCheck)) && (!empty($sBandwidth)) && (!empty($sLastBandwidth))){
+			$sTimeDifference = $sLastCheck - $sPreviousCheck;
+			if(!empty($sTimeDifference)){
+				$sBandwidthDifference = round((($sBandwidth - $sLastBandwidth) / $sTimeDifference), 2);
+				// Alert if bandwidth average over 100 mbps.
+				if($sBandwidthDifference > 100){
+					$sHigh[] = array("name" => $sServer->sName);
+				}
+				$sBandwidthDifference = "{$sBandwidthDifference} Mbps";
+			}
+		}
+		
 		$sStatistics[] = array("name" => $sServer->sName,
 								"load_average" => $sServer->sLoadAverage,
 								"disk_usage" => $sHardDiskUsed,
@@ -41,23 +62,30 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 								"ram_free" => $sRAMFree,
 								"status" => $sServer->sStatus,
 								"uptime" => ConvertTime(round($sServer->sHardwareUptime, 0)),
-								"type" => $sType);
+								"type" => $sType,
+								"bandwidth" => $sBandwidthDifference);
 		
 		if(empty($sServer->sStatus)){
 			$sDown[] = array("name" => $sServer->sName);
 		}
 		
+		// Cleanup just in case.
 		unset($sHardDiskUsed);
 		unset($sHardDiskFree);
 		unset($sRAMUsed);
 		unset($sRAMFree);
+		unset($sLastCheck);
+		unset($sPreviousCheck);
+		unset($sBandwidth);
+		unset($sLastBandwidth);
+		unset($sBandwidthDifference);
 	}
 }
 
 $sPage = "dashboard";
 $sPageType = "admin";
 
-$sContent = Templater::AdvancedParse($sAdminTemplate->sValue.'/status', $locale->strings, array("Statistics" => $sStatistics, "Down" => $sDown, "Status" => $sRequested["GET"]["json"]));
+$sContent = Templater::AdvancedParse($sAdminTemplate->sValue.'/status', $locale->strings, array("Statistics" => $sStatistics, "Down" => $sDown, "High" => $sHigh, "Status" => $sRequested["GET"]["json"]));
 
 if(!empty($sRequested["GET"]["json"])){
 	echo json_encode(array("content" => $sContent));

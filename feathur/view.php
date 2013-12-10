@@ -34,11 +34,12 @@ if(($sVPS->sUserId != $sUser->sId) && ($sUser->sPermissions != 7)){
 }
 
 // Restrict access to the vps if the user's vps is suspended.
-if(($sVPS->sSuspended == 1) && ($sUser->sPermissions != 7)){
+$sSuspended = $sVPS->sSuspended;
+if((!empty($sSuspended)) && ($sUser->sPermissions != 7)){
 	$sUserView .= Templater::AdvancedParse($sTemplate->sValue.'/suspended', $locale->strings, array());
 }
 
-// Restrict access to the vps if the VPS is being transfered.
+// Restrict access to the vps if the VPS is being transferred.
 if($sTransfer = $database->CachedQuery("SELECT * FROM transfers WHERE `completed` = 0 AND `vps_id` = :VPSId", array('VPSId' => $sVPS->sId))){
 	$sUserView = Templater::AdvancedParse($sTemplate->sValue.'/transfer', $locale->strings, array());
 	echo Templater::AdvancedParse($sTemplate->sValue.'/master', $locale->strings, array("Content" => $sUserView, "Page" => "main", "Errors" => $sErrors, "VPSId" => $sVPS->sId));
@@ -62,7 +63,7 @@ if(!empty($sAction)){
 			die();
 		}
 	} else {
-		echo json_encode(array("json" => 1, "type" => "error", "result" => "You might want to try a different profession.", "reload" => 1));
+		echo json_encode(array("json" => 1, "type" => "error", "result" => "Invalid action requested. Please try again.", "reload" => 1));
 		die();
 	}
 }

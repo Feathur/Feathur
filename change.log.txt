@@ -1,4 +1,31 @@
 ==============================
+0.6.3.2 - December 3, 2013
+==============================
+- Fixed template missing startup errors (kvm).
+- Added debugging to template sync.
+
+==============================
+0.6.3.1 - December 6, 2013
+==============================
+- Patches to uptime to make RAM accurate.
+- Misc patches to uptime system.
+
+==============================
+0.6.3.0 - December 4, 2013
+==============================
+- Patches to fix uptime tracking system.
+- Emails now sent to admins on system outage.
+- Patches to prevent duplicate email sending.
+
+==============================
+0.6.2.10 - December 3, 2013
+==============================
+- Misc bug fixes in Settings.
+- Misc bug fixes in dashboard.
+- Misc bug fixes in update system.
+- Misc bug fixes in version systems.
+
+==============================
 0.6.2.9 - December 3, 2013
 ==============================
 - New uptime tracking system based on SSH.
