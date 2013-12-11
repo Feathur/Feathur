@@ -115,7 +115,7 @@ class Pull {
 				}
 				
 				if($sServer->sType == 'kvm'){
-					$sPullBandwidth = explode("\n", $sSSH->exec('for i in $(ip link show | grep kvm'.$sVPS->sContainerId.' | awk \'{print $2}\' | awk -F: \'{print $1}\' | sort -u); do ifconfig $i | grep 'RX bytes' | awk -F: \'{print $2,$3}\' | awk \'{print $1,$6}\'; done'));
+					$sPullBandwidth = explode("\n", $sSSH->exec('for i in $(ip link show | grep kvm'.$sVPS->sContainerId.' | awk \'{print $2}\' | awk -F: \'{print $1}\' | sort -u); do ifconfig $i | grep \'RX bytes\' | awk -F: \'{print $2,$3}\' | awk \'{print $1,$6}\'; done'));
 				}
 				
 				foreach($sPullBandwidth as $sData){
