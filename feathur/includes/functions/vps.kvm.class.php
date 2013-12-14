@@ -140,7 +140,7 @@ class kvm {
 			$sCreate = $this->kvm_config($sUser, $sVPS, $sRequested);
 			$sDHCP = $this->kvm_dhcp($sUser, $sVPS, $sRequested);
 			
-			$sCommandList .= "lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;";
+			$sCommandList .= "lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId}";
 			
 			$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
@@ -206,7 +206,7 @@ class kvm {
 		$sDumpCode = $sSSH->exec("mkdir -p /var/feathur/data;echo {$sStartupCode} > /var/feathur/data/start-kvm.sh;echo {$sBalance} > /var/feathur/data/vm-balancer.py");
 		
 		// Start VPS.
-		$sStart = $sSSH->exec("cd /var/feathur/data/;bash start-kvm.sh {$sVPS->sContainerId} {$sPanelURL} {$sVPSTemplate} {$sVNCPassword} {$sVNCPort}");
+		$sStart = $sSSH->exec("cd /var/feathur/data/;bash start-kvm.sh {$sVPS->sContainerId} {$sPanelURL} {$sVPSTemplate} {$sVNCPassword} {$sVNCPort}; virsh autostart kvm{$sVPS->sContainerId}");
 		
 		// Return output.
 		if($sStart == 1){
