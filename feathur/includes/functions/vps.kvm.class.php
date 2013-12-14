@@ -578,6 +578,7 @@ class kvm {
 			$sSSH = Server::server_connect($sServer);
 			$sLog[] = array("command" => "virsh destroy kvm{$sVPS->sContainerId}", "result" => $sSSH->exec("virsh destroy kvm{$sVPS->sContainerId}"));
 			$sLog[] = array("command" => "mv /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml /var/feathur/configs/kvm{$sVPS->sContainerId}-vps-suspended.xml", "result" => $sSSH->exec("mv /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml /var/feathur/configs/kvm{$sVPS->sContainerId}-vps-suspended.xml"));
+			$sLog[] = array("command" => "virsh autostart --disabled kvm{$sVPS->sContainerId}", "result" => $sSSH->exec("virsh autostart --disabled kvm{$sVPS->sContainerId}"));
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
 			return $sArray = array("json" => 1, "type" => "success", "result" => "User's VPS has been suspended!", "reload" => 1);
 		} else {
