@@ -1,4 +1,10 @@
 ==============================
+0.6.3.4 - December 14, 2013
+==============================
+- Removed some unnecessary code.
+- Patched `Rebuild to unsuspend` bug on OpenVZ.
+
+==============================
 0.6.3.3 - December 10, 2013
 ==============================
 - New (accurate) openvz bandwidth counter.
