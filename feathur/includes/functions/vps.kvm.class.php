@@ -604,6 +604,7 @@ class kvm {
 			$sSSH = Server::server_connect($sServer);
 			$sLog[] = array("command" => "mv /var/feathur/configs/kvm{$sVPS->sContainerId}-vps-suspended.xml /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml", "result" => $sSSH->exec("mv /var/feathur/configs/kvm{$sVPS->sContainerId}-vps-suspended.xml /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml"));
 			$sLog[] = array("command" => "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;", "result" => $sSSH->exec("virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;"));
+			$sLog[] = array("command" => "virsh autostart kvm{sVPS->sContainerId}", "result" => $sSSH->exec("virsh autostart kvm{$sVPS->sContainerId}"));
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
 			return $sArray = array("json" => 1, "type" => "success", "result" => "User's VPS has been unsuspended!", "reload" => 1);
 		} else {
@@ -835,6 +836,7 @@ class kvm {
 		if($sUserPermissions == 7){
 			$sServer = new Server($sVPS->sServerId);
 			$sSSH = Server::server_connect($sServer);
+			$sCommandList .= "virsh autostart --disabled kvm{$sVPS->sContainerId}}";
 			$sCommandList .= "virsh destroy kvm{$sVPS->sContainerId};";
 			$sCommandList .= "rm -rf /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;rm -rf /var/feathur/configs/kvm{$sVPS->sContainerId}-dhcp.conf;";
 			$sCommandList .= "cat /var/feathur/configs/dhcpd.head /var/feathur/configs/*-dhcp.conf > /etc/dhcp/dhcpd.conf;service isc-dhcp-server restart;";
