@@ -18,6 +18,9 @@ if(!($sLocalSSH->login("root", $sLocalKey))) {
 	die("Cannot connect to this server, check local key.");
 }
 
+// Create template link for KVM.
+$sLink = $sLocalSSH->exec("ln -s /var/feathur/data/templates/kvm /var/feathur/feathur/templates/");
+
 // Setup screen to begin syncing templates assuming that:
 // 1. A sync hasn't occurred in the last 5 minutes.
 // 2. A sync isn't still in progress (EG: template.lock)
