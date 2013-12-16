@@ -47,7 +47,7 @@
 						</div>
 						{%if isempty|server[status] == false}
 							<div style="width:59%;float:right;padding-right:5px;" align="right">
-								{%if isempty|server[ip_count] == false}({%?server[ip_count]}) | {$/if}
+								{%if isempty|server[ip_count] == false}({%?server[ip_count]}) | {%/if}
 								{%if isempty|server[load_average] == false}Load: {%?server[load_average]}{%/if}
 								{%if isempty|server[load_average] == false}{%if isempty|server[bandwidth] == false}&nbsp;|&nbsp;{%/if}{%/if}
 								{%if isempty|server[bandwidth] == false}BW: {%?server[bandwidth]}{%/if}
