@@ -4,11 +4,15 @@ if(!(php_sapi_name() == 'cli')){
 	die("Unfortunately this script must be executed via CLI.");
 }
 
+// Place us in the correct directory...
+// Call prerequisites, set variables.
 chdir('/var/feathur/feathur/');
 include('./includes/loader.php');
 error_reporting(E_ALL ^ E_NOTICE);
 $sTime = time();
 
+// Set timeout and memory limit then
+// connect to the local host.
 set_time_limit(6000);
 ini_set('memory_limit','512M');
 $sLocalSSH = new Net_SSH2('127.0.0.1');
@@ -20,6 +24,9 @@ if(!($sLocalSSH->login("root", $sLocalKey))) {
 
 // Create template link for KVM.
 $sLink = $sLocalSSH->exec("ln -s /var/feathur/data/templates/kvm /var/feathur/feathur/templates/");
+
+// Remove old screens
+$sClean = $sLocalSSH->exec("killall --older-than 10m screen");
 
 // Setup screen to begin syncing templates assuming that:
 // 1. A sync hasn't occurred in the last 5 minutes.
@@ -94,6 +101,18 @@ if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 	unset($sTotal);
 	echo "Finished launching uptime checkers.\n";
 }
+
+// Cleanup old statistics...
+$sOldStatistics = (time() - (60*60*24*5));
+$sStatistics = $database->prepare("DELETE FROM `statistics` WHERE timestamp < :OldStatistics");
+$sStatistics->bindParam(':OldStatistics', $sOldStatistics, PDO::PARAM_INT);  
+$sStatistics->execute();
+
+// Cleanup old history...
+$sOldHistory = (time() - (60*60*24*10));
+$sHistory = $database->prepare("DELETE FROM `history` WHERE timestamp < :OldHistory");
+$sHistory->bindParam(':OldHistory', $sOldHistory, PDO::PARAM_INT);  
+$sHistory->execute();
 
 // Reset bandwidth if today is the first day of the month and the last reset was more than 10 days ago.
 $sLastReset = Core::GetSetting('bandwidth_timestamp');
