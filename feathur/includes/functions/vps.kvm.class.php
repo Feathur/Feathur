@@ -202,8 +202,8 @@ class kvm {
 		
 		// Dump necessary code on server.
 		$sStartupCode = escapeshellarg(file_get_contents('/var/feathur/Scripts/start-kvm.sh'));
-		$sBalance = escapeshellarg(file_get_contents('/var/feathur/Scripts/vm-balancer.py'));
-		$sDumpCode = $sSSH->exec("mkdir -p /var/feathur/data;echo {$sStartupCode} > /var/feathur/data/start-kvm.sh;echo {$sBalance} > /var/feathur/data/vm-balancer.py");
+		$sBalance = escapeshellarg(file_get_contents('/var/feathur/Scripts/balancer.py'));
+		$sDumpCode = $sSSH->exec("mkdir -p /var/feathur/data;echo {$sStartupCode} > /var/feathur/data/start-kvm.sh;echo {$sBalance} > /var/feathur/data/balancer.py");
 		
 		// Start VPS.
 		$sStart = $sSSH->exec("cd /var/feathur/data/;bash start-kvm.sh {$sVPS->sContainerId} {$sPanelURL} {$sVPSTemplate} {$sVNCPassword} {$sVNCPort}");
