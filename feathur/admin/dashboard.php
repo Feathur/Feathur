@@ -57,7 +57,7 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 		// Calculates Free IP Space
 		if($sBlockList = $database->CachedQuery("SELECT * FROM `server_blocks` WHERE `server_id` = :ServerId", array("ServerId" => $sServer->sId))){
 			foreach($sBlockList->data as $sBlockRow){
-				if($sIPList = $database->CachedQuery("SELECT * FROM `ipaddresses` WHERE `block_id` = :BlockId AND `vps_id` = :VPSId", array("BlockId" => $sBlockRow["id"], "VPSId" => 0))){
+				if($sIPList = $database->CachedQuery("SELECT * FROM `ipaddresses` WHERE `block_id` = :BlockId AND `vps_id` = :VPSId", array("BlockId" => $sBlockRow["block_id"], "VPSId" => 0))){
 					$sIPCount = ($sIPCount + count($sIPList->data));
 				}
 			}
