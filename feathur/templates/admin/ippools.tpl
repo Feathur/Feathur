@@ -5,8 +5,7 @@
 				"sPaginationType": "full_numbers",
 				"bSort": false,
 				"aaSorting": [[ 0, "asc" ]],
-				"aLengthMenu": [[-1, 10, 25, 50, 100], ["All", 10, 25, 50, 100]],
-				"bStateSave": true,
+				"iDisplayLength": -1
 				"oLanguage": {
 						"sEmptyTable": "There are no IP blocks, add one using the + above."
 				}
@@ -34,7 +33,7 @@
 		<div align="center">
 			<h4>IPv4 Pools</h4>
 			{%if isset|BlockList == true}
-				<table class="tablesorter" id="BlockListTable">
+				<table class="tablesorter" id="BlockListTable" style="width:90%">
 					<thead>
 							<tr>
 									<th width="60%"><div align="center">Name</div></th>
@@ -76,7 +75,7 @@
 		<div align="center">
 			<h4>IPv6 Pools</h4>
 			{%if isset|BlockList == true}
-				<table class="tablesorter" id="BlockListTable">
+				<table class="tablesorter" style="width:90%">
 					<thead>
 							<tr>
 									<th width="60%"><div align="center">Name</div></th>
