@@ -11,5 +11,5 @@ if(empty($sType)){
 	$sContent .= Templater::AdvancedParse($sAdminTemplate->sValue.'/ippools', $locale->strings, array());
 } else {
 	$sBlockList = Block::block_list($sType);
-	$sContent .= Templater::AdvancedParse($sAdminTemplate->sValue.'/templates', $locale->strings, array("Type" => $sType, "BlockList" => $sBlockList));
+	$sContent .= Templater::AdvancedParse($sAdminTemplate->sValue.'/ippools', $locale->strings, array("Type" => $sType, "BlockList" => $sBlockList));
 }
