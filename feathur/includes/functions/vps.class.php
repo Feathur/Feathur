@@ -43,6 +43,7 @@ class VPS extends CPHPDatabaseRecordClass {
 			'PrivateNetwork' => "private_network",
 			'BandwidthUsage' => "bandwidth_usage",
 			'LastBandwidth' => "last_bandwidth",
+			'IPv6' => "ipv6",
 		),
 	);
 	

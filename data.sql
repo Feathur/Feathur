@@ -19,6 +19,11 @@ CREATE TABLE IF NOT EXISTS `blocks` (
   `name` varchar(65) NOT NULL,
   `gateway` varchar(65) NOT NULL,
   `netmask` varchar(65) NOT NULL,
+  `ipv6` int(8) NOT NULL DEFAULT 0,
+  `prefix` varchar(65) NOT NULL,
+  `per_user` int(8) NOT NULL,
+  `current` varchar(65) NOT NULL,
+  `secondary` varchar(65) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
@@ -35,6 +40,14 @@ CREATE TABLE IF NOT EXISTS `ipaddresses` (
   `vps_id` int(8) NOT NULL,
   `block_id` int(8) NOT NULL,
   `ip_address` varchar(65) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=58 ;
+
+CREATE TABLE IF NOT EXISTS `ipv6addresses` (
+  `id` int(8) NOT NULL AUTO_INCREMENT,
+  `vps_id` int(8) NOT NULL,
+  `block_id` int(8) NOT NULL,
+  `suffix` varchar(65) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=58 ;
 
@@ -89,6 +102,7 @@ CREATE TABLE IF NOT EXISTS `server_blocks` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
   `server_id` int(8) NOT NULL,
   `block_id` int(8) NOT NULL,
+  `ipv6` int(8) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
@@ -206,6 +220,7 @@ CREATE TABLE IF NOT EXISTS `vps` (
   `disk_driver` varchar(65) NOT NULL,
   `network_driver` varchar(65) NOT NULL,
   `private_network` int(2) NOT NULL,
+  `ipv6` int(2) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=90 ;
 

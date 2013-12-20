@@ -8,6 +8,7 @@ include('./includes/functions/vps.openvz.class.php');
 include('./includes/functions/vps.kvm.class.php');
 include('./includes/functions/servers.class.php');
 include('./includes/functions/ipaddresses.class.php');
+include('./includes/functions/ipv6addresses.class.php');
 include('./includes/functions/blocks.class.php');
 include('./includes/functions/server.blocks.class.php');
 include('./includes/library/Net/SSH2.php');
