@@ -23,6 +23,7 @@ class Block extends CPHPDatabaseRecordClass {
 	);
 	
 	public static function block_list($sType){
+		global $database;
 		if($sBlocks = $database->CachedQuery("SELECT * FROM `blocks` WHERE `ipv6` = :Type", array("Type" => $sType))){
 			foreach($sBlocks->data as $sValue){
 				if($sType == 0){
