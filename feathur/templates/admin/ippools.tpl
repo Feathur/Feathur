@@ -5,7 +5,7 @@
 				"sPaginationType": "full_numbers",
 				"bSort": false,
 				"aaSorting": [[ 0, "asc" ]],
-				"aLengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+				"aLengthMenu": [[-1, 10, 25, 50, 100], ["All", 10, 25, 50, 100]],
 				"bStateSave": true,
 				"oLanguage": {
 						"sEmptyTable": "There are no IP blocks, add one using the + above."
