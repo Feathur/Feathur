@@ -31,38 +31,45 @@
 	{%if isempty|Type == true}
 		<br><br>
 		<div align="center">
-			<h4>IPv4 Pools</h4>
 			{%if isset|BlockList == true}
-				<table class="tablesorter" id="BlockListTable" style="width:90%">
-					<thead>
-							<tr>
-									<th width="60%"><div align="center">Name</div></th>
-									<th width="20%"><div align="center">Usage</div></th>
-									<th width="20%"><div align="center">Actions</div></th>
-							</tr>
-					</thead>        
-					{%if isset|BlockList == true}
-							{%foreach block in BlockList}
-									<tr>
-											<td><a href="#" class="ManageBlock" value="{%?block[id]}">{%?block[name]}</a></td>
-											<td><div align="center">{%?block[used]} / {%?block[total]}</div></td>
-											<td>
-													<div align="center">
-															<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
-															<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
-													</div>
-											</td>
-									</tr>
-							{%/foreach}
-					{%/if}
-					{%if isset|BlockList == false}
-							<tr>
-									<td></td>
-									<td></td>
-									<td></td>
-							</tr>
-					{%/if}
-				</table>
+				<div class="simplebox grid740">
+					<div class="titleh">
+							<h3>IPv4 Blocks</h3>
+							<div class="shortcuts-icons">
+									<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+							</div>
+					</div>
+					<table class="tablesorter" id="BlockListTable">
+						<thead>
+								<tr>
+										<th width="60%"><div align="center">Name</div></th>
+										<th width="20%"><div align="center">Usage</div></th>
+										<th width="20%"><div align="center">Actions</div></th>
+								</tr>
+						</thead>        
+						{%if isset|BlockList == true}
+								{%foreach block in BlockList}
+										<tr>
+												<td><a href="#" class="ManageBlock" value="{%?block[id]}">{%?block[name]}</a></td>
+												<td><div align="center">{%?block[used]} / {%?block[total]}</div></td>
+												<td>
+														<div align="center">
+																<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
+																<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
+														</div>
+												</td>
+										</tr>
+								{%/foreach}
+						{%/if}
+						{%if isset|BlockList == false}
+								<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+								</tr>
+						{%/if}
+					</table>
+				</div>
 			{%/if}
 			{%if isset|BlockList == false}
 				<br><br>
@@ -75,34 +82,42 @@
 		<div align="center">
 			<h4>IPv6 Pools</h4>
 			{%if isset|BlockList == true}
-				<table class="tablesorter" style="width:90%">
-					<thead>
-							<tr>
-									<th width="60%"><div align="center">Name</div></th>
-									<th width="20%"><div align="center">Actions</div></th>
-							</tr>
-					</thead>        
-					{%if isset|BlockList == true}
-							{%foreach block in BlockList}
-									<tr>
-											<td><a href="#" class="ManageBlock" value="{%?block[id]}">{%?block[name]}</a></td>
-											<td>
-													<div align="center">
-															<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
-															<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
-													</div>
-											</td>
-									</tr>
-							{%/foreach}
-					{%/if}
-					{%if isset|BlockList == false}
-							<tr>
-									<td></td>
-									<td></td>
-									<td></td>
-							</tr>
-					{%/if}
-				</table>
+				<div class="simplebox grid740">
+					<div class="titleh">
+							<h3>IPv6 Blocks</h3>
+							<div class="shortcuts-icons">
+									<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+							</div>
+					</div>
+					<table class="tablesorter">
+						<thead>
+								<tr>
+										<th width="60%"><div align="center">Name</div></th>
+										<th width="20%"><div align="center">Actions</div></th>
+								</tr>
+						</thead>        
+						{%if isset|BlockList == true}
+								{%foreach block in BlockList}
+										<tr>
+												<td><a href="#" class="ManageBlock" value="{%?block[id]}">{%?block[name]}</a></td>
+												<td>
+														<div align="center">
+																<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
+																<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
+														</div>
+												</td>
+										</tr>
+								{%/foreach}
+						{%/if}
+						{%if isset|BlockList == false}
+								<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+								</tr>
+						{%/if}
+					</table>
+				</div>
 			{%/if}
 			{%if isset|BlockList == false}
 				<br><br>
