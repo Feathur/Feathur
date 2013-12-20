@@ -1,12 +1,12 @@
 {%if isset|Type == false}
 	<div align="center">
 		<br><br>
-		<table style="border:0px solid white;width:40%;height:100px;">
+		<table style="border:0px solid white;width:50%;height:100px;">
 			<tr>
-				<td width="100%" align="center">
+				<td width="40%" align="center">
 					<a class="button-blue" href="admin.php?view=ippools&type=0">IPv4 Pools</a>
 				</td>
-				<td width="100%" align="center">
+				<td width="40%" align="center">
 					<a class="button-gray" href="admin.php?view=ippools&type=1">IPv6 Pools</a>
 				</td>
 			</tr>

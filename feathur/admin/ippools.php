@@ -7,7 +7,7 @@ $sPage = "ippools";
 $sPageType = "settings";
 $uType = $_GET['type'];
 
-if(empty($sType)){
+if(!isset($sType)){
 	$sContent .= Templater::AdvancedParse($sAdminTemplate->sValue.'/ippools', $locale->strings, array());
 } else {
 	$sBlockList = Block::block_list($sType);
