@@ -9,6 +9,7 @@ $sUsername = "email";
 $sPassword = "password";
 $sServerId = 31;
 $sDefaultTemplateId = 3;
+$sAssignNewIP = 0;
 
 set_time_limit(1800);
 include('./includes/loader.php');
@@ -81,22 +82,33 @@ foreach($vps as $sVPS){
 				$sIPs = substr($sVPS["coma_vmipaddress_a"], 1);
 				$sIPs = explode(",", $sIPs);
 				
-				$sAction = "assignip";
-				$sDBAction = "database_{$sNewVPS->sType}_{$sAction}";
-				$sServerAction = "{$sNewVPS->sType}_{$sAction}";
-				foreach($sIPs as $sIP){
-					if(empty($sFirst)){
-						$sNewVPS->uPrimaryIP = $sIP;
-						$sNewVPS->InsertIntoDatabase();
-						$sFirst = 1;
+				if(empty($sAssignNewIP)){
+					$sAction = "assignip";
+					$sDBAction = "database_{$sNewVPS->sType}_{$sAction}";
+					$sServerAction = "{$sNewVPS->sType}_{$sAction}";
+					foreach($sIPs as $sIP){
+						if(empty($sFirst)){
+							$sNewVPS->uPrimaryIP = $sIP;
+							$sNewVPS->InsertIntoDatabase();
+							$sFirst = 1;
+						}
+						if(!empty($sIP)){
+							$sRequested["GET"]["ip"] = $sIP;
+							$sDBResult = $sStart->$sDBAction($sUser, $sNewVPS, $sRequested);
+							$sServerResult = $sStart->$sServerAction($sUser, $sNewVPS, $sRequested);
+						}
 					}
-					if(!empty($sIP)){
-						$sRequested["GET"]["ip"] = $sIP;
-						$sDBResult = $sStart->$sDBAction($sUser, $sNewVPS, $sRequested);
-						$sServerResult = $sStart->$sServerAction($sUser, $sNewVPS, $sRequested);
-					}
-					unset($sRequested);
+				} else {
+					$sTotalIPs = count($sIPs);
+					$sAction = "addip";
+					$sDBAction = "database_{$sNewVPS->sType}_{$sAction}";
+					$sServerAction = "{$sNewVPS->sType}_{$sAction}";
+					$sRequested["GET"]["ip"] = $sTotalIPs;
+					$sDBResult = $sStart->$sDBAction($sUser, $sNewVPS, $sRequested);
+					$sServerResult = $sStart->$sServerAction($sUser, $sNewVPS, $sRequested);
 				}
+				
+				unset($sRequested);
 				
 				$sShutdown = $sStart->openvz_shutdown($sUser, $sNewVPS, $sRequested);
 				
