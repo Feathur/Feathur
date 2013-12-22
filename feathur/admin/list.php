@@ -72,8 +72,15 @@ if(!empty($sServers)){
 }
 if(!empty($sVPS->data)){
 	foreach($sVPS->data as $value){
-		$sTempUser = new User($value["user_id"]);
-		$sResult[] = array("result_type" => "vps", "id" => $value["id"], "user_id" => $value["user_id"], "username" => $sTempUser->sUsername, "server_id" => $value["server_id"], "hostname" => $value["hostname"], "primary_ip" => $value["primary_ip"], "type" => $value["type"], "suspended" => $value["suspended"]);
+		if(!empty($value["user_id"])){
+			$sTempUser = new User($value["user_id"]);
+			$sUsername = $sTempUser->sUsername;
+			$sUserId = $sTempUser->sId;
+		} else {
+			$sUsername = "N/A";
+			$sUserId = "0";
+		}
+		$sResult[] = array("result_type" => "vps", "id" => $value["id"], "user_id" => $sUserId, "username" => $sUsername, "server_id" => $value["server_id"], "hostname" => $value["hostname"], "primary_ip" => $value["primary_ip"], "type" => $value["type"], "suspended" => $value["suspended"]);
 		$sVPSCount++;
 	}
 }
