@@ -246,7 +246,7 @@ class openvz {
 	public function openvz_reboot($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
-		$sLog[] = array("command" => "vzctl restart {$sVPS->sContainerId};", "result" => $sSSH->exec("vzctl restart {$sVPS->sContainerId};"));
+		$sLog[] = array("command" => "vzctl restart {$sVPS->sContainerId};modprobe ipt_state;", "result" => $sSSH->exec("vzctl restart {$sVPS->sContainerId};modprobe ipt_state;"));
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
 		if(strpos($sLog[0]["result"], 'Container is already running') !== false) {
 			return $sArray = array("json" => 1, "type" => "caution", "result" => "VPS is already running!");
