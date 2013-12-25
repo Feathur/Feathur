@@ -2,10 +2,10 @@
 	$(document).ready(function() {
 		oTable = $('#ListTable').dataTable({
 				"bJQueryUI": true,
-				"sPaginationType": "full_numbers",
 				"bSort": false,
 				"aaSorting": [[ 0, "asc" ]],
 				"iDisplayLength": -1,
+				"bPaginate": false,
 				"bStateSave": true,
 		});
 	});
