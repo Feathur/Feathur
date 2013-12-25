@@ -6,9 +6,6 @@
 				"bSort": false,
 				"aaSorting": [[ 0, "asc" ]],
 				"iDisplayLength": -1
-				"oLanguage": {
-						"sEmptyTable": "There are no IP blocks, add one using the + above."
-				}
 		});
 	});
 </script>
@@ -64,17 +61,17 @@
 							{%/if}
 							{%if isempty|BlockList == true}
 									<tr>
-											<td></td>
-											<td></td>
-											<td></td>
+										<td colspan="3">
+											<div align="center">There are no IP blocks, add one using the + above.</div>
+										</td>
 									</tr>
 							{%/if}
 						{%/if}
 						{%if isset|BlockList == false}
 								<tr>
-										<td></td>
-										<td></td>
-										<td></td>
+									<td colspan="3">
+										<div align="center">There are no IP blocks, add one using the + above.</div>
+									</td>
 								</tr>
 						{%/if}
 					</table>
@@ -89,7 +86,6 @@
 	{%if isempty|Type == false}
 		<br><br>
 		<div align="center">
-			<h4>IPv6 Pools</h4>
 			{%if isset|BlockList == true}
 				<div class="simplebox grid740">
 					<div class="titleh">
@@ -121,15 +117,17 @@
 							{%/if}
 							{%if isempty|BlockList == true}
 									<tr>
-											<td></td>
-											<td></td>
+										<td colspan="2">
+											<div align="center">There are no IP blocks, add one using the + above.</div>
+										</td>
 									</tr>
 							{%/if}
 						{%/if}
 						{%if isset|BlockList == false}
 								<tr>
-										<td></td>
-										<td></td>
+									<td colspan="2">
+										<div align="center">There are no IP blocks, add one using the + above.</div>
+									</td>
 								</tr>
 						{%/if}
 					</table>
