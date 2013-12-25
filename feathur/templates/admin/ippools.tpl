@@ -142,52 +142,55 @@
 		{%/if}
 	{%/if}
 	{%if isset|Pool == true}
-		<div class="simplebox grid740">
-			<div class="titleh">
-				<h3>{%if isset|BlockName == true}{%?BlockName}{%/if}{%if isset|BlockName == false}IP Block{%/if}</h3>
-				<div class="shortcuts-icons">
-					<a class="shortcut tips" title="Add IP Addresses"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+		<br><br>
+		<div align="center">
+			<div class="simplebox grid740">
+				<div class="titleh">
+					<h3>{%if isset|BlockName == true}{%?BlockName}{%/if}{%if isset|BlockName == false}IP Block{%/if}</h3>
+					<div class="shortcuts-icons">
+						<a class="shortcut tips" title="Add IP Addresses"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+					</div>
 				</div>
+				<table class="tablesorter">
+					<thead>
+						<tr>
+							<th width="60%"><div align="center">IP Address</div></th>
+							<th width="20%"><div align="center">Owner</div></th>
+							<th width="20%"><div align="center">Actions</div></th>
+						</tr>
+					</thead>        
+					{%if isset|IPList == true}
+						{%if isempty|IPList == false}
+							{%foreach ip in IPList}
+								<tr>
+									<td>{%?ip[ip]}</td>
+									<td><div align="center"><a href="admin.php?view=clients&id={%?ip[OwnerId]}">{%ip[Owner]}</a></div></td>
+									<td>
+										<div align="center">
+											<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
+											<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
+										</div>
+									</td>
+								</tr>
+							{%/foreach}
+						{%/if}
+						{%if isempty|IPList == true}
+								<tr>
+									<td colspan="2">
+										<div align="center">There are no IPs, add one using the + above.</div>
+									</td>
+								</tr>
+						{%/if}
+					{%/if}
+					{%if isset|IPList == false}
+						<tr>
+							<td colspan="2">
+								<div align="center">There are no IPs, add one using the + above.</div>
+							</td>
+						</tr>
+					{%/if}
+				</table>
 			</div>
-			<table class="tablesorter">
-				<thead>
-					<tr>
-						<th width="60%"><div align="center">IP Address</div></th>
-						<th width="20%"><div align="center">Owner</div></th>
-						<th width="20%"><div align="center">Actions</div></th>
-					</tr>
-				</thead>        
-				{%if isset|IPList == true}
-					{%if isempty|IPList == false}
-						{%foreach ip in IPList}
-							<tr>
-								<td>{%?ip[ip]}</td>
-								<td><div align="center"><a href="admin.php?view=clients&id={%?ip[OwnerId]}">{%ip[Owner]}</a></div></td>
-								<td>
-									<div align="center">
-										<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
-										<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
-									</div>
-								</td>
-							</tr>
-						{%/foreach}
-					{%/if}
-					{%if isempty|IPList == true}
-							<tr>
-								<td colspan="2">
-									<div align="center">There are no IPs, add one using the + above.</div>
-								</td>
-							</tr>
-					{%/if}
-				{%/if}
-				{%if isset|IPList == false}
-					<tr>
-						<td colspan="2">
-							<div align="center">There are no IPs, add one using the + above.</div>
-						</td>
-					</tr>
-				{%/if}
-			</table>
 		</div>
 	{%/if}
 {%/if}

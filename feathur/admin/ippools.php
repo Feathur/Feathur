@@ -12,10 +12,10 @@ if(!isset($uType)){
 	$sContent .= Templater::AdvancedParse($sAdminTemplate->sValue.'/ippools', $locale->strings, array());
 } else {
 	if(isset($uPool)){
-		$sData = Block::list_pool($sType, $sPool);
-		$sContent .= Templater::AdvancedParse($sAdminTemplate->sValue.'/ippools', $locale->strings, array("Type" => $sType, "Pool" => $uPool, "IPList" => $sData["IPList"], "ServerList" => $sData["ServerList"], "AvailableServers" => $sData["AvailableServers"], "BlockName" => $sData["BlockName"]));
+		$sData = Block::list_pool($uType, $uPool);
+		$sContent .= Templater::AdvancedParse($sAdminTemplate->sValue.'/ippools', $locale->strings, array("Type" => $uType, "Pool" => $uPool, "IPList" => $sData["IPList"], "ServerList" => $sData["ServerList"], "AvailableServers" => $sData["AvailableServers"], "BlockName" => $sData["BlockName"]));
 	} else {
 		$sBlockList = Block::block_list($sType);
-		$sContent .= Templater::AdvancedParse($sAdminTemplate->sValue.'/ippools', $locale->strings, array("Type" => $sType, "BlockList" => $sBlockList));
+		$sContent .= Templater::AdvancedParse($sAdminTemplate->sValue.'/ippools', $locale->strings, array("Type" => $uType, "BlockList" => $sBlockList));
 	}
 }
