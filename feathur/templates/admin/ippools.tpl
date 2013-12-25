@@ -164,7 +164,15 @@
 							{%foreach ip in IPList}
 								<tr>
 									<td>{%?ip[ip]}</td>
-									<td><div align="center">{%if isset|ip[Owner] == true}{%if isset|ip[OwnerId] == true}<a href="admin.php?view=clients&id={%?ip[OwnerId]}">{%?ip[Owner]}</a>{%/if}{%/if}</div></td>
+									<td>
+										<div align="center">
+											{%if isempty|ip[Owner] == false}
+												{%if isempty|ip[OwnerId] == false}
+													<a href="admin.php?view=clients&id={%?ip[OwnerId]}">{%?ip[Owner]}</a>
+												{%/if}
+											{%/if}
+										</div>
+									</td>
 									<td>
 										<div align="center">
 											<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="" value=""><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
