@@ -144,7 +144,7 @@
 	{%if isset|Pool == true}
 		<div class="simplebox grid740">
 			<div class="titleh">
-				<h3>{%?BlockName}</h3>
+				<h3>{%if isset|BlockName == true}{%?BlockName}{%/if}{%if isset|BlockName == false}IP Block{%/if}</h3>
 				<div class="shortcuts-icons">
 					<a class="shortcut tips" title="Add IP Addresses"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 				</div>
