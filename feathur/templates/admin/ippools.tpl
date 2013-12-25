@@ -5,7 +5,8 @@
 				"sPaginationType": "full_numbers",
 				"bSort": false,
 				"aaSorting": [[ 0, "asc" ]],
-				"iDisplayLength": -1
+				"iDisplayLength": -1,
+				"bStateSave": true,
 		});
 	});
 </script>
