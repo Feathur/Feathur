@@ -1,6 +1,6 @@
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function() {
-		oTable = $('#BlockListTable').dataTable({
+		oTable = $('#ListTable').dataTable({
 				"bJQueryUI": true,
 				"sPaginationType": "full_numbers",
 				"bSort": false,
@@ -38,7 +38,7 @@
 										<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 								</div>
 						</div>
-						<table class="tablesorter" id="BlockListTable">
+						<table class="tablesorter" id="ListTable">
 							<thead>
 									<tr>
 											<th width="60%"><div align="center">Name</div></th>
@@ -96,7 +96,7 @@
 										<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 								</div>
 						</div>
-						<table class="tablesorter">
+						<table class="tablesorter" id="ListTable">
 							<thead>
 									<tr>
 											<th width="60%"><div align="center">Name</div></th>
@@ -152,7 +152,7 @@
 						<a class="shortcut tips" title="Add IP Addresses"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 					</div>
 				</div>
-				<table class="tablesorter">
+				<table class="tablesorter" id="ListTable">
 					<thead>
 						<tr>
 							<th width="60%"><div align="center">IP Address</div></th>
