@@ -48,6 +48,7 @@
 								</tr>
 						</thead>        
 						{%if isset|BlockList == true}
+							{%if isempty|BlockList == false}
 								{%foreach block in BlockList}
 										<tr>
 												<td><a href="#" class="ManageBlock" value="{%?block[id]}">{%?block[name]}</a></td>
@@ -60,6 +61,14 @@
 												</td>
 										</tr>
 								{%/foreach}
+							{%/if}
+							{%if isempty|BlockList == true}
+									<tr>
+											<td></td>
+											<td></td>
+											<td></td>
+									</tr>
+							{%/if}
 						{%/if}
 						{%if isset|BlockList == false}
 								<tr>
@@ -97,6 +106,7 @@
 								</tr>
 						</thead>        
 						{%if isset|BlockList == true}
+							{%if isempty|BlockList == false}
 								{%foreach block in BlockList}
 										<tr>
 												<td><a href="#" class="ManageBlock" value="{%?block[id]}">{%?block[name]}</a></td>
@@ -108,10 +118,16 @@
 												</td>
 										</tr>
 								{%/foreach}
+							{%/if}
+							{%if isempty|BlockList == true}
+									<tr>
+											<td></td>
+											<td></td>
+									</tr>
+							{%/if}
 						{%/if}
 						{%if isset|BlockList == false}
 								<tr>
-										<td></td>
 										<td></td>
 										<td></td>
 								</tr>
