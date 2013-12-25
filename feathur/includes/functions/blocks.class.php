@@ -46,8 +46,13 @@ class Block extends CPHPDatabaseRecordClass {
 				if($sIPs = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `block_id` = :BlockId", array('BlockId' => $sPool))){
 					foreach($sIPs->data as $sValue){
 						if(!empty($sValue["vps_id"])){
-							$sVPS = new VPS($sValue["vps_id"]);
-							$sTempUser = new User($sVPS->sUserId);
+							try {
+								$sVPS = new VPS($sValue["vps_id"]);
+								$sTempUser = new User($sVPS->sUserId);
+							} catch (Exception $e) {
+								$sVPS = 0;
+								$sTempUser = 0;
+							}
 						}
 						$sIPList[] = array("id" => $sValue["id"], "ip" => $sValue["ip_address"], "Owner" => $sTempUser->sUsername, "OwnerId" => $sTempUser->sId);
 						unset($sTempUser);
