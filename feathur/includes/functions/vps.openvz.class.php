@@ -78,7 +78,7 @@ class openvz {
 																	$sVPS->InsertIntoDatabase();
 																	
 																	if($uIPAddresses > 0){
-																		if($sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId", array('ServerId' => $sServer->sId))){
+																		if($sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId AND `ipv6` = 0", array('ServerId' => $sServer->sId))){
 																			foreach($sBlocks->data as $key => $value){
 																				if($sIPs = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `block_id` = :BlockId AND `vps_id` = 0", array('BlockId' => $value["block_id"]))){
 																					foreach($sIPs->data as $subvalue){
@@ -649,7 +649,7 @@ class openvz {
 		if($sUserPermissions == 7){
 			$sIPs = $sRequested["GET"]["ip"];
 			global $database;
-			if($sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId", array('ServerId' => $sVPS->sServerId))){
+			if($sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId AND `ipv6` = 0", array('ServerId' => $sVPS->sServerId))){
 				foreach($sBlocks->data as $key => $value){
 					if($sIP = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `block_id` = :BlockId AND `vps_id` = 0", array('BlockId' => $value["block_id"]))){
 						foreach($sIP->data as $subvalue){

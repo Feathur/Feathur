@@ -147,7 +147,7 @@ class VPS extends CPHPDatabaseRecordClass {
 	
 	public static function check_ipspace($sServer, $sMinimum){
 		global $database;
-		$sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId", array('ServerId' => $sServer));
+		$sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId AND `ipv6` = 0", array('ServerId' => $sServer));
 		if(!empty($sBlocks)){
 			foreach($sBlocks->data as $key => $value){
 				$sIPs = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `block_id` = :BlockId AND `vps_id` = 0", array('BlockId' => $value["block_id"]));
