@@ -25,118 +25,169 @@
 	</div>
 {%/if}
 {%if isset|Type == true}
-	{%if isempty|Type == true}
-		<br><br>
-		<div align="center">
-			{%if isset|BlockList == true}
-				<div class="simplebox grid740">
-					<div class="titleh">
-							<h3>IPv4 Blocks</h3>
-							<div class="shortcuts-icons">
-									<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
-							</div>
-					</div>
-					<table class="tablesorter" id="BlockListTable">
-						<thead>
-								<tr>
-										<th width="60%"><div align="center">Name</div></th>
-										<th width="20%"><div align="center">Usage</div></th>
-										<th width="20%"><div align="center">Actions</div></th>
-								</tr>
-						</thead>        
-						{%if isset|BlockList == true}
-							{%if isempty|BlockList == false}
-								{%foreach block in BlockList}
+	{%if isset|Pool == false}
+		{%if isempty|Type == true}
+			<br><br>
+			<div align="center">
+				{%if isset|BlockList == true}
+					<div class="simplebox grid740">
+						<div class="titleh">
+								<h3>IPv4 Blocks</h3>
+								<div class="shortcuts-icons">
+										<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+								</div>
+						</div>
+						<table class="tablesorter" id="BlockListTable">
+							<thead>
+									<tr>
+											<th width="60%"><div align="center">Name</div></th>
+											<th width="20%"><div align="center">Usage</div></th>
+											<th width="20%"><div align="center">Actions</div></th>
+									</tr>
+							</thead>        
+							{%if isset|BlockList == true}
+								{%if isempty|BlockList == false}
+									{%foreach block in BlockList}
+											<tr>
+													<td><a href="admin.php?ippools&type=0&pool={%?block[id]}">{%?block[name]}</a></td>
+													<td><div align="center">{%?block[used]} / {%?block[total]}</div></td>
+													<td>
+															<div align="center">
+																	<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
+																	<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
+															</div>
+													</td>
+											</tr>
+									{%/foreach}
+								{%/if}
+								{%if isempty|BlockList == true}
 										<tr>
-												<td><a href="#" class="ManageBlock" value="{%?block[id]}">{%?block[name]}</a></td>
-												<td><div align="center">{%?block[used]} / {%?block[total]}</div></td>
-												<td>
-														<div align="center">
-																<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
-																<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
-														</div>
-												</td>
+											<td colspan="3">
+												<div align="center">There are no IP blocks, add one using the + above.</div>
+											</td>
 										</tr>
-								{%/foreach}
+								{%/if}
 							{%/if}
-							{%if isempty|BlockList == true}
+							{%if isset|BlockList == false}
 									<tr>
 										<td colspan="3">
 											<div align="center">There are no IP blocks, add one using the + above.</div>
 										</td>
 									</tr>
 							{%/if}
-						{%/if}
-						{%if isset|BlockList == false}
-								<tr>
-									<td colspan="3">
-										<div align="center">There are no IP blocks, add one using the + above.</div>
-									</td>
-								</tr>
-						{%/if}
-					</table>
-				</div>
-			{%/if}
-			{%if isset|BlockList == false}
-				<br><br>
-				<div align="center">There are currently no pools defined.</div>
-			{%/if}
-		</div>
-	{%/if}
-	{%if isempty|Type == false}
-		<br><br>
-		<div align="center">
-			{%if isset|BlockList == true}
-				<div class="simplebox grid740">
-					<div class="titleh">
-							<h3>IPv6 Blocks</h3>
-							<div class="shortcuts-icons">
-									<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
-							</div>
+						</table>
 					</div>
-					<table class="tablesorter">
-						<thead>
-								<tr>
-										<th width="60%"><div align="center">Name</div></th>
-										<th width="20%"><div align="center">Actions</div></th>
-								</tr>
-						</thead>        
-						{%if isset|BlockList == true}
-							{%if isempty|BlockList == false}
-								{%foreach block in BlockList}
+				{%/if}
+				{%if isset|BlockList == false}
+					<br><br>
+					<div align="center">There are currently no pools defined.</div>
+				{%/if}
+			</div>
+		{%/if}
+		{%if isempty|Type == false}
+			<br><br>
+			<div align="center">
+				{%if isset|BlockList == true}
+					<div class="simplebox grid740">
+						<div class="titleh">
+								<h3>IPv6 Blocks</h3>
+								<div class="shortcuts-icons">
+										<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+								</div>
+						</div>
+						<table class="tablesorter">
+							<thead>
+									<tr>
+											<th width="60%"><div align="center">Name</div></th>
+											<th width="20%"><div align="center">Actions</div></th>
+									</tr>
+							</thead>        
+							{%if isset|BlockList == true}
+								{%if isempty|BlockList == false}
+									{%foreach block in BlockList}
+											<tr>
+													<td><a href="admin.php?ippools&type=1&pool={%?block[id]}">{%?block[name]}</a></td>
+													<td>
+															<div align="center">
+																	<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
+																	<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
+															</div>
+													</td>
+											</tr>
+									{%/foreach}
+								{%/if}
+								{%if isempty|BlockList == true}
 										<tr>
-												<td><a href="#" class="ManageBlock" value="{%?block[id]}">{%?block[name]}</a></td>
-												<td>
-														<div align="center">
-																<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
-																<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
-														</div>
-												</td>
+											<td colspan="2">
+												<div align="center">There are no IP blocks, add one using the + above.</div>
+											</td>
 										</tr>
-								{%/foreach}
+								{%/if}
 							{%/if}
-							{%if isempty|BlockList == true}
+							{%if isset|BlockList == false}
 									<tr>
 										<td colspan="2">
 											<div align="center">There are no IP blocks, add one using the + above.</div>
 										</td>
 									</tr>
 							{%/if}
-						{%/if}
-						{%if isset|BlockList == false}
-								<tr>
-									<td colspan="2">
-										<div align="center">There are no IP blocks, add one using the + above.</div>
-									</td>
-								</tr>
-						{%/if}
-					</table>
+						</table>
+					</div>
+				{%/if}
+				{%if isset|BlockList == false}
+					<br><br>
+					<div align="center">There are currently no pools defined.</div>
+				{%/if}
+			</div>
+		{%/if}
+	{%/if}
+	{%if isset|Pool == true}
+		<div class="simplebox grid740">
+			<div class="titleh">
+				<h3>{%?BlockName}</h3>
+				<div class="shortcuts-icons">
+					<a class="shortcut tips" title="Add IP Addresses"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 				</div>
-			{%/if}
-			{%if isset|BlockList == false}
-				<br><br>
-				<div align="center">There are currently no pools defined.</div>
-			{%/if}
+			</div>
+			<table class="tablesorter">
+				<thead>
+					<tr>
+						<th width="60%"><div align="center">IP Address</div></th>
+						<th width="20%"><div align="center">Owner</div></th>
+						<th width="20%"><div align="center">Actions</div></th>
+					</tr>
+				</thead>        
+				{%if isset|IPList == true}
+					{%if isempty|IPList == false}
+						{%foreach ip in IPList}
+							<tr>
+								<td>{%?ip[ip]}</td>
+								<td><div align="center"><a href="admin.php?view=clients&id={%?ip[OwnerId]}">{%ip[Owner]}</a></div></td>
+								<td>
+									<div align="center">
+										<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
+										<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
+									</div>
+								</td>
+							</tr>
+						{%/foreach}
+					{%/if}
+					{%if isempty|IPList == true}
+							<tr>
+								<td colspan="2">
+									<div align="center">There are no IPs, add one using the + above.</div>
+								</td>
+							</tr>
+					{%/if}
+				{%/if}
+				{%if isset|IPList == false}
+					<tr>
+						<td colspan="2">
+							<div align="center">There are no IPs, add one using the + above.</div>
+						</td>
+					</tr>
+				{%/if}
+			</table>
 		</div>
 	{%/if}
 {%/if}

@@ -6,10 +6,16 @@ if($sUser->sPermissions != 7){
 $sPage = "ippools";
 $sPageType = "settings";
 $uType = $_GET['type'];
+$uPool = $_GET['pool'];
 
-if(!isset($sType)){
+if(!isset($uType)){
 	$sContent .= Templater::AdvancedParse($sAdminTemplate->sValue.'/ippools', $locale->strings, array());
 } else {
-	$sBlockList = Block::block_list($sType);
-	$sContent .= Templater::AdvancedParse($sAdminTemplate->sValue.'/ippools', $locale->strings, array("Type" => $sType, "BlockList" => $sBlockList));
+	if(isset($uPool)){
+		$sData = Block::list_pool($sType, $sPool);
+		$sContent .= Templater::AdvancedParse($sAdminTemplate->sValue.'/ippools', $locale->strings, array("Type" => $sType, "Pool" => $uPool, "IPList" => $sData["IPList"], "ServerList" => $sData["ServerList"], "AvailableServers" => $sData["AvailableServers"], "BlockName" => $sData["BlockName"]));
+	} else {
+		$sBlockList = Block::block_list($sType);
+		$sContent .= Templater::AdvancedParse($sAdminTemplate->sValue.'/ippools', $locale->strings, array("Type" => $sType, "BlockList" => $sBlockList));
+	}
 }
