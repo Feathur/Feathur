@@ -3,7 +3,6 @@
 		oTable = $('#ListTable').dataTable({
 				"bJQueryUI": true,
 				"bSort": false,
-				"aaSorting": [[ 0, "asc" ]],
 				"iDisplayLength": -1,
 				"bPaginate": false,
 				"bStateSave": true,
@@ -65,19 +64,19 @@
 									{%/foreach}
 								{%/if}
 								{%if isempty|BlockList == true}
-										<tr>
-											<td colspan="3">
-												<div align="center">There are no IP blocks, add one using the + above.</div>
-											</td>
-										</tr>
-								{%/if}
-							{%/if}
-							{%if isset|BlockList == false}
 									<tr>
 										<td colspan="3">
 											<div align="center">There are no IP blocks, add one using the + above.</div>
 										</td>
 									</tr>
+								{%/if}
+							{%/if}
+							{%if isset|BlockList == false}
+								<tr>
+									<td colspan="3">
+										<div align="center">There are no IP blocks, add one using the + above.</div>
+									</td>
+								</tr>
 							{%/if}
 						</table>
 					</div>
@@ -121,19 +120,19 @@
 									{%/foreach}
 								{%/if}
 								{%if isempty|BlockList == true}
-										<tr>
-											<td colspan="2">
-												<div align="center">There are no IP blocks, add one using the + above.</div>
-											</td>
-										</tr>
-								{%/if}
-							{%/if}
-							{%if isset|BlockList == false}
 									<tr>
 										<td colspan="2">
 											<div align="center">There are no IP blocks, add one using the + above.</div>
 										</td>
 									</tr>
+								{%/if}
+							{%/if}
+							{%if isset|BlockList == false}
+								<tr>
+									<td colspan="2">
+										<div align="center">There are no IP blocks, add one using the + above.</div>
+									</td>
+								</tr>
 							{%/if}
 						</table>
 					</div>
@@ -146,126 +145,131 @@
 		{%/if}
 	{%/if}
 	{%if isset|Pool == true}
-		<br><br>
-		<div align="center">
-			<div class="grid740">
-				<div id="tabs">
+		{%if isempty|Type == true}
+			<br><br>
+			<div align="center">
+				<div class="grid740">
 					<div id="tabs">
-						<ul>
-							<li><a href="#tabs-1">IP Addresses</a></li>
-							<li><a href="#tabs-2">Servers</a></li>
-						</ul>
-					</div>
-					<div id="tabs-1">
-						<div align="center">
-							<div class="simplebox" style="width:95%">
-								<div class="titleh">
-									<h3>{%if isset|BlockName == true}{%?BlockName}{%/if}{%if isset|BlockName == false}IP Block{%/if} IP Management</h3>
-									<div class="shortcuts-icons">
-										<a class="shortcut tips" title="Add IP Addresses"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+						<div id="tabs">
+							<ul>
+								<li><a href="#tabs-1">IP Addresses</a></li>
+								<li><a href="#tabs-2">Servers</a></li>
+							</ul>
+						</div>
+						<div id="tabs-1">
+							<div align="center">
+								<div class="simplebox" style="width:95%">
+									<div class="titleh">
+										<h3>{%if isset|BlockName == true}{%?BlockName}{%/if}{%if isset|BlockName == false}IP Block{%/if} IP Management</h3>
+										<div class="shortcuts-icons">
+											<a class="shortcut tips" title="Add IP Addresses"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+										</div>
 									</div>
-								</div>
-								<table class="tablesorter" id="ListTable">
-									<thead>
-										<tr>
-											<th width="40%"><div align="center">IP Address</div></th>
-											<th width="30%"><div align="center">Owner</div></th>
-											<th width="30%"><div align="center">Actions</div></th>
-										</tr>
-									</thead>        
-									{%if isset|IPList == true}
-										{%if isempty|IPList == false}
-											{%foreach ip in IPList}
-												<tr>
-													<td>{%?ip[ip]}</td>
-													<td>
-														<div align="center">
-															{%if isempty|ip[Owner] == false}
-																{%if isempty|ip[OwnerId] == false}
-																	<a href="admin.php?view=clients&id={%?ip[OwnerId]}">{%?ip[Owner]}</a>
+									<table class="tablesorter" id="ListTable">
+										<thead>
+											<tr>
+												<th width="40%"><div align="center">IP Address</div></th>
+												<th width="30%"><div align="center">Owner</div></th>
+												<th width="30%"><div align="center">Actions</div></th>
+											</tr>
+										</thead>        
+										{%if isset|IPList == true}
+											{%if isempty|IPList == false}
+												{%foreach ip in IPList}
+													<tr>
+														<td>{%?ip[ip]}</td>
+														<td>
+															<div align="center">
+																{%if isempty|ip[Owner] == false}
+																	{%if isempty|ip[OwnerId] == false}
+																		<a href="admin.php?view=clients&id={%?ip[OwnerId]}">{%?ip[Owner]}</a>
+																	{%/if}
 																{%/if}
-															{%/if}
-														</div>
-													</td>
-													<td>
-														<div align="center">
-															<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="" value=""><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
-															<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="" value=""><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
-														</div>
-													</td>
-												</tr>
-											{%/foreach}
-										{%/if}
-										{%if isempty|IPList == true}
+															</div>
+														</td>
+														<td>
+															<div align="center">
+																<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="" value=""><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
+																<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="" value=""><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
+															</div>
+														</td>
+													</tr>
+												{%/foreach}
+											{%/if}
+											{%if isempty|IPList == true}
 												<tr>
 													<td colspan="3">
 														<div align="center">There are no IPs, add one using the + above.</div>
 													</td>
 												</tr>
+											{%/if}
 										{%/if}
-									{%/if}
-									{%if isset|IPList == false}
-										<tr>
-											<td colspan="3">
-												<div align="center">There are no IPs, add one using the + above.</div>
-											</td>
-										</tr>
-									{%/if}
-								</table>
+										{%if isset|IPList == false}
+											<tr>
+												<td colspan="3">
+													<div align="center">There are no IPs, add one using the + above.</div>
+												</td>
+											</tr>
+										{%/if}
+									</table>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div id="tabs-2">
-						<div align="center">
-							<div class="simplebox" style="width:95%">
-								<div class="titleh">
-									<h3>{%if isset|BlockName == true}{%?BlockName}{%/if}{%if isset|BlockName == false}IP Block{%/if} Server Management</h3>
-									<div class="shortcuts-icons">
-										<a class="shortcut tips" title="Add Server"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+						<div id="tabs-2">
+							<div align="center">
+								<div class="simplebox" style="width:95%">
+									<div class="titleh">
+										<h3>{%if isset|BlockName == true}{%?BlockName}{%/if}{%if isset|BlockName == false}IP Block{%/if} Server Management</h3>
+										<div class="shortcuts-icons">
+											<a class="shortcut tips" title="Add Server"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+										</div>
 									</div>
-								</div>
-								<table class="tablesorter" id="ListTable">
-									<thead>
-										<tr>
-											<th width="60%"><div align="center">Server</div></th>
-											<th width="20%"><div align="center">Actions</div></th>
-										</tr>
-									</thead>        
-									{%if isset|ServerList == true}
-										{%if isempty|ServerList == false}
-											{%foreach server in ServerList}
-												<tr>
-													<td>{%?server[name]}</td>
-													<td>
-														<div align="center">
-															<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="" value=""><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
-															<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="" value=""><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
-														</div>
-													</td>
-												</tr>
-											{%/foreach}
-										{%/if}
-										{%if isempty|ServerList == true}
+									<table class="tablesorter" id="ListTable">
+										<thead>
+											<tr>
+												<th width="60%"><div align="center">Server</div></th>
+												<th width="20%"><div align="center">Actions</div></th>
+											</tr>
+										</thead>        
+										{%if isset|ServerList == true}
+											{%if isempty|ServerList == false}
+												{%foreach server in ServerList}
+													<tr>
+														<td>{%?server[name]}</td>
+														<td>
+															<div align="center">
+																<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="" value=""><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
+																<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="" value=""><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
+															</div>
+														</td>
+													</tr>
+												{%/foreach}
+											{%/if}
+											{%if isempty|ServerList == true}
 												<tr>
 													<td colspan="2">
 														<div align="center">There are no servers assigned to this block, add one using the + above. (1)</div>
 													</td>
 												</tr>
+											{%/if}
 										{%/if}
-									{%/if}
-									{%if isset|ServerList == false}
-										<tr>
-											<td colspan="2">
-												<div align="center">There are no servers assigned to this block, add one using the + above. (2)</div>
-											</td>
-										</tr>
-									{%/if}
-								</table>
+										{%if isset|ServerList == false}
+											<tr>
+												<td colspan="2">
+													<div align="center">There are no servers assigned to this block, add one using the + above. (2)</div>
+												</td>
+											</tr>
+										{%/if}
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		{%/if}
+		{%if isempty|Type == true}
+			<div align="center">IPv6 Pool here</div>
+		{%/if}
 	{%/if}
 {%/if}
