@@ -7,6 +7,10 @@
 				"iDisplayLength": -1,
 				"bPaginate": false,
 				"bStateSave": true,
+				"oLanguage": {
+					"sEmptyTable": '',
+					"sInfoEmpty": ''
+				},
 				"sEmptyTable": "Loading data from server",
 		});
 	});
