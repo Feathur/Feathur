@@ -1,17 +1,15 @@
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function() {
-		oTable = $('#ListTable').dataTable({
-				"bJQueryUI": true,
-				"bSort": false,
-				"aaSorting": [[ 0, "asc" ]],
-				"iDisplayLength": -1,
-				"bPaginate": false,
-				"bStateSave": true,
-				"oLanguage": {
-					"sEmptyTable": '',
-					"sInfoEmpty": ''
-				},
-				"sEmptyTable": "Loading data from server",
+		oTablea = $('#ListTable').dataTable({
+			"bJQueryUI": true,
+			"bPaginate": false,
+			"aaSorting": [[ 0, "asc" ]],
+			"bSort": false,
+			"iDisplayLength": -1,
+			"bStateSave": true,
+			"oLanguage": {
+			"sEmptyTable": "No Entries"
+			}
 		});
 	});
 	$(function() {
@@ -46,7 +44,7 @@
 										<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 								</div>
 						</div>
-						<table class="tablesorter">
+						<table class="tablesorter" id="ListTable">
 							<thead>
 									<tr>
 											<th width="60%"><div align="center">Name</div></th>
@@ -57,16 +55,16 @@
 							{%if isset|BlockList == true}
 								{%if isempty|BlockList == false}
 									{%foreach block in BlockList}
-											<tr>
-													<td><a href="admin.php?view=ippools&type=0&pool={%?block[id]}">{%?block[name]}</a></td>
-													<td><div align="center">{%?block[used]} / {%?block[total]}</div></td>
-													<td>
-															<div align="center">
-																	<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
-																	<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
-															</div>
-													</td>
-											</tr>
+										<tr>
+											<td><a href="admin.php?view=ippools&type=0&pool={%?block[id]}">{%?block[name]}</a></td>
+											<td><div align="center">{%?block[used]} / {%?block[total]}</div></td>
+											<td>
+												<div align="center">
+													<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
+													<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
+												</div>
+											</td>
+										</tr>
 									{%/foreach}
 								{%/if}
 								{%if isempty|BlockList == true}
