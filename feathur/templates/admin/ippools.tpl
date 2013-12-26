@@ -44,7 +44,7 @@
 										<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 								</div>
 						</div>
-						<table class="tablesorter" id="ListTable">
+						<table class="tablesorter" {%if isset|BlockList == true}{%if isempty|BlockList == false}id="ListTable"{%/if}{%/if}>
 							<thead>
 									<tr>
 											<th width="60%"><div align="center">Name</div></th>
@@ -102,7 +102,7 @@
 										<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 								</div>
 						</div>
-						<table class="tablesorter" id="ListTable">
+						<table class="tablesorter"  {%if isset|BlockList == true}{%if isempty|BlockList == false}id="ListTable"{%/if}{%/if}>
 							<thead>
 									<tr>
 											<th width="60%"><div align="center">Name</div></th>
@@ -169,7 +169,7 @@
 											<a class="shortcut tips" title="Add IP Addresses"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 										</div>
 									</div>
-									<table class="tablesorter" id="ListTable">
+									<table class="tablesorter" {%if isset|IPList == true}{%if isempty|IPList == false}id="ListTable"{%/if}{%/if}>
 										<thead>
 											<tr>
 												<th width="40%"><div align="center">IP Address</div></th>
@@ -228,7 +228,7 @@
 											<a class="shortcut tips" title="Add Server"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 										</div>
 									</div>
-									<table class="tablesorter" id="ListTable">
+									<table class="tablesorter">
 										<thead>
 											<tr>
 												<th width="60%"><div align="center">Server</div></th>
