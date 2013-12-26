@@ -198,7 +198,7 @@
 										{%/if}
 										{%if isempty|IPList == true}
 												<tr>
-													<td colspan="2">
+													<td colspan="3">
 														<div align="center">There are no IPs, add one using the + above.</div>
 													</td>
 												</tr>
@@ -206,7 +206,7 @@
 									{%/if}
 									{%if isset|IPList == false}
 										<tr>
-											<td colspan="2">
+											<td colspan="3">
 												<div align="center">There are no IPs, add one using the + above.</div>
 											</td>
 										</tr>
@@ -235,14 +235,7 @@
 										{%if isempty|ServerList == false}
 											{%foreach server in ServerList}
 												<tr>
-													<td>{%?ip[ip]}</td>
-													<td>
-														<div align="center">
-															{%if isset|server[name] == true}
-																{%?server[name}
-															{%/if}
-														</div>
-													</td>
+													<td>{%?server[name]}</td>
 													<td>
 														<div align="center">
 															<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="" value=""><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
@@ -255,7 +248,7 @@
 										{%if isempty|ServerList == true}
 												<tr>
 													<td colspan="2">
-														<div align="center">There are no servers assigned to this block, add one using the + above.</div>
+														<div align="center">There are no servers assigned to this block, add one using the + above. (1)</div>
 													</td>
 												</tr>
 										{%/if}
@@ -263,7 +256,7 @@
 									{%if isset|ServerList == false}
 										<tr>
 											<td colspan="2">
-												<div align="center">There are no servers assigned to this block, add one using the + above.</div>
+												<div align="center">There are no servers assigned to this block, add one using the + above. (2)</div>
 											</td>
 										</tr>
 									{%/if}
