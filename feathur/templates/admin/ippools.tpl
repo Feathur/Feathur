@@ -126,6 +126,7 @@
 									{%/foreach}
 								{%/if}
 								{%if isempty|BlockList == true}
+									<tr><td></td><td></td></tr>
 									<tr>
 										<td colspan="2">
 											<div align="center">There are no IP blocks, add one using the + above.</div>
@@ -134,6 +135,7 @@
 								{%/if}
 							{%/if}
 							{%if isset|BlockList == false}
+								<tr><td></td><td></td></tr>
 								<tr>
 									<td colspan="2">
 										<div align="center">There are no IP blocks, add one using the + above.</div>
@@ -274,7 +276,7 @@
 				</div>
 			</div>
 		{%/if}
-		{%if isempty|Type == true}
+		{%if isempty|Type == false}
 			<div align="center">IPv6 Pool here</div>
 		{%/if}
 	{%/if}
