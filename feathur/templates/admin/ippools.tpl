@@ -168,9 +168,9 @@
 								<table class="tablesorter" id="ListTable">
 									<thead>
 										<tr>
-											<th width="60%"><div align="center">IP Address</div></th>
-											<th width="20%"><div align="center">Owner</div></th>
-											<th width="20%"><div align="center">Actions</div></th>
+											<th width="40%"><div align="center">IP Address</div></th>
+											<th width="30%"><div align="center">Owner</div></th>
+											<th width="30%"><div align="center">Actions</div></th>
 										</tr>
 									</thead>        
 									{%if isset|IPList == true}
