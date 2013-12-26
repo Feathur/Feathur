@@ -7,6 +7,7 @@
 				"iDisplayLength": -1,
 				"bPaginate": false,
 				"bStateSave": true,
+				"sEmptyTable": "Loading data from server",
 		});
 	});
 	$(function() {
