@@ -60,7 +60,7 @@ class Block extends CPHPDatabaseRecordClass {
 					}
 				}
 				
-				if($sServerBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `block_id` = :BlockId AND `ipv6` = 0", array('BlockId' => $sBlock))){
+				if($sServerBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `block_id` = :BlockId AND `ipv6` = 0", array('BlockId' => $sPool))){
 					foreach($sServerBlocks->data as $sValue){
 						$sServer = new Server($sValue["server_id"]);
 						$sServerList[] = array("id" => $sValue["server_id"], "name" => $sServer->sName);
