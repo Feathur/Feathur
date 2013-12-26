@@ -3,6 +3,7 @@
 		oTable = $('#ListTable').dataTable({
 				"bJQueryUI": true,
 				"bSort": false,
+				"aaSorting": [[ 0, "asc" ]],
 				"iDisplayLength": -1,
 				"bPaginate": false,
 				"bStateSave": true,
@@ -102,7 +103,7 @@
 							<thead>
 									<tr>
 											<th width="60%"><div align="center">Name</div></th>
-											<th width="20%"><div align="center">Actions</div></th>
+											<th width="40%"><div align="center">Actions</div></th>
 									</tr>
 							</thead>        
 							{%if isset|BlockList == true}
