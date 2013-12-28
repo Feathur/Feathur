@@ -63,7 +63,7 @@ bridgeconfig=$(egrep -v "(NM_CONTROLLED|DEVICE|TYPE)" /etc/sysconfig/network-scr
 echo "$trunkconfig" > /etc/sysconfig/network-scripts/ifcfg-$trunkinterface
 echo "$bridgeconfig" > /etc/sysconfig/network-scripts/ifcfg-br0
 service network restart
-if [[ $(ping -c 3 8.8.8.8 | wc -l) != 5 ]]
+if [[ $(ping -c 3 8.8.8.8 | wc -l) == 5 ]]
 then
 	/bin/rm -Rf /etc/sysconfig/network-scripts/
 	mv /etc/sysconfig/network-scripts.backup /etc/sysconfig/network-scripts
