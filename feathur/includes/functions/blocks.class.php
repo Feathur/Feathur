@@ -85,4 +85,22 @@ class Block extends CPHPDatabaseRecordClass {
 		}
 	}
 	
+	public static function create_pool($sRequested){
+		global $database;
+		if(empty($sRequested["GET"]["type"])){
+			if(!empty($sRequested["GET"]["name"])){
+				$sNewBlock = new Block(0);
+				$sNewBlock->uName = $sRequested["GET"]["name"];
+				$sNewBlock->uGateway = $sRequested["GET"]["gateway"];
+				$sNewBlock->uNetmask = $sRequested["GET"]["netmask"];
+				$sNewBlock->InsertIntoDatabase();
+				return $sSuccess = array("content" => "The block {$sRequested["GET"]["name"]} has been created.");
+			} else {
+				return $sError = array("red" => "You must give each block a name.");
+			}
+		} else {
+		
+		}
+	}
+	
 }

@@ -11,11 +11,15 @@
 			"sEmptyTable": "No Entries"
 			}
 		});
+		$('.noEnterSubmit').keypress(function(e){
+			if ( e.which == 13 ) e.preventDefault();
+		});
 	});
 	$(function() {
 	   $( "#tabs" ).tabs();
 	});
 </script>
+<!--- If no type is set, ask admin what type they want. --->
 {%if isset|Type == false}
 	<div align="center">
 		<br><br>
@@ -31,9 +35,38 @@
 		</table>
 	</div>
 {%/if}
+
+<div id="result"></div>
+
+<!--- If the Type isset, and the pool is not set display some blocks. --->
 {%if isset|Type == true}
 	{%if isset|Pool == false}
+		
+		<!--- If the Type is empty then the blocks are IPv4 --->
 		{%if isempty|Type == true}
+			<script type="text/javascript">
+				$('#SubmitNewBlock').click(function() {
+					var name = $("#NewBlockName").val();
+					var gateway = $("#NewBlockGateway").val();
+					var netmask = $("#NewBlockNetmask").val()
+					$('#SubmitNewBlockWrapper').html('<a class="button-blue" />Please Wait...</a>');
+					if(!name){
+						$('#SubmitNewBlockWrapper').html('<a class="button-blue" id="SubmitNewBlock" />Add IP Block</a>');
+					}
+					else {
+						$.modal.close();
+						$("#LoadingImage").css({visibility: "visible"});
+						$.getJSON("admin.php?view=ippools&type=0&action=create_pool&name=" + name + "&gateway=" + gateway + "&netmask=" + netmask,function(result){
+							if(typeof(result.red) != "undefined" && result.red !== null) {
+								$("#result").html(result.red);
+							} else {
+								$("#result").html(result.content);
+								window.location.reload();
+							}
+						});
+					}
+				});
+			</script>
 			<br><br>
 			<div align="center">
 				{%if isset|BlockList == true}
@@ -90,24 +123,42 @@
 					<div align="center">There are currently no pools defined.</div>
 				{%/if}
 			</div>
+			<div id="NewBlockForm" style="display:none;" align="center">
+				<div style="z-index: 610;" class="simplebox">
+					<div style="z-index: 600;" class="titleh" align="center"><h3>Add IPv4 Block</h3></div>
+					<div style="z-index: 590;" class="body padding10">
+						<div style="height:170px;">
+							<form id="form1" name="form1" class="SubmitBlockForm noEnterSubmit">
+									Block Name: <input name="newblockname" class="st-forminput" id="NewBlockName" style="width:150px" type="text"><br>
+									Gateway: &nbsp;<input name="newblockgateway" class="st-forminput" id="NewBlockGateway" style="width:150px" type="text"><br>
+									Netmask: &nbsp;<input name="newblocknetmask" class="st-forminput" id="NewBlockNetmask" style="width:150px" type="text">
+									<div style="padding:12px;"></div>
+									<div align="center" style="margin-bottom:5px;" id="SubmitNewBlockWrapper"><a class="button-blue" style="cursor:pointer;" id="SubmitNewBlock">Add IP Block</a></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
 		{%/if}
+		
+		<!--- If the Type is not empty then the blocks are IPv6 --->
 		{%if isempty|Type == false}
 			<br><br>
 			<div align="center">
 				{%if isset|BlockList == true}
 					<div class="simplebox grid740">
 						<div class="titleh">
-								<h3>IPv6 Blocks</h3>
-								<div class="shortcuts-icons">
-										<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
-								</div>
+							<h3>IPv6 Blocks</h3>
+							<div class="shortcuts-icons">
+								<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+							</div>
 						</div>
 						<table class="tablesorter"  {%if isset|BlockList == true}{%if isempty|BlockList == false}id="ListTable"{%/if}{%/if}>
 							<thead>
-									<tr>
-											<th width="60%"><div align="center">Name</div></th>
-											<th width="40%"><div align="center">Actions</div></th>
-									</tr>
+								<tr>
+									<th width="60%"><div align="center">Name</div></th>
+									<th width="40%"><div align="center">Actions</div></th>
+								</tr>
 							</thead>        
 							{%if isset|BlockList == true}
 								{%if isempty|BlockList == false}
@@ -148,7 +199,11 @@
 			</div>
 		{%/if}
 	{%/if}
+	
+	<!--- If the Pool isset then display the pool settings --->
 	{%if isset|Pool == true}
+	
+		<!--- If the Pool type is empty then this block is IPv4 --->
 		{%if isempty|Type == true}
 			<br><br>
 			<div align="center">
@@ -272,6 +327,8 @@
 				</div>
 			</div>
 		{%/if}
+		
+		<!--- If the Type isset then this pool is IPv6 --->
 		{%if isempty|Type == false}
 			<div align="center">IPv6 Pool here</div>
 		{%/if}

@@ -7,6 +7,15 @@ $sPage = "ippools";
 $sPageType = "settings";
 $uType = $_GET['type'];
 $uPool = $_GET['pool'];
+$uAction = $_GET['action'];
+
+if(isset($uAction)){
+	$sResult = Block::$uAction($sRequested);
+	if(is_array($sResult)){
+		echo json_encode($sResult);
+		die();
+	}
+}
 
 if(!isset($uType)){
 	$sContent .= Templater::AdvancedParse($sAdminTemplate->sValue.'/ippools', $locale->strings, array());
