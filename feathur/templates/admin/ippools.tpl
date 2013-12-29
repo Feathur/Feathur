@@ -45,6 +45,9 @@
 		<!--- If the Type is empty then the blocks are IPv4 --->
 		{%if isempty|Type == true}
 			<script type="text/javascript">
+				$("#AddBlock").click(function(){
+                    $("#NewBlockForm").modal({containerCss:{width:"400", height:"250"}});
+                });
 				$('#SubmitNewBlock').click(function() {
 					var name = $("#NewBlockName").val();
 					var gateway = $("#NewBlockGateway").val();
