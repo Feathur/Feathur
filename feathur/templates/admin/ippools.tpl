@@ -14,6 +14,8 @@
 		$('.noEnterSubmit').keypress(function(e){
 			if ( e.which == 13 ) e.preventDefault();
 		});
+		$("#result-error").hide();
+		$("#result-success").hide();
 	});
 	$(function() {
 	   $( "#tabs" ).tabs();
@@ -36,7 +38,8 @@
 	</div>
 {%/if}
 
-<div id="result"></div>
+<div class="albox errorbox" id="result-error"></div>
+<div class="albox successbox" id="result-success"></div>
 
 <!--- If the Type isset, and the pool is not set display some blocks. --->
 {%if isset|Type == true}
@@ -54,21 +57,18 @@
 						var gateway = $("#NewBlockGateway").val();
 						var netmask = $("#NewBlockNetmask").val()
 						$('#SubmitNewBlockWrapper').html('<a class="button-blue" />Please Wait...</a>');
-						if(!name){
-							$('#SubmitNewBlockWrapper').html('<a class="button-blue" id="SubmitNewBlock" />Add IP Block</a>');
-						}
-						else {
-							$.modal.close();
-							$("#LoadingImage").css({visibility: "visible"});
-							$.getJSON("admin.php?view=ippools&type=0&action=create_pool&name=" + name + "&gateway=" + gateway + "&netmask=" + netmask,function(result){
-								if(typeof(result.red) != "undefined" && result.red !== null) {
-									$("#result").html(result.red);
-								} else {
-									$("#result").html(result.content);
-									window.location.reload();
-								}
-							});
-						}
+						$.modal.close();
+						$("#LoadingImage").css({visibility: "visible"});
+						$.getJSON("admin.php?view=ippools&type=0&action=create_pool&name=" + name + "&gateway=" + gateway + "&netmask=" + netmask,function(result){
+							if(typeof(result.red) != "undefined" && result.red !== null) {
+								$("#result-error").html(result.red);
+								$("#result-error").show();
+							} else {
+								$("#result-success").html(result.content);
+								$("#result-success").show();
+								window.location.reload();
+							}
+						});
 					});
 				});
 			</script>
