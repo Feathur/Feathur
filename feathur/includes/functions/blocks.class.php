@@ -103,4 +103,22 @@ class Block extends CPHPDatabaseRecordClass {
 		}
 	}
 	
+	public static function delete_pool($sRequested){
+		global $database;
+		if(empty($sRequested["GET"]["type"])){
+			if(!empty($sRequested["GET"]["id"])){
+				if(!$sServers = $database->CachedQuery("SELECT * FROM `ipaddresses` WHERE `block_id` = :BlockId AND `vps_id` != 0", array("BlockId" => $sRequested["GET"]["id"]))){
+					$sDeleteBlock = $database->CachedQuery("DELETE FROM `blocks` WHERE `id` = :Id", array("BlockId" => $sRequested["GET"]["id"]));
+					$sDeleteIPs = $database->CachedQuery("DELETE FROM `ipaddresses` WHERE `block_id` = :BlockId", array("BlockId" => $sRequested["GET"]["id"]));
+					return $sSuccess = array("content" => "The block has been deleted.");
+				} else {
+					return $sError = array("red" => "You can not delete a block with IPs assigned to VPS.");
+				}
+			} else {
+				return $sError = array("red" => "You must specify a pool to delete.");
+			}
+		} else {
+		
+		}
+	}
 }

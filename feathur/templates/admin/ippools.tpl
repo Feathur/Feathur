@@ -72,6 +72,28 @@
 							}
 						});
 					});
+					$(".DeleteBlock").click(function() {
+                        var blockname = $(this).attr('rel');
+                        var blockid = $(this).attr('value');
+                        $("#DeleteFormName").html(blockname);
+                        $("#DeleteFormValue").html(blockid);
+                        $("#DeleteForm").modal({containerCss:{width:"400", height:"200"}});
+					});
+					$("#ConfirmDelete").click(function() {
+						var deleteid = $("#DeleteFormValue").text();
+						$.modal.close();
+						$("#LoadingImage").css({visibility: "visible"});
+						$.getJSON("admin.php?view=ippools&type=0&action=delete_pool&id=" + deleteid,function(result){
+							if(typeof(result.red) != "undefined" && result.red !== null) {
+								$("#result-error").html(result.red);
+								$("#result-error").show();
+							} else {
+								$("#result-success").html(result.content);
+								$("#result-success").show();
+								window.location.reload();
+							}
+						});
+					});
 				});
 			</script>
 			<br><br>
@@ -101,7 +123,7 @@
 											<td>
 												<div align="center">
 													<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
-													<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
+                                                    <a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
 												</div>
 											</td>
 										</tr>
@@ -136,11 +158,25 @@
 					<div style="z-index: 590;" class="body padding10">
 						<div style="height:170px;">
 							<form id="form1" name="form1" class="SubmitBlockForm noEnterSubmit">
-									Block Name: <input name="newblockname" class="st-forminput" id="NewBlockName" style="width:150px" type="text"><br>
-									Gateway: &nbsp;<input name="newblockgateway" class="st-forminput" id="NewBlockGateway" style="width:150px" type="text"><br>
-									Netmask: &nbsp;<input name="newblocknetmask" class="st-forminput" id="NewBlockNetmask" style="width:150px" type="text">
-									<div style="padding:12px;"></div>
-									<div align="center" style="margin-bottom:5px;" id="SubmitNewBlockWrapper"><a class="button-blue" style="cursor:pointer;" id="SubmitNewBlock">Add IP Block</a></div>
+								Block Name: <input name="newblockname" class="st-forminput" id="NewBlockName" style="width:150px" type="text"><br>
+								Gateway: &nbsp;<input name="newblockgateway" class="st-forminput" id="NewBlockGateway" style="width:150px" type="text"><br>
+								Netmask: &nbsp;<input name="newblocknetmask" class="st-forminput" id="NewBlockNetmask" style="width:150px" type="text">
+								<div style="padding:12px;"></div>
+								<div align="center" style="margin-bottom:5px;" id="SubmitNewBlockWrapper"><a class="button-blue" style="cursor:pointer;" id="SubmitNewBlock">Add IP Block</a></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="DeleteForm" style="display:none;height:130px;" align="center">
+				<div style="z-index: 610;" class="simplebox">
+					<div style="z-index: 600;" class="titleh" align="center"><h3>Delete IP Block</h3></div>
+					<div style="z-index: 590;" class="body padding10">
+						<div style="height:120px;">
+							<form id="form3" name="form3" class="Delete noEnterSubmit">
+								Do you want to delete the IP block <a style="color:#737F89;" id="DeleteFormName"></a><a id="DeleteFormValue" style="display:none;"></a>?
+								<div style="padding:12px;"></div>
+								<div align="center" style="margin-bottom:5px;" id="FormDelete"><a class="button-blue" style="cursor:pointer;" id="ConfirmDelete">Yes</a> <a class="button-blue" style="cursor:pointer;" id="CancelDelete">No</a></div>
 							</form>
 						</div>
 					</div>
