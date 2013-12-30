@@ -108,8 +108,8 @@ class Block extends CPHPDatabaseRecordClass {
 		if(empty($sRequested["GET"]["type"])){
 			if(!empty($sRequested["GET"]["id"])){
 				if(!$sServers = $database->CachedQuery("SELECT * FROM `ipaddresses` WHERE `block_id` = :BlockId AND `vps_id` != 0", array("BlockId" => $sRequested["GET"]["id"]))){
-					$sDeleteBlock = $database->CachedQuery("DELETE FROM `blocks` WHERE `id` = :Id", array("Id" => $sRequested["GET"]["id"]));
 					$sDeleteIPs = $database->CachedQuery("DELETE FROM `ipaddresses` WHERE `block_id` = :BlockId", array("BlockId" => $sRequested["GET"]["id"]));
+					$sDeleteBlock = $database->CachedQuery("DELETE FROM `blocks` WHERE `id` = :Id", array("Id" => $sRequested["GET"]["id"]));
 					return $sSuccess = array("content" => "The block has been deleted.");
 				} else {
 					return $sError = array("red" => "You can not delete a block with IPs assigned to VPS.");
