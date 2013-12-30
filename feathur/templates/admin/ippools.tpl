@@ -45,29 +45,31 @@
 		<!--- If the Type is empty then the blocks are IPv4 --->
 		{%if isempty|Type == true}
 			<script type="text/javascript">
-				$("#AddBlock").click(function(){
-                    $("#NewBlockForm").modal({containerCss:{width:"400", height:"250"}});
-                });
-				$('#SubmitNewBlock').click(function() {
-					var name = $("#NewBlockName").val();
-					var gateway = $("#NewBlockGateway").val();
-					var netmask = $("#NewBlockNetmask").val()
-					$('#SubmitNewBlockWrapper').html('<a class="button-blue" />Please Wait...</a>');
-					if(!name){
-						$('#SubmitNewBlockWrapper').html('<a class="button-blue" id="SubmitNewBlock" />Add IP Block</a>');
-					}
-					else {
-						$.modal.close();
-						$("#LoadingImage").css({visibility: "visible"});
-						$.getJSON("admin.php?view=ippools&type=0&action=create_pool&name=" + name + "&gateway=" + gateway + "&netmask=" + netmask,function(result){
-							if(typeof(result.red) != "undefined" && result.red !== null) {
-								$("#result").html(result.red);
-							} else {
-								$("#result").html(result.content);
-								window.location.reload();
-							}
-						});
-					}
+				$(document).ready(function() {
+					$("#AddBlock").click(function(){
+						$("#NewBlockForm").modal({containerCss:{width:"400", height:"250"}});
+					});
+					$('#SubmitNewBlock').click(function() {
+						var name = $("#NewBlockName").val();
+						var gateway = $("#NewBlockGateway").val();
+						var netmask = $("#NewBlockNetmask").val()
+						$('#SubmitNewBlockWrapper').html('<a class="button-blue" />Please Wait...</a>');
+						if(!name){
+							$('#SubmitNewBlockWrapper').html('<a class="button-blue" id="SubmitNewBlock" />Add IP Block</a>');
+						}
+						else {
+							$.modal.close();
+							$("#LoadingImage").css({visibility: "visible"});
+							$.getJSON("admin.php?view=ippools&type=0&action=create_pool&name=" + name + "&gateway=" + gateway + "&netmask=" + netmask,function(result){
+								if(typeof(result.red) != "undefined" && result.red !== null) {
+									$("#result").html(result.red);
+								} else {
+									$("#result").html(result.content);
+									window.location.reload();
+								}
+							});
+						}
+					});
 				});
 			</script>
 			<br><br>
