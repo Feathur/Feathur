@@ -38,8 +38,10 @@
 	</div>
 {%/if}
 
-<div class="albox errorbox" id="result-error"></div>
-<div class="albox successbox" id="result-success"></div>
+<div align="center">
+	<div class="albox errorbox" id="result-error" style="width:50%"></div>
+	<div class="albox successbox" id="result-success" style="width:50%"></div>
+</div>
 
 <!--- If the Type isset, and the pool is not set display some blocks. --->
 {%if isset|Type == true}
