@@ -121,4 +121,16 @@ class Block extends CPHPDatabaseRecordClass {
 		
 		}
 	}
+	
+	public static function rename_pool($sRequested){
+		global $database;
+		if(!empty($sRequested["GET"]["id"])){
+			$sBlock = new Block($sRequested["GET"]["id"]);
+			$sBlock->uName = $sRequested["GET"]["name"];
+			$sBlock->InsertIntoDatabase();
+			return $sSuccess = array("content" => "The block has been updated.");
+		} else {
+			return $sError = array("red" => "You must specify a block to edit.");
+		}
+	}
 }
