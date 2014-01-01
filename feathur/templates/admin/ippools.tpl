@@ -339,6 +339,9 @@
 						$("#DeleteFormType").html("remove_ipv4");
 						$("#DeleteForm").modal({containerCss:{width:"400", height:"200"}});
 					});
+					 $("#AddIP").click(function(){
+                        $("#NewIPForm").modal({containerCss:{width:"400", height:"360"}});
+					});
 					$("#AddServer").click(function(){
 						$("#NewServerForm").modal({containerCss:{width:"400", height:"200"}});
 					});
@@ -409,7 +412,7 @@
 									<div class="titleh">
 										<h3>{%if isset|BlockName == true}{%?BlockName}{%/if}{%if isset|BlockName == false}IP Block{%/if} IP Management</h3>
 										<div class="shortcuts-icons">
-											<a class="shortcut tips" title="Add IP Addresses"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+											<a class="shortcut tips" title="Add IP Addresses" id="AddIP"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 										</div>
 									</div>
 									<table class="tablesorter" {%if isset|IPList == true}{%if isempty|IPList == false}id="ListTable"{%/if}{%/if}>
@@ -468,7 +471,7 @@
 									<div class="titleh">
 										<h3>{%if isset|BlockName == true}{%?BlockName}{%/if}{%if isset|BlockName == false}IP Block{%/if} Server Management</h3>
 										<div class="shortcuts-icons">
-											<a class="shortcut tips" title="Add Server"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+											<a class="shortcut tips" title="Add Server" id="AddServer"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 										</div>
 									</div>
 									<table class="tablesorter">
