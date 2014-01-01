@@ -296,7 +296,7 @@
 						else {
 							$.modal.close();
 							$("#LoadingImage").css({visibility: "visible"});
-							$.getJSON("admin.php?view=ippools&type=0&pool={%?Pool}&action=add_ipv4&ip=" + ip + "&block={%?BlockId}",function(result){
+							$.getJSON("admin.php?view=ippools&type=0&pool={%?Pool}&action=add_ipv4&ip=" + ip,function(result){
 								if(typeof(result.red) != "undefined" && result.red !== null) {
 									$("#result-error").html(result.red);
 									$("#result-error").show();
