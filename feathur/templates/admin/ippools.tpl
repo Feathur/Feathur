@@ -318,7 +318,7 @@
 						else {
 							$.modal.close();
 							$("#LoadingImage").css({visibility: "visible"});
-							$.getJSON("admin.php?view=ippools&type=0&pool={%?Pool}&action=add_ipv4_range&start=" + start + "&end=" + end + "&block={%?BlockId}",function(result){
+							$.getJSON("admin.php?view=ippools&type=0&pool={%?Pool}&action=add_ipv4_range&start=" + start + "&end=" + end,function(result){
 								if(typeof(result.red) != "undefined" && result.red !== null) {
 									$("#result-error").html(result.red);
 									$("#result-error").show();
@@ -351,7 +351,7 @@
 						else {
 							$.modal.close();
 							$("#LoadingImage").css({visibility: "visible"});
-							$.getJSON("admin.php?view=ippools&type=0&pool={%?Pool}&action=add_server&id=" + id + "&block={%?BlockId}",function(result){
+							$.getJSON("admin.php?view=ippools&type=0&pool={%?Pool}&action=add_server&id=" + id,function(result){
 								if(typeof(result.red) != "undefined" && result.red !== null) {
 									$("#result-error").html(result.red);
 									$("#result-error").show();
@@ -377,7 +377,7 @@
 						var type = $("#DeleteFormType").text();
 						$.modal.close();
 						$("#LoadingImage").css({visibility: "visible"});
-						$.getJSON("admin.php?view=ippools&type=0&pool={%?Pool}&action=" + type + "&id=" + id + "&block={%?BlockId}",function(result){
+						$.getJSON("admin.php?view=ippools&type=0&pool={%?Pool}&action=" + type + "&id=" + id,function(result){
 							if(typeof(result.red) != "undefined" && result.red !== null) {
 								$("#result-error").html(result.red);
 								$("#result-error").show();
