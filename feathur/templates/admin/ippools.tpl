@@ -433,6 +433,7 @@
 						</div>
 						<script type="text/javascript">
 							$(document).ready(function() {
+								alert("test");
 								$("#AddServer").click(function(){
 									alert("test");
 									$("#NewServerForm").modal({containerCss:{width:"400", height:"200"}});
