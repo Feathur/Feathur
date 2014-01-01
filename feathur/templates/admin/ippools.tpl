@@ -308,6 +308,9 @@
 							});
 						}
 					});
+					$("#AddServer").click(function(){
+						$("#NewServerForm").modal({containerCss:{width:"400", height:"200"}});
+					});
 					$('#SubmitNewRange').click(function() {
 						var start = $("#StartIPAdd").val();
 						var end = $("#EndIPAdd").val();
@@ -341,9 +344,6 @@
 					});
 					 $("#AddIP").click(function(){
                         $("#NewIPForm").modal({containerCss:{width:"400", height:"360"}});
-					});
-					$(".AddServer").click(function(){
-						$("#NewServerForm").modal({containerCss:{width:"400", height:"200"}});
 					});
 					$('#SubmitServer').click(function() {
 						var id = $("#SelectedServer").val();
@@ -469,8 +469,8 @@
 								<div class="simplebox" style="width:95%">
 									<div class="titleh">
 										<h3>{%if isset|BlockName == true}{%?BlockName}{%/if}{%if isset|BlockName == false}IP Block{%/if} Server Management</h3>
-										<div class="shortcuts-icons" class="AddServer">
-											<a class="shortcut tips AddServer" title="Add Server"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" class="AddServer" /></a>
+										<div class="shortcuts-icons">
+											<a class="shortcut tips" title="Add Server" id="AddServer"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon"/></a>
 										</div>
 									</div>
 									<table class="tablesorter">
