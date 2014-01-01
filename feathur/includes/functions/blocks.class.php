@@ -71,7 +71,7 @@ class Block extends CPHPDatabaseRecordClass {
 				if($sServers = $database->CachedQuery("SELECT * FROM servers", array())){
 					foreach($sServers->data as $sValue){
 						$sServer = new Server($sValue["id"]);
-						if(!$sServerBlockCheck = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId AND `block_id` = :BlockId AND `ipv6` = 0", array('ServerId' => $sServer->sId, 'BlockId' => $sBlock))){
+						if(!$sServerBlockCheck = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId AND `block_id` = :BlockId AND `ipv6` = 0", array('ServerId' => $sServer->sId, 'BlockId' => $sPool))){
 							$sAvailableServers[] = array("id" => $sServer->sId, "name" => $sServer->sName);
 						}
 						unset($sServer);
@@ -131,6 +131,110 @@ class Block extends CPHPDatabaseRecordClass {
 			return $sSuccess = array("content" => "The block has been updated.");
 		} else {
 			return $sError = array("red" => "You must specify a block to edit.");
+		}
+	}
+	
+	public static function add_ipv4($sRequested){
+		global $database;
+		if(filter_var($sRequested["GET"]["ip"], FILTER_VALIDATE_IP)) {
+			if(is_numeric($sRequested["GET"]["pool"])){
+				if(!$sIPExists = $database->CachedQuery("SELECT * FROM `ipaddresses` WHERE `ip_address` = :IP", array('IP' => $sRequested["GET"]["ip"]))){
+					$sIP = new IP(0);
+					$sIP->uIPAddress = $sRequested["GET"]["ip"];
+					$sIP->uVPSId = 0;
+					$sIP->uBlockId = $sRequested["GET"]["pool"];
+					$sIP->InsertIntoDatabase();
+					return $sSuccess = array("content" => "The IP has been added to the pool.");
+				} else {
+					return $sError = array("red" => "The IP you entered is already in the system!");
+				}
+			} else {
+				return $sError = array("red" => "Invalid block. Please reload and try again!");
+			}
+		} else {
+			return $sError = array("red" => "You must specify a valid range or IP!");
+		}
+	}
+	
+	public static function add_ipv4_range($sRequested){
+		global $database;
+		if((filter_var($sRequested["GET"]["start"], FILTER_VALIDATE_IP)) && (filter_var($sRequested["GET"]["end"], FILTER_VALIDATE_IP))){
+			if(is_numeric($sRequested["GET"]["pool"])){
+				$sStart = ip2long($sRequested["GET"]["start"]);
+				$sEnd = ip2long($sRequested["GET"]["end"]);
+				$sTotalIPs = $sEnd - $sStart;
+				if(($sTotalIPs < 256) && ($sTotalIPs > 0)){
+					$sCurrent = $sStart;
+					while($sCurrent <= $sEnd){
+						if(!$sIPExists = $database->CachedQuery("SELECT * FROM `ipaddresses` WHERE `ip_address` = :IP", array('IP' => long2ip($sCurrent)))){
+							$sIP = new IP(0);
+							$sIP->uIPAddress = long2ip($sCurrent);
+							$sIP->uVPSId = 0;
+							$sIP->uBlockId = $sRequested["GET"]["pool"];
+							$sIP->InsertIntoDatabase();
+							unset($sIP);
+						}
+						$sCurrent++;
+					}
+					return $sSuccess = array("content" => "The IPs have been added to the pool.");
+				} else {
+					return $sError = array("red" => "You must specify a valid range or IP!");
+				}
+			} else {
+				return $sError = array("red" => "Invalid block. Please reload and try again!");
+			}
+		} else {
+			return $sError = array("red" => "You must specify a valid range or IP!");
+		}
+	}
+	
+	public static function remove_ipv4($sRequested){
+		global $database;
+		if(is_numeric($sRequested["GET"]["id"])){
+			$sIPRemoval = $database->CachedQuery("DELETE FROM `ipaddresses` WHERE `id` = :Id", array('Id' => $sRequested["GET"]["id"]));
+			return $sSuccess = array("content" => "The IP has been removed from the pool.");
+		} else {
+			return $sError = array("red" => "The IP you attempted to remove is invalid.");
+		}
+	}
+	
+	public static function remove_server($sRequested){
+		global $database;
+		if(is_numeric($sRequested["GET"]["id"])){
+			if(is_numeric($sRequested["GET"]["pool"])){
+				if($sServerLookup = $database->CachedQuery("SELECT * FROM `server_blocks` WHERE `server_id` = :ServerId AND `block_id` = :BlockId", array('ServerId' => $sRequested["GET"]["id"], 'BlockId' => $sRequested["GET"]["pool"]))){
+					$sCleanUp = $database->CachedQuery("DELETE FROM `server_blocks` WHERE `server_id` = :ServerId AND `block_id` = :BlockId", array('ServerId' => $sRequested["GET"]["id"], 'BlockId' => $sRequested["GET"]["pool"]));
+					return $sSuccess = array("content" => "The server has been removed from the pool.");
+				} else {
+					return $sError = array("red" => "The server or block you entered is invalid.");
+				}
+			} else {
+				return $sError = array("red" => "The block you entered is invalid.");
+			}
+		} else {
+			return $sError = array("red" => "The server you selected is invalid.");
+		}
+	}
+	
+	public static function add_server($sRequested){
+		global $database;
+		if(is_numeric($sRequested["GET"]["id"])){
+			if(is_numeric($sRequested["GET"]["pool"])){
+				if($sServerLookup = $database->CachedQuery("SELECT * FROM `servers` WHERE `id` = :Id", array('Id' => $sRequested["GET"]["id"]))){
+					$sServer = new Server($sRequested["GET"]["id"]);
+					$sServerBlock = new ServerBlock(0);
+					$sServerBlock->sServerId = $sServer->sId;
+					$sServerBlock->sBlockId = $sRequested["GET"]["pool"];
+					$sServerBlock->InsertIntoDatabase();
+					return $sSuccess = array("content" => "The server has been added to the pool.");
+				} else {
+					return $sError = array("red" => "The server you selected is invalid.");
+				}
+			} else {
+				return $sError = array("red" => "The block you entered is invalid.");
+			}
+		} else {
+			return $sError = array("red" => "The server you selected is invalid.");
 		}
 	}
 }

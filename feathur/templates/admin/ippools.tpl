@@ -285,6 +285,114 @@
 	
 		<!--- If the Pool type is empty then this block is IPv4 --->
 		{%if isempty|Type == true}
+			<script type="text/javascript">
+				$(document).ready(function() {
+					$('#SubmitNewIP').click(function() {
+						var ip = $("#SingleIPAdd").val();
+						$('#SubmitNewIPWrapper').html('<a class="button-blue" />Please Wait...</a>');
+						if(!ip){
+							$('#SubmitNewIPWrapper').html('<a class="button-blue" id="SubmitNewIP" />Add Single IP</a>');
+						}
+						else {
+							$.modal.close();
+							$("#LoadingImage").css({visibility: "visible"});
+							$.getJSON("admin.php?view=ippools&type=0&pool={%?Pool}&action=add_ipv4&ip=" + ip + "&block={%?BlockId}",function(result){
+								if(typeof(result.red) != "undefined" && result.red !== null) {
+									$("#result-error").html(result.red);
+									$("#result-error").show();
+								} else {
+									$("#result-success").html(result.content);
+									$("#result-success").show();
+									window.location.reload();
+								}
+							});
+						}
+					});
+					$('#SubmitNewRange').click(function() {
+						var start = $("#StartIPAdd").val();
+						var end = $("#EndIPAdd").val();
+						$('#SubmitNewRangeWrapper').html('<a class="button-blue" />Please Wait...</a>');
+						if((!start) || (!end)){
+							$('#SubmitNewRangeWrapper').html('<a class="button-blue" id="SubmitNewRange" />Add Range of IPs</a>');
+						}
+						else {
+							$.modal.close();
+							$("#LoadingImage").css({visibility: "visible"});
+							$.getJSON("admin.php?view=ippools&type=0&pool={%?Pool}&action=add_ipv4_range&start=" + start + "&end=" + end + "&block={%?BlockId}",function(result){
+								if(typeof(result.red) != "undefined" && result.red !== null) {
+									$("#result-error").html(result.red);
+									$("#result-error").show();
+								} else {
+									$("#result-success").html(result.content);
+									$("#result-success").show();
+									window.location.reload();
+								}
+							});
+						}
+					});
+					$(".DeleteIP").click(function() {
+						var ip = $(this).attr('rel');
+						var id = $(this).attr('value');
+						$("#DeleteFormName").html(ip);
+						$("#DeleteFormValue").html(id);
+						$("#DeleteFormText").html("Do you really want to remove the IP: ");
+						$("#DeleteFormType").html("remove_ipv4");
+						$("#DeleteForm").modal({containerCss:{width:"400", height:"200"}});
+					});
+					$("#AddServer").click(function(){
+						$("#NewServerForm").modal({containerCss:{width:"400", height:"200"}});
+					});
+					$('#SubmitServer').click(function() {
+						var id = $("#SelectedServer").val();
+						$('#SubmitNewServer').html('<a class="button-blue" />Please Wait...</a>');
+						if(!id){
+							$('#SubmitNewServer').html('<a class="button-blue" id="SubmitServer" />Add Server To Block</a>');
+						}
+						else {
+							$.modal.close();
+							$("#LoadingImage").css({visibility: "visible"});
+							$.getJSON("admin.php?view=ippools&type=0&pool={%?Pool}&action=add_server&id=" + id + "&block={%?BlockId}",function(result){
+								if(typeof(result.red) != "undefined" && result.red !== null) {
+									$("#result-error").html(result.red);
+									$("#result-error").show();
+								} else {
+									$("#result-success").html(result.content);
+									$("#result-success").show();
+									window.location.reload();
+								}
+							});
+						}
+					});
+					$(".DeleteServer").click(function() {
+						var name = $(this).attr('rel');
+						var id = $(this).attr('value');
+						$("#DeleteFormName").html(name);
+						$("#DeleteFormValue").html(id);
+						$("#DeleteFormText").html("Remove the following server from this block: ");
+						$("#DeleteFormType").html("remove_server");
+						$("#DeleteForm").modal({containerCss:{width:"400", height:"200"}});
+					});
+					$("#ConfirmDelete").click(function() {
+						var id = $("#DeleteFormValue").text();
+						var type = $("#DeleteFormType").text();
+						$.modal.close();
+						$("#LoadingImage").css({visibility: "visible"});
+						$.getJSON("admin.php?view=ippools&type=0&pool={%?Pool}&action=" + type + "&id=" + id + "&block={%?BlockId}",function(result){
+							if(typeof(result.red) != "undefined" && result.red !== null) {
+								$("#result-error").html(result.red);
+								$("#result-error").show();
+							} else {
+								$("#result-success").html(result.content);
+								$("#result-success").show();
+								window.location.reload();
+							}
+						});
+					});
+					$("#CancelDelete").click(function() {
+						$.modal.close();
+					});
+				});
+			</script>
 			<br><br>
 			<div align="center">
 				<div class="grid740">
@@ -402,6 +510,71 @@
 									</table>
 								</div>
 							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="NewIPForm" style="display:none;" align="center">
+				<div style="z-index: 610;" class="simplebox">
+					<div style="z-index: 600;" class="titleh" align="center"><h3>Add A Single IP</h3></div>
+					<div style="z-index: 590;" class="body padding10">
+						<div style="height:90px;">
+							<form id="form1" name="form1" class="SubmitBlockForm noEnterSubmit">
+								IP Address: <input name="singleip" class="st-forminput" id="SingleIPAdd" style="width:150px" type="text"><br>
+								<div style="padding:12px;"></div>
+								<div align="center" style="margin-bottom:5px;" id="SubmitNewIPWrapper"><a class="button-blue" style="cursor:pointer;" id="SubmitNewIP">Add Single IP</a></div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<br>
+				<div style="z-index: 610;" class="simplebox">
+					<div style="z-index: 600;" class="titleh" align="center"><h3>Add A Range of IPs</h3></div>
+					<div style="z-index: 590;" class="body padding10">
+						<div style="height:120px;">
+							<form id="form1" name="form1" class="SubmitBlockForm noEnterSubmit">
+								Start IP: &nbsp;<input name="startip" class="st-forminput" id="StartIPAdd" style="width:150px" type="text"><br>
+								End IP: &nbsp;&nbsp;<input name="endip" class="st-forminput" id="EndIPAdd" style="width:150px" type="text">
+								<div style="padding:12px;"></div>
+								<div align="center" style="margin-bottom:5px;" id="SubmitNewRangeWrapper"><a class="button-blue" style="cursor:pointer;" id="SubmitNewRange">Add Range of IPs</a></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="DeleteForm" style="display:none;height:130px;" align="center">
+				<div style="z-index: 610;" class="simplebox">
+					<div style="z-index: 600;" class="titleh" align="center"><h3>Delete</h3></div>
+					<div style="z-index: 590;" class="body padding10">
+						<div style="height:120px;">
+							<form id="form3" name="form3" class="Delete noEnterSubmit">
+								<a style="color:#737F89;" id="DeleteFormText"></a><a style="color:#737F89;" id="DeleteFormName"></a><a id="DeleteFormValue" style="display:none;"></a><a id="DeleteFormType" style="display:none;"></a>?
+								<div style="padding:12px;"></div>
+								<div align="center" style="margin-bottom:5px;" id="FormDelete"><a class="button-blue" style="cursor:pointer;" id="ConfirmDelete">Yes</a> <a class="button-blue" style="cursor:pointer;" id="CancelDelete">No</a></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="NewServerForm" style="display:none;" align="center">
+				<div style="z-index: 610;" class="simplebox">
+					<div style="z-index: 600;" class="titleh" align="center"><h3>Add A Server to A Block</h3></div>
+					<div style="z-index: 590;" class="body padding10">
+						<div style="height:90px;">
+							<form id="form1" name="form1" class="SubmitBlockForm noEnterSubmit">
+								Server to Add: <select id="SelectedServer" name="SelectedServer">
+									{%if isset|AvailableServers == true}
+										{%foreach Server in AvailableServers}
+											<option value="{%?Server[id]}">{%?Server[name]}</option>
+										{%/foreach}
+									{%/if}
+									{%if isset|AvailableServers == false}
+										<option>No Servers Available</option>
+									{%/if}
+								</select>
+								<div style="padding:12px;"></div>
+								<div align="center" style="margin-bottom:5px;" id="SubmitNewServer"><a class="button-blue" style="cursor:pointer;" id="SubmitServer">Add Server to Block</a></div>
+							</form>
 						</div>
 					</div>
 				</div>
