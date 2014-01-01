@@ -126,7 +126,7 @@
 						<div class="titleh">
 								<h3>IPv4 Blocks</h3>
 								<div class="shortcuts-icons">
-										<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+									<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 								</div>
 						</div>
 						<table class="tablesorter" {%if isset|BlockList == true}{%if isempty|BlockList == false}id="ListTable"{%/if}{%/if}>
@@ -473,8 +473,8 @@
 								<div class="simplebox" style="width:95%">
 									<div class="titleh">
 										<h3>{%if isset|BlockName == true}{%?BlockName}{%/if}{%if isset|BlockName == false}IP Block{%/if} Server Management</h3>
-										<div class="shortcuts-icons" id="AddServer">
-											<a class="shortcut tips" title="Add Server"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon"/></a>
+										<div class="shortcuts-icons">
+											<a class="shortcut tips" id="AddServer" title="Add Server"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 										</div>
 									</div>
 									<table class="tablesorter">
