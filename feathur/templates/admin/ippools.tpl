@@ -467,11 +467,11 @@
 						</div>
 						<div id="tabs-2">
 							<div align="center">
-							<a class="shortcut tips" id="AddServer" title="Add Server"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 								<div class="simplebox" style="width:95%">
 									<div class="titleh">
 										<h3>{%if isset|BlockName == true}{%?BlockName}{%/if}{%if isset|BlockName == false}IP Block{%/if} Server Management</h3>
-										<div class="shortcuts-icons">
+										<div align="right">
+											<a class="shortcut tips" id="AddServer" title="Add Server"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 										</div>
 									</div>
 									<table class="tablesorter">
