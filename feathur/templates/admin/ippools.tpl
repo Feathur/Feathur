@@ -362,7 +362,6 @@
 						$.modal.close();
 					});
 					$("#AddServer").click(function(){
-						alert("test");
 						$("#NewServerForm").modal({containerCss:{width:"400", height:"200"}});
 					});
 					$('#SubmitServer').click(function() {
@@ -466,9 +465,11 @@
 							</div>
 						</div>
 						<div id="tabs-2">
+							<div align="right">
+								<a class="shortcut tips" id="AddServer" title="Add Server"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+							</div>
 							<div align="center">
 								<div class="simplebox" style="width:95%">
-									<a class="shortcut tips" id="AddServer" title="Add Server"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 									<div class="titleh">
 										<h3>{%if isset|BlockName == true}{%?BlockName}{%/if}{%if isset|BlockName == false}IP Block{%/if} Server Management</h3>
 									</div>
