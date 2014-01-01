@@ -361,6 +361,40 @@
 					$("#CancelDelete").click(function() {
 						$.modal.close();
 					});
+					$("#AddServer").click(function(){
+						alert("test");
+						$("#NewServerForm").modal({containerCss:{width:"400", height:"200"}});
+					});
+					$('#SubmitServer').click(function() {
+						var id = $("#SelectedServer").val();
+						$('#SubmitNewServer').html('<a class="button-blue" />Please Wait...</a>');
+						if(!id){
+							$('#SubmitNewServer').html('<a class="button-blue" id="SubmitServer" />Add Server To Block</a>');
+						}
+						else {
+							$.modal.close();
+							$("#LoadingImage").css({visibility: "visible"});
+							$.getJSON("admin.php?view=ippools&type=0&pool={%?Pool}&action=add_server&id=" + id,function(result){
+								if(typeof(result.red) != "undefined" && result.red !== null) {
+									$("#result-error").html(result.red);
+									$("#result-error").show();
+								} else {
+									$("#result-success").html(result.content);
+									$("#result-success").show();
+									window.location.reload();
+								}
+							});
+						}
+					});
+					$(".DeleteServer").click(function() {
+						var name = $(this).attr('rel');
+						var id = $(this).attr('value');
+						$("#DeleteFormName").html(name);
+						$("#DeleteFormValue").html(id);
+						$("#DeleteFormText").html("Remove the following server from this block: ");
+						$("#DeleteFormType").html("remove_server");
+						$("#DeleteForm").modal({containerCss:{width:"400", height:"200"}});
+					});
 				});
 			</script>
 			<br><br>
@@ -433,11 +467,11 @@
 						</div>
 						<div id="tabs-2">
 							<div align="center">
+							<a class="shortcut tips" id="AddServer" title="Add Server"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 								<div class="simplebox" style="width:95%">
 									<div class="titleh">
 										<h3>{%if isset|BlockName == true}{%?BlockName}{%/if}{%if isset|BlockName == false}IP Block{%/if} Server Management</h3>
 										<div class="shortcuts-icons">
-											<a class="shortcut tips" id="AddServer" title="Add Server"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 										</div>
 									</div>
 									<table class="tablesorter">
@@ -548,44 +582,6 @@
 					</div>
 				</div>
 			</div>
-			<script type="text/javascript">
-				$(document).ready(function() {
-					$("#AddServer").click(function(){
-						alert("test");
-						$("#NewServerForm").modal({containerCss:{width:"400", height:"200"}});
-					});
-					$('#SubmitServer').click(function() {
-						var id = $("#SelectedServer").val();
-						$('#SubmitNewServer').html('<a class="button-blue" />Please Wait...</a>');
-						if(!id){
-							$('#SubmitNewServer').html('<a class="button-blue" id="SubmitServer" />Add Server To Block</a>');
-						}
-						else {
-							$.modal.close();
-							$("#LoadingImage").css({visibility: "visible"});
-							$.getJSON("admin.php?view=ippools&type=0&pool={%?Pool}&action=add_server&id=" + id,function(result){
-								if(typeof(result.red) != "undefined" && result.red !== null) {
-									$("#result-error").html(result.red);
-									$("#result-error").show();
-								} else {
-									$("#result-success").html(result.content);
-									$("#result-success").show();
-									window.location.reload();
-								}
-							});
-						}
-					});
-					$(".DeleteServer").click(function() {
-						var name = $(this).attr('rel');
-						var id = $(this).attr('value');
-						$("#DeleteFormName").html(name);
-						$("#DeleteFormValue").html(id);
-						$("#DeleteFormText").html("Remove the following server from this block: ");
-						$("#DeleteFormType").html("remove_server");
-						$("#DeleteForm").modal({containerCss:{width:"400", height:"200"}});
-					});
-				});
-			</script>
 		{%/if}
 		
 		<!--- If the Type isset then this pool is IPv6 --->
