@@ -434,6 +434,7 @@
 						<script type="text/javascript">
 							$(document).ready(function() {
 								$("#AddServer").click(function(){
+									alert("test");
 									$("#NewServerForm").modal({containerCss:{width:"400", height:"200"}});
 								});
 								$('#SubmitServer').click(function() {
