@@ -439,8 +439,7 @@
 														</td>
 														<td>
 															<div align="center">
-																<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="" value=""><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
-																<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="" value=""><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
+																<a original-title="Delete" class="icon-button tips DeleteIP" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?ip[ip]}" value="{%?ip[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
 															</div>
 														</td>
 													</tr>
