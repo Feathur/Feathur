@@ -466,7 +466,7 @@
 						</div>
 						<div id="tabs-2">
 							<div style="text-align:right;">
-								<a class="shortcut tips" id="AddServer" title="Add Server"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+								<a id="AddServer" title="Add Server"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 							</div>
 							<br><br>
 							<div align="center">
