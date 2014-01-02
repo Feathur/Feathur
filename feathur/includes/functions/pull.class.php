@@ -46,7 +46,7 @@ class Pull {
 					}
 				}
 			}
-			
+			$sClean = $sSSH->exec("rm -rf /var/feathur/data/suspended.txt");
 		}
 		
 		
