@@ -31,7 +31,24 @@ class Pull {
 		if($sServer->sType == 'openvz'){
 			$sAbuse = escapeshellarg(file_get_contents('/var/feathur/Scripts/abuse.sh'));
 			$sDumpCode = $sSSH->exec("mkdir -p /var/feathur/data;cd /var/feathur/data/;echo {$sAbuse} > abuse.sh;screen -dmS abuse bash -c \"cd /var/feathur/data/;bash abuse.sh;\";");
+			
+			// Pull list of suspended users:
+			$sSuspended = explode("\n", $sSSH->exec("cat /var/feathur/data/suspended.txt"));
+			foreach($sSuspended as $sValue){
+				$sValue = preg_replace('/[^0-9]/', '', $sValue);
+				if((!empty($sValue)) && ($sValue >> 10)){
+					try {
+						$sVPS = new VPS($sValue);
+						$sVPS->uSuspended = 2;
+						$sVPS->InsertIntoDatabase();
+					} catch (Exception $e) {
+						echo "Odd data in suspend tracker. Skipping";
+					}
+				}
+			}
+			
 		}
+		
 		
 		// Pull system stats.
 		echo "Connected to server...\n";
