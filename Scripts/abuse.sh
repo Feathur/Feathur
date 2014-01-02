@@ -3,6 +3,13 @@
 LOGDIR="/var/feathur/data/ddos/"
 THRESHOLD1=15000000
 THRESHOLD2=30000000
+IGNORE=736;
+
+containsElement () {
+  local e
+  for e in "${@:2}"; do [[ "$e" == "$1" ]] && return 0; done
+  return 1
+}
 
 if [ -f /var/feathur/data/abuse.lock ];
 then
@@ -86,9 +93,11 @@ do
 		# Now check counter
 		if (( counter == 9 ))
 			then
-			vzctl set $veid --disabled yes --save;
-			vzctl stop $veid;
-			echo "$veid" >> /var/feathur/data/suspended.txt
+			if [ "$ignore" -ne "$veid" ]; then
+				vzctl set $veid --disabled yes --save;
+				vzctl stop $veid;
+				echo "$veid" >> /var/feathur/data/suspended.txt
+			fi
 		fi
 
 		# Same for lower threshold
@@ -108,9 +117,11 @@ do
 		# Now check counter
 		if (( counter == 2 ))
 			then
-			vzctl set $veid --disabled yes --save;
-			vzctl stop $veid;
-			echo "$veid" >> /var/feathur/data/suspended.txt
+			if [ "$ignore" -ne "$veid" ]; then
+				vzctl set $veid --disabled yes --save;
+				vzctl stop $veid;
+				echo "$veid" >> /var/feathur/data/suspended.txt
+			fi
 		fi
 	done
     sleep 10
