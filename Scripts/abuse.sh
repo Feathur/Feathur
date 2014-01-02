@@ -5,12 +5,6 @@ THRESHOLD1=15000000
 THRESHOLD2=30000000
 IGNORE=736;
 
-containsElement () {
-  local e
-  for e in "${@:2}"; do [[ "$e" == "$1" ]] && return 0; done
-  return 1
-}
-
 if [ -f /var/feathur/data/abuse.lock ];
 then
 	exit 1;
