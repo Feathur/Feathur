@@ -206,7 +206,7 @@ class openvz {
 	public function openvz_boot($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
-		$sLog[] = array("command" => "vzctl start {$sVPS->sContainerId};", "result" => $sSSH->exec("vzctl start {$sVPS->sContainerId};"));
+		$sLog[] = array("command" => "vzctl start {$sVPS->sContainerId};modprobe iptable_nat;", "result" => $sSSH->exec("vzctl start {$sVPS->sContainerId};modprobe iptable_nat;"));
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
 		if(strpos($sLog[0]["result"], 'Container is already running') !== false) {
 			return $sArray = array("json" => 1, "type" => "caution", "result" => "VPS is already running!");
@@ -246,7 +246,7 @@ class openvz {
 	public function openvz_reboot($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
-		$sLog[] = array("command" => "vzctl restart {$sVPS->sContainerId};modprobe ipt_state;", "result" => $sSSH->exec("vzctl restart {$sVPS->sContainerId};modprobe ipt_state;"));
+		$sLog[] = array("command" => "vzctl restart {$sVPS->sContainerId};modprobe ipt_state;modprobe iptable_nat;", "result" => $sSSH->exec("vzctl restart {$sVPS->sContainerId};modprobe ipt_state;modprobe iptable_nat;"));
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
 		if(strpos($sLog[0]["result"], 'Container is already running') !== false) {
 			return $sArray = array("json" => 1, "type" => "caution", "result" => "VPS is already running!");
