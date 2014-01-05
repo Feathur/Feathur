@@ -1,4 +1,26 @@
 ==============================
+0.6.3.5 - January 5, 2014
+==============================
+- KVM set startup on boot.
+- Updates to whole IP structure.
+- Updates to add IPv6 (not completed).
+- Updates to redo IP Pools.
+- Abuse prevention system added.
+- Variable cleanup.
+- Patches to IP Tables (openvz).
+- New functions in block class.
+- ISO sync for KVM enhancements.
+- Updates to improve suspends.
+- Patches to distinguish blocks as IPv4 or IPv6.
+
+Notes: This really should be a couple of versions 
+but I got caught up in trying to finish IPv6 before
+changing the version numbers. IPv6 isn't done yet,
+it should be next patch... I'll likely skip up to
+0.6.4.0 as that's roughly where the code should be
+after the IPv6 addition.
+
+==============================
 0.6.3.4 - December 14, 2013
 ==============================
 - Removed some unnecessary code.
