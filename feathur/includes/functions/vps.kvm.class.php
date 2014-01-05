@@ -83,7 +83,7 @@ class kvm {
 									$sVPS->uBootOrder = "hd";
 									$sVPS->InsertIntoDatabase();
 									
-									if($sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId", array('ServerId' => $sServer->sId))){
+									if($sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId AND `ipv6` = 0", array('ServerId' => $sServer->sId))){
 										foreach($sBlocks->data as $key => $value){
 											if($sIPs = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `block_id` = :BlockId AND `vps_id` = 0", array('BlockId' => $value["block_id"]))){
 												foreach($sIPs->data as $subvalue){
@@ -140,7 +140,7 @@ class kvm {
 			$sCreate = $this->kvm_config($sUser, $sVPS, $sRequested);
 			$sDHCP = $this->kvm_dhcp($sUser, $sVPS, $sRequested);
 			
-			$sCommandList .= "lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;";
+			$sCommandList .= "lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId}";
 			
 			$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
@@ -202,11 +202,11 @@ class kvm {
 		
 		// Dump necessary code on server.
 		$sStartupCode = escapeshellarg(file_get_contents('/var/feathur/Scripts/start-kvm.sh'));
-		$sBalance = escapeshellarg(file_get_contents('/var/feathur/Scripts/vm-balancer.py'));
-		$sDumpCode = $sSSH->exec("mkdir -p /var/feathur/data;echo {$sStartupCode} > /var/feathur/data/start-kvm.sh;echo {$sBalance} > /var/feathur/data/vm-balancer.py");
+		$sBalance = escapeshellarg(file_get_contents('/var/feathur/Scripts/balancer.py'));
+		$sDumpCode = $sSSH->exec("mkdir -p /var/feathur/data;echo {$sStartupCode} > /var/feathur/data/start-kvm.sh;echo {$sBalance} > /var/feathur/data/balancer.py");
 		
 		// Start VPS.
-		$sStart = $sSSH->exec("cd /var/feathur/data/;bash start-kvm.sh {$sVPS->sContainerId} {$sPanelURL} {$sVPSTemplate} {$sVNCPassword} {$sVNCPort}");
+		$sStart = $sSSH->exec("cd /var/feathur/data/;bash start-kvm.sh {$sVPS->sContainerId} {$sPanelURL} {$sVPSTemplate} {$sVNCPassword} {$sVNCPort}; virsh autostart kvm{$sVPS->sContainerId}");
 		
 		// Return output.
 		if($sStart == 1){
@@ -578,6 +578,7 @@ class kvm {
 			$sSSH = Server::server_connect($sServer);
 			$sLog[] = array("command" => "virsh destroy kvm{$sVPS->sContainerId}", "result" => $sSSH->exec("virsh destroy kvm{$sVPS->sContainerId}"));
 			$sLog[] = array("command" => "mv /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml /var/feathur/configs/kvm{$sVPS->sContainerId}-vps-suspended.xml", "result" => $sSSH->exec("mv /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml /var/feathur/configs/kvm{$sVPS->sContainerId}-vps-suspended.xml"));
+			$sLog[] = array("command" => "virsh autostart --disabled kvm{$sVPS->sContainerId}", "result" => $sSSH->exec("virsh autostart --disabled kvm{$sVPS->sContainerId}"));
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
 			return $sArray = array("json" => 1, "type" => "success", "result" => "User's VPS has been suspended!", "reload" => 1);
 		} else {
@@ -603,6 +604,7 @@ class kvm {
 			$sSSH = Server::server_connect($sServer);
 			$sLog[] = array("command" => "mv /var/feathur/configs/kvm{$sVPS->sContainerId}-vps-suspended.xml /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml", "result" => $sSSH->exec("mv /var/feathur/configs/kvm{$sVPS->sContainerId}-vps-suspended.xml /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml"));
 			$sLog[] = array("command" => "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;", "result" => $sSSH->exec("virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;"));
+			$sLog[] = array("command" => "virsh autostart kvm{sVPS->sContainerId}", "result" => $sSSH->exec("virsh autostart kvm{$sVPS->sContainerId}"));
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
 			return $sArray = array("json" => 1, "type" => "success", "result" => "User's VPS has been unsuspended!", "reload" => 1);
 		} else {
@@ -639,7 +641,7 @@ class kvm {
 		if($sUserPermissions == 7){
 			$sIPs = $sRequested["GET"]["ip"];
 			global $database;
-			if($sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId", array('ServerId' => $sVPS->sServerId))){
+			if($sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId AND `ipv6` = 0", array('ServerId' => $sVPS->sServerId))){
 				foreach($sBlocks->data as $key => $value){
 					if($sIP = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `block_id` = :BlockId AND `vps_id` = 0", array('BlockId' => $value["block_id"]))){
 						foreach($sIP->data as $subvalue){
@@ -834,6 +836,7 @@ class kvm {
 		if($sUserPermissions == 7){
 			$sServer = new Server($sVPS->sServerId);
 			$sSSH = Server::server_connect($sServer);
+			$sCommandList .= "virsh autostart --disabled kvm{$sVPS->sContainerId}}";
 			$sCommandList .= "virsh destroy kvm{$sVPS->sContainerId};";
 			$sCommandList .= "rm -rf /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;rm -rf /var/feathur/configs/kvm{$sVPS->sContainerId}-dhcp.conf;";
 			$sCommandList .= "cat /var/feathur/configs/dhcpd.head /var/feathur/configs/*-dhcp.conf > /etc/dhcp/dhcpd.conf;service isc-dhcp-server restart;";

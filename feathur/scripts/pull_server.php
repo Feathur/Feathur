@@ -4,7 +4,7 @@ if(!(php_sapi_name() == 'cli')){
 	die("Unfortunately this script must be executed via CLI.");
 }
 
-set_time_limit(60);
+set_time_limit(30);
 chdir('/var/feathur/feathur/');
 include('./includes/loader.php');
 error_reporting(E_ALL ^ E_NOTICE);

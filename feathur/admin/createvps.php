@@ -39,7 +39,7 @@ if($sAction == create){
 	}
 }
 
-$sUsers = $database->CachedQuery("SELECT * FROM accounts", array());
+$sUsers = $database->CachedQuery("SELECT * FROM accounts ORDER BY `email_address` ASC", array());
 foreach($sUsers->data as $value){
 	$sUserList[] = array("id" => $value["id"], "email" => $value["email_address"]);
 }

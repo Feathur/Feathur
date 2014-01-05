@@ -4,11 +4,15 @@ if(!(php_sapi_name() == 'cli')){
 	die("Unfortunately this script must be executed via CLI.");
 }
 
+// Place us in the correct directory...
+// Call prerequisites, set variables.
 chdir('/var/feathur/feathur/');
 include('./includes/loader.php');
 error_reporting(E_ALL ^ E_NOTICE);
 $sTime = time();
 
+// Set timeout and memory limit then
+// connect to the local host.
 set_time_limit(6000);
 ini_set('memory_limit','512M');
 $sLocalSSH = new Net_SSH2('127.0.0.1');
@@ -17,6 +21,12 @@ $sLocalKey->loadKey(file_get_contents($cphp_config->settings->rootkey));
 if(!($sLocalSSH->login("root", $sLocalKey))) {
 	die("Cannot connect to this server, check local key.");
 }
+
+// Create template link for KVM.
+$sLink = $sLocalSSH->exec("ln -s /var/feathur/data/templates/kvm /var/feathur/feathur/templates/");
+
+// Remove old screens
+$sClean = $sLocalSSH->exec("killall --older-than 10m screen");
 
 // Setup screen to begin syncing templates assuming that:
 // 1. A sync hasn't occurred in the last 5 minutes.
@@ -60,10 +70,10 @@ if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 			unset($sCommandList);
 			unset($sTotal);
 			echo "Launched a batch of uptime checkers.\n";
-			sleep(2);
+			sleep(5);
 		}
 		$sServer = new Server($sServer["id"]);
-		$sCommandList .= "screen -dm -S uptracker bash -c 'cd /var/feathur/feathur/scripts/;php pull_server.php {$sServer->sId};exit;';";
+		$sCommandList .= "screen -dm -S uptracker bash -c 'cd /var/feathur/feathur/scripts/;php pull_server.php {$sServer->sId} >> /var/feathur/data/status.log;exit;';";
 		$sTotal++;
 		
 		$sBefore = (time() - (5 * 60));
@@ -91,6 +101,18 @@ if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 	unset($sTotal);
 	echo "Finished launching uptime checkers.\n";
 }
+
+// Cleanup old statistics...
+$sOldStatistics = (time() - (60*60*24*5));
+$sStatistics = $database->prepare("DELETE FROM `statistics` WHERE timestamp < :OldStatistics");
+$sStatistics->bindParam(':OldStatistics', $sOldStatistics, PDO::PARAM_INT);  
+$sStatistics->execute();
+
+// Cleanup old history...
+$sOldHistory = (time() - (60*60*24*10));
+$sHistory = $database->prepare("DELETE FROM `history` WHERE timestamp < :OldHistory");
+$sHistory->bindParam(':OldHistory', $sOldHistory, PDO::PARAM_INT);  
+$sHistory->execute();
 
 // Reset bandwidth if today is the first day of the month and the last reset was more than 10 days ago.
 $sLastReset = Core::GetSetting('bandwidth_timestamp');

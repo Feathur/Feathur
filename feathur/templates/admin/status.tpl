@@ -43,10 +43,11 @@
 				<div class="titleh">
 					<h3>
 						<div style="width:39%;float:left;">
-							<img src="./templates/status/{%if isempty|server[status] == true}offline{%/if}{%if isempty|server[status] == false}online{%/if}.png" style="width:10px;height:10px;">{%if isset|server[name] == true}{%?server[name]}{%/if}
+							<img src="./templates/status/{%if isempty|server[status] == true}offline{%/if}{%if isempty|server[status] == false}online{%/if}.png" style="width:10px;height:10px;">{%if isset|server[name] == true}&nbsp;{%?server[name]}{%/if}
 						</div>
 						{%if isempty|server[status] == false}
 							<div style="width:59%;float:right;padding-right:5px;" align="right">
+								{%if isempty|server[ip_count] == false}({%?server[ip_count]}) | {%/if}
 								{%if isempty|server[load_average] == false}Load: {%?server[load_average]}{%/if}
 								{%if isempty|server[load_average] == false}{%if isempty|server[bandwidth] == false}&nbsp;|&nbsp;{%/if}{%/if}
 								{%if isempty|server[bandwidth] == false}BW: {%?server[bandwidth]}{%/if}

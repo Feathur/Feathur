@@ -54,6 +54,17 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 			}
 		}
 		
+		// Calculates Free IP Space
+		if($sBlockList = $database->CachedQuery("SELECT * FROM `server_blocks` WHERE `server_id` = :ServerId", array("ServerId" => $sServer->sId))){
+			foreach($sBlockList->data as $sBlockRow){
+				if($sIPList = $database->CachedQuery("SELECT * FROM `ipaddresses` WHERE `block_id` = :BlockId AND `vps_id` = :VPSId", array("BlockId" => $sBlockRow["block_id"], "VPSId" => 0))){
+					$sIPCount = ($sIPCount + count($sIPList->data));
+				}
+			}
+		} else {
+			$sIPCount = "0";
+		}
+		
 		$sStatistics[] = array("name" => $sServer->sName,
 								"load_average" => $sServer->sLoadAverage,
 								"disk_usage" => $sHardDiskUsed,
@@ -62,6 +73,7 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 								"ram_free" => $sRAMFree,
 								"status" => $sServer->sStatus,
 								"uptime" => ConvertTime(round($sServer->sHardwareUptime, 0)),
+								"ip_count" => $sIPCount,
 								"type" => $sType,
 								"bandwidth" => $sBandwidthDifference);
 		
@@ -79,6 +91,7 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 		unset($sBandwidth);
 		unset($sLastBandwidth);
 		unset($sBandwidthDifference);
+		unset($sIPCount);
 	}
 }
 

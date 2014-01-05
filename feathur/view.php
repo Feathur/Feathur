@@ -36,7 +36,11 @@ if(($sVPS->sUserId != $sUser->sId) && ($sUser->sPermissions != 7)){
 // Restrict access to the vps if the user's vps is suspended.
 $sSuspended = $sVPS->sSuspended;
 if((!empty($sSuspended)) && ($sUser->sPermissions != 7)){
-	$sUserView = Templater::AdvancedParse($sTemplate->sValue.'/suspended', $locale->strings, array("Hostname" => $sVPS->sHostname));
+	if($sSuspended == 2){
+		$sUserView = Templater::AdvancedParse($sTemplate->sValue.'/abuse', $locale->strings, array("Hostname" => $sVPS->sHostname));
+	} else {
+		$sUserView = Templater::AdvancedParse($sTemplate->sValue.'/suspended', $locale->strings, array("Hostname" => $sVPS->sHostname));
+	} 
 	echo Templater::AdvancedParse($sTemplate->sValue.'/master', $locale->strings, array("Content" => $sUserView, "Page" => "main"));
 	die();
 }

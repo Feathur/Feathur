@@ -273,7 +273,7 @@
 						<div align="center" style="width:100%">
 							{%if UserPermissions == 7}
 								{%if vps[suspended] == 1}<div class="albox warningbox" style="width:50%;">This VPS is Suspended.</div>{%/if}
-								{%if vps[suspended] == 2}<div class="albox warningbox" style="width:50%;">This VPS is Suspended due to bandwidth overage.</div>{%/if}
+								{%if vps[suspended] == 2}<div class="albox warningbox" style="width:50%;">This VPS is Suspended by Feathur due to abuse.</div>{%/if}
 							{%/if}
 							<div style="width:90%;white-space:nowrap;overflow:hidden;text-align:center;">
 								<div style="display:inline-block;vertical-align:middle;padding-left:15px;padding-right:15px;" align="center">
