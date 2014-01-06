@@ -914,9 +914,12 @@ class openvz {
 			} else {
 				$sBandwidthUsage = "0 MB";
 			}
-			
-			$sPercentBandwidth = round(((100 / ($sVPS->sBandwidthLimit * 1024)) * $sVPS->sBandwidthUsage), 0);
-			if(empty($sPercentBandwidth)){
+			if((!empty($sVPS->sBandwidthLimit)) && (!empty($sVPS->sBandwidthUsage))){
+				$sPercentBandwidth = round(((100 / ($sVPS->sBandwidthLimit * 1024)) * $sVPS->sBandwidthUsage), 0);
+				if(empty($sPercentBandwidth)){
+					$sPercentBandwidth = 0;
+				}
+			} else {
 				$sPercentBandwidth = 0;
 			}
 			
