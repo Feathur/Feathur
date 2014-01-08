@@ -65,7 +65,7 @@ if($sTemplateSync < $sBefore){
 // System status tracker.
 if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 	foreach($sServerList->data as $sServer){
-		if($sTotal == 10) {
+		if($sTotal == 5) {
 			$sLocalSSH->exec($sCommandList);
 			unset($sCommandList);
 			unset($sTotal);
