@@ -325,9 +325,9 @@ status "Base Config: 8 / 11"
 rm -rf /etc/nginx/sites-enabled/* 
 
 if [ $DEVMODE -eq 1 ]; then
-	ln -s /var/feathur/feathur/includes/configs/nginx.feathur.conf /etc/nginx/sites-enabled/nginx.feathur.conf
+	ln -s /var/feathur/feathur/includes/configs/nginx.feathur.conf.example /etc/nginx/sites-enabled/nginx.feathur.conf
 else
-	cp /var/feathur/feathur/includes/configs/nginx.feathur.conf /etc/nginx/sites-enabled/nginx.feathur.conf
+	cp /var/feathur/feathur/includes/configs/nginx.feathur.conf.example /etc/nginx/sites-enabled/nginx.feathur.conf
 fi
 
 cd ~/feathur-install/
