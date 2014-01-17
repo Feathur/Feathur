@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ ! -z $1 ] && [ "$1" == "dev-mode" ]; then
+	DEVMODE=1
+else
+	DEVMODE=0
+fi
+
 mkdir ~/feathur-install/
 cd ~/feathur-install/
 touch ~/feathur-install/install.log
@@ -184,9 +190,13 @@ status "Base Config: 1 / 11"
 # Download Feathur
 ############################################################
 
-mkdir /var/feathur/
-cd /var/feathur/
-git clone -b develop https://github.com/BlueVM/Feathur.git /var/feathur/
+if [ $DEVMODE -eq 1 ]; then
+	ln -s /vagrant /var/feathur
+else
+	mkdir /var/feathur/
+	cd /var/feathur/
+	git clone -b develop https://github.com/BlueVM/Feathur.git /var/feathur/
+fi
 
 cd ~/feathur-install/
 status "Base Config: 2 / 11"
@@ -241,7 +251,13 @@ status "Base Config: 5 / 11"
 ############################################################
 
 mv /etc/my.cnf /etc/my.cnf.backup
-cp /var/feathur/feathur/includes/configs/my.cnf /etc/my.cnf
+
+if [ $DEVMODE -eq 1 ]; then
+	ln -s /var/feathur/feathur/includes/configs/my.cnf.example /etc/my.cnf
+else
+	cp /var/feathur/feathur/includes/configs/my.cnf.example /etc/my.cnf
+fi
+	
 /etc/init.d/mysql start
 
 salt=$(< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-32};)
@@ -262,10 +278,20 @@ status "Base Config: 6 / 11"
 # Begin PHP Configuration
 ############################################################
 
-cp /var/feathur/feathur/includes/configs/php.conf /etc/php5/fpm/pool.d/www.conf
+if [ $DEVMODE -eq 1 ]; then
+	ln -s /var/feathur/feathur/includes/configs/php.conf.example /etc/php5/fpm/pool.d/www.conf
+else
+	cp /var/feathur/feathur/includes/configs/php.conf.example /etc/php5/fpm/pool.d/www.conf	
+fi
+
 mv /etc/php5/conf.d/apc.ini /etc/php5/apc.old
 rm -rf /etc/php5/fpm/php.ini
-cp /var/feathur/feathur/includes/configs/php.ini /etc/php5/fpm/php.ini
+
+if [ $DEVMODE -eq 1 ]; then
+	ln -s /var/feathur/feathur/includes/configs/php.ini.example /etc/php5/fpm/php.ini
+else
+	cp /var/feathur/feathur/includes/configs/php.ini.example /etc/php5/fpm/php.ini
+fi
 
 cd ~/feathur-install/
 status "Base Config: 7 / 11"
@@ -299,8 +325,15 @@ status "Base Config: 9 / 11"
 ############################################################
 
 mv /etc/phpmyadmin/config.inc.php /etc/phpmyadmin/config.old.inc.php
-cp /var/feathur/feathur/includes/configs/pma.php /usr/share/phpmyadmin/
-cp /var/feathur/feathur/includes/configs/pma.config.inc.php /etc/phpmyadmin/config.inc.php
+
+if [ $DEVMODE -eq 1 ]; then
+	ln -s /var/feathur/feathur/includes/configs/pma.php.example /usr/share/phpmyadmin/pma.php
+	ln -s /var/feathur/feathur/includes/configs/pma.config.inc.php.example /etc/phpmyadmin/config.inc.php
+else
+	cp /var/feathur/feathur/includes/configs/pma.php.example /usr/share/phpmyadmin/pma.php
+	cp /var/feathur/feathur/includes/configs/pma.config.inc.php.example /etc/phpmyadmin/config.inc.php
+fi
+	
 sed -i 's/databasepasswordhere/'${mysqlpassword}'/g' /usr/share/phpmyadmin/pma.php
 chown -R www-data /etc/phpmyadmin
 chown -R www-data /usr/share/phpmyadmin
@@ -312,7 +345,13 @@ status "Base Config: 10 / 11"
 ############################################################
 
 mv /etc/powerdns/pdns.conf /etc/powerdns/pdns.old
-cp /var/feathur/feathur/includes/configs/pdns.conf /etc/powerdns/pdns.conf
+
+if [ $DEVMODE -eq 1 ]; then
+	ln -s /var/feathur/feathur/includes/configs/pdns.conf.example /etc/powerdns/pdns.conf
+else
+	cp /var/feathur/feathur/includes/configs/pdns.conf.example /etc/powerdns/pdns.conf
+fi
+
 sed -i 's/databasenamehere/dns/g' /etc/powerdns/pdns.conf
 sed -i 's/databasepasswordhere/'${mysqlpassword}'/g' /etc/powerdns/pdns.conf
 sed -i 's/databaseusernamehere/root/g' /etc/powerdns/pdns.conf
