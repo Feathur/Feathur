@@ -126,7 +126,7 @@ class Server extends CPHPDatabaseRecordClass {
 							return $sResult = array("content" => "You must select a server type.", "type" => "error", "json" => "1");
 						}
 					} else {
-						return $sResult = array("content" => "You must enter a SSH key.", "type" => "error", "json" => "1");
+						return $sResult = array("content" => "You must enter an SSH key.", "type" => "error", "json" => "1");
 					}
 				} else {
 					return $sResult = array("content" => "You must enter a super user (Eg: root)", "type" => "error", "json" => "1");
@@ -151,9 +151,9 @@ class Server extends CPHPDatabaseRecordClass {
 		try {
 			if (!$sSSH->login($sServer->sUser, $sKey)) {
 				if(!empty($sAPI)){
-					return $sResult = array("result" => 'Unable to connect to the host node, please contact customer serivce.');
+					return $sResult = array("result" => 'Unable to connect to the host node, please contact customer service.');
 				}
-				echo json_encode(array("result" => 'Unable to connect to the host node, please contact customer serivce.'));
+				echo json_encode(array("result" => 'Unable to connect to the host node, please contact customer service.'));
 				die();
 			} else {
 				$sSSH->setTimeout(30);
@@ -161,9 +161,9 @@ class Server extends CPHPDatabaseRecordClass {
 			}
 		} catch (Exception $e) { 
 			if(!empty($sAPI)){
-				return $sResult = array("result" => 'Unable to connect to the host node, please contact customer serivce.');
+				return $sResult = array("result" => 'Unable to connect to the host node, please contact customer service.');
 			}
-			echo json_encode(array("result" => 'Unable to connect to the host node, please contact customer serivce.'));
+			echo json_encode(array("result" => 'Unable to connect to the host node, please contact customer service.'));
 			die();
 		}
 	}
