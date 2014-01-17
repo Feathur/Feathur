@@ -92,8 +92,8 @@ check_sanity
 ############################################################
 
 if [ $DEVMODE -eq 1 ]; then
-	user_host = "feathur.local"
-	user_email = "root@feathur.local"
+	user_host="feathur.local"
+	user_email="root@feathur.local"
 	echo "127.0.0.1 feathur.local" >> /etc/hosts
 else
 	status "====================================="
