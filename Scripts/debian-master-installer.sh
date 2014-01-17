@@ -274,8 +274,10 @@ while ! mysql -u root -p$mysqlpassword  -e ";" ; do
 done
 
 mysql -u root --password="$mysqlpassword" --execute="CREATE DATABASE IF NOT EXISTS panel;CREATE DATABASE IF NOT EXISTS dns;DROP DATABASE test;"
+cp data.sql.example data.sql
 sed -i 's/admin@company.com/'${user_email}'/g' /var/feathur/data.sql
 mysql -u root --password="$mysqlpassword" panel < /var/feathur/data.sql
+rm data.sql
 
 cd ~/feathur-install/
 status "Base Config: 6 / 11"
