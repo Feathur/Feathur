@@ -225,7 +225,7 @@ status "Base Config: 3 / 11"
 # Generate Passwords
 ############################################################
 
-mysqlpassword=$(< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-32};)
+mysqlpassword=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c${1:-32};)
 
 cd ~/feathur-install/
 status "Base Config: 4 / 11"
@@ -266,7 +266,7 @@ fi
 	
 /etc/init.d/mysql start
 
-salt=$(< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-32};)
+salt=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c${1:-32};)
 mysqladmin -u root password $mysqlpassword
 
 while ! mysql -u root -p$mysqlpassword  -e ";" ; do
