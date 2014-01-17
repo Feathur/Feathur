@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ ! -z $1 ] && [ "$1" == "dev-mode" ]; then
+if [ ! -z $1 ] && [ "$2" == "dev-mode" ]; then
 	DEVMODE=1
 else
 	DEVMODE=0
@@ -274,10 +274,10 @@ while ! mysql -u root -p$mysqlpassword  -e ";" ; do
 done
 
 mysql -u root --password="$mysqlpassword" --execute="CREATE DATABASE IF NOT EXISTS panel;CREATE DATABASE IF NOT EXISTS dns;DROP DATABASE test;"
-cp data.sql.example data.sql
+cp /var/feathur/data.sql.example /var/feathur/data.sql
 sed -i 's/admin@company.com/'${user_email}'/g' /var/feathur/data.sql
 mysql -u root --password="$mysqlpassword" panel < /var/feathur/data.sql
-rm data.sql
+rm /var/feathur/data.sql
 
 cd ~/feathur-install/
 status "Base Config: 6 / 11"

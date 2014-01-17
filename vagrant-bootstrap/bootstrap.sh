@@ -1,3 +1,3 @@
 #!/bin/sh
-cd /vagrant/Scripts
-sudo /vagrant/Scripts/debian-master-installer.sh dev-mode
+cd /vagrant
+sudo /vagrant/Scripts/debian-master-installer.sh 32 dev-mode
