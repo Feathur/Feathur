@@ -91,33 +91,39 @@ check_sanity
 # Begin Installation
 ############################################################
 
-status "====================================="
-status "     Welcome to Feathur Installation"
-status "====================================="
-status " "
-status "Feathur master server installation."
-status " "
-status "Feathur will remove any existing apache,"
-status "nginx, mysql or php services you have"
-status "installed upon this server. It will"
-status "also delete all custom config files"
-status "that you may have."
-status " "
-status "It is recommended that you run this"
-status "installer in a screen."
-status " "
-status "This script will begin installing"
-status "Feathur in 10 seconds. If you wish to"
-status "cancel the install press CTRL + C"
-sleep 10
-status "Feathur needs a bit of information before"
-status "beginning the installation."
-status " "
-status "What hostname would you like to use (Example: manage.yourdomain.com):"
-read user_host
-status " "
-status "What email would you like to use for your administrative account?"
-read user_email
+if [ $DEVMODE -eq 1 ]; then
+	user_host = "feathur.local"
+	user_email = "root@feathur.local"
+	echo "127.0.0.1 feathur.local" >> /etc/hosts
+else
+	status "====================================="
+	status "     Welcome to Feathur Installation"
+	status "====================================="
+	status " "
+	status "Feathur master server installation."
+	status " "
+	status "Feathur will remove any existing apache,"
+	status "nginx, mysql or php services you have"
+	status "installed upon this server. It will"
+	status "also delete all custom config files"
+	status "that you may have."
+	status " "
+	status "It is recommended that you run this"
+	status "installer in a screen."
+	status " "
+	status "This script will begin installing"
+	status "Feathur in 10 seconds. If you wish to"
+	status "cancel the install press CTRL + C"
+	sleep 10
+	status "Feathur needs a bit of information before"
+	status "beginning the installation."
+	status " "
+	status "What hostname would you like to use (Example: manage.yourdomain.com):"
+	read user_host
+	status " "
+	status "What email would you like to use for your administrative account?"
+	read user_email
+fi
 
 ############################################################
 # Begin Cleanup
