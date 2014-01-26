@@ -38,7 +38,7 @@ status "Feathur needs a bit of information before"
 status "beginning the installation."
 status " "
 status "What is the name of your trunk interface?"
-possibleOptions=$(for i in $(ifconfig -a | grep Link | grep -v inet 6 | grep Ethernet | awk '{print $1}'); do echo -n $i; done)
+possibleOptions=$(for i in $(ifconfig -a | grep Link | grep -v inet6 | grep Ethernet | awk '{print $1}'); do echo -n $i; done)
 status "Possible options: $possibleOptions";
 read trunkinterface
 status "What is the name of your volumegroup (Ex: volgroup00):"
