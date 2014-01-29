@@ -21,20 +21,20 @@ if(is_array($sUser)){
 }
 
 if(!file_exists("hypervm-array.php")) {
-	die("Unfortunatly there is no data to import. (File missing)");
+	die("Unfortunately there is no data to import. (File missing)");
 }
 
 include('hypervm-array.php');
 
 if(!is_array($vps)){
-	die("Unfortunatly there is no data to import (Array missing/invalid)");
+	die("Unfortunately there is no data to import (Array missing/invalid)");
 }
 
 // Get server information
 if($sServers = $database->CachedQuery("SELECT * FROM servers WHERE `id` = :ServerId", array(':ServerId' => $sServerId))){
 	$sServerId = $sServers->data[0]["id"];
 } else {
-	echo "Unfortunatly no server matches your query.";
+	echo "Unfortunately no server matches your query.";
 	die();
 }
 
@@ -55,6 +55,9 @@ foreach($vps as $sVPS){
 				$sSkipped = 1;
 			}
 		}
+		
+		$sVariable = array();
+		$sSend = Core::SendEmail($sActionUser->sEmailAddress, "VPS Migration Information", "migrate", $sVariable);
 		
 		if(empty($sSkipped)){
 			$sStart = new openvz;
