@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ ! -z $1 ] && [ "$2" == "dev-mode" ]; then
+	DEVMODE=1
+else
+	DEVMODE=0
+fi
+
 mkdir ~/feathur-install/
 cd ~/feathur-install/
 touch ~/feathur-install/install.log
@@ -85,33 +91,39 @@ check_sanity
 # Begin Installation
 ############################################################
 
-status "====================================="
-status "     Welcome to Feathur Installation"
-status "====================================="
-status " "
-status "Feathur master server installation."
-status " "
-status "Feathur will remove any existing apache,"
-status "nginx, mysql or php services you have"
-status "installed upon this server. It will"
-status "also delete all custom config files"
-status "that you may have."
-status " "
-status "It is recommended that you run this"
-status "installer in a screen."
-status " "
-status "This script will begin installing"
-status "Feathur in 10 seconds. If you wish to"
-status "cancel the install press CTRL + C"
-sleep 10
-status "Feathur needs a bit of information before"
-status "beginning the installation."
-status " "
-status "What hostname would you like to use (Example: manage.yourdomain.com):"
-read user_host
-status " "
-status "What email would you like to use for your administrative account?"
-read user_email
+if [ $DEVMODE -eq 1 ]; then
+	user_host="feathur.local"
+	user_email="root@feathur.local"
+	echo "127.0.0.1 feathur.local" >> /etc/hosts
+else
+	status "====================================="
+	status "     Welcome to Feathur Installation"
+	status "====================================="
+	status " "
+	status "Feathur master server installation."
+	status " "
+	status "Feathur will remove any existing apache,"
+	status "nginx, mysql or php services you have"
+	status "installed upon this server. It will"
+	status "also delete all custom config files"
+	status "that you may have."
+	status " "
+	status "It is recommended that you run this"
+	status "installer in a screen."
+	status " "
+	status "This script will begin installing"
+	status "Feathur in 10 seconds. If you wish to"
+	status "cancel the install press CTRL + C"
+	sleep 10
+	status "Feathur needs a bit of information before"
+	status "beginning the installation."
+	status " "
+	status "What hostname would you like to use (Example: manage.yourdomain.com):"
+	read user_host
+	status " "
+	status "What email would you like to use for your administrative account?"
+	read user_email
+fi
 
 ############################################################
 # Begin Cleanup
@@ -184,9 +196,13 @@ status "Base Config: 1 / 11"
 # Download Feathur
 ############################################################
 
-mkdir /var/feathur/
-cd /var/feathur/
-git clone -b develop https://github.com/BlueVM/Feathur.git /var/feathur/
+if [ $DEVMODE -eq 1 ]; then
+	ln -s /vagrant /var/feathur
+else
+	mkdir /var/feathur/
+	cd /var/feathur/
+	git clone -b develop https://github.com/BlueVM/Feathur.git /var/feathur/
+fi
 
 cd ~/feathur-install/
 status "Base Config: 2 / 11"
@@ -209,7 +225,7 @@ status "Base Config: 3 / 11"
 # Generate Passwords
 ############################################################
 
-mysqlpassword=$(< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-32};)
+mysqlpassword=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c${1:-32};)
 
 cd ~/feathur-install/
 status "Base Config: 4 / 11"
@@ -241,10 +257,16 @@ status "Base Config: 5 / 11"
 ############################################################
 
 mv /etc/my.cnf /etc/my.cnf.backup
-cp /var/feathur/feathur/includes/configs/my.cnf /etc/my.cnf
+
+if [ $DEVMODE -eq 1 ]; then
+	ln -s /var/feathur/feathur/includes/configs/my.cnf.example /etc/my.cnf
+else
+	cp /var/feathur/feathur/includes/configs/my.cnf.example /etc/my.cnf
+fi
+	
 /etc/init.d/mysql start
 
-salt=$(< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-32};)
+salt=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c${1:-32};)
 mysqladmin -u root password $mysqlpassword
 
 while ! mysql -u root -p$mysqlpassword  -e ";" ; do
@@ -252,8 +274,10 @@ while ! mysql -u root -p$mysqlpassword  -e ";" ; do
 done
 
 mysql -u root --password="$mysqlpassword" --execute="CREATE DATABASE IF NOT EXISTS panel;CREATE DATABASE IF NOT EXISTS dns;DROP DATABASE test;"
+cp /var/feathur/data.sql.example /var/feathur/data.sql
 sed -i 's/admin@company.com/'${user_email}'/g' /var/feathur/data.sql
 mysql -u root --password="$mysqlpassword" panel < /var/feathur/data.sql
+rm /var/feathur/data.sql
 
 cd ~/feathur-install/
 status "Base Config: 6 / 11"
@@ -262,10 +286,20 @@ status "Base Config: 6 / 11"
 # Begin PHP Configuration
 ############################################################
 
-cp /var/feathur/feathur/includes/configs/php.conf /etc/php5/fpm/pool.d/www.conf
+if [ $DEVMODE -eq 1 ]; then
+	ln -s /var/feathur/feathur/includes/configs/php.conf.example /etc/php5/fpm/pool.d/www.conf
+else
+	cp /var/feathur/feathur/includes/configs/php.conf.example /etc/php5/fpm/pool.d/www.conf	
+fi
+
 mv /etc/php5/conf.d/apc.ini /etc/php5/apc.old
 rm -rf /etc/php5/fpm/php.ini
-cp /var/feathur/feathur/includes/configs/php.ini /etc/php5/fpm/php.ini
+
+if [ $DEVMODE -eq 1 ]; then
+	ln -s /var/feathur/feathur/includes/configs/php.ini.example /etc/php5/fpm/php.ini
+else
+	cp /var/feathur/feathur/includes/configs/php.ini.example /etc/php5/fpm/php.ini
+fi
 
 cd ~/feathur-install/
 status "Base Config: 7 / 11"
@@ -289,7 +323,12 @@ status "Base Config: 8 / 11"
 ############################################################
 
 rm -rf /etc/nginx/sites-enabled/* 
-mv /var/feathur/feathur/includes/configs/nginx.feathur.conf /etc/nginx/sites-enabled/nginx.feathur.conf 
+
+if [ $DEVMODE -eq 1 ]; then
+	ln -s /var/feathur/feathur/includes/configs/nginx.feathur.conf.example /etc/nginx/sites-enabled/nginx.feathur.conf
+else
+	cp /var/feathur/feathur/includes/configs/nginx.feathur.conf.example /etc/nginx/sites-enabled/nginx.feathur.conf
+fi
 
 cd ~/feathur-install/
 status "Base Config: 9 / 11"
@@ -299,8 +338,15 @@ status "Base Config: 9 / 11"
 ############################################################
 
 mv /etc/phpmyadmin/config.inc.php /etc/phpmyadmin/config.old.inc.php
-cp /var/feathur/feathur/includes/configs/pma.php /usr/share/phpmyadmin/
-cp /var/feathur/feathur/includes/configs/pma.config.inc.php /etc/phpmyadmin/config.inc.php
+
+if [ $DEVMODE -eq 1 ]; then
+	ln -s /var/feathur/feathur/includes/configs/pma.php.example /usr/share/phpmyadmin/pma.php
+	ln -s /var/feathur/feathur/includes/configs/pma.config.inc.php.example /etc/phpmyadmin/config.inc.php
+else
+	cp /var/feathur/feathur/includes/configs/pma.php.example /usr/share/phpmyadmin/pma.php
+	cp /var/feathur/feathur/includes/configs/pma.config.inc.php.example /etc/phpmyadmin/config.inc.php
+fi
+	
 sed -i 's/databasepasswordhere/'${mysqlpassword}'/g' /usr/share/phpmyadmin/pma.php
 chown -R www-data /etc/phpmyadmin
 chown -R www-data /usr/share/phpmyadmin
@@ -312,7 +358,13 @@ status "Base Config: 10 / 11"
 ############################################################
 
 mv /etc/powerdns/pdns.conf /etc/powerdns/pdns.old
-cp /var/feathur/feathur/includes/configs/pdns.conf /etc/powerdns/pdns.conf
+
+if [ $DEVMODE -eq 1 ]; then
+	ln -s /var/feathur/feathur/includes/configs/pdns.conf.example /etc/powerdns/pdns.conf
+else
+	cp /var/feathur/feathur/includes/configs/pdns.conf.example /etc/powerdns/pdns.conf
+fi
+
 sed -i 's/databasenamehere/dns/g' /etc/powerdns/pdns.conf
 sed -i 's/databasepasswordhere/'${mysqlpassword}'/g' /etc/powerdns/pdns.conf
 sed -i 's/databaseusernamehere/root/g' /etc/powerdns/pdns.conf

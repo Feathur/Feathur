@@ -138,10 +138,10 @@ cd ~/feathur-install/
 status "Configuring: 3 of 4"
 
 mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.old
-cp /var/feathur/feathur/includes/configs/php.conf /etc/php-fpm.d/www.conf
+cp /var/feathur/feathur/includes/configs/php.conf.example /etc/php-fpm.d/www.conf
 sed -i 's/www-data/nginx/g' /etc/php-fpm.d/www.conf
 mv /etc/php.d/apc.ini /etc/php.d/apc.old
-cp /var/feathur/feathur/includes/configs/php.ini /etc/php.ini
+cp /var/feathur/feathur/includes/configs/php.ini.example /etc/php.ini
 
 mkdir /usr/ssl
 cd /usr/ssl
@@ -151,10 +151,10 @@ openssl req -new -key feathur.pem -subj "/C=US/ST=Oregon/L=Portland/O=IT/CN=www.
 openssl x509 -req -days 365 -in feathur.csr -signkey feathur.pem -out feathur.crt
 
 rm -rf /etc/nginx/conf.d/*
-cp /var/feathur/feathur/includes/configs/nginx.feathur.centos.conf /etc/nginx/conf.d/
+cp /var/feathur/feathur/includes/configs/nginx.feathur.centos.conf.example /etc/nginx/conf.d/nging.feathur.centos.conf
 
 mv /etc/pdns/pdns.conf /etc/powerdns/pdns.old
-cp /var/feathur/feathur/includes/configs/centos.pdns.conf /etc/pdns/pdns.conf
+cp /var/feathur/feathur/includes/configs/centos.pdns.conf.example /etc/pdns/pdns.conf
 sed -i 's/databasenamehere/dns/g' /etc/pdns/pdns.conf
 sed -i 's/databasepasswordhere/'${mysqlpassword}'/g' /etc/pdns/pdns.conf
 sed -i 's/databaseusernamehere/root/g' /etc/pdns/pdns.conf
@@ -168,8 +168,8 @@ ln -s /usr/share/phpMyAdmin /var/feathur/feathur/phpmyadmin
 chown -R nginx /usr/share/phpMyAdmin
 
 mv /etc/phpMyAdmin/config.inc.php /etc/phpMyAdmin/config.old.inc.php
-cp /var/feathur/feathur/includes/configs/pma.php /usr/share/phpMyAdmin/
-cp /var/feathur/feathur/includes/configs/pma.config.inc.php /etc/phpMyAdmin/config.inc.php
+cp /var/feathur/feathur/includes/configs/pma.php.example /usr/share/phpMyAdmin/pma.php
+cp /var/feathur/feathur/includes/configs/pma.config.inc.php.example /etc/phpMyAdmin/config.inc.php
 sed -i 's/databasepasswordhere/'${mysqlpassword}'/g' /usr/share/phpMyAdmin/pma.php
 chown -R nginx /usr/share/phpMyAdmin
 chown -R nginx /etc/phpMyAdmin
