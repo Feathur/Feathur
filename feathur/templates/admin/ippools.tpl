@@ -226,7 +226,7 @@
 			<script type="text/javascript">
 				$(document).ready(function() {
 					$("#AddBlock").click(function(){
-						$("#NewBlockForm").modal({containerCss:{width:"400", height:"250"}});
+						$("#NewBlockForm").modal({containerCss:{width:"500", height:"350"}});
 					});
 				});
 			</script>
@@ -244,7 +244,6 @@
 							<thead>
 									<tr>
 											<th width="60%"><div align="center">Name</div></th>
-											<th width="20%"><div align="center">Usage</div></th>
 											<th width="20%"><div align="center">Actions</div></th>
 									</tr>
 							</thead>        
@@ -289,10 +288,10 @@
 				<div style="z-index: 610;" class="simplebox">
 					<div style="z-index: 600;" class="titleh" align="center"><h3>Add IPv6 Block</h3></div>
 					<div style="z-index: 590;" class="body padding10">
-						<div style="height:170px;">
+						<div style="height:270px;">
 							<form id="newblock" name="form1" class="SubmitBlockForm noEnterSubmit">
 								Block Name: <input name="newblockname" class="st-forminput" id="NewBlockName" style="width:150px" type="text"><br>
-								Gateway: &nbsp;<input name="g1" class="st-forminput" style="width:20px" type="text"><input name="g2" class="st-forminput" style="width:20px" type="text"><input name="g3" class="st-forminput" style="width:20px" type="text"><input name="g4" class="st-forminput" style="width:20px" type="text"><input name="g5" class="st-forminput" style="width:20px" type="text"><input name="g6" class="st-forminput" style="width:20px" type="text"><input name="g7" class="st-forminput" style="width:20px" type="text"><input name="g8" class="st-forminput" style="width:20px" type="text"><br>
+								Gateway: &nbsp;<input name="g1" class="st-forminput" style="width:30px;padding-right:2px;" type="text"><input name="g2" class="st-forminput" style="width:30px;padding-right:2px;" type="text"><input name="g3" class="st-forminput" style="width:30px;padding-right:2px;" type="text"><input name="g4" class="st-forminput" style="width:30px;padding-right:2px;" type="text"><input name="g5" class="st-forminput" style="width:30px;padding-right:2px;" type="text"><input name="g6" class="st-forminput" style="width:30px;padding-right:2px;" type="text"><input name="g7" class="st-forminput" style="width:30px;padding-right:2px;" type="text"><input name="g8" class="st-forminput" style="width:30px;padding-right:2px;" type="text"><br>
 								Netmask: &nbsp;<input name="newblocknetmask" class="st-forminput" id="NewBlockNetmask" style="width:150px" type="text">
 								<div style="padding:12px;"></div>
 								<div align="center" style="margin-bottom:5px;" id="SubmitNewBlockWrapper"><a class="button-blue" style="cursor:pointer;" id="SubmitNewBlock">Add IP Block</a></div>
