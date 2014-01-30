@@ -228,12 +228,12 @@
 					$("#AddBlock").click(function(){
 						$("#NewBlockForm").modal({containerCss:{width:"500", height:"350"}});
 					});
-					function next(that) {
-						if ( that.value.length == 3) {
-							that.form.elements[that.name++].focus();
-						}
-					}
 				});
+				function nextbox(fldobj, nbox) { 
+					if (fldobj.value.length==fldobj.maxLength) {
+						fldobj.form.elements[nbox].focus();
+					}
+				}
 			</script>
 			<br><br>
 			<div align="center">
@@ -296,7 +296,7 @@
 						<div style="height:270px;">
 							<form id="newblock" name="form1" class="SubmitBlockForm noEnterSubmit">
 								Block Name: <input name="newblockname" class="st-forminput" id="NewBlockName" style="width:150px" type="text"><br>
-								Gateway: &nbsp;<input name="g1" onkeyup="next(this);" maxlength="4" class="st-forminput" style="width:40px;padding-right:4px;" type="text"><input maxlength="4" onkeyup="next(this);" name="g2" class="st-forminput" style="width:40px;padding-right:4px;" type="text"><input maxlength="4" onkeyup="next(this);" name="g3" class="st-forminput" style="width:40px;padding-right:4px;" type="text"><input maxlength="4" onkeyup="next(this);" name="g4" class="st-forminput" style="width:40px;padding-right:4px;" type="text"><input maxlength="4" onkeyup="next(this);" name="g5" class="st-forminput" style="width:40px;padding-right:4px;" type="text"><input maxlength="4" onkeyup="next(this);" name="g6" class="st-forminput" style="width:40px;padding-right:4px;" type="text"><input maxlength="4" onkeyup="next(this);" name="g7" class="st-forminput" style="width:40px;padding-right:4px;" type="text"><input maxlength="4" name="g8" class="st-forminput" style="width:40px;padding-right:4px;" type="text"><br>
+								Gateway: &nbsp;<input name="g1" onkeyup="nextbox(this,'g2');" maxlength="4" class="st-forminput" style="width:40px;padding-right:4px;" type="text"><input maxlength="4" onkeyup="nextbox(this,'g3');" name="g2" class="st-forminput" style="width:40px;padding-right:4px;" type="text"><input maxlength="4" onkeyup="nextbox(this,'g4');" name="g3" class="st-forminput" style="width:40px;padding-right:4px;" type="text"><input maxlength="4" onkeyup="nextbox(this,'g5');" name="g4" class="st-forminput" style="width:40px;padding-right:4px;" type="text"><input maxlength="4" onkeyup="nextbox(this,'g6');" name="g5" class="st-forminput" style="width:40px;padding-right:4px;" type="text"><input maxlength="4" onkeyup="nextbox(this,'g7');" name="g6" class="st-forminput" style="width:40px;padding-right:4px;" type="text"><input maxlength="4" onkeyup="nextbox(this,'g8');" name="g7" class="st-forminput" style="width:40px;padding-right:4px;" type="text"><input maxlength="4" name="g8" class="st-forminput" style="width:40px;padding-right:4px;" type="text"><br>
 								Netmask: &nbsp;<input name="newblocknetmask" class="st-forminput" id="NewBlockNetmask" style="width:150px" type="text">
 								<div style="padding:12px;"></div>
 								<div align="center" style="margin-bottom:5px;" id="SubmitNewBlockWrapper"><a class="button-blue" style="cursor:pointer;" id="SubmitNewBlock">Add IP Block</a></div>
