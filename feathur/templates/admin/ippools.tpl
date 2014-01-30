@@ -223,32 +223,41 @@
 		
 		<!--- If the Type is not empty then the blocks are IPv6 --->
 		{%if isempty|Type == false}
+			<script type="text/javascript">
+				$(document).ready(function() {
+					$("#AddBlock").click(function(){
+						$("#NewBlockForm").modal({containerCss:{width:"400", height:"250"}});
+					});
+				});
+			</script>
 			<br><br>
 			<div align="center">
 				{%if isset|BlockList == true}
 					<div class="simplebox grid740">
 						<div class="titleh">
-							<h3>IPv6 Blocks</h3>
-							<div class="shortcuts-icons">
-								<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
-							</div>
+								<h3>IPv4 Blocks</h3>
+								<div class="shortcuts-icons">
+									<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+								</div>
 						</div>
-						<table class="tablesorter"  {%if isset|BlockList == true}{%if isempty|BlockList == false}id="ListTable"{%/if}{%/if}>
+						<table class="tablesorter" {%if isset|BlockList == true}{%if isempty|BlockList == false}id="ListTable"{%/if}{%/if}>
 							<thead>
-								<tr>
-									<th width="60%"><div align="center">Name</div></th>
-									<th width="40%"><div align="center">Actions</div></th>
-								</tr>
+									<tr>
+											<th width="60%"><div align="center">Name</div></th>
+											<th width="20%"><div align="center">Usage</div></th>
+											<th width="20%"><div align="center">Actions</div></th>
+									</tr>
 							</thead>        
 							{%if isset|BlockList == true}
 								{%if isempty|BlockList == false}
 									{%foreach block in BlockList}
 										<tr>
-											<td><a href="admin.php?view=ippools&type=1&pool={%?block[id]}">{%?block[name]}</a></td>
+											<td><a href="admin.php?view=ippools&type=0&pool={%?block[id]}">{%?block[name]}</a></td>
+											<td><div align="center">{%?block[used]} / {%?block[total]}</div></td>
 											<td>
 												<div align="center">
 													<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
-													<a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
+                                                    <a original-title="Edit" class="icon-button tips EditBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/paperpencil32.png" alt="icon" height="16" width="16"></a>
 												</div>
 											</td>
 										</tr>
@@ -256,7 +265,7 @@
 								{%/if}
 								{%if isempty|BlockList == true}
 									<tr>
-										<td colspan="2">
+										<td colspan="3">
 											<div align="center">There are no IP blocks, add one using the + above.</div>
 										</td>
 									</tr>
@@ -264,7 +273,7 @@
 							{%/if}
 							{%if isset|BlockList == false}
 								<tr>
-									<td colspan="2">
+									<td colspan="3">
 										<div align="center">There are no IP blocks, add one using the + above.</div>
 									</td>
 								</tr>
@@ -276,6 +285,22 @@
 					<br><br>
 					<div align="center">There are currently no pools defined.</div>
 				{%/if}
+			</div>
+			<div id="NewBlockForm" style="display:none;" align="center">
+				<div style="z-index: 610;" class="simplebox">
+					<div style="z-index: 600;" class="titleh" align="center"><h3>Add IPv6 Block</h3></div>
+					<div style="z-index: 590;" class="body padding10">
+						<div style="height:170px;">
+							<form id="newblock" name="form1" class="SubmitBlockForm noEnterSubmit">
+								Block Name: <input name="newblockname" class="st-forminput" id="NewBlockName" style="width:150px" type="text"><br>
+								Gateway: &nbsp;<input name="g1" class="st-forminput" style="width:20px" type="text"><input name="g2" class="st-forminput" style="width:20px" type="text"><input name="g3" class="st-forminput" style="width:20px" type="text"><input name="g4" class="st-forminput" style="width:20px" type="text"><input name="g5" class="st-forminput" style="width:20px" type="text"><input name="g6" class="st-forminput" style="width:20px" type="text"><input name="g7" class="st-forminput" style="width:20px" type="text"><input name="g8" class="st-forminput" style="width:20px" type="text"><br>
+								Netmask: &nbsp;<input name="newblocknetmask" class="st-forminput" id="NewBlockNetmask" style="width:150px" type="text">
+								<div style="padding:12px;"></div>
+								<div align="center" style="margin-bottom:5px;" id="SubmitNewBlockWrapper"><a class="button-blue" style="cursor:pointer;" id="SubmitNewBlock">Add IP Block</a></div>
+							</form>
+						</div>
+					</div>
+				</div>
 			</div>
 		{%/if}
 	{%/if}
