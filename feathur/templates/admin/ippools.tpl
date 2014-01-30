@@ -253,7 +253,6 @@
 									{%foreach block in BlockList}
 										<tr>
 											<td><a href="admin.php?view=ippools&type=0&pool={%?block[id]}">{%?block[name]}</a></td>
-											<td><div align="center">{%?block[used]} / {%?block[total]}</div></td>
 											<td>
 												<div align="center">
 													<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
