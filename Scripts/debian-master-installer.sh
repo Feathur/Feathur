@@ -279,6 +279,11 @@ sed -i 's/admin@company.com/'${user_email}'/g' /var/feathur/data.sql
 mysql -u root --password="$mysqlpassword" panel < /var/feathur/data.sql
 rm /var/feathur/data.sql
 
+if [ $DEVMODE -eq 1 ]; then
+	# Opens up external root access in development (Vagrant) mode
+	mysql --user=root --password="$mysqlpassword" -D mysql < echo "UPDATE user SET `host` = '%' WHERE `user` = 'root' AND `host` = 'localhost'; FLUSH PRIVILEGES;"
+fi
+
 cd ~/feathur-install/
 status "Base Config: 6 / 11"
 
