@@ -221,6 +221,9 @@ CREATE TABLE IF NOT EXISTS `vps` (
   `network_driver` varchar(65) NOT NULL,
   `private_network` int(2) NOT NULL,
   `ipv6` int(2) NOT NULL,
+  `tuntap` int(2) NOT NULL,
+  `ppp` int(2) NOT NULL,
+  `iptables` int(2) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=90 ;
 
