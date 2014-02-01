@@ -10,17 +10,6 @@ __copyright__ = "Copyright (c) Feathur LLC, 2014"
 __license__ = "GNU aGPL"
 
 #####
-# Python imports.
-#####
-import os, time
-
-#####
-# Fix for urlopen - 2 modules were merged in Python 3,
-#####
-try: from urllib2 import urlopen
-except ImportError: from urllib.request import urlopen
-
-#####
 # Fix for input() - raw_input() was renamed to input() in Python 3.
 #####
 try: input = raw_input
@@ -118,6 +107,7 @@ class Installer(object):
             Clean up.
             Perhaps a regex or two?
         '''
+        import os
         if os.path.isfile('/etc/os-release') and not os.path.isfile('/etc/debian_version'): # There's a version file in /etc. I won't dare doing a regex on this until a later update.
             try: # In case of an index/slice failure.
                 ubuntu = open('/etc/os-release', 'r').read().split('\n')
@@ -167,11 +157,13 @@ class Installer(object):
         print("Feathur in 10 seconds. If you wish to")
         print("cancel the install press CTRL + C now.")
         
+        import time
         try: time.sleep(1)
         except KeyboardInterrupt: # When CTRL + C is pressed.
             print("") # When we exit, the shell doesn't go on a newline for some reason - fix.
             exit(0) # Exit with exit code 0.
         
+        import os
         if os.getuid() != 0: # Get the current process' UID.
             print("You must run this installer as root!") # Byebye.
             print("")
@@ -212,15 +204,16 @@ class Installer(object):
             else:
                 for k, v in _d.items(): # Iterate.
                     if v == "%s %d"%(detected_os[0], detected_os[1]): # Get key from value.
-                        os = k
+                        _os = k
         
         print("")
         
         if _ask_os:
             
+            import time
             print("Supported OSes:")
-            for _i, os in _d.items():
-                print("[%d]: %s.x"%(_i, os)) # Ex. "[2] CentOS 6.x
+            for _i, _os in _d.items():
+                print("[%d]: %s.x"%(_i, _os)) # Ex. "[2] CentOS 6.x
                 time.sleep(0.2)
             
             print("")
@@ -234,29 +227,33 @@ class Installer(object):
                 while not _selected_os in _d.keys():
                     _selected_os = input("Please try again. [1-%d] "%(len(_d.keys())))
             
-            os = int(_selected_os)
+            _os = int(_selected_os)
         
         print("==============================")
             
         print("Available configurations:")
         
-        for k, v in self.options[_d[os]].items(): # Prints all the options with a slight delay between each line.
+        import time
+        for k, v in self.options[_d[_os]].items(): # Prints all the options with a slight delay between each line.
             time.sleep(0.2)
             print("[%d]: %s"%(k, v['name']))
         
-        _choice = input("Which configuration would you like to specify? [1-%d] "%(sorted(self.options[_d[os]].keys())[-1]))
+        _choice = input("Which configuration would you like to specify? [1-%d] "%(sorted(self.options[_d[_os]].keys())[-1]))
         
         if not _choice.isdigit():
             while not _choice.isdigit():
-                _choice = input("Please try again. [1-%d] "%(sorted(self.options[_d[os]].keys())[-1]))
-        if int(_choice) not in sorted(self.options[_d[os]].keys()):
-            while int(_choice) not in sorted(self.options[_d[os]].keys()):
-                _choice = input("Please try again. [1-%d] "%(sorted(self.options[_d[os]].keys())[-1]))
+                _choice = input("Please try again. [1-%d] "%(sorted(self.options[_d[_os]].keys())[-1]))
+        if int(_choice) not in sorted(self.options[_d[_os]].keys()):
+            while int(_choice) not in sorted(self.options[_d[_os]].keys()):
+                _choice = input("Please try again. [1-%d] "%(sorted(self.options[_d[_os]].keys())[-1]))
         
         print("==============================")
         print("Downloading prerequisite files...")
         
-        installer_script = urlopen(self.options[_d[os]][int(_choice)]['url']).read().decode("UTF-8") # Call the dictionary with possible configrations, downloading the selected one into a variable.
+        try: from urllib2 import urlopen # Fix for urlopen - 2 modules were merged in Python 3.
+        except ImportError: from urllib.request import urlopen
+        
+        installer_script = urlopen(self.options[_d[_os]][int(_choice)]['url']).read().decode("UTF-8") # Call the dictionary with possible configrations, downloading the selected one into a variable.
         
         print("Beginning installation...")
         print("==============================")
