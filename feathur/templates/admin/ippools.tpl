@@ -244,7 +244,7 @@
 				{%if isset|BlockList == true}
 					<div class="simplebox grid740">
 						<div class="titleh">
-								<h3>IPv4 Blocks</h3>
+								<h3>IPv6 Blocks</h3>
 								<div class="shortcuts-icons">
 									<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 								</div>
