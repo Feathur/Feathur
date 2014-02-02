@@ -299,7 +299,7 @@
 					<div style="z-index: 590;" class="body padding10">
 						<div style="height:270px;">
 							<form id="newblock" name="form1" class="SubmitBlockForm noEnterSubmit">
-								<table width="100%" border="0">
+								<table width="95%" border="0">
 									<tr>
 										<td width="75">Block Name:</td>
 										<td><input name="newblockname" class="st-forminput" id="NewBlockName" style="width:100%" type="text"></td>
