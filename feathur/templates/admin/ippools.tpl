@@ -302,11 +302,11 @@
 								<table width="95%" border="0">
 									<tr>
 										<td width="75">Block Name:</td>
-										<td><input name="newblockname" class="st-forminput" id="NewBlockName" style="width:100%" type="text"></td>
+										<td><input name="newblockname" class="st-forminput" id="NewBlockName" style="width:95%" type="text"></td>
 									</tr>
 									<tr>
 										<td width="75">Netmask:</td>
-										<td><select name="newblocknetmask" id="newblocknetmask" style="width:100%;"><option value="/32">/32</option><option value="/48">/48</option><option value="/64">/64</option><option value="/80">/80</option><option value="/96">/96</option><option value="/112">/112</option></select></td>
+										<td><select name="newblocknetmask" id="newblocknetmask" style="width:99%;"><option value="/32">/32</option><option value="/48">/48</option><option value="/64">/64</option><option value="/80">/80</option><option value="/96">/96</option><option value="/112">/112</option></select></td>
 									</tr>
 									<tr>
 										<td width="75">Gateway:</td>
@@ -319,9 +319,9 @@
 									<tr>
 										<td width="75">IPv6 Per VPS:</td>
 										<td>
-											<select name="newblockpervps" id="newblockperuser" onchange="CustomSelected(this);" style="width:100%"><option value="/48">/48</option><option value="/64">/64</option><option value="/80">/80</option><option value="/96">/96</option><option value="/112">/112</option><option value="/128">/128</option><option value="-1" id="customselected">Custom (Must be a number, EG: 10):</option></select><br>
+											<select name="newblockpervps" id="newblockperuser" onchange="CustomSelected(this);" style="width:99%"><option value="/48">/48</option><option value="/64">/64</option><option value="/80">/80</option><option value="/96">/96</option><option value="/112">/112</option><option value="/128">/128</option><option value="-1" id="customselected">Custom (Must be a number, EG: 10):</option></select><br>
 											<div id="custombox" style="display:none;">
-												<input name="newblockcustomipv6" class="st-forminput" id="NewBloclCustomIPv6" style="width:100%" type="text">
+												<input name="newblockcustomipv6" class="st-forminput" id="NewBloclCustomIPv6" style="width:95%" type="text">
 											</div>
 										</td>
 									</tr>
