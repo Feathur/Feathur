@@ -234,6 +234,10 @@
 						fldobj.form.elements[nbox].focus();
 					}
 				}
+				function CustomSelected(nameSelect) {
+					var val = nameSelect.options[nameSelect.selectedIndex].value;
+					document.getElementById("custombox").style.display = val == '-1' ? "block" : 'none';
+				}
 			</script>
 			<br><br>
 			<div align="center">
@@ -297,7 +301,12 @@
 							<form id="newblock" name="form1" class="SubmitBlockForm noEnterSubmit">
 								Block Name: <input name="newblockname" class="st-forminput" id="NewBlockName" style="width:150px" type="text"><br>
 								Gateway: &nbsp;<input name="g1" onkeyup="nextbox(this,'g2');" maxlength="4" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g3');" name="g2" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g4');" name="g3" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g5');" name="g4" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g6');" name="g5" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g7');" name="g6" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g8');" name="g7" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" name="g8" class="st-forminput" style="width:40px;" type="text"><br>
-								Netmask: &nbsp;<input name="newblocknetmask" class="st-forminput" id="NewBlockNetmask" style="width:150px" type="text">
+								First Usable: &nbsp;<input name="f1" onkeyup="nextbox(this,'f2');" maxlength="4" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'f3');" name="f2" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'f4');" name="f3" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'f5');" name="f4" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'f6');" name="f5" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'f7');" name="f6" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'f8');" name="f7" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" name="f8" class="st-forminput" style="width:40px;" type="text"><br>
+								Netmask: &nbsp;<select name="newblocknetmask" id="newblocknetmask"><option value="/32">/32</option><option value="/48">/48</option><option value="/64">/64</option><option value="/80">/80</option><option value="/96">/96</option><option value="/112">/112</option></select>
+								IPv6 Per VPS: <select name="newblockpervps" id="newblockperuser" onchange="CustomSelected(this);"><option value="/48">/48</option><option value="/64">/64</option><option value="/80">/80</option><option value="/96">/96</option><option value="/112">/112</option><option value="/128">/128</option><option value="-1" id="customselected">Custom (Must be a number, EG: 10):</option></select><br>
+								<div id="custombox" style="display:none;">
+									<input name="newblockcustomipv6" class="st-forminput" id="NewBloclCustomIPv6" style="width:150px" type="text">
+								</div>
 								<div style="padding:12px;"></div>
 								<div align="center" style="margin-bottom:5px;" id="SubmitNewBlockWrapper"><a class="button-blue" style="cursor:pointer;" id="SubmitNewBlock">Add IP Block</a></div>
 							</form>
