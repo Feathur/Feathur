@@ -100,6 +100,7 @@ class Block extends CPHPDatabaseRecordClass {
 			}
 		} else {
 			// Assign a number value to each block size...
+			$sCol = ":";
 			$sBlockSize = array("/32" => 1,
 								"/48" => 2,
 								"/64" => 3,
@@ -119,19 +120,19 @@ class Block extends CPHPDatabaseRecordClass {
 				$sCount = 1;
 				while($sCount < 9){
 					if((!empty($sRequested["POST"]["g".$sCount])) && (!empty($sRequested["POST"]["g".$sCount]))){
-						$sFullGateway .= $sRequested["POST"]["g".$sCount];
-						$sFullFirst .= $sRequested["POST"]["f".$sCount];
-						$sGateway[$sCount] = $sRequested["POST"]["g".$sCount];
-						$sFirst[$sCount] = $sRequested["POST"]["f".$sCount];
+						$sFullGateway .= $sRequested["POST"]["g".$sCount].$sCol;
+						$sFullFirst .= $sRequested["POST"]["f".$sCount].$sCol;
+						$sGateway[$sCount] = $sRequested["POST"]["g".$sCount].$sCol;
+						$sFirst[$sCount] = $sRequested["POST"]["f".$sCount].$sCol;
 						$sCount++;
 						if($sPrefixSize >= $sCount){
-							$sPrefix = $sRequested["POST"]["f".$sCount];
+							$sPrefix .= $sRequested["POST"]["f".$sCount].$sCol;
 						}
 						
 						if(($sStartSecondary != $sEndSecondary) && ($sCount < $sEndSecondary) && ($sPrefixSize < $sCount)){
-							$sSecondary .= $sRequested["POST"]["f".$sCount];
+							$sSecondary .= $sRequested["POST"]["f".$sCount].$sCol;
 						} elseif(($sCount < $sEndSecondary) && ($sPrefixSize < $sCount)){
-							$sCurrent .= $sRequested["POST"]["f".$sCount];
+							$sCurrent .= $sRequested["POST"]["f".$sCount].$sCol;
 						}
 						
 						
@@ -156,13 +157,13 @@ class Block extends CPHPDatabaseRecordClass {
 				
 				$sNewBlock = new Block(0);
 				$sNewBlock->uName = $sRequested["POST"]["newblockname"];
-				$sNewBlock->uGateway = $sFullGateway;
+				$sNewBlock->uGateway = trim($sFullGateway, ":");
 				$sNewBlock->uNetmask = $sRequested["POST"]["newblocknetmask"];
 				$sNewBlock->uIPv6 = 1;
 				$sNewBlock->uPrefix = $sPrefix;
 				$sNewBlock->uPerUser = $sPerVPS;
 				$sNewBlock->uSecondary = $sSecondary;
-				$sNewBlock->uCurrent = $sCurrent;
+				$sNewBlock->uCurrent = trim($sCurrent, ":");
 				$sNewBlock->InsertIntoDatabase();
 				return $sSuccess = array("content" => "The block {$sRequested["GET"]["name"]} has been created.");
 			} else {
