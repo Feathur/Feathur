@@ -114,6 +114,7 @@ class Block extends CPHPDatabaseRecordClass {
 				
 				// Determine if the Per VPS is bigger than the netmask.
 				$sPerVPS = $sRequested["POST"]["newblockpervps"];
+				$sCustomPerVPS = $sRequested["POST"]["newblockcustomipv6"];
 				$sCheckSmaller = $sBlockSize[$sPerVPS] - $sBlockSize[$sRequested["POST"]["newblocknetmask"]];
 				$sStartSecondary = $sPrefixSize + 1;
 				$sEndSecondary = $sPrefixSize + $sCheckSmaller;
@@ -141,8 +142,8 @@ class Block extends CPHPDatabaseRecordClass {
 				
 				// If Per VPS is a number don't let that number be greater than 60,000.
 				// If Per VPS is not a number check to make sure that it is not larger than the netmask (EG: impossible).
-				if(ctype_digit($sPerVPS)){
-					if($sPerUser > 60000){
+				if(ctype_digit($sCustomPerVPS)){
+					if($sCustomPerUser > 60000){
 						return $sError = array("red" => "IPv6 per VPS can not be larger than 60,000.");
 					}
 				} else {
@@ -159,7 +160,11 @@ class Block extends CPHPDatabaseRecordClass {
 				$sNewBlock->uNetmask = $sRequested["POST"]["newblocknetmask"];
 				$sNewBlock->uIPv6 = 1;
 				$sNewBlock->uPrefix = $sPrefix;
-				$sNewBlock->uPerUser = $sPerVPS;
+				if(ctype_digit($sCustomPerVPS)){
+					$sNewBlock->uPerUser = $sCustomPerVPS;
+				} else {
+					$sNewBlock->uPerUser = $sPerVPS;
+				}
 				$sNewBlock->uSecondary = $sSecondary;
 				$sNewBlock->uCurrent = trim($sCurrent, ":");
 				$sNewBlock->InsertIntoDatabase();
