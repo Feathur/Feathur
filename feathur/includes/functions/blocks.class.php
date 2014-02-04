@@ -120,7 +120,7 @@ class Block extends CPHPDatabaseRecordClass {
 				while($sCount < 9){
 					if((!empty($sRequested["POST"]["g".$sCount])) && (!empty($sRequested["POST"]["g".$sCount]))){
 						$sFullGateway .= $sRequested["POST"]["g".$sCount];
-						$sFullFirst = .= $sRequested["POST"]["f".$sCount];
+						$sFullFirst .= $sRequested["POST"]["f".$sCount];
 						$sGateway[$sCount] = $sRequested["POST"]["g".$sCount];
 						$sFirst[$sCount] = $sRequested["POST"]["f".$sCount];
 						$sCount++;
