@@ -226,7 +226,7 @@
 			<script type="text/javascript">
 				$(document).ready(function() {
 					$("#AddBlock").click(function(){
-						$("#NewBlockForm").modal({containerCss:{width:"600", height:"350"}});
+						$("#NewBlockForm").modal({containerCss:{width:"600", height:"470"}});
 					});
 					$("#blockresult-error").hide();
 					$("#blockresult-success").hide();
@@ -318,7 +318,7 @@
 				<div style="z-index: 610;" class="simplebox">
 					<div style="z-index: 600;" class="titleh" align="center"><h3>Add IPv6 Block</h3></div>
 					<div style="z-index: 590;" class="body padding10">
-						<div style="height:270px;">
+						<div style="height:390px;">
 							<div align="center">
 								<div class="albox errorbox" id="blockresult-error" style="width:75%"></div>
 								<div class="albox succesbox" id="blockresult-success" style="width:75%"></div>
