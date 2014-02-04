@@ -124,7 +124,6 @@ class Block extends CPHPDatabaseRecordClass {
 						$sFullFirst .= $sRequested["POST"]["f".$sCount].$sCol;
 						$sGateway[$sCount] = $sRequested["POST"]["g".$sCount].$sCol;
 						$sFirst[$sCount] = $sRequested["POST"]["f".$sCount].$sCol;
-						$sCount++;
 						if($sPrefixSize >= $sCount){
 							$sPrefix .= $sRequested["POST"]["f".$sCount].$sCol;
 						}
@@ -133,12 +132,11 @@ class Block extends CPHPDatabaseRecordClass {
 							$sSecondary .= $sRequested["POST"]["f".$sCount].$sCol;
 						} elseif(($sCount < $sEndSecondary) && ($sPrefixSize < $sCount)){
 							$sCurrent .= $sRequested["POST"]["f".$sCount].$sCol;
-						}
-						
-						
+						}	
 					} else {
 						return $sError = array("red" => "The gateway/first usable fields can not be empty.");
 					}
+					$sCount++;
 				}
 				
 				// If Per VPS is a number don't let that number be greater than 60,000.
