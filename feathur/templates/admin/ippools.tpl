@@ -228,6 +228,27 @@
 					$("#AddBlock").click(function(){
 						$("#NewBlockForm").modal({containerCss:{width:"600", height:"350"}});
 					});
+					$("#blockresult-error").hide();
+					$("#blockresult-success").hide();
+					$("#SubmitNewBlock").click(function(){
+						var datastring = $("#newblock").serialize();
+						$.ajax({
+							type: "POST",
+							url: "admin.php?view=ippools&type=1&action=create_pool&id=",
+							data: datastring,
+							dataType: "json",
+							success: function(result) {
+								if(typeof(result.red) != "undefined" && result.red !== null) {
+									$("#blockresult-error").html(result.red);
+									$("#blockresult-error").show();
+								} else {
+									$("#blockresult-success").html(result.content);
+									$("#blockresult-success").show();
+									window.location.reload();
+								}
+							},
+						});
+					});
 				});
 				function nextbox(fldobj, nbox) { 
 					if (fldobj.value.length==fldobj.maxLength) {
@@ -298,6 +319,10 @@
 					<div style="z-index: 600;" class="titleh" align="center"><h3>Add IPv6 Block</h3></div>
 					<div style="z-index: 590;" class="body padding10">
 						<div style="height:270px;">
+							<div align="center">
+								<div class="albox errorbox" id="blockresult-error" style="width:75%"></div>
+								<div class="albox succesbox" id="blockresult-success" style="width:75%"></div>
+							</div>
 							<form id="newblock" name="form1" class="SubmitBlockForm noEnterSubmit">
 								<table width="95%" border="0">
 									<tr>
@@ -321,7 +346,7 @@
 										<td>
 											<select name="newblockpervps" id="newblockperuser" onchange="CustomSelected(this);" style="width:99%"><option value="/48">/48</option><option value="/64">/64</option><option value="/80">/80</option><option value="/96">/96</option><option value="/112">/112</option><option value="/128">/128</option><option value="-1" id="customselected">Custom (Must be a number, EG: 10):</option></select><br>
 											<div id="custombox" style="display:none;">
-												<input name="newblockcustomipv6" class="st-forminput" id="NewBloclCustomIPv6" style="width:95%" type="text">
+												<input name="newblockcustomipv6" class="st-forminput" id="NewBlockCustomIPv6" style="width:95%" type="text">
 											</div>
 										</td>
 									</tr>

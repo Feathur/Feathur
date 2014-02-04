@@ -15,10 +15,10 @@ class Block extends CPHPDatabaseRecordClass {
 			'Prefix' => "prefix",
 			'Current' => "current",
 			'Secondary' => "secondary",
+			'PerUser' => "per_user",
 		),
 		'numeric' => array(
 			'IPv6' => "ipv6",
-			'PerUser' => "per_user",
 		)
 	);
 	
@@ -99,7 +99,75 @@ class Block extends CPHPDatabaseRecordClass {
 				return $sError = array("red" => "You must give each block a name.");
 			}
 		} else {
-		
+			// Assign a number value to each block size...
+			$sBlockSize = array("/32" => 1,
+								"/48" => 2,
+								"/64" => 3,
+								"/80" => 4,
+								"/96" => 5,
+								"/112" => 6,
+								"/128" => 7);
+			if(!empty($sRequested["POST"]["newblockname"])){
+				// Determine how many octets the prefix is.
+				$sPrefixSize = $sBlockSize[$$sRequested["POST"]["newblocknetmask"]] + 1;
+				
+				// Determine if the Per VPS is bigger than the netmask.
+				$sPerVPS = $sRequested["POST"]["newblockpervps"];
+				$sCheckSmaller = $sBlockSize[$sPerVPS] - $sBlockSize[$sRequested["POST"]["newblocknetmask"]];
+				$sStartSecondary = $sPrefixSize + 1;
+				$sEndSecondary = $sPrefixSize + $sCheckSmaller;
+				$sCount = 1;
+				while($sCount < 9){
+					if((!empty($sRequested["POST"]["g".$sCount])) && (!empty($sRequested["POST"]["g".$sCount]))){
+						$sFullGateway .= $sRequested["POST"]["g".$sCount];
+						$sFullFirst = .= $sRequested["POST"]["f".$sCount];
+						$sGateway[$sCount] = $sRequested["POST"]["g".$sCount];
+						$sFirst[$sCount] = $sRequested["POST"]["f".$sCount];
+						$sCount++;
+						if($sPrefixSize >= $sCount){
+							$sPrefix = $sRequested["POST"]["f".$sCount];
+						}
+						
+						if(($sStartSecondary != $sEndSecondary) && ($sCount < $sEndSecondary) && ($sPrefixSize < $sCount)){
+							$sSecondary .= $sRequested["POST"]["f".$sCount];
+						} elseif(($sCount < $sEndSecondary) && ($sPrefixSize < $sCount)){
+							$sCurrent .= $sRequested["POST"]["f".$sCount];
+						}
+						
+						
+					} else {
+						return $sError = array("red" => "The gateway/first usable fields can not be empty.");
+					}
+				}
+				
+				// If Per VPS is a number don't let that number be greater than 60,000.
+				// If Per VPS is not a number check to make sure that it is not larger than the netmask (EG: impossible).
+				if(ctype_digit($sPerVPS)){
+					if($sPerUser > 60000){
+						return $sError = array("red" => "IPv6 per VPS can not be larger than 60,000.");
+					}
+				} else {
+					if($sCheckSmaller < 0){
+						return $sError = array("red" => "IPv6 per user can not be greater than the netmask.");
+					}	
+				}
+				
+				
+				
+				$sNewBlock = new Block(0);
+				$sNewBlock->uName = $sRequested["POST"]["newblockname"];
+				$sNewBlock->uGateway = $sFullGateway;
+				$sNewBlock->uNetmask = $sRequested["POST"]["newblocknetmask"];
+				$sNewBlock->uIPv6 = 1;
+				$sNewBlock->uPrefix = $sPrefix;
+				$sNewBlock->uPerUser = $sPerVPS;
+				$sNewBlock->uSecondary = $sSecondary;
+				$sNewBlock->uCurrent = $sCurrent;
+				$sNewBlock->InsertIntoDatabase();
+				return $sSuccess = array("content" => "The block {$sRequested["GET"]["name"]} has been created.");
+			} else {
+				return $sError = array("red" => "You must give each block a name.");
+			}
 		}
 	}
 	
