@@ -110,7 +110,7 @@ class Block extends CPHPDatabaseRecordClass {
 								"/128" => 7);
 			if(!empty($sRequested["POST"]["newblockname"])){
 				// Determine how many octets the prefix is.
-				$sPrefixSize = $sBlockSize[$$sRequested["POST"]["newblocknetmask"]] + 1;
+				$sPrefixSize = $sBlockSize[$sRequested["POST"]["newblocknetmask"]] + 1;
 				
 				// Determine if the Per VPS is bigger than the netmask.
 				$sPerVPS = $sRequested["POST"]["newblockpervps"];
@@ -148,7 +148,7 @@ class Block extends CPHPDatabaseRecordClass {
 						return $sError = array("red" => "IPv6 per VPS can not be larger than 60,000.");
 					}
 				} else {
-					if($sCheckSmaller < 0){
+					if($sCheckSmaller <= 0){
 						return $sError = array("red" => "IPv6 per user can not be greater than the netmask.");
 					}	
 				}
