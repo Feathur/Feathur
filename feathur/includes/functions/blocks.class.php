@@ -179,7 +179,7 @@ class Block extends CPHPDatabaseRecordClass {
 		global $database;
 		if(empty($sRequested["GET"]["type"])){
 			if(!empty($sRequested["GET"]["id"])){
-				if(!$sServers = $database->CachedQuery("SELECT * FROM `ipaddresses` WHERE `block_id` = :BlockId AND `vps_id` != 0", array("BlockId" => $sRequested["GET"]["id"]))){
+				if(!$sBlocks = $database->CachedQuery("SELECT * FROM `ipaddresses` WHERE `block_id` = :BlockId AND `vps_id` != 0", array("BlockId" => $sRequested["GET"]["id"]))){
 					$sDeleteIPs = $database->CachedQuery("DELETE FROM `ipaddresses` WHERE `block_id` = :BlockId", array("BlockId" => $sRequested["GET"]["id"]));
 					$sDeleteBlock = $database->CachedQuery("DELETE FROM `blocks` WHERE `id` = :Id", array("Id" => $sRequested["GET"]["id"]));
 					return $sSuccess = array("content" => "The block has been deleted.");
@@ -190,7 +190,18 @@ class Block extends CPHPDatabaseRecordClass {
 				return $sError = array("red" => "You must specify a pool to delete.");
 			}
 		} else {
-		
+			if(!$sBlocks = $database->CachedQuery("SELECT * FROM `ipv6addresses` WHERE `block_id` = :BlockId AND `vps_id` != 0", array("BlockId" => $sRequested["GET"]["id"]))){
+				if(!$sUserBlocks = $database->CachedQuery("SELECT * FROM `useripv6blocks` WHERE `block_id` = :BlockId AND `vps_id` != 0", array("BlockId" => $sRequested["GET"]["id"]))){
+					$sDeleteIPs = $database->CachedQuery("DELETE FROM `ipv6addresses` WHERE `block_id` = :BlockId", array("BlockId" => $sRequested["GET"]["id"]));
+					$sDeleteUserBlocks = $database->CachedQuery("DELETE FROM `useripv6blocks` WHERE `block_id` = :BlockId", array("BlockId" => $sRequested["GET"]["id"]));
+					$sDeleteBlock = $database->CachedQuery("DELETE FROM `blocks` WHERE `id` = :Id", array("Id" => $sRequested["GET"]["id"]));
+					return $sSuccess = array("content" => "The block has been deleted.");
+				} else {
+					return $sError = array("red" => "You can not delete a block with subblocks assigned to VPS.");
+				}
+			} else {
+				return $sError = array("red" => "You can not delete a block with IPs assigned to VPS.");
+			}
 		}
 	}
 	

@@ -249,6 +249,28 @@
 							},
 						});
 					});
+					$(".DeleteBlock").click(function() {
+                        var blockname = $(this).attr('rel');
+                        var blockid = $(this).attr('value');
+                        $("#DeleteFormName").html(blockname);
+                        $("#DeleteFormValue").html(blockid);
+                        $("#DeleteForm").modal({containerCss:{width:"400", height:"200"}});
+					});
+					$("#ConfirmDelete").click(function() {
+						var deleteid = $("#DeleteFormValue").text();
+						$.modal.close();
+						$("#LoadingImage").css({visibility: "visible"});
+						$.getJSON("admin.php?view=ippools&type=1&action=delete_pool&id=" + deleteid,function(result){
+							if(typeof(result.red) != "undefined" && result.red !== null) {
+								$("#result-error").html(result.red);
+								$("#result-error").show();
+							} else {
+								$("#result-success").html(result.content);
+								$("#result-success").show();
+								window.location.reload();
+							}
+						});
+					});
 				});
 				function nextbox(fldobj, nbox) { 
 					if (fldobj.value.length==fldobj.maxLength) {
@@ -353,6 +375,20 @@
 								</table>
 								<div style="padding:12px;"></div>
 								<div align="center" style="margin-bottom:5px;" id="SubmitNewBlockWrapper"><a class="button-blue" style="cursor:pointer;" id="SubmitNewBlock">Add IP Block</a></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="DeleteForm" style="display:none;height:130px;" align="center">
+				<div style="z-index: 610;" class="simplebox">
+					<div style="z-index: 600;" class="titleh" align="center"><h3>Delete IP Block</h3></div>
+					<div style="z-index: 590;" class="body padding10">
+						<div style="height:120px;">
+							<form id="form3" name="form3" class="Delete noEnterSubmit">
+								Do you want to delete the IP block <a style="color:#737F89;" id="DeleteFormName"></a><a id="DeleteFormValue" style="display:none;"></a>?
+								<div style="padding:12px;"></div>
+								<div align="center" style="margin-bottom:5px;" id="FormDelete"><a class="button-blue" style="cursor:pointer;" id="ConfirmDelete">Yes</a> <a class="button-blue" style="cursor:pointer;" id="CancelDelete">No</a></div>
 							</form>
 						</div>
 					</div>
