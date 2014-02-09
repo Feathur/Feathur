@@ -271,6 +271,29 @@
 							}
 						});
 					});
+					$(".EditBlock").click(function() {
+						var blockname = $(this).attr('rel');
+						var blockid = $(this).attr('value');
+						$("#EditFormName").val(blockname);
+						$("#EditFormValue").html(blockid);
+						$("#EditForm").modal({containerCss:{width:"400", height:"200"}});
+					});
+					$("#SubmitEditBlock").click(function() {
+						var editid = $("#EditFormValue").text();
+						var name = $("#EditFormName").val();
+						$.modal.close();
+						$("#LoadingImage").css({visibility: "visible"});
+						$.getJSON("admin.php?view=ippools&type=1&action=rename_pool&id=" + editid + "&name=" + name,function(result){
+							if(typeof(result.red) != "undefined" && result.red !== null) {
+								$("#result-error").html(result.red);
+								$("#result-error").show();
+							} else {
+								$("#result-success").html(result.content);
+								$("#result-success").show();
+								window.location.reload();
+							}
+						});
+					});
 				});
 				function nextbox(fldobj, nbox) { 
 					if (fldobj.value.length==fldobj.maxLength) {
@@ -389,6 +412,20 @@
 								Do you want to delete the IP block <a style="color:#737F89;" id="DeleteFormName"></a><a id="DeleteFormValue" style="display:none;"></a>?
 								<div style="padding:12px;"></div>
 								<div align="center" style="margin-bottom:5px;" id="FormDelete"><a class="button-blue" style="cursor:pointer;" id="ConfirmDelete">Yes</a> <a class="button-blue" style="cursor:pointer;" id="CancelDelete">No</a></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="EditForm" style="display:none;" align="center">
+				<div style="z-index: 610;" class="simplebox">
+					<div style="z-index: 600;" class="titleh" align="center"><h3>Edit IP Block</h3></div>
+					<div style="z-index: 590;" class="body padding10">
+						<div style="height:120px;">
+							<form id="form1" name="form1" class="SubmitEditBlock noEnterSubmit">
+								Block Name: <input name="ipblockname" class="st-forminput" id="EditFormName" value="" style="width:150px" type="text"><a id="EditFormValue" style="display:none;"></a><br>
+								<div style="padding:12px;"></div>
+								<div align="center" style="margin-bottom:5px;" id="FormEditBlock"><a class="button-blue" style="cursor:pointer;" id="SubmitEditBlock">Update IP Block</a></div>
 							</form>
 						</div>
 					</div>
