@@ -90,3 +90,9 @@ $sAdd->execute();
 
 $sAdd = $database->prepare("ALTER TABLE `blocks` CHANGE `per_user` `per_user` VARCHAR(65) NOT NULL;");
 $sAdd->execute();
+
+// Just in case.
+$sAdd = $database->prepare("ALTER TABLE `vps` ADD `tuntap` INT(2);ALTER TABLE `vps` ADD `ppp` INT(2);ALTER TABLE `vps` ADD `iptables` INT(2);");
+$sAdd->execute();
+
+
