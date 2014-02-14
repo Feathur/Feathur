@@ -4,7 +4,6 @@ if($sUser->sPermissions != 7){
 }
 
 if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
-	natsort($sServerList->data);
 	foreach($sServerList->data as $sServer){
 		$sServer = new Server($sServer["id"]);
 		
@@ -82,6 +81,7 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 			$sDown[] = array("name" => $sServer->sName);
 		}
 		
+		natsort($sStatistics);
 		// Cleanup just in case.
 		unset($sHardDiskUsed);
 		unset($sHardDiskFree);
