@@ -3,7 +3,7 @@ if($sUser->sPermissions != 7){
 	die("Sorry you've accessed our system without permission");
 }
 
-if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
+if($sServerList = $database->CachedQuery("SELECT * FROM `servers` ORDER BY `name`", array())){
 	foreach($sServerList->data as $sServer){
 		$sServer = new Server($sServer["id"]);
 		
