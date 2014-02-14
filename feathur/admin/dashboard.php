@@ -3,7 +3,7 @@ if($sUser->sPermissions != 7){
 	die("Sorry you've accessed our system without permission");
 }
 
-if($sServerList = $database->CachedQuery("SELECT * FROM `servers` ORDER BY `name`", array())){
+if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
 	foreach($sServerList->data as $sServer){
 		$sServer = new Server($sServer["id"]);
 		
@@ -81,6 +81,7 @@ if($sServerList = $database->CachedQuery("SELECT * FROM `servers` ORDER BY `name
 			$sDown[] = array("name" => $sServer->sName);
 		}
 		
+		natsort($sStatistics);
 		// Cleanup just in case.
 		unset($sHardDiskUsed);
 		unset($sHardDiskFree);
