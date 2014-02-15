@@ -364,7 +364,11 @@ class kvm {
 			$sTarget = "<target dev='hda' bus='ide'/>";
 		}
 		
-		$sVPSConfig .= "<devices>{$sQEMUPath}<disk type='file' device='disk'><source file='/dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img'/>{$sTarget}</disk><disk type='file' device='cdrom'>";
+		if(isset($sVPS->sSecondaryDrive)){
+			$sSecondary = "<disk type='file' device='disk'><source file='{$sVPS->sSecondaryDrive}'/>{$sTarget}</disk>";
+		}
+		
+		$sVPSConfig .= "<devices>{$sQEMUPath}<disk type='file' device='disk'><source file='/dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img'/>{$sTarget}</disk>{$sSecondary}<disk type='file' device='cdrom'>";
 			
 		if(isset($sTemplate)){
 			$sVPSConfig .= "<source file='/var/feathur/data/templates/kvm/{$sTemplate->sPath}.iso'/>";

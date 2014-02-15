@@ -228,6 +228,7 @@ CREATE TABLE IF NOT EXISTS `vps` (
   `boot_order` varchar(65) NOT NULL,
   `disk_driver` varchar(65) NOT NULL,
   `network_driver` varchar(65) NOT NULL,
+  `secondary_drive` varchar(130) NOT NULL,
   `private_network` int(2) NOT NULL,
   `ipv6` int(2) NOT NULL,
   `tuntap` int(2) NOT NULL,

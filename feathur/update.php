@@ -95,4 +95,5 @@ $sAdd->execute();
 $sAdd = $database->prepare("ALTER TABLE `vps` ADD `tuntap` INT(2);ALTER TABLE `vps` ADD `ppp` INT(2);ALTER TABLE `vps` ADD `iptables` INT(2);");
 $sAdd->execute();
 
-
+$sAdd = $database->prepare("ALTER TABLE `vps` ADD `secondary_drive` VARCHAR(130);");
+$sAdd->execute();

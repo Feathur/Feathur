@@ -17,6 +17,7 @@ class VPS extends CPHPDatabaseRecordClass {
 			'BootOrder' => "boot_order",
 			'NetworkDriver' => "network_driver",
 			'DiskDriver' => "disk_driver",
+			'SecondaryDrive' => "secondary_drive",
 		),
 		'numeric' => array(
 			'UserId' => "user_id",
