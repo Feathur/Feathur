@@ -408,8 +408,7 @@ class kvm {
 		}
 		
 		if(empty($sPassword)){
-			$sVNCPort = ($sVPS->sVNCPort - 5900);
-			$sVPSConfig .= "<graphics type='vnc' port='{$sVNCPort}' passwd='' listen='127.0.0.1'/>";
+			$sVPSConfig .= "<graphics type='vnc' port='{$sVPS->sVNCPort}' passwd='' listen='127.0.0.1'/>";
 		} else {
 			$sPassword = escapeshellarg($sPassword);
 			$sVPSConfig .= "<graphics type='vnc' port='{$sVPS->sVNCPort}' passwd={$sPassword} listen='0.0.0.0'/>";
