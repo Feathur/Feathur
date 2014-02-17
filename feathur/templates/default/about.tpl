@@ -16,7 +16,7 @@
 					Patrick Nommensen (UI / Website / Support)
 				</div>
 				<br><br>
-				Feathur is released under the <a href="https://github.com/BlueVM/Feathur/blob/develop/License.v1.txt">Feathur License Version 1.0</a>.
+				Feathur is released under the <a href="https://github.com/BlueVM/Feathur/blob/develop/License.txt">AGPL 3.0</a>.
 				<br><br>
 			</div>
 		</div>
