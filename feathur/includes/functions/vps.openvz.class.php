@@ -163,7 +163,8 @@ class openvz {
 			$sPassword = escapeshellarg($sRequested["POST"]["password"]);
 			$sIPList = $sRequested["POST"]["IPList"];
 			$sHighDisk = $sVPS->sDisk + 1;
-		
+			$sCPUs = round((($sVPS->sCPULimit) / 100));
+			
 			$sCommandList .= "vzctl create {$sVPS->sContainerId} --ostemplate {$sTemplate->sPath};";
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --onboot yes --save;";
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --ram {$sVPS->sRAM}M --swap {$sVPS->sSWAP}M --save;";
@@ -500,7 +501,7 @@ class openvz {
 		global $sTemplate;
 		$sOpenVZTemplate = new Template($sVPS->sTemplateId);
 		$sHighDisk = $sVPS->sDisk + 1;
-		$sCPUs = (($sVPS->sCPULimit) / 100);
+		$sCPUs = round((($sVPS->sCPULimit) / 100));
 		$sCommandList .= "vzctl stop {$sVPS->sContainerId} --fast;";
 		$sCommandList .= "vzctl destroy {$sVPS->sContainerId};";
 		$sCommandList .= "vzctl create {$sVPS->sContainerId} --ostemplate {$sOpenVZTemplate->sPath};";
@@ -630,7 +631,7 @@ class openvz {
 			$sServer = new Server($sVPS->sServerId);
 			$sSSH = Server::server_connect($sServer);
 			$sHighDisk = $sVPS->sDisk + 1;
-			$sCPUs = (($sVPS->sCPULimit) / 100);
+			$sCPUs = round((($sVPS->sCPULimit) / 100));
 			
 			$sLog[] = array("command" => "vzctl set {$sVPS->sContainerId} --ram {$sVPS->sRAM}M --swap {$sVPS->sSWAP}M --save;", "result" => $sSSH->exec("vzctl set {$sVPS->sContainerId} --ram {$sVPS->sRAM}M --swap {$sVPS->sSWAP}M --save;"));
 			$sLog[] = array("command" => "vzctl set {$sVPS->sContainerId} --cpuunits {$sVPS->sCPUUnits} --save;", "result" => $sSSH->exec("vzctl set {$sVPS->sContainerId} --cpuunits {$sVPS->sCPUUnits} --save;"));

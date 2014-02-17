@@ -15,10 +15,10 @@ class Block extends CPHPDatabaseRecordClass {
 			'Prefix' => "prefix",
 			'Current' => "current",
 			'Secondary' => "secondary",
+			'PerUser' => "per_user",
 		),
 		'numeric' => array(
 			'IPv6' => "ipv6",
-			'PerUser' => "per_user",
 		)
 	);
 	
@@ -99,7 +99,79 @@ class Block extends CPHPDatabaseRecordClass {
 				return $sError = array("red" => "You must give each block a name.");
 			}
 		} else {
-		
+			// Assign a number value to each block size...
+			$sCol = ":";
+			$sBlockSize = array("/32" => 1,
+								"/48" => 2,
+								"/64" => 3,
+								"/80" => 4,
+								"/96" => 5,
+								"/112" => 6,
+								"/128" => 7);
+			if(!empty($sRequested["POST"]["newblockname"])){
+				// Determine how many octets the prefix is.
+				$sPrefixSize = $sBlockSize[$sRequested["POST"]["newblocknetmask"]] + 1;
+				
+				// Determine if the Per VPS is bigger than the netmask.
+				$sPerVPS = $sRequested["POST"]["newblockpervps"];
+				$sCustomPerVPS = $sRequested["POST"]["newblockcustomipv6"];
+				$sCheckSmaller = $sBlockSize[$sPerVPS] - $sBlockSize[$sRequested["POST"]["newblocknetmask"]];
+				$sStartSecondary = $sPrefixSize + 1;
+				$sEndSecondary = $sPrefixSize + $sCheckSmaller;
+				$sCount = 1;
+				while($sCount < 9){
+					if((!empty($sRequested["POST"]["g".$sCount])) && (!empty($sRequested["POST"]["g".$sCount]))){
+						$sFullGateway .= $sRequested["POST"]["g".$sCount].$sCol;
+						$sFullFirst .= $sRequested["POST"]["f".$sCount].$sCol;
+						$sGateway[$sCount] = $sRequested["POST"]["g".$sCount].$sCol;
+						$sFirst[$sCount] = $sRequested["POST"]["f".$sCount].$sCol;
+						if($sPrefixSize >= $sCount){
+							$sPrefix .= $sRequested["POST"]["f".$sCount].$sCol;
+						}
+						
+						if(($sStartSecondary != $sEndSecondary) && ($sCount < $sEndSecondary) && ($sPrefixSize < $sCount)){
+							$sSecondary .= $sRequested["POST"]["f".$sCount].$sCol;
+						} elseif(($sCount < $sEndSecondary) && ($sPrefixSize < $sCount)){
+							$sCurrent .= $sRequested["POST"]["f".$sCount].$sCol;
+						}	
+					} else {
+						return $sError = array("red" => "The gateway/first usable fields can not be empty.");
+					}
+					$sCount++;
+				}
+				
+				// If Per VPS is a number don't let that number be greater than 60,000.
+				// If Per VPS is not a number check to make sure that it is not larger than the netmask (EG: impossible).
+				if(ctype_digit($sCustomPerVPS)){
+					if($sCustomPerUser > 60000){
+						return $sError = array("red" => "IPv6 per VPS can not be larger than 60,000.");
+					}
+				} else {
+					if($sCheckSmaller <= 0){
+						return $sError = array("red" => "IPv6 per user can not be greater than the netmask.");
+					}	
+				}
+				
+				
+				
+				$sNewBlock = new Block(0);
+				$sNewBlock->uName = $sRequested["POST"]["newblockname"];
+				$sNewBlock->uGateway = trim($sFullGateway, ":");
+				$sNewBlock->uNetmask = $sRequested["POST"]["newblocknetmask"];
+				$sNewBlock->uIPv6 = 1;
+				$sNewBlock->uPrefix = $sPrefix;
+				if(ctype_digit($sCustomPerVPS)){
+					$sNewBlock->uPerUser = $sCustomPerVPS;
+				} else {
+					$sNewBlock->uPerUser = $sPerVPS;
+				}
+				$sNewBlock->uSecondary = $sSecondary;
+				$sNewBlock->uCurrent = trim($sCurrent, ":");
+				$sNewBlock->InsertIntoDatabase();
+				return $sSuccess = array("content" => "The block {$sRequested["GET"]["name"]} has been created.");
+			} else {
+				return $sError = array("red" => "You must give each block a name.");
+			}
 		}
 	}
 	
@@ -107,7 +179,7 @@ class Block extends CPHPDatabaseRecordClass {
 		global $database;
 		if(empty($sRequested["GET"]["type"])){
 			if(!empty($sRequested["GET"]["id"])){
-				if(!$sServers = $database->CachedQuery("SELECT * FROM `ipaddresses` WHERE `block_id` = :BlockId AND `vps_id` != 0", array("BlockId" => $sRequested["GET"]["id"]))){
+				if(!$sBlocks = $database->CachedQuery("SELECT * FROM `ipaddresses` WHERE `block_id` = :BlockId AND `vps_id` != 0", array("BlockId" => $sRequested["GET"]["id"]))){
 					$sDeleteIPs = $database->CachedQuery("DELETE FROM `ipaddresses` WHERE `block_id` = :BlockId", array("BlockId" => $sRequested["GET"]["id"]));
 					$sDeleteBlock = $database->CachedQuery("DELETE FROM `blocks` WHERE `id` = :Id", array("Id" => $sRequested["GET"]["id"]));
 					return $sSuccess = array("content" => "The block has been deleted.");
@@ -118,7 +190,18 @@ class Block extends CPHPDatabaseRecordClass {
 				return $sError = array("red" => "You must specify a pool to delete.");
 			}
 		} else {
-		
+			if(!$sBlocks = $database->CachedQuery("SELECT * FROM `ipv6addresses` WHERE `block_id` = :BlockId AND `vps_id` != 0", array("BlockId" => $sRequested["GET"]["id"]))){
+				if(!$sUserBlocks = $database->CachedQuery("SELECT * FROM `useripv6blocks` WHERE `block_id` = :BlockId AND `vps_id` != 0", array("BlockId" => $sRequested["GET"]["id"]))){
+					$sDeleteIPs = $database->CachedQuery("DELETE FROM `ipv6addresses` WHERE `block_id` = :BlockId", array("BlockId" => $sRequested["GET"]["id"]));
+					$sDeleteUserBlocks = $database->CachedQuery("DELETE FROM `useripv6blocks` WHERE `block_id` = :BlockId", array("BlockId" => $sRequested["GET"]["id"]));
+					$sDeleteBlock = $database->CachedQuery("DELETE FROM `blocks` WHERE `id` = :Id", array("Id" => $sRequested["GET"]["id"]));
+					return $sSuccess = array("content" => "The block has been deleted.");
+				} else {
+					return $sError = array("red" => "You can not delete a block with subblocks assigned to VPS.");
+				}
+			} else {
+				return $sError = array("red" => "You can not delete a block with IPs assigned to VPS.");
+			}
 		}
 	}
 	

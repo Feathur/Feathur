@@ -226,7 +226,73 @@
 			<script type="text/javascript">
 				$(document).ready(function() {
 					$("#AddBlock").click(function(){
-						$("#NewBlockForm").modal({containerCss:{width:"600", height:"350"}});
+						$("#NewBlockForm").modal({containerCss:{width:"600", height:"470"}});
+					});
+					$("#blockresult-error").hide();
+					$("#blockresult-success").hide();
+					$("#SubmitNewBlock").click(function(){
+						var datastring = $("#newblock").serialize();
+						$.ajax({
+							type: "POST",
+							url: "admin.php?view=ippools&type=1&action=create_pool&id=",
+							data: datastring,
+							dataType: "json",
+							success: function(result) {
+								if(typeof(result.red) != "undefined" && result.red !== null) {
+									$("#blockresult-error").html(result.red);
+									$("#blockresult-error").show();
+								} else {
+									$("#blockresult-success").html(result.content);
+									$("#blockresult-success").show();
+									window.location.reload();
+								}
+							},
+						});
+					});
+					$(".DeleteBlock").click(function() {
+                        var blockname = $(this).attr('rel');
+                        var blockid = $(this).attr('value');
+                        $("#DeleteFormName").html(blockname);
+                        $("#DeleteFormValue").html(blockid);
+                        $("#DeleteForm").modal({containerCss:{width:"400", height:"200"}});
+					});
+					$("#ConfirmDelete").click(function() {
+						var deleteid = $("#DeleteFormValue").text();
+						$.modal.close();
+						$("#LoadingImage").css({visibility: "visible"});
+						$.getJSON("admin.php?view=ippools&type=1&action=delete_pool&id=" + deleteid,function(result){
+							if(typeof(result.red) != "undefined" && result.red !== null) {
+								$("#result-error").html(result.red);
+								$("#result-error").show();
+							} else {
+								$("#result-success").html(result.content);
+								$("#result-success").show();
+								window.location.reload();
+							}
+						});
+					});
+					$(".EditBlock").click(function() {
+						var blockname = $(this).attr('rel');
+						var blockid = $(this).attr('value');
+						$("#EditFormName").val(blockname);
+						$("#EditFormValue").html(blockid);
+						$("#EditForm").modal({containerCss:{width:"400", height:"200"}});
+					});
+					$("#SubmitEditBlock").click(function() {
+						var editid = $("#EditFormValue").text();
+						var name = $("#EditFormName").val();
+						$.modal.close();
+						$("#LoadingImage").css({visibility: "visible"});
+						$.getJSON("admin.php?view=ippools&type=1&action=rename_pool&id=" + editid + "&name=" + name,function(result){
+							if(typeof(result.red) != "undefined" && result.red !== null) {
+								$("#result-error").html(result.red);
+								$("#result-error").show();
+							} else {
+								$("#result-success").html(result.content);
+								$("#result-success").show();
+								window.location.reload();
+							}
+						});
 					});
 				});
 				function nextbox(fldobj, nbox) { 
@@ -234,13 +300,17 @@
 						fldobj.form.elements[nbox].focus();
 					}
 				}
+				function CustomSelected(nameSelect) {
+					var val = nameSelect.options[nameSelect.selectedIndex].value;
+					document.getElementById("custombox").style.display = val == '-1' ? "block" : 'none';
+				}
 			</script>
 			<br><br>
 			<div align="center">
 				{%if isset|BlockList == true}
 					<div class="simplebox grid740">
 						<div class="titleh">
-								<h3>IPv4 Blocks</h3>
+								<h3>IPv6 Blocks</h3>
 								<div class="shortcuts-icons">
 									<a class="shortcut tips" id="AddBlock" title="Add IP Block"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
 								</div>
@@ -256,7 +326,7 @@
 								{%if isempty|BlockList == false}
 									{%foreach block in BlockList}
 										<tr>
-											<td><a href="admin.php?view=ippools&type=0&pool={%?block[id]}">{%?block[name]}</a></td>
+											<td><a href="admin.php?view=ippools&type=1&pool={%?block[id]}">{%?block[name]}</a></td>
 											<td>
 												<div align="center">
 													<a original-title="Delete" class="icon-button tips DeleteBlock" style="padding-left:5px;padding-right:5px;cursor:pointer;" rel="{%?block[name]}" value="{%?block[id]}"><img src="./templates/default/img/icons/32x32/stop32.png" alt="icon" height="16" width="16"></a>
@@ -293,13 +363,69 @@
 				<div style="z-index: 610;" class="simplebox">
 					<div style="z-index: 600;" class="titleh" align="center"><h3>Add IPv6 Block</h3></div>
 					<div style="z-index: 590;" class="body padding10">
-						<div style="height:270px;">
+						<div style="height:390px;">
+							<div align="center">
+								<div class="albox errorbox" id="blockresult-error" style="width:75%"></div>
+								<div class="albox succesbox" id="blockresult-success" style="width:75%"></div>
+							</div>
 							<form id="newblock" name="form1" class="SubmitBlockForm noEnterSubmit">
-								Block Name: <input name="newblockname" class="st-forminput" id="NewBlockName" style="width:150px" type="text"><br>
-								Gateway: &nbsp;<input name="g1" onkeyup="nextbox(this,'g2');" maxlength="4" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g3');" name="g2" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g4');" name="g3" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g5');" name="g4" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g6');" name="g5" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g7');" name="g6" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g8');" name="g7" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" name="g8" class="st-forminput" style="width:40px;" type="text"><br>
-								Netmask: &nbsp;<input name="newblocknetmask" class="st-forminput" id="NewBlockNetmask" style="width:150px" type="text">
+								<table width="95%" border="0">
+									<tr>
+										<td width="75">Block Name:</td>
+										<td><input name="newblockname" class="st-forminput" id="NewBlockName" style="width:95%" type="text"></td>
+									</tr>
+									<tr>
+										<td width="75">Netmask:</td>
+										<td><select name="newblocknetmask" id="newblocknetmask" style="width:99%;"><option value="/32">/32</option><option value="/48">/48</option><option value="/64">/64</option><option value="/80">/80</option><option value="/96">/96</option><option value="/112">/112</option></select></td>
+									</tr>
+									<tr>
+										<td width="75">Gateway:</td>
+										<td><input name="g1" onkeyup="nextbox(this,'g2');" maxlength="4" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g3');" name="g2" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g4');" name="g3" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g5');" name="g4" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g6');" name="g5" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g7');" name="g6" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'g8');" name="g7" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" name="g8" class="st-forminput" style="width:40px;" type="text"></td>
+									</tr>
+									<tr>
+										<td width="75">First Usable:</td>
+										<td><input name="f1" onkeyup="nextbox(this,'f2');" maxlength="4" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'f3');" name="f2" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'f4');" name="f3" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'f5');" name="f4" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'f6');" name="f5" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'f7');" name="f6" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" onkeyup="nextbox(this,'f8');" name="f7" class="st-forminput" style="width:40px;" type="text">&nbsp;<input maxlength="4" name="f8" class="st-forminput" style="width:40px;" type="text"></td>
+									</tr>
+									<tr>
+										<td width="75">IPv6 Per VPS:</td>
+										<td>
+											<select name="newblockpervps" id="newblockperuser" onchange="CustomSelected(this);" style="width:99%"><option value="/48">/48</option><option value="/64">/64</option><option value="/80">/80</option><option value="/96">/96</option><option value="/112">/112</option><option value="/128">/128</option><option value="-1" id="customselected">Custom (Must be a number, EG: 10):</option></select><br>
+											<div id="custombox" style="display:none;">
+												<input name="newblockcustomipv6" class="st-forminput" id="NewBlockCustomIPv6" style="width:95%" type="text">
+											</div>
+										</td>
+									</tr>
+								</table>
 								<div style="padding:12px;"></div>
 								<div align="center" style="margin-bottom:5px;" id="SubmitNewBlockWrapper"><a class="button-blue" style="cursor:pointer;" id="SubmitNewBlock">Add IP Block</a></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="DeleteForm" style="display:none;height:130px;" align="center">
+				<div style="z-index: 610;" class="simplebox">
+					<div style="z-index: 600;" class="titleh" align="center"><h3>Delete IP Block</h3></div>
+					<div style="z-index: 590;" class="body padding10">
+						<div style="height:120px;">
+							<form id="form3" name="form3" class="Delete noEnterSubmit">
+								Do you want to delete the IP block <a style="color:#737F89;" id="DeleteFormName"></a><a id="DeleteFormValue" style="display:none;"></a>?
+								<div style="padding:12px;"></div>
+								<div align="center" style="margin-bottom:5px;" id="FormDelete"><a class="button-blue" style="cursor:pointer;" id="ConfirmDelete">Yes</a> <a class="button-blue" style="cursor:pointer;" id="CancelDelete">No</a></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="EditForm" style="display:none;" align="center">
+				<div style="z-index: 610;" class="simplebox">
+					<div style="z-index: 600;" class="titleh" align="center"><h3>Edit IP Block</h3></div>
+					<div style="z-index: 590;" class="body padding10">
+						<div style="height:120px;">
+							<form id="form1" name="form1" class="SubmitEditBlock noEnterSubmit">
+								Block Name: <input name="ipblockname" class="st-forminput" id="EditFormName" value="" style="width:150px" type="text"><a id="EditFormValue" style="display:none;"></a><br>
+								<div style="padding:12px;"></div>
+								<div align="center" style="margin-bottom:5px;" id="FormEditBlock"><a class="button-blue" style="cursor:pointer;" id="SubmitEditBlock">Update IP Block</a></div>
 							</form>
 						</div>
 					</div>

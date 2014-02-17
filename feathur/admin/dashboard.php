@@ -4,6 +4,7 @@ if($sUser->sPermissions != 7){
 }
 
 if($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array())){
+	sort($sServerList->data, 1);
 	foreach($sServerList->data as $sServer){
 		$sServer = new Server($sServer["id"]);
 		

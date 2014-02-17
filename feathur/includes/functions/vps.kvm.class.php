@@ -364,7 +364,11 @@ class kvm {
 			$sTarget = "<target dev='hda' bus='ide'/>";
 		}
 		
-		$sVPSConfig .= "<devices>{$sQEMUPath}<disk type='file' device='disk'><source file='/dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img'/>{$sTarget}</disk><disk type='file' device='cdrom'>";
+		if(isset($sVPS->sSecondaryDrive)){
+			$sSecondary = "<disk type='file' device='disk'><source file='{$sVPS->sSecondaryDrive}'/>{$sTarget}</disk>";
+		}
+		
+		$sVPSConfig .= "<devices>{$sQEMUPath}<disk type='file' device='disk'><source file='/dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img'/>{$sTarget}</disk>{$sSecondary}<disk type='file' device='cdrom'>";
 			
 		if(isset($sTemplate)){
 			$sVPSConfig .= "<source file='/var/feathur/data/templates/kvm/{$sTemplate->sPath}.iso'/>";
@@ -404,8 +408,7 @@ class kvm {
 		}
 		
 		if(empty($sPassword)){
-			$sVNCPort = ($sVPS->sVNCPort - 5900);
-			$sVPSConfig .= "<graphics type='vnc' port='{$sVNCPort}' passwd='' listen='127.0.0.1'/>";
+			$sVPSConfig .= "<graphics type='vnc' port='{$sVPS->sVNCPort}' passwd='' listen='127.0.0.1'/>";
 		} else {
 			$sPassword = escapeshellarg($sPassword);
 			$sVPSConfig .= "<graphics type='vnc' port='{$sVPS->sVNCPort}' passwd={$sPassword} listen='0.0.0.0'/>";
