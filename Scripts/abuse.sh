@@ -7,7 +7,15 @@ IGNORE=736;
 
 if [ -f /var/feathur/data/abuse.lock ];
 then
-	exit 1;
+	timestamp=$(date +%s);
+	difference="600";
+	last=$(cat /var/feathur/data/abuse.lock)
+	timestamp=$((timestamp-difference))
+	if [ "$timestamp" -lt "$last" ];
+	then
+		echo "Another copy is running";
+		exit 1;
+	fi
 fi
 
 touch /var/feathur/data/abuse.lock
@@ -17,7 +25,8 @@ mkdir $LOGDIR;
 
 while [ true ]
 do
-
+	timestamp=$(date +%s);
+	echo "$timestamp" > /var/feathur/data/abuse.lock;
 	killall -9 wcgrid_fahv_vin
 	killall -9 wcgrid_faah_7.15_x86_64-pc-linux-gnu
 	killall -9 wcgrid_mcm1_7.28_i686-pc-linux-gnu
