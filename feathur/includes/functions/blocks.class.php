@@ -80,7 +80,43 @@ class Block extends CPHPDatabaseRecordClass {
 				
 				return $sData = array("IPList" => $sIPList, "ServerList" => $sServerList, "AvailableServers" => $sAvailableServers, "BlockName" => $sBlocks->data[0]["name"]);
 			} else {
+				$sBlock = new Block($sPool);
+				if($sIPs = $database->CachedQuery("SELECT * FROM ipv6addresses WHERE `block_id` = :BlockId", array('BlockId' => $sPool))){
+					foreach($sIPs->data as $sValue){
+						if(!empty($sValue["vps_id"])){
+							try {
+								$sVPS = new VPS($sValue["vps_id"]);
+								$sTempUser = new User($sVPS->sUserId);
+							} catch (Exception $e) {
+								$sVPS = 0;
+								$sTempUser = 0;
+							}
+						}
+						$sIPList[] = array("id" => $sValue["id"], "ip" => $sBlock->sPrefix.$sBlock->sSecondary.$sValue["suffix"], "Owner" => $sTempUser->sUsername, "OwnerId" => $sTempUser->sId);
+						unset($sTempUser);
+						unset($sVPS);
+					}
+				}
 				
+				if($sServerBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `block_id` = :BlockId AND `ipv6` = 1", array('BlockId' => $sPool))){
+					foreach($sServerBlocks->data as $sValue){
+						$sServer = new Server($sValue["server_id"]);
+						$sServerList[] = array("id" => $sValue["server_id"], "name" => $sServer->sName);
+						unset($sServer);
+					}
+				}
+	
+				if($sServers = $database->CachedQuery("SELECT * FROM servers", array())){
+					foreach($sServers->data as $sValue){
+						$sServer = new Server($sValue["id"]);
+						if(!$sServerBlockCheck = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId AND `block_id` = :BlockId AND `ipv6` = 1", array('ServerId' => $sServer->sId, 'BlockId' => $sPool))){
+							$sAvailableServers[] = array("id" => $sServer->sId, "name" => $sServer->sName);
+						}
+						unset($sServer);
+					}
+				}
+				
+				return $sData = array("IPList" => $sIPList, "ServerList" => $sServerList, "AvailableServers" => $sAvailableServers, "BlockName" => $sBlocks->data[0]["name"]);
 			}
 		}
 	}
