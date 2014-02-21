@@ -712,10 +712,12 @@ class kvm {
 								if($sRequested["GET"]["disk"] > $sVPS->sDisk){
 									$sRequested["GET"]["diskchanged"] = 1;
 								}
+								$sIPv6Allowed = $sRequested["GET"]["ipv6allowed"];
 								$sVPS->uRAM = $sRequested["GET"]["ram"];
 								$sVPS->uDisk = $sRequested["GET"]["disk"];
 								$sVPS->uCPULimit = $sRequested["GET"]["cpulimit"];
 								$sVPS->uBandwidthLimit = $sRequested["GET"]["bandwidth"];
+								$sVPS->uIPv6 = $sIPv6Allowed;
 								$sVPS->InsertIntoDatabase();
 								return true;
 							} else {

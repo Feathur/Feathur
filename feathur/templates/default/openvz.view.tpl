@@ -191,8 +191,9 @@
 				var cpuunits = $('#AdminCPUUnits').attr('value');
 				var cpulimit = $('#AdminCPULimit').attr('value');
 				var bandwidthlimit = $('#AdminBandwidthLimit').attr('value');
+				var ipv6allowed = $('#AdminIPv6Allowed').attr('value');
 				var inodes = $('#AdminInodes').attr('value');
-				$.getJSON("view.php?id={%?vps[id]}&action=update&ram=" + ram + "&swap=" + swap + "&disk=" + disk + "&cpuunits=" + cpuunits + "&cpulimit=" + cpulimit + "&bandwidth=" + bandwidthlimit + "&inodes=" + inodes,function(result){
+				$.getJSON("view.php?id={%?vps[id]}&action=update&ram=" + ram + "&swap=" + swap + "&disk=" + disk + "&cpuunits=" + cpuunits + "&cpulimit=" + cpulimit + "&bandwidth=" + bandwidthlimit + "&inodes=" + inodes + "&ipv6allowed=" + ipv6allowed,function(result){
 					$('#AdminNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
 				});
 			});
@@ -654,6 +655,15 @@
 						<tr>
 							<td style="width:50%">Inodes (200,000 Default):</td>
 							<td><input id="AdminInodes" type="text" name="AdminInodes" value="{%?vps[inodes]}" style="width:90%" /></td>
+						</tr>
+						<tr>
+							<td style="width:50%">IPv6 Allowed:</td>
+							<td>
+								<select id="AdminIPv6Allowed">
+									<option value="0" {%if isset|vps[ipv6] == true}{%if empty|vps[ipv6] == true}selected="selected"{%/if}{%/if}>No</option>
+									<option value="1" {%if isset|vps[ipv6] == true}{%if empty|vps[ipv6] == false}selected="selected"{%/if}{%/if}>Yes</option>
+								</select>
+							</td>
 						</tr>
 						<tr>
 							<td colspan="2">

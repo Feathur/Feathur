@@ -584,6 +584,7 @@ class openvz {
 			$sCPUUnits = $sRequested["GET"]["cpuunits"];
 			$sCPULimit = $sRequested["GET"]["cpulimit"];
 			$sBandwidth = $sRequested["GET"]["bandwidth"];
+			$sIPv6Allowed = $sRequested["GET"]["ipv6allowed"];
 			$sInodes = $sRequested["GET"]["inodes"];
 			if(is_numeric($sRAM)){
 				if(is_numeric($sDisk)){
@@ -599,6 +600,7 @@ class openvz {
 										$sVPS->uBandwidthLimit = $sBandwidth;
 										$sVPS->uCPULimit = $sCPULimit;
 										$sVPS->uInodes = $sInodes;
+										$sVPS->uIPv6 = $sIPv6Allowed;
 										$sVPS->InsertIntoDatabase();
 										return true;
 									} else {
