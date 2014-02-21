@@ -24,6 +24,7 @@ class kvm {
 			$uHostname = $sRequested["POST"]["hostname"];
 			$uNameserver = $sRequested["POST"]["nameserver"];
 			$uCPULimit = $sRequested["POST"]["cpulimit"];
+			$uIPv6Allowed = $sRequested["POST"]["ipv6allowed"];
 			$uBandwidthLimit = $sRequested["POST"]["bandwidthlimit"];
 			if((!empty($uServer)) && (is_numeric($uServer))){
 				if((!empty($uUser)) && (is_numeric($uUser))){
@@ -81,6 +82,7 @@ class kvm {
 									$sVPS->uBandwidthLimit = $uBandwidthLimit;
 									$sVPS->uVNCPort = ($sVPSId->sValue + 5900);
 									$sVPS->uBootOrder = "hd";
+									$sVPS->uIPv6 = $uIPv6Allowed;
 									$sVPS->InsertIntoDatabase();
 									
 									if($sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId AND `ipv6` = 0", array('ServerId' => $sServer->sId))){

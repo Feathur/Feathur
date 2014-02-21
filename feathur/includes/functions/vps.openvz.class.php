@@ -21,6 +21,7 @@ class openvz {
 			$uPassword = $sRequested["POST"]["password"];
 			$uCPUUnits = $sRequested["POST"]["cpuunits"];
 			$uCPULimit = $sRequested["POST"]["cpulimit"];
+			$uIPv6Allowed = $sRequested["POST"]["ipv6allowed"];
 			$uBandwidthLimit = $sRequested["POST"]["bandwidthlimit"];
 			if((!empty($uServer)) && (is_numeric($uServer))){
 				if((!empty($uUser)) && (is_numeric($uUser))){
@@ -75,6 +76,7 @@ class openvz {
 																	$sVPS->uCPULimit = $uCPULimit;
 																	$sVPS->uTemplateId = $sTemplate->sId;
 																	$sVPS->uBandwidthLimit = $uBandwidthLimit;
+																	$sVPS->uIPv6 = $uIPv6Allowed;
 																	$sVPS->InsertIntoDatabase();
 																	
 																	if($uIPAddresses > 0){

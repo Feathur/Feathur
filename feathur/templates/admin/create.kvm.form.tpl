@@ -51,6 +51,14 @@
 	<div class="clear"></div>
 </div>
 <div class="st-form-line">	
+	<span class="st-labeltext">IPv6 Allowed:</span>	
+	<select name="ipv6allowed" id="ipv6allowed" style="width:520px;">
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</select>
+	<div class="clear"></div>
+</div>
+<div class="st-form-line">	
 	<span class="st-labeltext">Hostname (optional):</span>	
 	<input id="hostname" type="text" name="hostname" value="server.example.com" style="width:500px;">
 	<div class="clear"></div>
@@ -86,10 +94,11 @@
 			var hostname = $('#hostname').attr('value');
 			var nameserver = $('#nameserver').attr('value');
 			var password = $('#password').attr('value');
+			var ipv6allowed = $('#ipv6allowed').attr('value');
 			var beginbuild = $.ajax({
 				type: "POST",
 				url: "admin.php?view=createvps&action=create",
-				data: "password=" + password + "&user=" + user + "&server=" + server + "&template=" + template + "&ram=" + ram + "&disk=" + disk + "&cpulimit=" + cpulimit + "&bandwidthlimit=" + bandwidthlimit + "&ipaddresses=" + ipaddresses + "&hostname=" + hostname + "&nameserver=" + nameserver + "&password=" + password,
+				data: "password=" + password + "&user=" + user + "&server=" + server + "&template=" + template + "&ram=" + ram + "&disk=" + disk + "&cpulimit=" + cpulimit + "&bandwidthlimit=" + bandwidthlimit + "&ipaddresses=" + ipaddresses + "&hostname=" + hostname + "&nameserver=" + nameserver + "&password=" + password + "&ipv6allowed=" + ipv6allowed,
 				success: function(data){
 					var result = $.parseJSON(data);
 					$('#update').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
