@@ -342,8 +342,11 @@ class Block extends CPHPDatabaseRecordClass {
 				if($sServerLookup = $database->CachedQuery("SELECT * FROM `servers` WHERE `id` = :Id", array('Id' => $sRequested["GET"]["id"]))){
 					$sServer = new Server($sRequested["GET"]["id"]);
 					$sServerBlock = new ServerBlock(0);
-					$sServerBlock->sServerId = $sServer->sId;
-					$sServerBlock->sBlockId = $sRequested["GET"]["pool"];
+					$sServerBlock->uServerId = $sServer->sId;
+					$sServerBlock->uBlockId = $sRequested["GET"]["pool"];
+					if(!empty($sRequested["GET"]["type"]){
+						$sServerBlock->uIPv6 = 1;
+					}
 					$sServerBlock->InsertIntoDatabase();
 					return $sSuccess = array("content" => "The server has been added to the pool.");
 				} else {

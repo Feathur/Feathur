@@ -11,6 +11,7 @@ class ServerBlock extends CPHPDatabaseRecordClass {
 		'numeric' => array(
 			'ServerId' => "server_id",
 			'BlockId' => "block_id",
+			'IPv6' => "ipv6",
 		)
 	);
 }
