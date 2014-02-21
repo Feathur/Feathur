@@ -344,7 +344,7 @@ class Block extends CPHPDatabaseRecordClass {
 					$sServerBlock = new ServerBlock(0);
 					$sServerBlock->uServerId = $sServer->sId;
 					$sServerBlock->uBlockId = $sRequested["GET"]["pool"];
-					if(!empty($sRequested["GET"]["type"]){
+					if(!empty($sRequested["GET"]["type"])){
 						$sServerBlock->uIPv6 = 1;
 					}
 					$sServerBlock->InsertIntoDatabase();
