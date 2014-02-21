@@ -853,7 +853,7 @@
 											{%if isempty|IPList == true}
 												<tr>
 													<td colspan="3">
-														<div align="center">There are no IPs, add one using the + above.</div>
+														<div align="center">There are no IPs currently assigned to any VPS.</div>
 													</td>
 												</tr>
 											{%/if}
@@ -861,7 +861,7 @@
 										{%if isset|IPList == false}
 											<tr>
 												<td colspan="3">
-													<div align="center">There are no IPs, add one using the + above.</div>
+													<div align="center">There are no IPs currently assigned to any VPS.</div>
 												</td>
 											</tr>
 										{%/if}
