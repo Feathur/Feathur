@@ -530,8 +530,8 @@
 							<td style="width:50%">IPv6 Allowed:</td>
 							<td>
 								<select id="AdminIPv6Allowed">
-									<option value="0" {%if isset|vps[ipv6] == true}{%if empty|vps[ipv6] == true}selected="selected"{%/if}{%/if}>No</option>
-									<option value="1" {%if isset|vps[ipv6] == true}{%if empty|vps[ipv6] == false}selected="selected"{%/if}{%/if}>Yes</option>
+									<option value="0" {%if isset|vps[ipv6] == true}{%if vps[ipv6] == 0}selected="selected"{%/if}{%/if}>No</option>
+									<option value="1" {%if isset|vps[ipv6] == true}{%if vps[ipv6] == 1}selected="selected"{%/if}{%/if}>Yes</option>
 								</select>
 							</td>
 						</tr>
