@@ -13,7 +13,7 @@ $sTime = time();
 
 // Set timeout and memory limit then
 // connect to the local host.
-set_time_limit(6000);
+set_time_limit(120);
 ini_set('memory_limit','512M');
 $sLocalSSH = new Net_SSH2('127.0.0.1');
 $sLocalKey = new Crypt_RSA();
@@ -66,14 +66,16 @@ if($sTemplateSync < $sBefore){
 if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 	foreach($sServerList->data as $sServer){
 		if($sTotal == 5) {
-			$sLocalSSH->exec($sCommandList);
+			$sWrapper = "screen -dm -S uptracker bash -c '{$sCommandList}exit;';";
+			$sLocalSSH->exec($sWrapper);
 			unset($sCommandList);
+			unset($sWrapper);
 			unset($sTotal);
 			echo "Launched a batch of uptime checkers.\n";
 			sleep(5);
 		}
 		$sServer = new Server($sServer["id"]);
-		$sCommandList .= "screen -dm -S uptracker bash -c 'cd /var/feathur/feathur/scripts/;php pull_server.php {$sServer->sId} >> /var/feathur/data/status.log;exit;';";
+		$sCommandList .= "cd /var/feathur/feathur/scripts/;php pull_server.php {$sServer->sId} >> /var/feathur/data/status.log;";
 		$sTotal++;
 		
 		$sBefore = (time() - (5 * 60));
