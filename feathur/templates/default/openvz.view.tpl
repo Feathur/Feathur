@@ -466,7 +466,7 @@
 			<div class="simplebox grid340-left">
 				<div class="titleh">
 					<h3>rDNS</h3>
-				</div>
+				</div>}
 				<table class="tablesorter" style="height:120px;">
 					<tr>
 						<td width="40%">Select IP</td>
@@ -498,7 +498,33 @@
 		{%if vps[ipv6] == 1}
 			{%if isempty|IPv6Exist == false}
 				<div id="tabs-3" style="height:600px;">
-					If IPv6 is allowed this tab displays.{%?IPv6Exist}
+					<table style="width:100%;">
+						<tr>
+							<td width="25%" align="left">
+							</td>
+							<td width="70%" align="right">
+								<div id="IPv6Notice"></div>
+							</td>
+						</tr> 
+					</table>
+					<br><br>
+					{%if isempty|UserIPv6Block == true}
+						<button class="small blue" id="RequestBlock">Request IPv6 Block</button>
+					{%/if}
+					{%if isempty|UserIPv6Block == false}
+						<div align="center">
+							<div class="simplebox grid360">
+								<div class="titleh">
+									<h3>VPS Statistics</h3>
+								</div>
+								<table class="tablesorter">
+									{%foreach block in UserIPv6Block}
+										<tr>{%?block[prefix]}{%?block[user_block]}{%?block[user_block_size]}</tr>
+									{%/foreach}
+								</table>
+							</div>
+						</div>
+					{%/if}
 				</div>
 			{%/if}
 		{%/if}

@@ -372,4 +372,16 @@ class Block extends CPHPDatabaseRecordClass {
 		}
 		return 0;
 	}
+	
+	public static function vps_ipv6_block($sVPS){
+		global $database;
+		if($sBlockLookup = $database->CachedQuery("SELECT * FROM `useripv6blocks` WHERE `vps_id` = :VPSId", array('VPSId' => $sVPS->sId))){
+			foreach($sBlockLookup->data as $sRow){
+				$sBlock = new Block($sRow["block_id"]);
+				$sIPv6Blocks[] = array("prefix" => $sBlock["prefix"], "user_block" => $sRow["user_block"], "user_block_size" => $sRow["user_block_size"]);
+			}
+			return $sIPv6Blocks;
+		}
+		return 0;
+	}
 }
