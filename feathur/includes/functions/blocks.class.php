@@ -359,4 +359,17 @@ class Block extends CPHPDatabaseRecordClass {
 			return $sError = array("red" => "The server you selected is invalid.");
 		}
 	}
+	
+	public static function ipv6_exist($sVPS){
+		global $database;
+		// Technically I could have checked this using only the DB lookup for server blocks,
+		// but then someone would end up complaining that it would spit out false positives whenever they jackknifed their DB manually. :P
+		if($sBlockLookup = $database->CachedQuery("SELECT * FROM `server_blocks` WHERE `server_id` = :ServerId AND `ipv6` = 1", array('ServerId' => $sVPS->sServerId))){
+			$sBlock = new Block($sBlockLookup->data[0]["block_id"]);
+			if($sBlock->sIPv6 == 1){
+				return 1;
+			}
+		}
+		return 0;
+	}
 }

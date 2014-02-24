@@ -83,6 +83,6 @@ if($sVPS->sRebuilding == 1){
 
 $sVPSOwner = new User($sVPS->sUserId);
 
-$sUserView .= Templater::AdvancedParse($sTemplate->sValue.'/'.$sVPS->sType.'.view', $locale->strings, array("VPS" => array("data" => $sVPS->uData), "IPs" => VPS::list_ipspace($sVPS), "Templates" => VPS::list_templates($sVPS), "Servers" => VPS::list_servers($sVPS), "User" => array("data" => $sVPSOwner->uData), "UserVPSList" => VPS::list_uservps($sVPS)));
+$sUserView .= Templater::AdvancedParse($sTemplate->sValue.'/'.$sVPS->sType.'.view', $locale->strings, array("VPS" => array("data" => $sVPS->uData), "IPs" => VPS::list_ipspace($sVPS), "Templates" => VPS::list_templates($sVPS), "Servers" => VPS::list_servers($sVPS), "User" => array("data" => $sVPSOwner->uData), "UserVPSList" => VPS::list_uservps($sVPS), "IPv6Exist" => Block::ipv6_exist($sVPS)));
 echo Templater::AdvancedParse($sTemplate->sValue.'/master', $locale->strings, array("Content" => $sUserView, "Page" => "main"));
 die();

@@ -250,7 +250,7 @@
 		<ul>
 			<li><a href="#tabs-1">General</a></li>
 			<li><a href="#tabs-2">Settings</a></li>
-			{%if vps[ipv6] == 1}<li><a href="#tabs-3">IPv6</a></li>{%/if}
+			{%if vps[ipv6] == 1}{%if IPv6Exist == 1}<li><a href="#tabs-3">IPv6</a></li>{%/if}{%/if}
 			<li><a href="#tabs-4">Rebuild</a></li>
 			<li><a href="#tabs-5">Command Center</a></li>
 			<li><a href="#tabs-6">Console</a></li>
@@ -496,9 +496,11 @@
 			</div>
 		</div>
 		{%if vps[ipv6] == 1}
-			<div id="tabs-3" style="height:600px;">
-				If IPv6 is allowed this tab displays.
-			</div>
+			{%if IPv6Exist == 1}
+				<div id="tabs-3" style="height:600px;">
+					If IPv6 is allowed this tab displays.
+				</div>
+			{%/if}
 		{%/if}
 		<div id="tabs-4" style="height:600px;">
 			<div align="center" style="width:100%">
