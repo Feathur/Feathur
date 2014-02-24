@@ -250,7 +250,7 @@
 		<ul>
 			<li><a href="#tabs-1">General</a></li>
 			<li><a href="#tabs-2">Settings</a></li>
-			{if vps[ipv6] == 1}<li><a href="#tabs-3">IPv6</a></li>{%/if}
+			{%if vps[ipv6] == 1}<li><a href="#tabs-3">IPv6</a></li>{%/if}
 			<li><a href="#tabs-4">Rebuild</a></li>
 			<li><a href="#tabs-5">Command Center</a></li>
 			<li><a href="#tabs-6">Console</a></li>
