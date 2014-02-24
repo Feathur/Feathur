@@ -824,7 +824,7 @@ class openvz {
 		if(empty($sBlockCheck)){
 			if($sBlockLookup = $database->CachedQuery("SELECT * FROM `server_blocks` WHERE `server_id` = :ServerId AND `ipv6` = 1", array('ServerId' => $sVPS->sServerId))){
 				foreach($sBlockLookup->data as $sRow){
-					$sCurrent = hexdec($sRow["current"]
+					$sCurrent = hexdec($sRow["current"]);
 					if($sCurrent < 65000){
 						// To be completed.
 					}
