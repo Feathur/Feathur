@@ -250,10 +250,11 @@
 		<ul>
 			<li><a href="#tabs-1">General</a></li>
 			<li><a href="#tabs-2">Settings</a></li>
-			<li><a href="#tabs-3">Rebuild</a></li>
-			<li><a href="#tabs-4">Command Center</a></li>
-			<li><a href="#tabs-5">Console</a></li>
-			{%if UserPermissions == 7}<li><a href="#tabs-6">Admin</a></li>{%/if}
+			{if vps[ipv6] == 1}<li><a href="#tabs-3">IPv6</a></li>{%/if}
+			<li><a href="#tabs-4">Rebuild</a></li>
+			<li><a href="#tabs-5">Command Center</a></li>
+			<li><a href="#tabs-6">Console</a></li>
+			{%if UserPermissions == 7}<li><a href="#tabs-7">Admin</a></li>{%/if}
 		</ul>
 		<div id="tabs-1">
 			<table>
@@ -494,7 +495,12 @@
 				</table>
 			</div>
 		</div>
-		<div id="tabs-3" style="height:600px;">
+		{%if vps[ipv6] == 1}
+			<div id="tabs-3" style="height:600px;">
+				If IPv6 is allowed this tab displays.
+			</div>
+		{%/if}
+		<div id="tabs-4" style="height:600px;">
 			<div align="center" style="width:100%">
 				<table style="width:100%;">
 					<tr>
@@ -539,7 +545,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="tabs-4">
+		<div id="tabs-5">
 			<div align="center" style="width:100%">
 				<div style="z-index: 500;text-align:left;" class="simple-tips">
 		                        <h2>Command Center Notes</h2>
@@ -571,11 +577,11 @@
 				</div>
 			</div>
 		</div>
-		<div id="tabs-5">
+		<div id="tabs-6">
 			<iframe src="console.php?id={%?vps[id]}" width="100%" height="500" frameborder="0" scrolling="no"></iframe>
 		</div>
 		{%if UserPermissions == 7}
-			<div id="tabs-6" style="height:1500px">
+			<div id="tabs-7" style="height:1500px">
 				<table style="width:100%;">
 					<tr>
 						<td width="25%" align="left">
