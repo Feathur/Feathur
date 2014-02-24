@@ -819,6 +819,26 @@ class openvz {
 		}
 	}
 	
+	public function database_openvz_requestblock($sUser, $sVPS, $sRequested){
+		$sBlockCheck = Block::vps_ipv6_block($sVPS);
+		if(empty($sBlockCheck)){
+			if($sBlockLookup = $database->CachedQuery("SELECT * FROM `server_blocks` WHERE `server_id` = :ServerId AND `ipv6` = 1", array('ServerId' => $sVPS->sServerId))){
+				foreach($sBlockLookup->data as $sRow){
+					$sCurrent = hexdec($sRow["current"]
+					if($sCurrent < 65000){
+						// To be completed.
+					}
+				}
+			}
+			return $sArray = array("json" => 1, "type" => "error", "result" => "There are no available IPv6 Blocks.", "reload" => 1);
+		}
+		return $sArray = array("json" => 1, "type" => "error", "result" => "You already have a block.", "reload" => 1);
+	}
+	
+	public function openvz_requestblock($sUser, $sVPS, $sRequested){
+	
+	}
+	
 	public function openvz_terminate($sUser, $sVPS, $sRequested){
 		return true;
 	}
