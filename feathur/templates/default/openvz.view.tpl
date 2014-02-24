@@ -498,7 +498,7 @@
 		{%if vps[ipv6] == 1}
 			{%if IPv6Exist == 1}
 				<div id="tabs-3" style="height:600px;">
-					If IPv6 is allowed this tab displays.
+					If IPv6 is allowed this tab displays.{%?IPv6Exists}
 				</div>
 			{%/if}
 		{%/if}
