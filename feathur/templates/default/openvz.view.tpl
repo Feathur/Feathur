@@ -472,7 +472,7 @@
 			<div class="simplebox grid340-left">
 				<div class="titleh">
 					<h3>rDNS</h3>
-				</div>}
+				</div>
 				<table class="tablesorter" style="height:120px;">
 					<tr>
 						<td width="40%">Select IP</td>
