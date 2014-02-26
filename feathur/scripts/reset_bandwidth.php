@@ -4,5 +4,7 @@ if(!(php_sapi_name() == 'cli')){
 	die("Unfortunately this script must be executed via CLI.");
 }
 
+include('./includes/loader.php');
+
 $sAdd = $database->prepare("UPDATE `vps` SET `bandwidth_usage` = 0");
 $sAdd->execute();
