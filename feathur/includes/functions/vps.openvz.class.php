@@ -813,7 +813,7 @@ class openvz {
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
 			$sTerminate = $database->CachedQuery("DELETE FROM vps WHERE `id` = :VPSId", array('VPSId' => $sVPS->sId));
 			$sCleanIPs = $database->CachedQuery("UPDATE ipaddresses SET `vps_id` = 0 WHERE `vps_id` = :VPSId", array('VPSId' => $sVPS->sId));
-			return $sArray = array("json" => 1, "type" => "error", "result" => "This VPS has been terminated.", "reload" => 1);
+			return $sArray = array("json" => 1, "type" => "success", "result" => "This VPS has been terminated.", "reload" => 1);
 		} else {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.", "reload" => 1);
 		}
