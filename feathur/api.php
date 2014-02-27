@@ -98,7 +98,7 @@ if($sUser->sPermissions == 7){
 					die();
 				}
 			} else {
-				echo json_encode(array("result" => "The VPS Id is either invalid or does not belong to this user."));
+				echo json_encode(array("type" => "success", "result" => "The VPS Id is either invalid or does not belong to this user."));
 				die();
 			}
 		} else {
