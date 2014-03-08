@@ -523,18 +523,20 @@
 						<button class="small blue" id="RequestBlock">Request IPv6 Access</button>
 					{%/if}
 					{%if isempty|UserIPv6Block == false}
-						<div align="center">
-							<div class="simplebox grid360">
-								<div class="titleh">
-									<h3>VPS Statistics</h3>
+						{%foreach block in UserIPv6Block}
+							{%if isempty|block[is_block] == true}
+								<div align="center">
+									<div class="simplebox grid360">
+										<div class="titleh">
+											<h3>Block Assignment</h3>
+										</div>
+										<table class="tablesorter">
+											<tr>Your Block: {%?block[prefix]}{%?block[per_user]}</tr>
+										</table>
+									</div>
 								</div>
-								<table class="tablesorter">
-									{%foreach block in UserIPv6Block}
-										<tr>{%?block[prefix]}{%?block[user_block]}{%?block[user_block_size]}</tr>
-									{%/foreach}
-								</table>
-							</div>
-						</div>
+							{%/if}
+						{%/foreach}
 					{%/if}
 				</div>
 			{%/if}

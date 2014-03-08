@@ -377,10 +377,27 @@ class Block extends CPHPDatabaseRecordClass {
 	
 	public static function vps_ipv6_block($sVPS){
 		global $database;
+		$sBlockSize = array("/32" => 1,
+							"/48" => 2,
+							"/64" => 3,
+							"/80" => 4,
+							"/96" => 5,
+							"/112" => 6,
+							"/128" => 7);
 		if($sBlockLookup = $database->CachedQuery("SELECT * FROM `useripv6blocks` WHERE `vps_id` = :VPSId", array('VPSId' => $sVPS->sId))){
 			foreach($sBlockLookup->data as $sRow){
 				$sBlock = new Block($sRow["block_id"]);
-				$sIPv6Blocks[] = array("prefix" => $sBlock->sPrefix, "user_block" => $sRow["user_block"], "user_block_size" => $sRow["user_block_size"]);
+				$sOffset = 7 - $sBlockSize[$sBlock->sNetmask];
+				for($i = 1; $i <= $sOffest; $i++) {
+					$sUserPrefix .= "0000:";
+				}
+				$sSecondary = $sBlock->sSecondary.str_pad($sRow["user_block"], 4, '0', STR_PAD_LEFT);
+				if(ctype_digit($sBlock->sPerUser)){
+					$sIsBlock = 0;
+				} else {
+					$sIsBlock = 1;
+				}
+				$sIPv6Blocks[] = array("prefix" => $sBlock->sPrefix.$sSecondary, "size" => $sBlock->sPerUser, "is_block" => $sIsBlock, "user_current" => str_pad($sRow["current"], 4, '0', STR_PAD_LEFT));
 			}
 			return $sIPv6Blocks;
 		}

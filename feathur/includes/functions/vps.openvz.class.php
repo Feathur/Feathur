@@ -840,7 +840,7 @@ class openvz {
 							$sUserBlock->uUserBlock = 0;
 							$sUserBlock->uCurrent = 0;
 							$sUserBlock->InsertIntoDatabase();
-							return $sArray = array("json" => 1, "type" => "error", "result" => "IPv6 Activated for your VPS, reloading.", "reload" => 1);
+							return $sArray = array("json" => 1, "type" => "success", "result" => "IPv6 Activated for your VPS, reloading.", "reload" => 1);
 					// else if the admin has elected to assign whole blocks to the VPS (ideal).
 					} else {
 						// Check to make sure the block has enough free room.
@@ -848,13 +848,13 @@ class openvz {
 							$sUserBlock = new UserIPv6Block(0);
 							$sUserBlock->uVPSId = $sVPS->sId;
 							$sUserBlock->uBlockId = $sBlock->sId;
-							$sUserBlock->uUserBlock = str_pad(dechex($sCurrent), 4, '0', STR_PAD_LEFT);
+							$sUserBlock->uUserBlock = dechex($sCurrent);
 							$sUserBlock->uCurrent = "0002";
 							$sUserBlock->InsertIntoDatabase();
 							$sCurrent++;
-							$sBlock->uCurrent = str_pad(dechex($sCurrent), 4, '0', STR_PAD_LEFT);
+							$sBlock->uCurrent = dechex($sCurrent);
 							$sBlock->InsertIntoDatabase();
-							return $sArray = array("json" => 1, "type" => "error", "result" => "Block assigned, reloading.", "reload" => 1);
+							return $sArray = array("json" => 1, "type" => "success", "result" => "Block assigned, reloading.", "reload" => 1);
 						}
 					}
 				}
