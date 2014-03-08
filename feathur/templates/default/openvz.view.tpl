@@ -524,7 +524,7 @@
 					{%/if}
 					{%if isempty|UserIPv6Block == false}
 						{%foreach block in UserIPv6Block}
-							{%if isempty|block[is_block] == true}
+							{%if isempty|block[is_block] == false}
 								<div align="center">
 									<div class="simplebox grid360">
 										<div class="titleh">
