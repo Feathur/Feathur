@@ -824,6 +824,7 @@ class openvz {
 	}
 	
 	public function database_openvz_requestblock($sUser, $sVPS, $sRequested){
+		global $database;
 		$sBlockCheck = Block::vps_ipv6_block($sVPS);
 		if(empty($sBlockCheck)){
 			if($sBlockLookup = $database->CachedQuery("SELECT * FROM `server_blocks` WHERE `server_id` = :ServerId AND `ipv6` = 1", array('ServerId' => $sVPS->sServerId))){
@@ -868,7 +869,7 @@ class openvz {
 	}
 	
 	public function openvz_requestblock($sUser, $sVPS, $sRequested){
-	
+		return true;
 	}
 	
 	public function database_openvz_statistics($sUser, $sVPS, $sRequested){
