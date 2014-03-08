@@ -829,8 +829,8 @@ class openvz {
 		if(empty($sBlockCheck)){
 			if($sBlockLookup = $database->CachedQuery("SELECT * FROM `server_blocks` WHERE `server_id` = :ServerId AND `ipv6` = 1", array('ServerId' => $sVPS->sServerId))){
 				foreach($sBlockLookup->data as $sRow){
-					$sCurrent = hexdec($sRow["current"]);
 					$sBlock = new Block($sRow["block_id"]);
+					$sCurrent = $sBlock->sCurrent;
 					
 					// If the admin has elected to assign a number of IPs to the VPS.
 					if(ctype_digit($sBlock->sPerUser)){
