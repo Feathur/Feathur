@@ -85,7 +85,7 @@ $sAdd->execute();
 $sAdd = $database->prepare("CREATE TABLE IF NOT EXISTS `ipv6addresses` (`id` int(8) NOT NULL AUTO_INCREMENT, `vps_id` int(8) NOT NULL, `block_id` int(8) NOT NULL, `suffix` varchar(65) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=58 ;");
 $sAdd->execute();
 
-$sAdd = $database->prepare("CREATE TABLE IF NOT EXISTS `useripv6blocks` (`id` int(8) NOT NULL AUTO_INCREMENT, `vps_id` int(8) NOT NULL, `block_id` int(8) NOT NULL, `user_block` varchar(65) NOT NULL, `user_block_size` varchar(65) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=58;");
+$sAdd = $database->prepare("CREATE TABLE IF NOT EXISTS `useripv6blocks` (`id` int(8) NOT NULL AUTO_INCREMENT, `vps_id` int(8) NOT NULL, `block_id` int(8) NOT NULL, `user_block` varchar(65) NOT NULL, `current` varchar(65) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=58;");
 $sAdd->execute();
 
 $sAdd = $database->prepare("ALTER TABLE `blocks` CHANGE `per_user` `per_user` VARCHAR(65) NOT NULL;");
@@ -97,3 +97,7 @@ $sAdd->execute();
 
 $sAdd = $database->prepare("ALTER TABLE `vps` ADD `secondary_drive` VARCHAR(130);");
 $sAdd->execute();
+
+$sAdd = $database->prepare("ALTER TABLE `useripv6blocks` ADD `current` varchar(65) NOT NULL;");
+$sAdd->execute();
+

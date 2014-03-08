@@ -190,6 +190,7 @@ class Block extends CPHPDatabaseRecordClass {
 				
 				
 				
+				
 				$sNewBlock = new Block(0);
 				$sNewBlock->uName = $sRequested["POST"]["newblockname"];
 				$sNewBlock->uGateway = trim($sFullGateway, ":");
@@ -202,7 +203,8 @@ class Block extends CPHPDatabaseRecordClass {
 					$sNewBlock->uPerUser = $sPerVPS;
 				}
 				$sNewBlock->uSecondary = $sSecondary;
-				$sNewBlock->uCurrent = trim($sCurrent, ":");
+				$sCurrentOffset = 1 + $sBlockSize[$sPerVPS];
+				$sNewBlock->uCurrent = $sRequested["POST"]["f".$sCurrentOffset];
 				$sNewBlock->InsertIntoDatabase();
 				return $sSuccess = array("content" => "The block {$sRequested["GET"]["name"]} has been created.");
 			} else {

@@ -10,6 +10,7 @@ include('./includes/functions/servers.class.php');
 include('./includes/functions/ipaddresses.class.php');
 include('./includes/functions/ipv6addresses.class.php');
 include('./includes/functions/blocks.class.php');
+include('./includes/functions/useripv6blocks.class.php');
 include('./includes/functions/server.blocks.class.php');
 include('./includes/library/Net/SSH2.php');
 include('./includes/library/Crypt/RSA.php');

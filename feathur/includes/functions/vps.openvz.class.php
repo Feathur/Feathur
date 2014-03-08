@@ -819,28 +819,56 @@ class openvz {
 		}
 	}
 	
+	public function openvz_terminate($sUser, $sVPS, $sRequested){
+		return true;
+	}
+	
 	public function database_openvz_requestblock($sUser, $sVPS, $sRequested){
 		$sBlockCheck = Block::vps_ipv6_block($sVPS);
 		if(empty($sBlockCheck)){
 			if($sBlockLookup = $database->CachedQuery("SELECT * FROM `server_blocks` WHERE `server_id` = :ServerId AND `ipv6` = 1", array('ServerId' => $sVPS->sServerId))){
 				foreach($sBlockLookup->data as $sRow){
 					$sCurrent = hexdec($sRow["current"]);
-					if($sCurrent < 65000){
-						// To be completed.
+					$sBlock = new Block($sRow["id"]);
+					
+					// If the admin has elected to assign a number of IPs to the VPS.
+					if(ctype_digit($sBlock->sPerUser)){
+							$sUserBlock = new UserIPv6Block(0);
+							$sUserBlock->uVPSId = $sVPS->sId;
+							$sUserBlock->uBlockId = $sBlock->sId;
+							$sUserBlock->uUserBlock = 0;
+							$sUserBlock->uCurrent = 0;
+							$sUserBlock->InsertIntoDatabase();
+							$sCurrent++;
+							$sBlock->uCurrent = dechex($sCurrent);
+							$sBlock->InsertIntoDatabase();
+							return $sArray = array("json" => 1, "type" => "error", "result" => "Block assigned, reloading.", "reload" => 1);
+					// else if the admin has elected to assign whole blocks to the VPS (ideal).
+					} else {
+						// Check to make sure the block has enough free room.
+						if($sCurrent < 65000){
+							$sUserBlock = new UserIPv6Block(0);
+							$sUserBlock->uVPSId = $sVPS->sId;
+							$sUserBlock->uBlockId = $sBlock->sId;
+							$sUserBlock->uUserBlock = dechex($sCurrent);
+							$sUserBlock->uCurrent = "0002";
+							$sUserBlock->InsertIntoDatabase();
+							$sCurrent++;
+							$sBlock->uCurrent = dechex($sCurrent);
+							$sBlock->InsertIntoDatabase();
+							return $sArray = array("json" => 1, "type" => "error", "result" => "Block assigned, reloading.", "reload" => 1);
+						}
 					}
 				}
+				return $sArray = array("json" => 1, "type" => "error", "result" => "There are no available IPv6 Blocks.");
 			}
-			return $sArray = array("json" => 1, "type" => "error", "result" => "There are no available IPv6 Blocks.", "reload" => 1);
+			return $sArray = array("json" => 1, "type" => "error", "result" => "There are no available IPv6 Blocks.");
 		}
 		return $sArray = array("json" => 1, "type" => "error", "result" => "You already have a block.", "reload" => 1);
 	}
 	
 	public function openvz_requestblock($sUser, $sVPS, $sRequested){
 	
-	}
-	
-	public function openvz_terminate($sUser, $sVPS, $sRequested){
-		return true;
 	}
 	
 	public function database_openvz_statistics($sUser, $sVPS, $sRequested){

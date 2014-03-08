@@ -71,7 +71,12 @@
 		$("#RequestBlock").click(function() {
 			$('#IPv6Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
 			$.getJSON("view.php?id={%?vps[id]}&action=requestblock",function(result){
-				$('#IPv6Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');  
+				$('#IPv6Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>'); 
+				if(result.reload == 1){
+					location.reload();
+				} else {
+					uptime();
+				}
 			});
 		});
 		$("#ChangeHostname").click(function() {
