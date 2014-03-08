@@ -531,7 +531,7 @@
 											<h3>Block Assignment</h3>
 										</div>
 										<table class="tablesorter">
-											<tr>Your Block: {%?block[prefix]}{%?block[size]}</tr>
+											<tr><td>Your Block:<td><td>{%?block[prefix]}{%?block[size]}<td></tr>
 										</table>
 									</div>
 								</div>
