@@ -520,7 +520,7 @@
 					</table>
 					<br><br>
 					{%if isempty|UserIPv6Block == true}
-						<button class="small blue" id="RequestBlock">Request IPv6 Block</button>
+						<button class="small blue" id="RequestBlock">Request IPv6 Access</button>
 					{%/if}
 					{%if isempty|UserIPv6Block == false}
 						<div align="center">

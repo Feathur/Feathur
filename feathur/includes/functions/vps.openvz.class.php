@@ -842,7 +842,7 @@ class openvz {
 							$sCurrent++;
 							$sBlock->uCurrent = dechex($sCurrent);
 							$sBlock->InsertIntoDatabase();
-							return $sArray = array("json" => 1, "type" => "error", "result" => "Block assigned, reloading.", "reload" => 1);
+							return $sArray = array("json" => 1, "type" => "error", "result" => "IPv6 Activated for your VPS, reloading.", "reload" => 1);
 					// else if the admin has elected to assign whole blocks to the VPS (ideal).
 					} else {
 						// Check to make sure the block has enough free room.
