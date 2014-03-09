@@ -68,17 +68,21 @@
 				$('#SettingNotice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');  
 			});
 		});
-		$("#RequestBlock").click(function() {
-			$('#IPv6Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
-			$.getJSON("view.php?id={%?vps[id]}&action=requestblock",function(result){
-				$('#IPv6Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>'); 
-				if(result.reload == 1){
-					location.reload();
-				} else {
-					uptime();
-				}
-			});
-		});
+		{%if vps[ipv6] == 1}
+			{%if isempty|IPv6Exist == false}
+				$("#RequestBlock").click(function() {
+					$('#IPv6Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
+					$.getJSON("view.php?id={%?vps[id]}&action=requestblock",function(result){
+						$('#IPv6Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>'); 
+						if(result.reload == 1){
+							location.reload();
+						} else {
+							uptime();
+						}
+					});
+				});
+			{%/if}
+		{%/if}
 		$("#ChangeHostname").click(function() {
 			$('#SettingNotice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
 			var hostname = $('#Hostname').attr('value');
@@ -523,20 +527,20 @@
 						<button class="small blue" id="RequestBlock">Request IPv6 Access</button>
 					{%/if}
 					{%if isempty|UserIPv6Block == false}
-						{%foreach block in UserIPv6Block}
-							{%if isempty|block[is_block] == false}
-								<div align="center">
-									<div class="simplebox grid360">
-										<div class="titleh">
-											<h3>Block Assignment</h3>
-										</div>
-										<table class="tablesorter">
-											<tr><td>Your Block:</td><td>{%?block[prefix]}{%?block[size]}</td></tr>
-										</table>
-									</div>
+						<div align="center">
+							<div class="simplebox grid360">
+								<div class="titleh">
+									<h3>Block Assignment</h3>
 								</div>
-							{%/if}
-						{%/foreach}
+								<table class="tablesorter">
+									{%foreach block in UserIPv6Block}
+										{%if isempty|block[is_block] == false}
+											<tr><td>Your Block:</td><td>{%?block[prefix]}{%?block[size]}</td></tr>
+										{%/if}
+									{%/foreach}
+								</table>
+							</div>
+						</div>
 					{%/if}
 				</div>
 			{%/if}
