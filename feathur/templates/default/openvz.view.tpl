@@ -528,22 +528,22 @@
 					{%/if}
 					{%if isempty|UserIPv6Block == false}
 						<div align="center">
-							<div class="simplebox grid360">
-								<div class="titleh">
-									<h3>Block Assignment</h3>
-								</div>
-								<table class="tablesorter">
-									{%foreach block in UserIPv6Block}
-										{%if isempty|block[is_block] == false}
+							{%foreach block in UserIPv6Block}
+								{%if isempty|block[is_block] == false}
+									<div class="simplebox grid740">
+										<div class="titleh">
+											<h3>{%?block[prefix]}{%?block[size]} Management</h3>
+										</div>
+										<table class="tablesorter">
 											<tr><td>
 												<div align="center">
-													{%?block[prefix]} {%?block[size]}
+													Block Management Here
 												</div>
 											</td></tr>
-										{%/if}
-									{%/foreach}
-								</table>
-							</div>
+										</table>
+									</div>
+								{%/if}
+							{%/foreach}
 						</div>
 					{%/if}
 				</div>
@@ -608,7 +608,7 @@
 				</div>
 				<div class="simplebox grid740" style="width:700px;">
 					<div class="titleh">
-						<h3>IP Command Center</h3>
+						<h3>Command Center</h3>
 					</div>
 					<table class="tablesorter">
 						<tr>
