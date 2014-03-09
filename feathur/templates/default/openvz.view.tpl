@@ -535,7 +535,11 @@
 								<table class="tablesorter">
 									{%foreach block in UserIPv6Block}
 										{%if isempty|block[is_block] == false}
-											<tr><td>{%?block[prefix]} {%?block[size]}</td></tr>
+											<tr><td>
+												<div align="center">
+													{%?block[prefix]} {%?block[size]}
+												</div>
+											</td></tr>
 										{%/if}
 									{%/foreach}
 								</table>
