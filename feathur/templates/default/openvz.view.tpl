@@ -530,7 +530,7 @@
 						<div align="center">
 							{%foreach block in UserIPv6Block}
 								{%if isempty|block[is_block] == false}
-									<div class="simplebox grid740">
+									<div class="simplebox grid740" style="width:700px;">
 										<div class="titleh">
 											<h3>{%?block[prefix]}{%?block[size]} Management</h3>
 										</div>
