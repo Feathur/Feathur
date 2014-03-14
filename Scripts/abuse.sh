@@ -88,9 +88,7 @@ do
 		if (( counter == 9 ))
 			then
 			if [ "$ignore" -ne "$veid" ]; then
-				vzctl set $veid --disabled yes --save;
 				vzctl stop $veid;
-				echo "$veid" >> /var/feathur/data/suspended.txt
 			fi
 		fi
 
@@ -112,9 +110,7 @@ do
 		if (( counter == 2 ))
 			then
 			if [ "$ignore" -ne "$veid" ]; then
-				vzctl set $veid --disabled yes --save;
 				vzctl stop $veid;
-				echo "$veid" >> /var/feathur/data/suspended.txt
 			fi
 		fi
 	done
