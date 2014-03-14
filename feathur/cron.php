@@ -32,26 +32,32 @@ $sClean = $sLocalSSH->exec("killall --older-than 10m screen");
 // 1. A sync hasn't occurred in the last 5 minutes.
 // 2. A sync isn't still in progress (EG: template.lock)
 $sTemplateSync = Core::GetSetting('last_template_sync');
-$sBefore = time() - (60 * 5);
+$sBefore = time() - (60 * 15);
 $sTemplateSync = $sTemplateSync->sValue;
+$sTimestamp = time();
 if($sTemplateSync < $sBefore){
 
 	$sLock = $sLocalSSH->exec("cat /var/feathur/data/template.lock;");
-	if(strpos($sLock, 'No such file or directory') !== false) {
+	
+	if((strpos($sLock, 'No such file or directory') !== false) || ($sLock < $sBefore)) {
 
 		// Issue template lock.
-		$sLock = $sLocalSSH->exec("cd /var/feathur/data;touch template.lock;");
+		$sLock = $sLocalSSH->exec("echo '{$sTimestamp}' > /var/feathur/data/template.lock;");
 		echo "Starting template sync...\n";
 		
-		if($sOpenVZ = $database->CachedQuery("SELECT * FROM servers WHERE `type` = 'openvz'", array())){
-			foreach($sOpenVZ->data as $sValue){
+		if($sServerList = $database->CachedQuery("SELECT * FROM servers WHERE (`type` = 'openvz' || `type` = 'kvm')", array())){
+			foreach($sServerList->data as $sValue){
 				$sServer = new Server($sValue["id"]);
-				$sCommandList .= "echo \"{$sServer->sName} Starting...\n\";rsync -avz -e \"ssh -o StrictHostKeyChecking=no -i /var/feathur/data/keys/{$sServer->sKey}\" /var/feathur/data/templates/openvz/* root@{$sServer->sIPAddress}:/vz/template/cache/;";
+				if($sServer->sType == 'openvz'){
+					$sLocation = '/vz/template/cache/';
+				} elseif($sServer->sType == 'kvm'){
+					$sLocation = '/var/feathur/data/templates/kvm';
+				}
+				$sCommandList .= "echo \"{$sServer->sName} Starting...\n\";rsync -avz -e \"ssh -o StrictHostKeyChecking=no -i /var/feathur/data/keys/{$sServer->sKey}\" /var/feathur/data/templates/{$sServer->sType}/* root@{$sServer->sIPAddress}:{$sLocation};";
 			}
-			echo "Issuing commands to sync OpenVZ templates.\n";
+			echo "Issuing commands to sync templates.\n";
 		}
 		
-		$sCommandList .= "rm -rf /var/feathur/data/template.lock;";
 		$sCommandList = escapeshellarg($sCommandList);
 		$sLocalSSH->exec("screen -dm -S cron bash -c {$sCommandList};");
 		$sLastUpdate = Core::UpdateSetting('last_template_sync', time());
