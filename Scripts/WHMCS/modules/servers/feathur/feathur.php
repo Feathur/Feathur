@@ -72,7 +72,7 @@ function feathur_CreateAccount($sData) {
 				"numiptent" => $sData["configoption10"],
 				"ipaddresses" => $sData["configoption11"],
 				"nameserver" => $sData["configoption12"],
-				"hostname" => $sData["domain"],
+				"hostname" => preg_replace('/[^A-Za-z0-9-.]/', '', $sData["domain"]),
 				);
 
 	$sSetupVPS = feathur_RemoteConnect($sPost, $sConfig["master"]);

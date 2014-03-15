@@ -65,9 +65,6 @@ then
 	exit 1;
 fi
 
-cd /var/www/
-wget https://raw.github.com/BlueVM/Feathur/develop/Scripts/uptime.php
-cd /
 cd ~
 mkdir ~/.ssh/
 ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa

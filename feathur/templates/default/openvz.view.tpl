@@ -581,7 +581,7 @@
 							<td width="50%"><input id="RebuildPassword" type="password" name="password" /></td>
 						</tr>
 						<tr>
-							<td colspan="2"><input type="checkbox" name="VerifyRebuild" id="VerifyRebuild" value="1"> I understand that this procedure will destroy my VPS and all data on it, and start with a desired template.</td>
+							<td colspan="2"><input type="checkbox" name="VerifyRebuild" id="VerifyRebuild" value="1">I understand that this procedure will destroy my VPS and all data on it, and start with a desired template.</td>
 						</tr>
 						<tr>
 							<td colspan="2">
@@ -599,7 +599,7 @@
 				<div style="z-index: 500;text-align:left;" class="simple-tips">
 		                        <h2>Command Center Notes</h2>
 					<ul>
-						<li>You can use this command center to issue commands to your VPS even if you can''t connect via SSH.</li>
+						<li>You can use this command center to issue commands to your VPS even if you can't connect via SSH.</li>
 						<li><strong>Notice:</strong> Commands issued are not successive. Each command is executed independently.</li>
 						<li>You can issue successive commands by putting a ; between them. (Eg: cd /var; ls}</li>
 						<li>To start SSH on most systems you can type: service ssh start -OR- service sshd start</li>
@@ -827,7 +827,7 @@
 					<table class="hide-message tablesorter">
 						<tr>
 							<td>
-								<input type="checkbox" name="VerifyTerminate" id="VerifyTerminate" value="1"> I understand that this will completely destroy this poor users pitiful VPS.
+								<input type="checkbox" name="VerifyTerminate" id="VerifyTerminate" value="1">I understand that this will completely destroy this poor users pitiful VPS.
 							</td>
 						</tr>
 						<tr>
