@@ -66,7 +66,7 @@ class kvm {
 									$sUpdate = Core::UpdateSetting('container_id', ($sVPSId->sValue + 1));
 									$sVPS = new VPS(0);
 									$sVPS->uType = $sServer->sType;
-									$sVPS->uHostname = $uHostname;
+									$sVPS->uHostname = preg_replace('/[^A-Za-z0-9-.]/', '', $uHostname);
 									$sVPS->uNameserver = $uNameserver;
 									$sVPS->uUserId = $sOwner->sId;
 									$sVPS->uServerId = $sServer->sId;
