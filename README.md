@@ -2,7 +2,7 @@
 
 
 ---------------------------------------
-Notice: We highly recommend that everyone update to 0.6.3.8 (or higher) if you intend to use Feathur with WHMCS.
+##### Notice: We highly recommend that everyone update to 0.6.3.8 (or higher) if you intend to use Feathur with WHMCS.
 ---------------------------------------
 
 Feathur is a VPS control panel which is
