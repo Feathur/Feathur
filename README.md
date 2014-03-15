@@ -1,4 +1,7 @@
-#### FEATHUR README UPDATED: NOVEMBER 20, 2013
+#### FEATHUR README UPDATED: MARCH 14, 2014
+
+---------------------------------------
+<font color="red">Notice:</font> We highly recommend that everyone update to 0.6.3.8. 
 
 Feathur is a VPS control panel which is
 designed to be used to administrate OpenVZ
@@ -27,3 +30,4 @@ You can check so see if your provider has a license at: http://check.feathur.com
 For setup directions and other information about
 Feathur. Check out our wiki at:
 https://github.com/BlueVM/Feathur/wiki/
+
