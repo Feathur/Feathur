@@ -1,7 +1,8 @@
 #### FEATHUR README UPDATED: MARCH 14, 2014
 
 ---------------------------------------
-<font color="red">Notice:</font> We highly recommend that everyone update to 0.6.3.8. 
+Notice: We highly recommend that everyone update to 0.6.3.8 (or higher) if you intend to use Feathur with WHMCS.
+---------------------------------------
 
 Feathur is a VPS control panel which is
 designed to be used to administrate OpenVZ
