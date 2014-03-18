@@ -870,7 +870,7 @@ class openvz {
 	}
 	
 	public function database_openvz_addipv6($sUser, $sVPS, $sRequested){
-		$sUserBlock = new UserIPv6Block($sRequested["block"]);
+		$sUserBlock = new UserIPv6Block($sRequested["GET"]["block"]);
 		if($sUserBlock->sVPSId == $sVPS->sId){
 			$sBlock = new Block($sUserBlock->sBlockId);
 			$sIPv6 = new IPv6(0);
