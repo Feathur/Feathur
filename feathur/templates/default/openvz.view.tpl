@@ -69,7 +69,7 @@
 			});
 		});
 		{%if vps[ipv6] == 1}
-			{%if isempty|IPv6Exist == false}
+			{%if isempty|IPv6Exist == true}
 				$("#RequestBlock").click(function() {
 					$('#IPv6Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
 					$.getJSON("view.php?id={%?vps[id]}&action=requestblock",function(result){
@@ -80,7 +80,7 @@
 					});
 				});
 			{%/if}
-			{%if isempty|IPv6Exist == true}
+			{%if isempty|IPv6Exist == false}
 				$("#AddIPv6").click(function() {
 					var blockid = $('#AddIPv6').attr('value');
 					$('#IPv6Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
