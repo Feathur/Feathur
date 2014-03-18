@@ -101,3 +101,6 @@ $sAdd->execute();
 $sAdd = $database->prepare("ALTER TABLE `useripv6blocks` ADD `current` varchar(65) NOT NULL;");
 $sAdd->execute();
 
+$sAdd = $database->prepare("ALTER TABLE `ipv6addresses` ADD `userblock_id` INT(8) NOT NULL;");
+$sAdd->execute();
+

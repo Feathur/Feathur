@@ -869,6 +869,57 @@ class openvz {
 		return true;
 	}
 	
+	public function database_openvz_addipv6($sUser, $sVPS, $sRequested){
+		$sUserBlock = new UserIPv6Block($sRequested["block"]);
+		if($sUserBlock->sVPSId == $sVPS->sId){
+			$sBlock = new Block($sUserBlock->sBlockId);
+			$sIPv6 = new IPv6(0);
+			$sIPv6->uSuffix = $sUserBlock->sCurrent;
+			$sIPv6->uVPSId = $sVPS->sId;
+			$sIPv6->uBlockId = $sBlock->sId;
+			$sIPv6->uUserBlockId = $sUserBlock->sId;
+			$sIPv6->InsertIntoDatabase();
+			
+			$sUserBlock->uCurrent = $sUserBlock->sCurrent + 1;
+			$sUserBlock->InsertIntoDatabase();
+			return true;
+		}
+		return $sArray = array("json" => 1, "type" => "error", "result" => "Invalid block, please try again.", "reload" => 1);
+	}
+	
+	public function openvz_addipv6($sUser, $sVPS, $sRequested){
+		global $database;
+		$sBlockSize = array("/48" => 4,
+							"/64" => 3,
+							"/80" => 2,
+							"/96" => 1,
+							"/112" => 0,
+							"/128" => 0);
+		$sServer = new Server($sVPS->sServerId);
+		$sSSH = Server::server_connect($sServer);
+		if($sIPv6List = $database->CachedQuery("SELECT * FROM `ipv6addresses` WHERE `vps_id` = :VPSId", array('VPSId' => $sVPS->sId))){
+			foreach($sIPv6List as $sRow){
+				$sBlock = new Block($sRow["block_id"]);
+				$sUserBlock = new UserIPv6Block($sRow["userblock_id"]);
+				$sPaddingSize = $sBlockSize[$sBlock->sPerUser];
+				for ($i = 1; $i <= $sPaddingSize; $i++) {
+					$sPadding .= ":0000";
+				}
+				$sIPv6 = $sBlock->sPrefix.str_pad($sUserBlock->sUserBlock, 4, '0', STR_PAD_LEFT).$sPadding.":".$sRow["suffix"];
+				$sCommandList .= "vzctl set {$sVPS->sContainerId} --ipadd $sIPv6 --save;";
+				unset($sBlock);
+				unset($sUserBlock);
+				unset($sPaddingSize);
+				unset($sPadding);
+				unset($sIPv6);
+			}
+			$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
+			$sSave = VPS::save_vps_logs($sLog, $sVPS);
+			return $sArray = array("json" => 1, "type" => "success", "result" => "IPv6 address assigned, reloading.", "reload" => 1);
+		}
+		return $sArray = array("json" => 1, "type" => "success", "result" => "No IPv6 were assigned to the VPS.", "reload" => 1);
+	}
+	
 	public function database_openvz_statistics($sUser, $sVPS, $sRequested){
 		return true;
 	}

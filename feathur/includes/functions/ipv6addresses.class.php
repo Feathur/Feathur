@@ -14,6 +14,7 @@ class IPv6 extends CPHPDatabaseRecordClass {
 		'numeric' => array(
 			'VPSId' => "vps_id",
 			'BlockId' => "block_id",
+			'UserBlockId' => "userblock_id",
 		)
 	);
 }

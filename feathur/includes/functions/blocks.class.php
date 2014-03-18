@@ -397,7 +397,7 @@ class Block extends CPHPDatabaseRecordClass {
 				} else {
 					$sIsBlock = 1;
 				}
-				$sIPv6Blocks[] = array("prefix" => $sBlock->sPrefix.$sSecondary, "size" => $sBlock->sPerUser, "is_block" => $sIsBlock, "user_current" => str_pad($sRow["current"], 4, '0', STR_PAD_LEFT));
+				$sIPv6Blocks[] = array("id" => $sRow["id"], "prefix" => $sBlock->sPrefix.$sSecondary, "size" => $sBlock->sPerUser, "is_block" => $sIsBlock, "user_current" => str_pad($sRow["current"], 4, '0', STR_PAD_LEFT));
 			}
 			return $sIPv6Blocks;
 		}

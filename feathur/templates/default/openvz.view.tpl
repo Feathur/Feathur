@@ -76,8 +76,18 @@
 						$('#IPv6Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>'); 
 						if(result.reload == 1){
 							location.reload();
-						} else {
-							uptime();
+						}
+					});
+				});
+			{%/if}
+			{%if isempty|IPv6Exist == true}
+				$("#AddIPv6").click(function() {
+					var blockid = $('#AddIPv6').attr('value');
+					$('#IPv6Notice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
+					$.getJSON("view.php?id={%?vps[id]}&action=addipv6&block=" + blockid,function(result){
+						$('#IPv6Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');  
+						if(result.reload == 1){
+							location.reload();
 						}
 					});
 				});
@@ -152,6 +162,7 @@
 			$('#Notice').html('');
 			$('#RebuildNotice').html();
 			$('#AdminNotice').html();
+			$('#IPv6Notice').html();
 		});
 		$("#Rebuild").click(function() {
 			$('#ReloadNotice').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
@@ -523,6 +534,17 @@
 						</tr> 
 					</table>
 					<br><br>
+					<div style="z-index: 500;text-align:left;" class="simple-tips">
+						<h2>IPv6 Management Notice</h2>
+						<ul>
+							<li>IPv6 functionality is still under development and may features may not work correctly all the time.</li>
+							<li>If you remove an IPv6 address you can not add it again.</li>
+							<li>IPv6 are assigned from the first subblock and are limited to 65,000.</li>
+							<li>It is not recommended to assign more than 128 IPv6 to your VPS as it will slow down.</li>
+						</ul>
+						<a href="#" onClick="return false;" class="close tips" title="Close">close</a>
+					</div>
+					<br><br>
 					{%if isempty|UserIPv6Block == true}
 						<button class="small blue" id="RequestBlock">Request IPv6 Access</button>
 					{%/if}
@@ -533,6 +555,9 @@
 									<div class="simplebox grid740" style="width:700px;">
 										<div class="titleh">
 											<h3>{%?block[prefix]}{%?block[size]} Management</h3>
+											<div class="shortcuts-icons">
+												<a class="shortcut tips" id="AddIPv6" title="Add IPv6 Address" value="{%?block[id]}"><img src="./templates/default/img/icons/shortcut/addfile.png" width="25" height="25" alt="icon" /></a>
+											</div>
 										</div>
 										<table class="tablesorter">
 											<tr><td>
