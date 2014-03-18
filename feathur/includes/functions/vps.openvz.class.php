@@ -905,7 +905,7 @@ class openvz {
 				for ($i = 1; $i <= $sPaddingSize; $i++) {
 					$sPadding .= ":0000";
 				}
-				$sIPv6 = $sBlock->sPrefix.str_pad($sUserBlock->sUserBlock, 4, '0', STR_PAD_LEFT).$sPadding.":".$sRow["suffix"];
+				$sIPv6 = $sBlock->sPrefix.str_pad(dechex($sUserBlock->sUserBlock), 4, '0', STR_PAD_LEFT).$sPadding.":".dechex($sRow["suffix"]);
 				$sCommandList .= "vzctl set {$sVPS->sContainerId} --ipadd $sIPv6 --save;";
 				unset($sBlock);
 				unset($sUserBlock);
