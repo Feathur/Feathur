@@ -898,7 +898,7 @@ class openvz {
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
 		if($sIPv6List = $database->CachedQuery("SELECT * FROM `ipv6addresses` WHERE `vps_id` = :VPSId", array('VPSId' => $sVPS->sId))){
-			foreach($sIPv6List as $sRow){
+			foreach($sIPv6List->data as $sRow){
 				$sBlock = new Block($sRow["block_id"]);
 				$sUserBlock = new UserIPv6Block($sRow["userblock_id"]);
 				$sPaddingSize = $sBlockSize[$sBlock->sPerUser];
