@@ -105,7 +105,7 @@ class Pull {
 		echo "Begining script updates...\n";
 		// Generate a random number... if the number is 1 then setup and start anti-abuse script on node.
 		// This is to reduce the amount of time a server poll takes as we don't need to check suspended users every minute.
-		$sRandom = echo rand(0, 5);
+		$sRandom = rand(0, 5);
 		if(($sServer->sType == 'openvz') && ($sRandom == 1)){
 			// Copy script to server so that updates are dispersed.
 			$sAbuse = escapeshellarg(file_get_contents('/var/feathur/Scripts/abuse.sh'));
