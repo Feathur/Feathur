@@ -163,7 +163,8 @@ INSERT INTO `settings` (`id`, `setting_name`, `setting_value`, `setting_group`) 
 (19, 'bandwidth_accounting', 'both', 'site_settings'),
 (20, 'license', '0', 'site_settings'),
 (21, 'refresh_time', '10', 'site_settings'),
-(22, 'panel_mode', 'https://', 'site_settings');
+(22, 'panel_mode', 'https://', 'site_settings'),
+(23, 'max_smtp_connections', '5', 'site_settings');
 
 CREATE TABLE IF NOT EXISTS `statistics` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
@@ -234,6 +235,7 @@ CREATE TABLE IF NOT EXISTS `vps` (
   `tuntap` int(2) NOT NULL,
   `ppp` int(2) NOT NULL,
   `iptables` int(2) NOT NULL,
+  `smtp_whitelist` int(2) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=90 ;
 
@@ -270,6 +272,14 @@ CREATE TABLE IF NOT EXISTS `ipv6addresses` (
 `suffix` varchar(65) NOT NULL, 
 PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=58 ;
+
+CREATE TABLE IF NOT EXISTS `smtp` (
+  `id` int(8) NOT NULL AUTO_INCREMENT,
+  `vps_id` int(8) NOT NULL,
+  `connections` int(8) NOT NULL,
+  `timestamp` int(16) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 USE dns;
 

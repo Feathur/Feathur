@@ -45,6 +45,7 @@ class VPS extends CPHPDatabaseRecordClass {
 			'BandwidthUsage' => "bandwidth_usage",
 			'LastBandwidth' => "last_bandwidth",
 			'IPv6' => "ipv6",
+			'SMTPWhitelist' => "smtp_whitelist",
 		),
 	);
 	

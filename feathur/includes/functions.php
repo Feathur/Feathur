@@ -21,6 +21,7 @@ include('./includes/functions/statistics.class.php');
 include('./includes/functions/rdns.class.php');
 include('./includes/functions/transfer.class.php');
 include('./includes/functions/attempts.class.php');
+include('./includes/functions/smtp.class.php');
 
 function ConvertTime($ss) {
 	if(!empty($ss)){

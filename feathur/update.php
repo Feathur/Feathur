@@ -104,3 +104,12 @@ $sAdd->execute();
 $sAdd = $database->prepare("ALTER TABLE `ipv6addresses` ADD `userblock_id` INT(8) NOT NULL;");
 $sAdd->execute();
 
+$sAdd = $database->prepare("CREATE TABLE IF NOT EXISTS `smtp` (`id` int(8) NOT NULL AUTO_INCREMENT, `vps_id` int(8) NOT NULL, `connections` int(8) NOT NULL, `timestamp` int(16) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0;");
+
+if(!$sFindSetting = $database->CachedQuery("SELECT * FROM settings WHERE `setting_name` LIKE :Setting", array('Setting' => "max_smtp_connections"))){
+	$sAdd = $database->prepare("INSERT INTO settings(setting_name, setting_value, setting_group) VALUES('max_smtp_connections', '5', 'site_settings')");
+	$sAdd->execute();
+}
+
+$sAdd = $database->prepare("ALTER TABLE `vps` ADD `smtp_whitelist` INT(2);");
+$sAdd->execute();
