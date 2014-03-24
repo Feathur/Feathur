@@ -170,6 +170,12 @@ class Pull {
 				}
 			}
 		}
+		
+		// Cleanup old records:
+		$sOldData = (time() - (60*60*24*14));
+		$sSMTP = $database->prepare("DELETE FROM `smtp` WHERE timestamp < :OldData");
+		$sSMTP->bindParam(':OldData', $sOldData, PDO::PARAM_INT);  
+		$sSMTP->execute();
 		echo "Finishing SMTP abuse search...\n";
 		
 		
