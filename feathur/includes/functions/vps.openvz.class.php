@@ -556,9 +556,10 @@ class openvz {
 		
 		$sHighDisk = $sVPS->sDisk + 1;
 		$sCPUs = round((($sVPS->sCPULimit) / 100));
+		$sOSTemplate = str_replace(array(".tar.gz", ".tar.xz"), '', $sTemplatePath);
 		$sCommandList .= "vzctl stop {$sVPS->sContainerId} --fast;";
 		$sCommandList .= "vzctl destroy {$sVPS->sContainerId};";
-		$sCommandList .= "vzctl create {$sVPS->sContainerId} --ostemplate {$sOpenVZTemplate->sPath};";
+		$sCommandList .= "vzctl create {$sVPS->sContainerId} --ostemplate {$sOSTemplate};";
 		$sCommandList .= "vzctl set {$sVPS->sContainerId} --onboot yes --save;";
 		$sCommandList .= "vzctl set {$sVPS->sContainerId} --ram {$sVPS->sRAM}M --swap {$sVPS->sSWAP}M --save;";
 		$sCommandList .= "vzctl set {$sVPS->sContainerId} --cpuunits {$sVPS->sCPUUnits} --save;";
@@ -588,7 +589,7 @@ class openvz {
 		$sCommandList .= "mkdir /vz/feathur_tmp/;echo \"{$sVPS->sId}\" > /vz/feathur_tmp/{$sVPS->sContainerId}.finished";
 
 		$sCommandList = escapeshellarg($sCommandList);
-		$sLog[] = array("command" => "Screened Rebuild", "result" => $sSSH->exec("screen -dm -S {$sVPS->sContainerId} bash -c {$sCommandList};"));
+		$sLog[] = array("command" => "Screened Rebuild => ".str_replace($sPassword, "obfuscated", $sCommandList), "result" => $sSSH->exec("screen -dm -S {$sVPS->sContainerId} bash -c {$sCommandList};"));
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
 		$sUserView .= Templater::AdvancedParse($sTemplate->sValue.'/rebuild', $locale->strings, array("VPS" => array("data" => $sVPS->uData)));
 		return $sArray = array("json" => 1, "type" => "success", "result" => $sUserView);
