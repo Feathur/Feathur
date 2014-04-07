@@ -19,29 +19,9 @@ NewTemplater::SetGlobalVariable("Request", $sRequest);
 $sTemplate = Core::GetSetting('template');
 NewTemplater::SetGlobalVariable("Template", $sTemplate->sValue);
 
-// Admin Template
-$sAdminTemplate = Core::GetSetting('admin_template');
-NewTemplater::SetGlobalVariable("AdminTemplate", $sAdminTemplate->sValue);
-
 // Description
 $sDescription = Core::GetSetting('description');
 NewTemplater::SetGlobalVariable("Description", $sDescription->sValue);
-
-// History Difference
-$sHistoryDifference = Core::GetSetting('history_difference');
-NewTemplater::SetGlobalVariable("HistoryDifference", $sHistoryDifference->sValue);
-
-// Refresh Time
-$sRefreshTime = Core::GetSetting('refresh_time');
-NewTemplater::SetGlobalVariable("RefreshTime", $sRefreshTime->sValue);
-
-// Max History
-$sMaxHistory = Core::GetSetting('max_history');
-NewTemplater::SetGlobalVariable("MaxHistory", $sMaxHistory->sValue);
-
-// Max Statistics
-$sMaxStatistics = Core::GetSetting('max_statistics');
-NewTemplater::SetGlobalVariable("MaxStatistics", $sMaxStatistics->sValue);
 
 // Panel URL
 $sPanelURL = Core::GetSetting('panel_url');
@@ -59,24 +39,35 @@ NewTemplater::SetGlobalVariable("UpdateType", $sUpdateType->sValue);
 $sPanelMode = Core::GetSetting('panel_mode');
 NewTemplater::SetGlobalVariable("PanelMode", $sPanelMode->sValue);
 
-// Sendgrid
-$sMail = Core::GetSetting('mail');
-NewTemplater::SetGlobalVariable("Mail", $sMail->sValue);
-
-// Sendgrid User
-$sMailUsername = Core::GetSetting('mail_username');
-NewTemplater::SetGlobalVariable("MailUsername", $sMailUsername->sValue);
-
-// Check For Sendgrid Password
-$sMailPassword = Core::GetSetting('mail_password');
-$sMailPassword = $sMailPassword->sValue;
-if(!empty($sMailPassword)){
-	NewTemplater::SetGlobalVariable("MailPassword", "1");
-}
-
 // Bandwidth Accounting
 $sBandwidthAccounting = Core::GetSetting('bandwidth_accounting');
 NewTemplater::SetGlobalVariable("BandwidthAccounting", $sBandwidthAccounting->sValue);
+
+if($sUser->sPermissions == 7){
+	// Admin Template
+	$sAdminTemplate = Core::GetSetting('admin_template');
+	NewTemplater::SetGlobalVariable("AdminTemplate", $sAdminTemplate->sValue);
+	
+	// History Difference
+	$sHistoryDifference = Core::GetSetting('history_difference');
+	NewTemplater::SetGlobalVariable("HistoryDifference", $sHistoryDifference->sValue);
+
+	// Refresh Time
+	$sRefreshTime = Core::GetSetting('refresh_time');
+	NewTemplater::SetGlobalVariable("RefreshTime", $sRefreshTime->sValue);
+
+	// Max History
+	$sMaxHistory = Core::GetSetting('max_history');
+	NewTemplater::SetGlobalVariable("MaxHistory", $sMaxHistory->sValue);
+
+	// Max Statistics
+	$sMaxStatistics = Core::GetSetting('max_statistics');
+	NewTemplater::SetGlobalVariable("MaxStatistics", $sMaxStatistics->sValue);
+	
+	// Templates redone message
+	$sTemplatesRedone = Core::GetSetting('template_redone_message');
+	NewTemplater::SetGlobalVariable("TemplatesRedone", $sTemplatesRedone->sValue);
+}
 
 // License Setting
 // Please don't remove or edit this code, a lot of work went into Feathur.

@@ -10,8 +10,13 @@ class Template extends CPHPDatabaseRecordClass {
 	public $prototype = array(
 		'string' => array(
 			'Name' 	    => "name",
-			'Path'	    => "path",
+			'URL'	    => "url",
 			'Type'    => "type",
-		)
+			'Path'    => "path",
+		),
+		'numeric' => array(
+			'Disabled' => "disabled",
+			'Size' => "size", 
+		),
 	);
 }

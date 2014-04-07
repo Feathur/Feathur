@@ -110,3 +110,7 @@ function check_updates(){
 		return array("your_version" => $sCurrentVersion, "current_version" => $sVersion, "update" => "0");
 	}
 }
+
+function endsWith($haystack, $needle){
+    return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
+}

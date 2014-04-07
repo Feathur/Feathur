@@ -108,9 +108,28 @@ $sAdd = $database->prepare("CREATE TABLE IF NOT EXISTS `smtp` (`id` int(8) NOT N
 $sAdd->execute();
 
 if(!$sFindSetting = $database->CachedQuery("SELECT * FROM settings WHERE `setting_name` LIKE :Setting", array('Setting' => "max_smtp_connections"))){
-	$sAdd = $database->prepare("INSERT INTO settings(setting_name, setting_value, setting_group) VALUES('max_smtp_connections', '5', 'site_settings')");
+	$sAdd = $database->prepare("INSERT INTO settings(setting_name, setting_value, setting_group) VALUES('max_smtp_connections', '8', 'site_settings')");
 	$sAdd->execute();
 }
 
 $sAdd = $database->prepare("ALTER TABLE `vps` ADD `smtp_whitelist` INT(2);");
 $sAdd->execute();
+
+if(!$sFindSetting = $database->CachedQuery("SELECT * FROM settings WHERE `setting_name` LIKE :Setting", array('Setting' => "template_redone_message"))){
+	$sAdd = $database->prepare("INSERT INTO settings(setting_name, setting_value, setting_group) VALUES('template_redone_message', '0', 'site_settings')");
+	$sAdd->execute();
+}
+
+if(!$sFindSetting = $database->CachedQuery("SELECT * FROM settings WHERE `setting_name` LIKE :Setting", array('Setting' => "templates_cleaned"))){
+	// Create new table.
+	$sAdd = $database->prepare("CREATE TABLE `new_templates`(`id` int(8) NOT NULL AUTO_INCREMENT, `name` varchar(65) NOT NULL, `path` varchar(65) NOT NULL, `url` varchar(255) NOT NULL, `type` varchar(65) NOT NULL, `disabled` int(2) NOT NULL, `size` int(65) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16;");
+	$sAdd->execute();
+	
+	// Rename old table, rename new table.
+	$sAdd = $database->prepare("RENAME TABLE `templates` TO `templates_old`, `new_templates` TO `templates`;");
+	$sAdd->execute();
+	
+	// Make sure this only happens once.
+	$sAdd = $database->prepare("INSERT INTO settings(setting_name, setting_value, setting_group) VALUES('templates_cleaned', '1', 'site_settings')");
+	$sAdd->execute();
+}

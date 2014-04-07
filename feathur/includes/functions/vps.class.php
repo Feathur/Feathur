@@ -165,50 +165,66 @@ class VPS extends CPHPDatabaseRecordClass {
 		}
 	}
 	
-	public static function add_template($sLocalSSH, $uName, $uURL, $uType){
+	public static function add_template($uName, $uURL, $uType){
 		global $database;
+		$sTypes = array(".iso", ".tar.gz", ".tar.xz");
 		if(filter_var($uURL, FILTER_VALIDATE_URL) === FALSE) {
 			return $sError = array("red" => "Invalid URL for the template to download");
-		} else {
-			if($uType == 'openvz'){
-				$sList = ".tar.gz";
-			} elseif($uType == 'kvm'){
-				$sList = ".iso";
-			}
-			$sName = preg_replace("/[^a-z0-9._-\s]+/i", "", $uName);
-			$sPath = str_replace($sList, "", basename($uURL));
-			if($sExists = $database->CachedQuery("SELECT * FROM templates WHERE `path` LIKE :TemplatePath && `type` = :Type", array('TemplatePath' => "%".$sPath."%", 'Type' => $uType))){
-				$sPath .= random_string(6);
-			}
-			$sTemplate = new Template(0);
-			$sTemplate->uName = $sName;
-			$sTemplate->uPath = $sPath;
-			$sTemplate->uType = $uType;
-			$sTemplate->InsertIntoDatabase();
-			$sDownload = $sLocalSSH->exec("cd /var/feathur/data/templates/;mkdir {$sTemplate->sType};cd {$sTemplate->sType};wget_output=$(wget -O {$sTemplate->sPath}{$sList} \"{$uURL}\")");
-			$sRandoCalrissian = random_string(12);
-			$sCheckDownload = $sLocalSSH->exec("cd /var/feathur/data/templates/{$sTemplate->sType};if [ -f {$sTemplate->sPath}{$sList} ]; do echo \"{$sRandoCalrissian}\"; fi;if [ $(ls -l {$sTemplate->sPath}{$sList} | awk '{print $5}') == 0 ]; do echo {$sRandoCalrissian}; fi");
-			if(strpos($sCheckDownload, $sRandoCalrissian) !== false) {
-				return $sArray = array("json" => 1, "type" => "success", "result" => "Template added, should be syncing to the servers here shortly.", "reload" => "1");
-			} else {
-				$sClean = $database->CachedQuery("DELETE FROM templates WHERE `id` = :Id", array('Id' => $sTemplate->sId));
-				$sData = $sLocalSSH->exec("cd /var/feathur/data/templates/{$sTemplate->sType};rm -rf {$sTemplate->sPath}{$sList};");
-				return $sArray = array("json" => 1, "type" => "error", "result" => "There was an issue downloading the template/iso.");
-			}
 		}
+		$sTemplateData = array_change_key_case(get_headers($uURL, TRUE));
+		
+		// Make sure the template is at least 10 MB.
+		if($sTemplateData["content-length"] > 10485760){
+		
+			// Get the download file data and make sure it's valid.
+			$sData = parse_url($uURL);
+			foreach($sTypes as $sKey){
+				if(((endsWith($sData["path"], $sKey)) === true) && (empty($sPath))){
+					$sPath = preg_replace("/[^a-z0-9_-]+/i", "", $sData["path"]);
+					if($sPathSearch = $database->CachedQuery("SELECT * FROM templates WHERE `path` = :Path", array('Path' => $sPath))){
+						unset($sPath);
+					}
+				}
+			}
+			
+			// If the file doesn't have a valid name generate one randomly and make sure it's unique.
+			if(empty($sPath)){
+				if($uType == 'openvz'){
+					while($sUnique == 0){
+						$sPath = str_pad(rand(1, 1000000000), 10, '0', STR_PAD_LEFT).'.tar.gz';
+						if(!$sPathSearch = $database->CachedQuery("SELECT * FROM templates WHERE `path` = :Path", array('Path' => $sPath))){
+							$sUnique = 1;
+						}
+					}
+				}
+				
+				if($sType == 'kvm'){
+					while($sUnique == 0){
+						$sPath = str_pad(rand(1, 1000000000), 10, '0', STR_PAD_LEFT).'.iso';
+						if(!$sPathSearch = $database->CachedQuery("SELECT * FROM templates WHERE `path` = :Path", array('Path' => $sPath))){
+							$sUnique = 1;
+						}
+					}
+				}
+			}
+			
+			// Save to database.
+			$sTemplate = new Template(0);
+			$sTemplate->uName = preg_replace('/[\s\W-]+/', "", $uName);
+			$sTemplate->uURL = $uURL;
+			$sTemplate->uType = $uType;
+			$sTemplate->uPath = $sPath;
+			$sTemplate->uSize = $sTemplateData["content-length"];
+			$sTemplate->uDisabled = 0;
+			$sTemplate->InsertIntoDatabase();
+		}
+		return $sError = array("red" => "Templates must be atleast 10 MB in size. Invalid download?");
 	}
 	
 	public static function remove_template($sLocalSSH, $uId){
 		global $database;
 		if(is_numeric($uId)){
 			$sTemplate = new Template($uId);
-			
-			if($sTemplate->sType == 'openvz'){
-				$sList = ".tar.gz";
-			} elseif($sTemplate->sType == 'kvm'){
-				$sList = ".iso";
-			}
-			$sRemoveFile = $sLocalSSH->exec("cd /var/feathur/data/templates/{$sTemplate->sType};rm -rf {$sTemplate->sPath}{$sList};");
 			$sClean = $database->CachedQuery("DELETE FROM templates WHERE `id` = :Id", array('Id' => $sTemplate->sId));
 			return $sArray = array("json" => 1, "type" => "success", "result" => "Template/ISO has been deleted.", "reload" => "1");
 		} else {

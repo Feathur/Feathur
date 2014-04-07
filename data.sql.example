@@ -164,7 +164,9 @@ INSERT INTO `settings` (`id`, `setting_name`, `setting_value`, `setting_group`) 
 (20, 'license', '0', 'site_settings'),
 (21, 'refresh_time', '10', 'site_settings'),
 (22, 'panel_mode', 'https://', 'site_settings'),
-(23, 'max_smtp_connections', '5', 'site_settings');
+(23, 'max_smtp_connections', '8', 'site_settings'),
+(24, 'template_redone_message', '1', 'site_settings'),
+(25, 'templates_cleaned', '1', 'site_settings');
 
 CREATE TABLE IF NOT EXISTS `statistics` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
@@ -185,7 +187,10 @@ CREATE TABLE IF NOT EXISTS `templates` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
   `name` varchar(65) NOT NULL,
   `path` varchar(65) NOT NULL,
+  `url` varchar(255) NOT NULL,
   `type` varchar(65) NOT NULL,
+  `disabled` int(2) NOT NULL,
+  `size` int(65) NOT NULL, 
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
 

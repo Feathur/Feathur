@@ -167,7 +167,22 @@ class openvz {
 			$sHighDisk = $sVPS->sDisk + 1;
 			$sCPUs = round((($sVPS->sCPULimit) / 100));
 			
-			$sCommandList .= "vzctl create {$sVPS->sContainerId} --ostemplate {$sTemplate->sPath};";
+			$sTemplatePath = escapeshellarg($sTemplate->sPath);
+			
+			// Check to make sure the template is on the server and is within 5 MB of the target size.
+			$sCheckSynced = $sSSH->exec("cd /vz/template/cache/;ls -nl {$sTemplatePath} | awk '{print $5}'");
+			$sUpper = $sTemplate->sSize + 5242880;
+			$sLower = $sTemplate->sSize - 5242880;
+			if(strpos($sCheckSynced, 'No such file or directory') !== false) { 
+				$sSync = true;
+			}
+			
+			if(($sCheckSynced < $sLower) || ($sCheckSynced > $sUpper)){
+				$sSync = true;
+				$sCleanup = $sSSH->exec("cd /vz/template/cache/;rm -rf {$sTemplatePath};");
+			}
+			
+			$sCommandList .= "vzctl create {$sVPS->sContainerId} --ostemplate {$sTemplatePath};";
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --onboot yes --save;";
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --ram {$sVPS->sRAM}M --swap {$sVPS->sSWAP}M --save;";
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --cpuunits {$sVPS->sCPUUnits} --save;";
@@ -192,6 +207,16 @@ class openvz {
 			
 			$sCommandList .= "vzctl stop {$sVPS->sContainerId};";
 			$sCommandList .= "vzctl start {$sVPS->sContainerId};";
+			
+			if($sSync === true){
+				$sTemplateURL = escapeshellarg($sTemplate->sURL);
+				$sStart .= "yum -y install screen;";
+				$sCommandList = "cd /vz/template/cache/;wget -O {$sTemplatePath} {$sTemplateURL};".$sCommandList;
+				$sScreen = "screen -dmS build{$sVPS->sContainerId} ".escapeshellarg($sCommandList);
+				$sLog[] = array("command" => str_replace($sPassword, "obfuscated", $sScreen), "result" => $sSSH->exec($sScreen));
+				$sSave = VPS::save_vps_logs($sLog, $sVPS);
+				return $sArray = array("json" => 1, "type" => "success", "result" => "VPS has been created!", "reload" => 1, "vps" => $sVPS->sId);
+			}
 	
 			$sLog[] = array("command" => str_replace($sPassword, "obfuscated", $sCommandList), "result" => $sSSH->exec($sCommandList));
 		

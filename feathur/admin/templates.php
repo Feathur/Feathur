@@ -9,7 +9,7 @@ $sType = $_GET['type'];
 
 if($sAction == addtemplate){
 	if((!empty($_GET['type'])) && (!empty($_GET['url']))){
-		$sAdd = VPS::add_template(VPS::localhost_connect(), $_GET['name'], $_GET['url'], $_GET['type']);
+		$sAdd = VPS::add_template($_GET['name'], $_GET['url'], $_GET['type']);
 		if(is_array($sAdd)){
 			echo json_encode($sAdd);
 			die();

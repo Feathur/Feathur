@@ -72,6 +72,14 @@
 						</select>
 						<div class="clear"></div>
 					</div>
+					<div class="st-form-line">	
+						<span class="st-labeltext">Template Warning Message (Dashboard):</span>
+						<select name="template_redone_setting" id="template_redone_setting" class="uniform">
+							<option value="0" {%if isset|TemplateRedone == true}{%if isempty|TemplatesRedone == true}selected="selected"{%/if}{%/if}>Enabled</option>
+							<option value="1" {%if isset|TemplateRedone == true}{%if isempty|TemplatesRedone == false}selected="selected"{%/if}{%/if}>Disabled</option>
+						</select>
+						<div class="clear"></div>
+					</div>
 				</p>
 			</div>
 			<div id="tabs-2" align="left">

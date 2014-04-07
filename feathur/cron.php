@@ -28,45 +28,43 @@ $sLink = $sLocalSSH->exec("ln -s /var/feathur/data/templates/kvm /var/feathur/fe
 // Remove old screens
 $sClean = $sLocalSSH->exec("killall --older-than 10m screen");
 
-// Setup screen to begin syncing templates assuming that:
-// 1. A sync hasn't occurred in the last 5 minutes.
-// 2. A sync isn't still in progress (EG: template.lock)
-$sTemplateSync = Core::GetSetting('last_template_sync');
-$sBefore = time() - (60 * 15);
-$sTemplateSync = $sTemplateSync->sValue;
-$sTimestamp = time();
-if($sTemplateSync < $sBefore){
+// Obsolete.
+// $sTemplateSync = Core::GetSetting('last_template_sync');
+// $sBefore = time() - (60 * 15);
+// $sTemplateSync = $sTemplateSync->sValue;
+// $sTimestamp = time();
+// if($sTemplateSync < $sBefore){
 
-	$sLock = $sLocalSSH->exec("cat /var/feathur/data/template.lock;");
+	//$sLock = $sLocalSSH->exec("cat /var/feathur/data/template.lock;");
 	
-	if((strpos($sLock, 'No such file or directory') !== false) || ($sLock < $sBefore)) {
+	// if((strpos($sLock, 'No such file or directory') !== false) || ($sLock < $sBefore)) {
 
 		// Issue template lock.
-		$sLock = $sLocalSSH->exec("echo '{$sTimestamp}' > /var/feathur/data/template.lock;");
-		echo "Starting template sync...\n";
+		// $sLock = $sLocalSSH->exec("echo '{$sTimestamp}' > /var/feathur/data/template.lock;");
+		// echo "Starting template sync...\n";
 		
-		if($sServerList = $database->CachedQuery("SELECT * FROM servers WHERE (`type` = 'openvz' || `type` = 'kvm')", array())){
-			foreach($sServerList->data as $sValue){
-				$sServer = new Server($sValue["id"]);
-				if($sServer->sType == 'openvz'){
-					$sLocation = '/vz/template/cache/';
-				} elseif($sServer->sType == 'kvm'){
-					$sLocation = '/var/feathur/data/templates/kvm';
-				}
-				$sCommandList .= "echo \"{$sServer->sName} Starting...\n\";rsync -avz -e \"ssh -o StrictHostKeyChecking=no -i /var/feathur/data/keys/{$sServer->sKey}\" /var/feathur/data/templates/{$sServer->sType}/* root@{$sServer->sIPAddress}:{$sLocation};";
-			}
-			echo "Issuing commands to sync templates.\n";
-		}
+		// if($sServerList = $database->CachedQuery("SELECT * FROM servers WHERE (`type` = 'openvz' || `type` = 'kvm')", array())){
+			// foreach($sServerList->data as $sValue){
+				// $sServer = new Server($sValue["id"]);
+				// if($sServer->sType == 'openvz'){
+				//	$sLocation = '/vz/template/cache/';
+				// } elseif($sServer->sType == 'kvm'){
+				//	$sLocation = '/var/feathur/data/templates/kvm';
+				// }
+				// $sCommandList .= "echo \"{$sServer->sName} Starting...\n\";rsync -avz -e \"ssh -o StrictHostKeyChecking=no -i /var/feathur/data/keys/{$sServer->sKey}\" /var/feathur/data/templates/{$sServer->sType}/* root@{$sServer->sIPAddress}:{$sLocation};";
+			// }
+			// echo "Issuing commands to sync templates.\n";
+		// }
 		
-		$sCommandList = escapeshellarg($sCommandList);
-		$sLocalSSH->exec("screen -dm -S cron bash -c {$sCommandList};");
-		$sLastUpdate = Core::UpdateSetting('last_template_sync', time());
-		unset($sCommandList);
-		echo "Issued commands to sync templates.\n";
-	}
-} else {
-	echo "Another template sync is already in progress, skipping template sync.\n";
-}
+		// $sCommandList = escapeshellarg($sCommandList);
+		// $sLocalSSH->exec("screen -dm -S cron bash -c {$sCommandList};");
+		// $sLastUpdate = Core::UpdateSetting('last_template_sync', time());
+		// unset($sCommandList);
+		// echo "Issued commands to sync templates.\n";
+	// }
+// } else {
+	// echo "Another template sync is already in progress, skipping template sync.\n";
+// }
 
 // System status tracker.
 if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
@@ -115,14 +113,14 @@ $sStatistics->bindParam(':OldStatistics', $sOldStatistics, PDO::PARAM_INT);
 $sStatistics->execute();
 
 // Cleanup old history...
-$sOldHistory = (time() - (60*60*24*10));
+$sOldHistory = (time() - (60*60*24*7));
 $sHistory = $database->prepare("DELETE FROM `history` WHERE timestamp < :OldHistory");
 $sHistory->bindParam(':OldHistory', $sOldHistory, PDO::PARAM_INT);  
 $sHistory->execute();
 
-// Reset bandwidth if today is the first day of the month and the last reset was more than 10 days ago.
+// Reset bandwidth if today is the first day of the month and the last reset was more than 7 days ago.
 $sLastReset = Core::GetSetting('bandwidth_timestamp');
-$sTimeAgo = (time() - (((60 * 60) * 24) * 10));
+$sTimeAgo = (time() - (((60 * 60) * 24) * 7));
 $sDayToday = date('j');
 if(($sLastReset->sValue < $sTimeAgo) && ($sDayToday == 1)){
 	$sReset = $database->prepare("UPDATE `vps` SET `bandwidth_usage` = '0'");

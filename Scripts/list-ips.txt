@@ -1,1 +1,0 @@
-vzlist -H -o ip

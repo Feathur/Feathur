@@ -21,6 +21,13 @@
 		});
 	</script>
 	<div align="center">Welcome to Feathur, here is a quick system report:</div><br><br>
+	{%if isempty|TemplatesRedone == true}
+		<div class="albox warningbox">
+			We have updated the template system. As part of that unfortunately all existing template database entries have been removed from the system. The table has been backed up as 'templates_old'. Any templates on the hard disk have been left where they are for the time being. The new system uses URL based downloads instead of rsync or localized downloads. You can disable this message in settings.
+			<a href="#" class="close tips" title="close">close</a>
+		</div>
+		<br><br>
+	{%/if}
 	{%if isset|Down == true}
 		<div class="albox errorbox">
 			Server(s) Down: {%foreach system in Down}{%?system[name]}, {%/foreach}
