@@ -213,7 +213,7 @@ class openvz {
 				$sTemplateURL = escapeshellarg($sTemplate->sURL);
 				$sStart .= "yum -y install screen;";
 				$sCommandList = "cd /vz/template/cache/;wget -O {$sTemplatePath} {$sTemplateURL};".$sCommandList;
-				$sScreen = "screen -dmS build{$sVPS->sContainerId} \"".$sCommandList."\";";
+				$sScreen = "screen -dmS build{$sVPS->sContainerId} bash -c \"".$sCommandList."\";";
 				$sLog[] = array("command" => str_replace($sPassword, "obfuscated", $sScreen), "result" => $sSSH->exec($sScreen));
 				$sSave = VPS::save_vps_logs($sLog, $sVPS);
 				return $sArray = array("json" => 1, "type" => "success", "result" => "VPS has been created!", "reload" => 1, "vps" => $sVPS->sId);
