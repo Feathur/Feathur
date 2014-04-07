@@ -176,7 +176,7 @@ class openvz {
 			if(strpos($sCheckSynced, 'No such file or directory') !== false) { 
 				$sSync = true;
 			}
-			
+
 			if(($sCheckSynced < $sLower) || ($sCheckSynced > $sUpper)){
 				$sSync = true;
 				$sCleanup = $sSSH->exec("cd /vz/template/cache/;rm -rf {$sTemplatePath};");
@@ -194,7 +194,7 @@ class openvz {
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --nameserver {$sVPS->sNameserver} --save;";
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --hostname {$sVPS->sHostname} --save;";
 			$sCommandList .= "modprobe tun;vzctl set {$sVPS->sContainerId} --devnodes net/tun:rw --save;vzctl set {$sVPS->sContainerId} --devices c:10:200:rw --save;vzctl set {$sVPS->sContainerId} --capability net_admin:on --save;vzctl exec {$sVPS->sContainerId} mkdir -p /dev/net;vzctl exec {$sVPS->sContainerId} mknod /dev/net/tun c 10 200;";
-			$sCommandList .= "modprobe iptables_module ipt_helper ipt_REDIRECT ipt_TCPMSS ipt_LOG ipt_TOS iptable_nat ipt_MASQUERADE ipt_multiport xt_multiport ipt_state xt_state ipt_limit xt_limit ipt_recent xt_connlimit ipt_owner xt_owner iptable_nat ipt_DNAT iptable_nat ipt_REDIRECT ipt_length ipt_tcpmss iptable_mangle ipt_tos iptable_filter ipt_helper ipt_tos ipt_ttl ipt_SAME ipt_REJECT ipt_helper ipt_owner ip_tables";
+			$sCommandList .= "modprobe iptables_module ipt_helper ipt_REDIRECT ipt_TCPMSS ipt_LOG ipt_TOS iptable_nat ipt_MASQUERADE ipt_multiport xt_multiport ipt_state xt_state ipt_limit xt_limit ipt_recent xt_connlimit ipt_owner xt_owner iptable_nat ipt_DNAT iptable_nat ipt_REDIRECT ipt_length ipt_tcpmss iptable_mangle ipt_tos iptable_filter ipt_helper ipt_tos ipt_ttl ipt_SAME ipt_REJECT ipt_helper ipt_owner ip_tables;";
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --iptables ipt_REJECT --iptables ipt_tos --iptables ipt_TOS --iptables ipt_LOG --iptables ip_conntrack --iptables ipt_limit --iptables ipt_multiport --iptables iptable_filter --iptables iptable_mangle --iptables ipt_TCPMSS --iptables ipt_tcpmss --iptables ipt_ttl --iptables ipt_length --iptables ipt_state --iptables iptable_nat --iptables ip_nat_ftp --save;";
 		
 			if(!empty($sPassword)){
@@ -209,12 +209,15 @@ class openvz {
 			$sCommandList .= "vzctl stop {$sVPS->sContainerId};";
 			$sCommandList .= "vzctl start {$sVPS->sContainerId};";
 			
+			// If the template needs to be synced throw the build process in a screen and act as if the VPS is just rebuilding...
 			if($sSync === true){
+				$sVPS->sRebuilding = 1;
+				$sVPS->InsertIntoDatabase();
 				$sTemplateURL = escapeshellarg($sTemplate->sURL);
 				$sStart .= "yum -y install screen;";
 				$sCommandList = "cd /vz/template/cache/;wget -O {$sTemplatePath} {$sTemplateURL};".$sCommandList;
-				$sScreen = "screen -dmS build{$sVPS->sContainerId} bash -c \"".$sCommandList."\";";
-				$sLog[] = array("command" => str_replace($sPassword, "obfuscated", $sScreen), "result" => $sSSH->exec($sScreen));
+				$sScreen = "screen -dmS build{$sVPS->sContainerId} bash -c \"".$sCommandList."mkdir /vz/feathur_tmp/;echo \"{$sVPS->sId}\" > /vz/feathur_tmp/{$sVPS->sContainerId}.finished;exit;\";";
+				$sLog[] = array("command" => str_replace($sPassword, "obfuscated", $sScreen), "result" => $sSSH->exec($sStart;$sScreen));
 				$sSave = VPS::save_vps_logs($sLog, $sVPS);
 				return $sArray = array("json" => 1, "type" => "success", "result" => "VPS has been created!", "reload" => 1, "vps" => $sVPS->sId);
 			}
