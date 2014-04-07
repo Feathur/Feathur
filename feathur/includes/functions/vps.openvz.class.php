@@ -599,12 +599,18 @@ class openvz {
 		$sSSH = Server::server_connect($sServer);
 		$sLog[] = array("command" => "Screened Rebuild Check", "result" => $sSSH->exec("cat /vz/feathur_tmp/{$sVPS->sContainerId}.finished"));
 		if(strpos($sLog[0]["result"], $sVPS->sId) !== false){
+			while($sClean = 0){
+				$sRemove = $sSSH->exec("rm -rf /vz/feathur_tmp/{$sVPS->sContainerId}.finished");
+				$sCheck = $sSSH->exec("cat /vz/feathur_tmp/{$sVPS->sContainerId}.finished");
+				if($sCheck != $sVPS->sId){
+					$sClean = 1;
+				}
+			}
 			$sVPS->uRebuilding = 0;
 			$sVPS->InsertIntoDatabase();
-			$sLog[] = array("command" => "Screened Rebuild Check", "result" => $sSSH->exec("rm -rf /vz/feathur_tmp/{$sVPS->sContainerId}.finished"));
-			return $sArray = array("json" => 1, "type" => "success", "reload" => 1, "result" => "Rebuild Completed!");
+			return $sArray = array("json" => 1, "type" => "success", "reload" => 1, "result" => "Rebuild Completed.");
 		} else {
-			return $sArray = array("json" => 1, "type" => "pending", "reload" => 0, "result" => "Rebuild Pending!");
+			return $sArray = array("json" => 1, "type" => "pending", "reload" => 0, "result" => "Rebuild Pending.");
 		}
 	}
 	
