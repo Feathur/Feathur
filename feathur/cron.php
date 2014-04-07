@@ -29,6 +29,7 @@ $sLink = $sLocalSSH->exec("ln -s /var/feathur/data/templates/kvm /var/feathur/fe
 $sClean = $sLocalSSH->exec("killall --older-than 10m screen");
 
 // Check to make sure that all template urls are valid and working on a 15 minute basis.
+echo "Begining template validity checks...\n";
 $sTemplateSync = Core::GetSetting('last_template_sync');
 $sBefore = time() - (60 * 15);
 $sTemplateSync = $sTemplateSync->sValue;
@@ -54,8 +55,10 @@ if($sTemplateSync < $sBefore){
 				$sTemplate->uDisabled = 0;
 				$sTemplate->InsertIntoDatabase();
 			}
+			unset($sDisable);
 		}
 	}
+	$sUpdateTimestamp = Core::UpdateSetting('last_template_sync', time());
 } else {
 	echo "Template URLs have been checked recently, skipping...\n";
 }
