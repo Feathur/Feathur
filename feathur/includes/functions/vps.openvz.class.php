@@ -535,6 +535,9 @@ class openvz {
 		$sOpenVZTemplate = new Template($sVPS->sTemplateId);
 		
 		$sTemplatePath = escapeshellarg($sOpenVZTemplate->sPath);
+		
+		// Make sure the marker for VPS rebuild finished is removed.
+		$sCommandList .= "rm -rf /vz/feathur_tmp/*{$sVPS->sContainerId}*;";
 			
 		// Check to make sure the template is on the server and is within 5 MB of the target size.
 		$sCheckSynced = $sSSH->exec("cd /vz/template/cache/;ls -nl {$sTemplatePath} | awk '{print $5}'");
@@ -554,6 +557,7 @@ class openvz {
 			$sCommandList .= "cd /vz/template/cache/;wget -O {$sTemplatePath} {$sTemplateURL};";
 		}
 		
+		// Remove and setup VPS again.
 		$sHighDisk = $sVPS->sDisk + 1;
 		$sCPUs = round((($sVPS->sCPULimit) / 100));
 		$sOSTemplate = str_replace(array(".tar.gz", ".tar.xz"), '', $sTemplatePath);
@@ -599,13 +603,7 @@ class openvz {
 		$sSSH = Server::server_connect($sServer);
 		$sCheck = $sSSH->exec("cat /vz/feathur_tmp/{$sVPS->sContainerId}.finished");
 		if(strpos($sCheck, $sVPS->sId) !== false){
-			while($sClean = 0){
-				$sRemove = $sSSH->exec("rm -rf /vz/feathur_tmp/*{$sVPS->sContainerId}*;");
-				$sCheck = $sSSH->exec("cat /vz/feathur_tmp/{$sVPS->sContainerId}.finished");
-				if(strpos($sCheck, $sVPS->sId) === false){
-					$sClean = 1;
-				}
-			}
+			$sRemove = $sSSH->exec("rm -rf /vz/feathur_tmp/*{$sVPS->sContainerId}*;");
 			$sVPS->uRebuilding = 0;
 			$sVPS->InsertIntoDatabase();
 			return $sArray = array("json" => 1, "type" => "success", "reload" => 1, "result" => "Rebuild Completed.");
