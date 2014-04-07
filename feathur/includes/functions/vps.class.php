@@ -180,7 +180,7 @@ class VPS extends CPHPDatabaseRecordClass {
 			$sData = parse_url($uURL);
 			foreach($sTypes as $sKey){
 				if(((endsWith($sData["path"], $sKey)) === true) && (empty($sPath))){
-					$sPath = preg_replace("/[^a-z0-9_-]+/i", "", $sData["path"]);
+					$sPath = preg_replace("/[^a-z0-9_.-]+/i", "", $sData["path"]);
 					if($sPathSearch = $database->CachedQuery("SELECT * FROM templates WHERE `path` = :Path", array('Path' => $sPath))){
 						unset($sPath);
 					}

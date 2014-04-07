@@ -182,7 +182,8 @@ class openvz {
 				$sCleanup = $sSSH->exec("cd /vz/template/cache/;rm -rf {$sTemplatePath};");
 			}
 			
-			$sCommandList .= "vzctl create {$sVPS->sContainerId} --ostemplate {$sTemplatePath};";
+			$sOSTemplate = str_replace(array(".tar.gz", ".tar.xz"), '', $sTemplatePath);
+			$sCommandList .= "vzctl create {$sVPS->sContainerId} --ostemplate {$sOSTemplate};";
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --onboot yes --save;";
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --ram {$sVPS->sRAM}M --swap {$sVPS->sSWAP}M --save;";
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --cpuunits {$sVPS->sCPUUnits} --save;";
