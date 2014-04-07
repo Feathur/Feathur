@@ -602,7 +602,7 @@ class openvz {
 			while($sClean = 0){
 				$sRemove = $sSSH->exec("rm -rf /vz/feathur_tmp/{$sVPS->sContainerId}.finished");
 				$sCheck = $sSSH->exec("cat /vz/feathur_tmp/{$sVPS->sContainerId}.finished");
-				if($sCheck != $sVPS->sId){
+				if(strpos($sCheck, $sVPS->sId) === false){
 					$sClean = 1;
 				}
 			}
