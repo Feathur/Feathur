@@ -530,6 +530,8 @@ class openvz {
 		global $database;
 		global $locale;
 		global $sTemplate;
+		$sServer = new Server($sVPS->sServerId);
+		$sSSH = Server::server_connect($sServer);
 		$sOpenVZTemplate = new Template($sVPS->sTemplateId);
 		
 		$sTemplatePath = escapeshellarg($sOpenVZTemplate->sPath);
@@ -584,9 +586,7 @@ class openvz {
 		$sCommandList .= "vzctl stop {$sVPS->sContainerId};";
 		$sCommandList .= "vzctl start {$sVPS->sContainerId};";
 		$sCommandList .= "mkdir /vz/feathur_tmp/;echo \"{$sVPS->sId}\" > /vz/feathur_tmp/{$sVPS->sContainerId}.finished";
-		
-		$sServer = new Server($sVPS->sServerId);
-		$sSSH = Server::server_connect($sServer);
+
 		$sCommandList = escapeshellarg($sCommandList);
 		$sLog[] = array("command" => "Screened Rebuild", "result" => $sSSH->exec("screen -dm -S {$sVPS->sContainerId} bash -c {$sCommandList};"));
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
