@@ -43,32 +43,6 @@ NewTemplater::SetGlobalVariable("PanelMode", $sPanelMode->sValue);
 $sBandwidthAccounting = Core::GetSetting('bandwidth_accounting');
 NewTemplater::SetGlobalVariable("BandwidthAccounting", $sBandwidthAccounting->sValue);
 
-if($sUser->sPermissions == 7){
-	// Admin Template
-	$sAdminTemplate = Core::GetSetting('admin_template');
-	NewTemplater::SetGlobalVariable("AdminTemplate", $sAdminTemplate->sValue);
-	
-	// History Difference
-	$sHistoryDifference = Core::GetSetting('history_difference');
-	NewTemplater::SetGlobalVariable("HistoryDifference", $sHistoryDifference->sValue);
-
-	// Refresh Time
-	$sRefreshTime = Core::GetSetting('refresh_time');
-	NewTemplater::SetGlobalVariable("RefreshTime", $sRefreshTime->sValue);
-
-	// Max History
-	$sMaxHistory = Core::GetSetting('max_history');
-	NewTemplater::SetGlobalVariable("MaxHistory", $sMaxHistory->sValue);
-
-	// Max Statistics
-	$sMaxStatistics = Core::GetSetting('max_statistics');
-	NewTemplater::SetGlobalVariable("MaxStatistics", $sMaxStatistics->sValue);
-	
-	// Templates redone message
-	$sTemplatesRedone = Core::GetSetting('template_redone_message');
-	NewTemplater::SetGlobalVariable("TemplatesRedone", $sTemplatesRedone->sValue);
-}
-
 // License Setting
 // Please don't remove or edit this code, a lot of work went into Feathur.
 // Thank us for our work by leaving this code here or by paying for a license.
@@ -84,6 +58,33 @@ if($sMail->sValue == 1){
 
 if(isset($_SESSION["user_id"])){
 	$sUser = new User($_SESSION["user_id"]);
+	
+	if($sUser->sPermissions == 7){
+		// Admin Template
+		$sAdminTemplate = Core::GetSetting('admin_template');
+		NewTemplater::SetGlobalVariable("AdminTemplate", $sAdminTemplate->sValue);
+		
+		// History Difference
+		$sHistoryDifference = Core::GetSetting('history_difference');
+		NewTemplater::SetGlobalVariable("HistoryDifference", $sHistoryDifference->sValue);
+
+		// Refresh Time
+		$sRefreshTime = Core::GetSetting('refresh_time');
+		NewTemplater::SetGlobalVariable("RefreshTime", $sRefreshTime->sValue);
+
+		// Max History
+		$sMaxHistory = Core::GetSetting('max_history');
+		NewTemplater::SetGlobalVariable("MaxHistory", $sMaxHistory->sValue);
+
+		// Max Statistics
+		$sMaxStatistics = Core::GetSetting('max_statistics');
+		NewTemplater::SetGlobalVariable("MaxStatistics", $sMaxStatistics->sValue);
+		
+		// Templates redone message
+		$sTemplatesRedone = Core::GetSetting('template_redone_message');
+		NewTemplater::SetGlobalVariable("TemplatesRedone", $sTemplatesRedone->sValue);
+	}
+	
 	$_SESSION['permissions'] = $sUser->sPermissions;
 	NewTemplater::SetGlobalVariable("Username", $sUser->sUsername);
 	NewTemplater::SetGlobalVariable("UserPermissions", $sUser->sPermissions);
