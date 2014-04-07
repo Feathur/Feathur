@@ -597,10 +597,10 @@ class openvz {
 	public function database_openvz_rebuildcheck($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
-		$sLog[] = array("command" => "Screened Rebuild Check", "result" => $sSSH->exec("cat /vz/feathur_tmp/{$sVPS->sContainerId}.finished"));
-		if(strpos($sLog[0]["result"], $sVPS->sId) !== false){
+		$sCheck = $sSSH->exec("cat /vz/feathur_tmp/{$sVPS->sContainerId}.finished");
+		if(strpos($sCheck, $sVPS->sId) !== false){
 			while($sClean = 0){
-				$sRemove = $sSSH->exec("rm -rf /vz/feathur_tmp/{$sVPS->sContainerId}.finished");
+				$sRemove = $sSSH->exec("rm -rf /vz/feathur_tmp/*{$sVPS->sContainerId}*;");
 				$sCheck = $sSSH->exec("cat /vz/feathur_tmp/{$sVPS->sContainerId}.finished");
 				if(strpos($sCheck, $sVPS->sId) === false){
 					$sClean = 1;
