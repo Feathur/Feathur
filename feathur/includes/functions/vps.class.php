@@ -95,7 +95,7 @@ class VPS extends CPHPDatabaseRecordClass {
 	
 	public static function list_templates($sVPS){
 		global $database;
-		if($sList = $database->CachedQuery("SELECT * FROM templates WHERE `type` = :Type", array('Type' => $sVPS->sType))){
+		if($sList = $database->CachedQuery("SELECT * FROM templates WHERE `type` = :Type AND `disabled` = 0", array('Type' => $sVPS->sType))){
 			foreach($sList->data as $key => $value){
 				if($value["id"] == $sVPS->sTemplateId){
 					$sPrimary = 1;
@@ -171,7 +171,16 @@ class VPS extends CPHPDatabaseRecordClass {
 		if(filter_var($uURL, FILTER_VALIDATE_URL) === FALSE) {
 			return $sError = array("red" => "Invalid URL for the template to download");
 		}
-		$sTemplateData = array_change_key_case(get_headers($uURL, TRUE));
+		
+		// Attempt to get data about the template.
+		try {
+			$sTemplateData = array_change_key_case(get_headers($uURL, TRUE));
+			if((!isset($sTemplateData['content-length'])) || (empty($sTemplateData['content-length']))){
+				throw new Exception("ISO Invalid");
+			}
+		} catch (Exception $e) {
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Template/ISO URL is invalid or down.");
+		}
 		
 		// Make sure the template is at least 10 MB.
 		if($sTemplateData["content-length"] > 10485760){
@@ -210,16 +219,17 @@ class VPS extends CPHPDatabaseRecordClass {
 			
 			// Save to database.
 			$sTemplate = new Template(0);
-			$sTemplate->uName = preg_replace("/[^a-z0-9_.-]+/i", "", $uName);
+			$sTemplate->uName = preg_replace("/[^a-z0-9_ .-]+/i", "", $uName);
 			$sTemplate->uURL = $uURL;
 			$sTemplate->uType = $uType;
 			$sTemplate->uPath = $sPath;
 			$sTemplate->uSize = $sTemplateData["content-length"];
 			$sTemplate->uDisabled = 0;
 			$sTemplate->InsertIntoDatabase();
-			return $sError = array("green" => "Template added.");
+			return $sArray = array("json" => 1, "type" => "success", "result" => "Template/ISO added.", "reload" => "1");
 		}
-		return $sArray = array("json" => 1, "type" => "success", "result" => "Template/ISO added.", "reload" => "1");
+		
+		return $sArray = array("json" => 1, "type" => "error", "result" => "Template/ISO URL is invalid or down.");
 	}
 	
 	public static function remove_template($sLocalSSH, $uId){

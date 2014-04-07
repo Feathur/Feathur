@@ -28,43 +28,37 @@ $sLink = $sLocalSSH->exec("ln -s /var/feathur/data/templates/kvm /var/feathur/fe
 // Remove old screens
 $sClean = $sLocalSSH->exec("killall --older-than 10m screen");
 
-// Obsolete.
-// $sTemplateSync = Core::GetSetting('last_template_sync');
-// $sBefore = time() - (60 * 15);
-// $sTemplateSync = $sTemplateSync->sValue;
-// $sTimestamp = time();
-// if($sTemplateSync < $sBefore){
-
-	//$sLock = $sLocalSSH->exec("cat /var/feathur/data/template.lock;");
-	
-	// if((strpos($sLock, 'No such file or directory') !== false) || ($sLock < $sBefore)) {
-
-		// Issue template lock.
-		// $sLock = $sLocalSSH->exec("echo '{$sTimestamp}' > /var/feathur/data/template.lock;");
-		// echo "Starting template sync...\n";
-		
-		// if($sServerList = $database->CachedQuery("SELECT * FROM servers WHERE (`type` = 'openvz' || `type` = 'kvm')", array())){
-			// foreach($sServerList->data as $sValue){
-				// $sServer = new Server($sValue["id"]);
-				// if($sServer->sType == 'openvz'){
-				//	$sLocation = '/vz/template/cache/';
-				// } elseif($sServer->sType == 'kvm'){
-				//	$sLocation = '/var/feathur/data/templates/kvm';
-				// }
-				// $sCommandList .= "echo \"{$sServer->sName} Starting...\n\";rsync -avz -e \"ssh -o StrictHostKeyChecking=no -i /var/feathur/data/keys/{$sServer->sKey}\" /var/feathur/data/templates/{$sServer->sType}/* root@{$sServer->sIPAddress}:{$sLocation};";
-			// }
-			// echo "Issuing commands to sync templates.\n";
-		// }
-		
-		// $sCommandList = escapeshellarg($sCommandList);
-		// $sLocalSSH->exec("screen -dm -S cron bash -c {$sCommandList};");
-		// $sLastUpdate = Core::UpdateSetting('last_template_sync', time());
-		// unset($sCommandList);
-		// echo "Issued commands to sync templates.\n";
-	// }
-// } else {
-	// echo "Another template sync is already in progress, skipping template sync.\n";
-// }
+Check to make sure that all template urls are valid and working on a 15 minute basis.
+$sTemplateSync = Core::GetSetting('last_template_sync');
+$sBefore = time() - (60 * 15);
+$sTemplateSync = $sTemplateSync->sValue;
+$sTimestamp = time();
+if($sTemplateSync < $sBefore){
+	// Attempt to get data about the template.
+	if($sTemplateList = $database->CachedQuery("SELECT * FROM `templates` WHERE `disabled` < 2", array())){
+		foreach($sTemplateList->data as $sTemplate){
+			$sTemplate = new Template($sTemplate["id"]);
+			try {
+				$sTemplateData = array_change_key_case(get_headers($sTemplate->sURL, TRUE));
+				if((!isset($sTemplateData['content-length'])) || (empty($sTemplateData['content-length']))){
+					throw new Exception("ISO Invalid");
+				}
+			} catch (Exception $e) {
+				$sDisable = 1;
+			}
+			
+			if(($sTemplate->sDisabled == 0) && ($sDisable == 1)){
+				$sTemplate->uDisabled = 1;
+				$sTemplate->InsertIntoDatabase();
+			} else {
+				$sTemplate->uDisabled = 0;
+				$sTemplate->InsertIntoDatabase();
+			}
+		}
+	}
+} else {
+	echo "Template URLs have been checked recently, skipping...\n";
+}
 
 // System status tracker.
 if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){

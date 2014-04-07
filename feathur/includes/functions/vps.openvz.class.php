@@ -531,6 +531,27 @@ class openvz {
 		global $locale;
 		global $sTemplate;
 		$sOpenVZTemplate = new Template($sVPS->sTemplateId);
+		
+		$sTemplatePath = escapeshellarg($sOpenVZTemplate->sPath);
+			
+		// Check to make sure the template is on the server and is within 5 MB of the target size.
+		$sCheckSynced = $sSSH->exec("cd /vz/template/cache/;ls -nl {$sTemplatePath} | awk '{print $5}'");
+		$sUpper = $sOpenVZTemplate->sSize + 5242880;
+		$sLower = $sOpenVZTemplate->sSize - 5242880;
+		if(strpos($sCheckSynced, 'No such file or directory') !== false) { 
+			$sSync = true;
+		}
+
+		if(($sCheckSynced < $sLower) || ($sCheckSynced > $sUpper)){
+			$sSync = true;
+			$sCleanup = $sSSH->exec("cd /vz/template/cache/;rm -rf {$sTemplatePath};");
+		}
+		
+		if($sSync === true){
+			$sTemplateURL = escapeshellarg($sOpenVZTemplate->sURL);
+			$sCommandList .= "cd /vz/template/cache/;wget -O {$sTemplatePath} {$sTemplateURL};";
+		}
+		
 		$sHighDisk = $sVPS->sDisk + 1;
 		$sCPUs = round((($sVPS->sCPULimit) / 100));
 		$sCommandList .= "vzctl stop {$sVPS->sContainerId} --fast;";
