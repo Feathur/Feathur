@@ -28,7 +28,7 @@ $sLink = $sLocalSSH->exec("ln -s /var/feathur/data/templates/kvm /var/feathur/fe
 // Remove old screens
 $sClean = $sLocalSSH->exec("killall --older-than 10m screen");
 
-Check to make sure that all template urls are valid and working on a 15 minute basis.
+// Check to make sure that all template urls are valid and working on a 15 minute basis.
 $sTemplateSync = Core::GetSetting('last_template_sync');
 $sBefore = time() - (60 * 15);
 $sTemplateSync = $sTemplateSync->sValue;
