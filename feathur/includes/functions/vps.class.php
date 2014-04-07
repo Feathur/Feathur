@@ -217,8 +217,9 @@ class VPS extends CPHPDatabaseRecordClass {
 			$sTemplate->uSize = $sTemplateData["content-length"];
 			$sTemplate->uDisabled = 0;
 			$sTemplate->InsertIntoDatabase();
+			return $sError = array("green" => "Template added.");
 		}
-		return $sError = array("red" => "Templates must be atleast 10 MB in size. Invalid download?");
+		return $sArray = array("json" => 1, "type" => "success", "result" => "Template/ISO added.", "reload" => "1");
 	}
 	
 	public static function remove_template($sLocalSSH, $uId){

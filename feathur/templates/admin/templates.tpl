@@ -127,7 +127,7 @@
 					{%foreach template in TemplateList}
 						<tr>
 							<td>{%?template[name]}</td>
-							<td>{%?template[path]}.tar.gz</td>
+							<td>{%?template[path]}</td>
 							<td><div align="center">OpenVZ</div></td>
 							<td>
 								<div align="center">
@@ -292,7 +292,7 @@
 					{%foreach template in TemplateList}
 						<tr>
 							<td>{%?template[name]}</td>
-							<td>{%?template[path]}.iso</td>
+							<td>{%?template[path]}</td>
 							<td><div align="center">KVM</div></td>
 							<td>
 								<div align="center">
