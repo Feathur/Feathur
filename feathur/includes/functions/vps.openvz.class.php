@@ -588,8 +588,7 @@ class openvz {
 		$sCommandList .= "vzctl start {$sVPS->sContainerId};";
 		$sCommandList .= "mkdir /vz/feathur_tmp/;echo \"{$sVPS->sId}\" > /vz/feathur_tmp/{$sVPS->sContainerId}.finished";
 
-		$sCommandList = escapeshellarg($sCommandList);
-		$sLog[] = array("command" => "Screened Rebuild => ".str_replace($sPassword, "obfuscated", $sCommandList), "result" => $sSSH->exec("screen -dm -S {$sVPS->sContainerId} bash -c {$sCommandList};"));
+		$sLog[] = array("command" => "Screened Rebuild => ".str_replace($sPassword, "obfuscated", $sCommandList), "result" => $sSSH->exec("screen -dm -S {$sVPS->sContainerId} bash -c \"{$sCommandList}\";"));
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
 		$sUserView .= Templater::AdvancedParse($sTemplate->sValue.'/rebuild', $locale->strings, array("VPS" => array("data" => $sVPS->uData)));
 		return $sArray = array("json" => 1, "type" => "success", "result" => $sUserView);
