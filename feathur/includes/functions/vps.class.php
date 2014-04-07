@@ -210,7 +210,7 @@ class VPS extends CPHPDatabaseRecordClass {
 			
 			// Save to database.
 			$sTemplate = new Template(0);
-			$sTemplate->uName = preg_replace('/[\s\W-]+/', "", $uName);
+			$sTemplate->uName = preg_replace("/[^a-z0-9_.-]+/i", "", $uName);
 			$sTemplate->uURL = $uURL;
 			$sTemplate->uType = $uType;
 			$sTemplate->uPath = $sPath;
