@@ -168,7 +168,7 @@ class kvm {
 					if($sSync === true){
 						$sVPS->uISOSyncing = 1;
 						$sVPS->InsertIntoDatabase();
-						$sCommandList .= "screen -dmS templatesync{$sVPS->sContainerId} bash -c \"cd /var/feathur/data/templates/kvm/;wget -O {$sTemplatePath} {$sTemplateURL}\";virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId}";
+						$sCommandList .= "screen -dmS templatesync{$sVPS->sContainerId} bash -c \"cd /var/feathur/data/templates/kvm/;wget -O {$sTemplatePath} {$sTemplateURL}\";virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId}\";";
 					}
 				} catch (Exception $e) {
 					$sVPS->uTemplate = 0;
