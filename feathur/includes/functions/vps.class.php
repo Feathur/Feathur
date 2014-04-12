@@ -195,20 +195,26 @@ class VPS extends CPHPDatabaseRecordClass {
 		
 			// Get the download file data and make sure it's valid.
 			$sData = parse_url($uURL);
-			foreach($sTypes as $sKey){
-				if(((endsWith($sData["path"], $sKey)) === true) && (empty($sPath))){
-					$sPath = preg_replace("/[^a-z0-9_.-]+/i", "", $sData["path"]);
-					if($sPathSearch = $database->CachedQuery("SELECT * FROM templates WHERE `path` = :Path", array('Path' => $sPath))){
-						unset($sPath);
-					}
-				}
-			}
+			$sPath = preg_replace("/[^a-z0-9_.-]+/i", "", basename($sData["path"]));
+			if($sPathSearch = $database->CachedQuery("SELECT * FROM templates WHERE `path` = :Path", array('Path' => $sPath))){
 			
-			// If the file doesn't have a valid name generate one randomly and make sure it's unique.
-			if(empty($sPath)){
 				if($uType == 'openvz'){
 					while($sUnique == 0){
-						$sPath = str_pad(rand(1, 1000000000), 10, '0', STR_PAD_LEFT).'.tar.gz';
+						foreach($sTypes as $sValue){
+							if(strpos($sPath, $sValue) !== false) {
+								if(!empty($sEnd)){
+									return $sArray = array("json" => 1, "type" => "error", "result" => "Template/ISO URL is invalid.");
+								}
+								$sEnd = $sValue;
+								$sPath = str_replace($sValue, '', $sPath);
+							}
+						}
+						
+						if(empty($sEnd)){
+							return $sArray = array("json" => 1, "type" => "error", "result" => "Template/ISO URL is invalid.");
+						}
+						
+						$sPath = $sPath.'-'.str_pad(rand(1, 10000), 5, '0', STR_PAD_LEFT).$sEnd;
 						if(!$sPathSearch = $database->CachedQuery("SELECT * FROM templates WHERE `path` = :Path", array('Path' => $sPath))){
 							$sUnique = 1;
 						}
