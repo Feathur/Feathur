@@ -241,6 +241,7 @@ CREATE TABLE IF NOT EXISTS `vps` (
   `ppp` int(2) NOT NULL,
   `iptables` int(2) NOT NULL,
   `smtp_whitelist` int(2) NOT NULL,
+  `iso_syncing` int(2) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=90 ;
 

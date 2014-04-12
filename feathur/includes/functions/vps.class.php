@@ -46,6 +46,7 @@ class VPS extends CPHPDatabaseRecordClass {
 			'LastBandwidth' => "last_bandwidth",
 			'IPv6' => "ipv6",
 			'SMTPWhitelist' => "smtp_whitelist",
+			'ISOSyncing' => "iso_syncing",
 		),
 	);
 	

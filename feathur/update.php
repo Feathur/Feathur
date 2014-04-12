@@ -133,3 +133,6 @@ if(!$sFindSetting = $database->CachedQuery("SELECT * FROM settings WHERE `settin
 	$sAdd = $database->prepare("INSERT INTO settings(setting_name, setting_value, setting_group) VALUES('templates_cleaned', '1', 'site_settings')");
 	$sAdd->execute();
 }
+
+$sAdd = $database->prepare("ALTER TABLE `vps` ADD `iso_syncing` INT(2);");
+$sAdd->execute();

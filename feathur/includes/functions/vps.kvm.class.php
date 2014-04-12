@@ -142,7 +142,47 @@ class kvm {
 			$sCreate = $this->kvm_config($sUser, $sVPS, $sRequested);
 			$sDHCP = $this->kvm_dhcp($sUser, $sVPS, $sRequested);
 			
-			$sCommandList .= "lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId}";
+			// Load up settings.
+			$sVPSTemplate = $sVPS->sTemplateId;
+			if(!empty($sVPSTemplate)){
+				try {
+					$sTemplate = new Template($sVPS->sTemplateId);
+					$sVPSTemplate = $sTemplate->sPath;
+					
+					$sTemplatePath = escapeshellarg($sTemplate->sPath);
+					$sTemplateURL = escapeshellarg($sTemplate->sURL);
+					
+					// Check to make sure the template is on the server and is within 5 MB of the target size.
+					$sCheckSynced = $sSSH->exec("cd /var/feathur/data/templates/kvm/;ls -nl {$sTemplatePath} | awk '{print $5}'");
+					$sUpper = $sTemplate->sSize + 5242880;
+					$sLower = $sTemplate->sSize - 5242880;
+					if(strpos($sCheckSynced, 'No such file or directory') !== false) { 
+						$sSync = true;
+					}
+
+					if(($sCheckSynced < $sLower) || ($sCheckSynced > $sUpper)){
+						$sSync = true;
+						$sCleanup = $sSSH->exec("cd /var/feathur/data/templates/kvm/;rm -rf {$sTemplatePath};");
+					}
+					
+					if($sSync === true){
+						$sVPS->uISOSyncing = 1
+						$sVPS->InsertIntoDatabase();
+						$sCommandList .= "screen -dmS templatesync{$sVPS->sContainerId} bash -c \"cd /var/feathur/data/templates/kvm/;wget -O {$sTemplatePath} {$sTemplateURL}\";virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId}";
+					}
+				} catch (Exception $e) {
+					$sVPS->uTemplate = 0;
+					$sVPS->InsertIntoDatabase();
+					$sVPSTemplate = "404";
+					$sChange = $this->kvm_config($sUser, $sVPS, $sRequested, $_SESSION['vnc_password']);
+				}
+			}
+			
+			$sCommandList .= "lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};";
+			
+			if($sSync === false){
+				$sCommandList = "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId};";
+			}
 			
 			$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
@@ -158,6 +198,33 @@ class kvm {
 	}
 	
 	public function kvm_boot($sUser, $sVPS, $sRequested){
+		$sVPS = new VPS($sRequested["POST"]["VPS"]);
+		$sServer = new Server($sVPS->sServerId);
+		$sSSH = Server::server_connect($sServer);
+		$sCreate = $this->kvm_config($sUser, $sVPS, $sRequested);
+		$sDHCP = $this->kvm_dhcp($sUser, $sVPS, $sRequested);
+		
+		if($sVPS->sISOSyncing == 1){
+			$sCheckScreen = $sSSH->exec("if screen -list | grep -q 'templatesync{$sVPS->sContainerId}'; then echo 'exists'; fi");
+			if(strpos($sCheckScreen, 'exists') !== false) {
+				return $sArray = array("json" => 1, "type" => "success", "result" => "Template is still syncing...");
+			} else {
+				$sVPS->uISOSyncing = 0;
+				$sVPS->InsertIntoDatabase();
+				$sCommandList .= "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId};";
+				
+				$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
+				$sSave = VPS::save_vps_logs($sLog, $sVPS);
+				
+				
+			}
+		}
+		
+		$sVersion = $sSSH->exec("virsh --version");
+		$sVersion = explode(".", $sVersion);
+		if($sVersion[0] != 1){
+			$sChange = $this->kvm_config($sUser, $sVPS, $sRequested, $_SESSION['vnc_password']);
+		}
 		
 		// Load up settings.
 		$sVPSTemplate = $sVPS->sTemplateId;
@@ -165,69 +232,56 @@ class kvm {
 			try {
 				$sTemplate = new Template($sVPS->sTemplateId);
 				$sVPSTemplate = $sTemplate->sPath;
+				
+				$sTemplatePath = escapeshellarg($sTemplate->sPath);
+				$sTemplateURL = escapeshellarg($sTemplate->sURL);
+				
+				// Check to make sure the template is on the server and is within 5 MB of the target size.
+				$sCheckSynced = $sSSH->exec("cd /var/feathur/data/templates/kvm/;ls -nl {$sTemplatePath} | awk '{print $5}'");
+				$sUpper = $sTemplate->sSize + 5242880;
+				$sLower = $sTemplate->sSize - 5242880;
+				if(strpos($sCheckSynced, 'No such file or directory') !== false) { 
+					$sSync = true;
+				}
+
+				if(($sCheckSynced < $sLower) || ($sCheckSynced > $sUpper)){
+					$sSync = true;
+					$sCleanup = $sSSH->exec("cd /var/feathur/data/templates/kvm/;rm -rf {$sTemplatePath};");
+				}
+				
+				if($sSync === true){
+					$sVPS->uISOSyncing = 1;
+					$sVPS->InsertIntoDatabase();
+					$sCommandList .= "screen -dmS templatesync{$sVPS->sContainerId} bash -c \"cd /var/feathur/data/templates/kvm/;wget -O {$sTemplatePath} {$sTemplateURL};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId};\";";
+				} else {
+					$sCommandList .= "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId};";
+				}
 			} catch (Exception $e) {
 				$sVPS->uTemplate = 0;
 				$sVPS->InsertIntoDatabase();
 				$sVPSTemplate = "404";
 				$sChange = $this->kvm_config($sUser, $sVPS, $sRequested, $_SESSION['vnc_password']);
+				$sCommandList .= "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId};";
 			}
-		} else {
-			$sVPSTemplate = "404";
 		}
 		
-		$sPanelURL = Core::GetSetting('panel_url');
-		$sVNCPort = ($sVPS->sVNCPort - 5900);
-		
-		$sVNCPassword = $_SESSION['vnc_password'];
-		if(empty($sVNCPassword)){
-			$sVNCPassword = "feathurpassword";
-		}
-		$sVNCPassword = escapeshellarg($sVNCPassword);
-		
-		$sPanelMode = Core::GetSetting('panel_mode');
-		$sPanelMode = $sPanelMode->sValue;
-		if(empty($sPanelMode)){
-			$sPanelMode = "https://";
-		}
-		$sPanelURL = escapeshellarg("{$sPanelMode}{$sPanelURL->sValue}");
-		
-		// Connect to server.
-		$sServer = new Server($sVPS->sServerId);
-		$sSSH = Server::server_connect($sServer);
-		
-		// Check Virsh Version. If less than 1.0 force config update to ensure VNC password remains.
-		$sVersion = $sSSH->exec("virsh --version");
-		$sVersion = explode(".", $sVersion);
-		if($sVersion[0] != 1){
-			$sChange = $this->kvm_config($sUser, $sVPS, $sRequested, $_SESSION['vnc_password']);
-		}
-		
-		// Dump necessary code on server.
-		$sStartupCode = escapeshellarg(file_get_contents('/var/feathur/Scripts/start-kvm.sh'));
-		$sBalance = escapeshellarg(file_get_contents('/var/feathur/Scripts/balancer.py'));
-		$sDumpCode = $sSSH->exec("mkdir -p /var/feathur/data;echo {$sStartupCode} > /var/feathur/data/start-kvm.sh;echo {$sBalance} > /var/feathur/data/balancer.py");
-		
-		// Start VPS.
-		$sStart = $sSSH->exec("cd /var/feathur/data/;bash start-kvm.sh {$sVPS->sContainerId} {$sPanelURL} {$sVPSTemplate} {$sVNCPassword} {$sVNCPort}; virsh autostart kvm{$sVPS->sContainerId}");
+		$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
+		$sSave = VPS::save_vps_logs($sLog, $sVPS);
 		
 		// Return output.
-		if($sStart == 1){
-			return $sArray = array("json" => 1, "type" => "error", "result" => "Your VPS is already booted...");
+		if($sSync === true){
+			return $sArray = array("json" => 1, "type" => "success", "result" => "Template syncing VPS will start in ~3 minutes.");
 		}
 		
-		if($sStart == 2){
-			return $sArray = array("json" => 1, "type" => "success", "result" => "ISO Syncing VPS will start in ~3 minutes.");
+		if(strpos($sLog[0]["result"], 'created from') !== false) {
+			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS booted successfully.");
 		}
 		
-		if($sStart == 3){
-			return $sArray = array("json" => 1, "type" => "error", "result" => "Virtual device missing, contact support.");
+		if(strpos($sLog[0]["result"], "cannot open file '/dev") !== false) {
+			return $sArray = array("json" => 1, "type" => "success", "result" => "Virtual disk does not exist, contact support.");
 		}
 		
-		if($sStart = 4){
-			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS is being restarted now...");
-		} 
-		
-		return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured. Pease contact support.");
+		return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured, contact support if your VPS fails to boot.");
 	}
 	
 	public function database_kvm_shutdown($sUser, $sVPS, $sRequested){
@@ -463,12 +517,44 @@ class kvm {
 		global $locale;
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
+		
 		$sLog[] = array("command" => "virsh list | grep kvm{$sVPS->sContainerId}", "result" => $sSSH->exec("virsh list | grep kvm{$sVPS->sContainerId}"));
 		if($sTemplates = $database->CachedQuery("SELECT * FROM templates WHERE `id` = :TemplateId", array('TemplateId' => $sVPS->sTemplateId))){
 			$sVPSTemplate = new Template($sVPS->sTemplateId);
 			$sTemplateName = $sVPSTemplate->sName;
 		} else {
 			$sTemplateName = "N/A";
+		}
+		
+		if($sVPS->sISOSyncing == 1){
+			$sTemplatePath = escapeshellarg($sVPSTemplate->sPath);
+				
+			// Check syncing progress.
+			$sCheckSync = $sSSH->exec("cd /var/feathur/data/templates/kvm/;ls -nl {$sTemplatePath} | awk '{print $5}'");
+			$sUpper = $sTemplate->sSize + 5242880;
+			
+			if($sCheckSync < ($sTemplate->sSize - 5242880)){
+				if($sCheckSync > 500){
+					$sISOSync = 1;
+					$sPercentSync = round(((100 / ($sTemplate->sSize)) * $sCheckSync), 0);
+				} else {
+					$sISOSync = 1;
+					$sPercentSync = 0;
+				}
+			} elseif($sCheckSync > $sUpper){
+				$sISOSync = 1;
+				$sSyncError = 1;
+			} else {
+				$sVPS->uISOSyncing = 0;
+				$sVPS->InsertIntoDatabase();
+				$sISOSync = 0;
+				$sSyncError = 0;
+			}
+			
+			if(strpos($sCheckSync, 'No such file or directory') !== false) {
+				$sISOSync = 1;
+				$sSyncError = 1;
+			}
 		}
 		
 		if($sVPS->sBandwidthUsage > 0){
@@ -497,6 +583,9 @@ class kvm {
 											"gateway" => $sIPList[0]["gateway"],
 											"netmask" => $sIPList[0]["netmask"],
 											"mac" => $sMac[0],
+											"iso_sync" => $sISOSync,
+											"sync_error" => $sSyncError,
+											"percent_sync" => $sPercentSync,
 							));
 		$sStatistics = Templater::AdvancedParse($sTemplate->sValue.'/'.$sVPS->sType.'.statistics', $locale->strings, array("Statistics" => $sStatistics));
 		if(strpos($sLog[0]["result"], 'running') === false) {
