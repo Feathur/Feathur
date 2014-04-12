@@ -176,7 +176,7 @@
 			<li><a href="#tabs-2">Settings</a></li>
 			{%if UserPermissions == 7}<li><a href="#tabs-3">Admin</a></li>{%/if}
 		</ul>
-		<div id="tabs-1" style="height:500px;">
+		<div id="tabs-1" style="height:650px;">
 			<table>
 				<tr>
 					<td style="width:20px;">

@@ -182,7 +182,7 @@ input, select, textarea{background:#fff; border:1px solid #D2D4D4; border-top:1p
 .small-success{background-color:#EBF9E2; border:1px solid #BEE4A5; color:#658C2C; padding:0px; margin:0px; text-align:center;}
 .small-caution{background-color:#FFF8D8; border:1px solid #F3D97E; color:#A68510; padding:0px; margin:0px; text-align:center;}
 .small-error{background-color:#FFF8D8; border:1px solid #F3D97E; color:#A68510; padding:0px; margin:0px; text-align:center;}
-.informationbox{background:#E9F3F8 url(../img/icons/error/help.png) no-repeat 14px 14px; border:1px solid #BBD7E4; color:#3876C6}
+.informationbox{border:1px solid #BBD7E4; color:#3876C6}
 .errorbox{background:#F8E9E9 url(../img/icons/error/cross.png) no-repeat 14px 14px; border:1px solid #E4BBBC; color:#BF2C11}
 
 .dialogbox{background:#F8F8F8; border:1px solid #DEDEDE; color:#666}

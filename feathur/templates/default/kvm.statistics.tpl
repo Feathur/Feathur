@@ -9,7 +9,7 @@
 					{%if isempty|info[sync_error] == true}
 						<div align="center">
 							<div class="albox informationbox" style="width:80%">
-								Template Sync Progress: 
+								<font color="black">Template Sync Progress:</font>
 								<div class="progress progress-success" style="margin-bottom:0;">
 									<div class="bar" style="width: {%?info[percent_sync]}%">{%if info[percent_sync] > 25}{%?info[percent_sync]}%{%/if}</div>
 								</div>
