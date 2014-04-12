@@ -531,9 +531,9 @@ class kvm {
 				
 			// Check syncing progress.
 			$sCheckSync = $sSSH->exec("cd /var/feathur/data/templates/kvm/;ls -nl {$sTemplatePath} | awk '{print $5}'");
-			$sUpper = $sTemplate->sSize + 5242880;
+			$sUpper = $sVPSTemplate->sSize + 5242880;
 			
-			if($sCheckSync < ($sTemplate->sSize - 5242880)){
+			if($sCheckSync < ($sVPSTemplate->sSize - 5242880)){
 				if($sCheckSync > 500){
 					$sISOSync = 1;
 					$sPercentSync = round(((100 / ($sTemplate->sSize)) * $sCheckSync), 0);
