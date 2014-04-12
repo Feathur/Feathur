@@ -186,7 +186,7 @@ CREATE TABLE IF NOT EXISTS `statistics` (
 CREATE TABLE IF NOT EXISTS `templates` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
   `name` varchar(65) NOT NULL,
-  `path` varchar(65) NOT NULL,
+  `path` varchar(255) NOT NULL,
   `url` varchar(255) NOT NULL,
   `type` varchar(65) NOT NULL,
   `disabled` int(2) NOT NULL,
