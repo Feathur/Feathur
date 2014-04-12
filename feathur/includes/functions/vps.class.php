@@ -224,8 +224,7 @@ class VPS extends CPHPDatabaseRecordClass {
 			$sTemplate->uSize = (intval($sTemplateData["content-length"]) / 1000);
 			$sTemplate->uDisabled = 0;
 			$sTemplate->InsertIntoDatabase();
-			$sData = pretty_dump($sTemplateData["content-length"]);
-			return $sArray = array("json" => 1, "type" => "success", "result" => "Template/ISO added.{$sData}");
+			return $sArray = array("json" => 1, "type" => "success", "result" => "Template/ISO added.{$sTemplateData["content-length"]}", "reload" => "1");
 		}
 		
 		return $sArray = array("json" => 1, "type" => "error", "result" => "Template/ISO URL is invalid or down.");
