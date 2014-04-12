@@ -215,7 +215,7 @@ class VPS extends CPHPDatabaseRecordClass {
 					}
 				}
 				
-				if($sType == 'kvm'){
+				if($uType == 'kvm'){
 					while($sUnique == 0){
 						$sPath = str_pad(rand(1, 1000000000), 10, '0', STR_PAD_LEFT).'.iso';
 						if(!$sPathSearch = $database->CachedQuery("SELECT * FROM templates WHERE `path` = :Path", array('Path' => $sPath))){
