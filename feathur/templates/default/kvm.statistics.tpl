@@ -1,12 +1,12 @@
 {%if isset|Statistics == true}
 	{%foreach info in Statistics}
-		{%if isset|iso_sync == true}
-			{%if isempty|iso_sync == false}
-				{%if isset|sync_error == true}
-					{%if isempty|sync_error == false}
+		{%if isset|info[iso_sync] == true}
+			{%if isempty|info[iso_sync] == false}
+				{%if isset|info[sync_error] == true}
+					{%if isempty|info[sync_error] == false}
 						<div align="center"><div class="albox warningbox" style="width:80%">Warning: Template syncing error. If this message persists for more than 5 minutes contact technical support.</div></div>
 					{%/if}
-					{%if isempty|sync_error == true}
+					{%if isempty|info[sync_error] == true}
 						<div align="center">
 							<div class="albox informationbox" style="width:80%">
 								Template Sync Progress: 
