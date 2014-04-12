@@ -167,7 +167,8 @@ class kvm {
 					if($sSync === true){
 						$sVPS->uISOSyncing = 1;
 						$sVPS->InsertIntoDatabase();
-						$sCommandList .= "screen -dmS templatesync{$sVPS->sContainerId} bash -c \"cd /var/feathur/data/templates/kvm/;wget -O {$sTemplatePath} {$sTemplateURL};lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId}\";";
+						$sCommandList = "screen -dmS templatesync{$sVPS->sContainerId} bash -c \"cd /var/feathur/data/templates/kvm/;wget -O {$sTemplatePath} {$sTemplateURL};lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId}\";";
+						$sExecute = $sSSH->exec($sCommandList);
 						$sLog[] = array("command" => $sCommandList, "result" => "Screened build of KVM VPS");
 						$sSave = VPS::save_vps_logs($sLog, $sVPS);
 						return $sArray = array("json" => 1, "type" => "success", "result" => "VPS has been created!", "reload" => 1, "vps" => $sVPS->sId);
@@ -424,7 +425,7 @@ class kvm {
 		$sVPSConfig .= "<devices>{$sQEMUPath}<disk type='file' device='disk'><source file='/dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img'/>{$sTarget}</disk>{$sSecondary}<disk type='file' device='cdrom'>";
 			
 		if(isset($sTemplate)){
-			$sVPSConfig .= "<source file='/var/feathur/data/templates/kvm/{$sTemplate->sPath}.iso'/>";
+			$sVPSConfig .= "<source file='/var/feathur/data/templates/kvm/{$sTemplate->sPath}'/>";
 		}
 			
 		$sVPSConfig .= "<target dev='hdc'/><readonly/></disk>";
