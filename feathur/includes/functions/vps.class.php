@@ -183,6 +183,13 @@ class VPS extends CPHPDatabaseRecordClass {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Template/ISO URL is invalid or down.");
 		}
 		
+		if(is_array($sTemplateData["content-length"])){
+			foreach($sTemplateData["content-length"] as $sValue){
+				$sTotal = $sTotal + $sValue;
+			}
+			$sTemplateData["content-length"] = $sTotal;
+		}
+		
 		// Make sure the template is at least 10 MB.
 		if($sTemplateData["content-length"] > 10485760){
 		
