@@ -147,8 +147,7 @@ class kvm {
 			if(!empty($sVPSTemplate)){
 				try {
 					$sTemplate = new Template($sVPS->sTemplateId);
-					$sVPSTemplate = $sTemplate->sPath;
-					
+
 					$sTemplatePath = escapeshellarg($sTemplate->sPath);
 					$sTemplateURL = escapeshellarg($sTemplate->sURL);
 					
@@ -169,24 +168,20 @@ class kvm {
 						$sVPS->uISOSyncing = 1;
 						$sVPS->InsertIntoDatabase();
 						$sCommandList .= "screen -dmS templatesync{$sVPS->sContainerId} bash -c \"cd /var/feathur/data/templates/kvm/;wget -O {$sTemplatePath} {$sTemplateURL}\";lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId}\";";
+						return $sArray = array("json" => 1, "type" => "success", "result" => "VPS has been created!", "reload" => 1, "vps" => $sVPS->sId);
 					}
 				} catch (Exception $e) {
 					$sVPS->uTemplate = 0;
 					$sVPS->InsertIntoDatabase();
 					$sVPSTemplate = "404";
 					$sChange = $this->kvm_config($sUser, $sVPS, $sRequested, $_SESSION['vnc_password']);
-					
-					$sCommandList = "lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};";
-					$sCommandList .= "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId};";
-					$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
-					$sSave = VPS::save_vps_logs($sLog, $sVPS);
 				}
-			} else {
-				$sCommandList = "lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};";
-				$sCommandList .= "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId};";
-				$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
-				$sSave = VPS::save_vps_logs($sLog, $sVPS);
-			}
+			} 
+			
+			$sCommandList = "lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};";
+			$sCommandList .= "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId};";
+			$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
+			$sSave = VPS::save_vps_logs($sLog, $sVPS);
 			
 			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS has been created!", "reload" => 1, "vps" => $sVPS->sId);
 		} else {
