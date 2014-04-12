@@ -129,10 +129,17 @@ if(!$sFindSetting = $database->CachedQuery("SELECT * FROM settings WHERE `settin
 	$sAdd = $database->prepare("RENAME TABLE `templates` TO `templates_old`, `new_templates` TO `templates`;");
 	$sAdd->execute();
 	
+	// Remove all VPS template settings just to make sure there's no overlap.
+	$sAdd = $database->prepare("UPDATE `vps` SET `template_id` = '0';");
+	$sAdd->execute();
+	
 	// Make sure this only happens once.
 	$sAdd = $database->prepare("INSERT INTO settings(setting_name, setting_value, setting_group) VALUES('templates_cleaned', '1', 'site_settings')");
 	$sAdd->execute();
 }
 
 $sAdd = $database->prepare("ALTER TABLE `vps` ADD `iso_syncing` INT(2);");
+$sAdd->execute();
+
+$sAdd = $database->prepare("ALTER TABLE `templates` CHANGE `path` `path` VARCHAR(255) NOT NULL;");
 $sAdd->execute();
