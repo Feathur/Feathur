@@ -175,10 +175,13 @@ class kvm {
 					$sVPS->InsertIntoDatabase();
 					$sVPSTemplate = "404";
 					$sChange = $this->kvm_config($sUser, $sVPS, $sRequested, $_SESSION['vnc_password']);
+					
+					$sCommandList = "lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};";
+					$sCommandList .= "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId};";
+					$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
+					$sSave = VPS::save_vps_logs($sLog, $sVPS);
 				}
-			}
-			
-			if($sSync === false){
+			} else {
 				$sCommandList = "lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};";
 				$sCommandList .= "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId};";
 				$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
