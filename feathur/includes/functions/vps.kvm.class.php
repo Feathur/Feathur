@@ -534,7 +534,7 @@ class kvm {
 			if($sCheckSync < ($sVPSTemplate->sSize - 5242880)){
 				if($sCheckSync > 500){
 					$sISOSync = 1;
-					$sPercentSync = round(((100 / ($sTemplate->sSize)) * $sCheckSync), 0);
+					$sPercentSync = round(((100 / ($sVPSTemplate->sSize)) * $sCheckSync), 0);
 				} else {
 					$sISOSync = 1;
 					$sPercentSync = 0;
