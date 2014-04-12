@@ -168,7 +168,7 @@ class kvm {
 					if($sSync === true){
 						$sVPS->uISOSyncing = 1;
 						$sVPS->InsertIntoDatabase();
-						$sCommandList .= "screen -dmS templatesync{$sVPS->sContainerId} bash -c \"cd /var/feathur/data/templates/kvm/;wget -O {$sTemplatePath} {$sTemplateURL}\";virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId}\";";
+						$sCommandList .= "screen -dmS templatesync{$sVPS->sContainerId} bash -c \"cd /var/feathur/data/templates/kvm/;wget -O {$sTemplatePath} {$sTemplateURL}\";lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId}\";";
 					}
 				} catch (Exception $e) {
 					$sVPS->uTemplate = 0;
@@ -178,14 +178,12 @@ class kvm {
 				}
 			}
 			
-			$sCommandList .= "lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};";
-			
 			if($sSync === false){
-				$sCommandList = "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId};";
+				$sCommandList = "lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};";
+				$sCommandList .= "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId};";
+				$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
+				$sSave = VPS::save_vps_logs($sLog, $sVPS);
 			}
-			
-			$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
-			$sSave = VPS::save_vps_logs($sLog, $sVPS);
 			
 			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS has been created!", "reload" => 1, "vps" => $sVPS->sId);
 		} else {
@@ -198,7 +196,6 @@ class kvm {
 	}
 	
 	public function kvm_boot($sUser, $sVPS, $sRequested){
-		$sVPS = new VPS($sRequested["POST"]["VPS"]);
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
 		$sCreate = $this->kvm_config($sUser, $sVPS, $sRequested);
