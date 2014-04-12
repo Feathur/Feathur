@@ -153,9 +153,8 @@ class kvm {
 					
 					// Check to make sure the template is on the server and is within 5 MB of the target size.
 					$sCheckSynced = $sSSH->exec("cd /var/feathur/data/templates/kvm/;ls -nl {$sTemplatePath} | awk '{print $5}'");
-					$sCheckSynced = ($sCheckSynced / 1000);
-					$sUpper = $sTemplate->sSize + 5242;
-					$sLower = $sTemplate->sSize - 5242;
+					$sUpper = $sTemplate->sSize + 5242880;
+					$sLower = $sTemplate->sSize - 5242880;
 					if(strpos($sCheckSynced, 'No such file or directory') !== false) { 
 						$sSync = true;
 					}
@@ -168,7 +167,7 @@ class kvm {
 					if($sSync === true){
 						$sVPS->uISOSyncing = 1;
 						$sVPS->InsertIntoDatabase();
-						$sCommandList = "screen -dmS templatesync{$sVPS->sContainerId} bash -c \"cd /var/feathur/data/templates/kvm/;wget -O {$sTemplatePath} {$sTemplateURL};lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId};\";";
+						$sCommandList = "screen -dmS templatesync{$sVPS->sContainerId} bash -c \"cd /var/feathur/data/templates/kvm/;wget -O {$sTemplatePath} {$sTemplateURL};lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId}\";";
 						$sExecute = $sSSH->exec($sCommandList);
 						$sLog[] = array("command" => $sCommandList, "result" => "Screened build of KVM VPS");
 						$sSave = VPS::save_vps_logs($sLog, $sVPS);
@@ -210,6 +209,12 @@ class kvm {
 			} else {
 				$sVPS->uISOSyncing = 0;
 				$sVPS->InsertIntoDatabase();
+				$sCommandList .= "virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId};";
+				
+				$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
+				$sSave = VPS::save_vps_logs($sLog, $sVPS);
+				
+				
 			}
 		}
 		
@@ -231,9 +236,8 @@ class kvm {
 				
 				// Check to make sure the template is on the server and is within 5 MB of the target size.
 				$sCheckSynced = $sSSH->exec("cd /var/feathur/data/templates/kvm/;ls -nl {$sTemplatePath} | awk '{print $5}'");
-				$sCheckSynced = ($sCheckSynced / 1000);
-				$sUpper = $sTemplate->sSize + 5242;
-				$sLower = $sTemplate->sSize - 5242;
+				$sUpper = $sTemplate->sSize + 5242880;
+				$sLower = $sTemplate->sSize - 5242880;
 				if(strpos($sCheckSynced, 'No such file or directory') !== false) { 
 					$sSync = true;
 				}
@@ -525,10 +529,9 @@ class kvm {
 				
 			// Check syncing progress.
 			$sCheckSync = $sSSH->exec("cd /var/feathur/data/templates/kvm/;ls -nl {$sTemplatePath} | awk '{print $5}'");
-			$sCheckSync = ($sCheckSync / 1000);
-			$sUpper = $sVPSTemplate->sSize + 5242;
+			$sUpper = $sVPSTemplate->sSize + 5242880;
 			
-			if($sCheckSync < ($sVPSTemplate->sSize - 5242)){
+			if($sCheckSync < ($sVPSTemplate->sSize - 5242880)){
 				if($sCheckSync > 500){
 					$sISOSync = 1;
 					$sPercentSync = round(((100 / ($sTemplate->sSize)) * $sCheckSync), 0);

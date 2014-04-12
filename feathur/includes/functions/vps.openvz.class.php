@@ -171,9 +171,8 @@ class openvz {
 			
 			// Check to make sure the template is on the server and is within 5 MB of the target size.
 			$sCheckSynced = $sSSH->exec("cd /vz/template/cache/;ls -nl {$sTemplatePath} | awk '{print $5}'");
-			$sCheckSynced = ($sCheckSynced / 1000);
-			$sUpper = $sTemplate->sSize + 5242;
-			$sLower = $sTemplate->sSize - 5242;
+			$sUpper = $sTemplate->sSize + 5242880;
+			$sLower = $sTemplate->sSize - 5242880;
 			if(strpos($sCheckSynced, 'No such file or directory') !== false) { 
 				$sSync = true;
 			}
@@ -542,9 +541,8 @@ class openvz {
 			
 		// Check to make sure the template is on the server and is within 5 MB of the target size.
 		$sCheckSynced = $sSSH->exec("cd /vz/template/cache/;ls -nl {$sTemplatePath} | awk '{print $5}'");
-		$sCheckSynced = ($sCheckSynced / 1000);
-		$sUpper = $sOpenVZTemplate->sSize + 5242;
-		$sLower = $sOpenVZTemplate->sSize - 5242;
+		$sUpper = $sOpenVZTemplate->sSize + 5242880;
+		$sLower = $sOpenVZTemplate->sSize - 5242880;
 		if(strpos($sCheckSynced, 'No such file or directory') !== false) { 
 			$sSync = true;
 		}

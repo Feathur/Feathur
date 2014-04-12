@@ -176,6 +176,9 @@ class VPS extends CPHPDatabaseRecordClass {
 		// Attempt to get data about the template.
 		try {
 			$sTemplateData = array_change_key_case(get_headers($uURL, TRUE));
+			if((!isset($sTemplateData['content-length'])) || (empty($sTemplateData['content-length']))){
+				throw new Exception("ISO Invalid");
+			}
 		} catch (Exception $e) {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Template/ISO URL is invalid or down.");
 		}
@@ -205,7 +208,7 @@ class VPS extends CPHPDatabaseRecordClass {
 					}
 				}
 				
-				if($uType == 'kvm'){
+				if($sType == 'kvm'){
 					while($sUnique == 0){
 						$sPath = str_pad(rand(1, 1000000000), 10, '0', STR_PAD_LEFT).'.iso';
 						if(!$sPathSearch = $database->CachedQuery("SELECT * FROM templates WHERE `path` = :Path", array('Path' => $sPath))){
@@ -221,7 +224,7 @@ class VPS extends CPHPDatabaseRecordClass {
 			$sTemplate->uURL = $uURL;
 			$sTemplate->uType = $uType;
 			$sTemplate->uPath = $sPath;
-			$sTemplate->uSize = ($sTemplateData["content-length"] / 1000);
+			$sTemplate->uSize = $sTemplateData["content-length"];
 			$sTemplate->uDisabled = 0;
 			$sTemplate->InsertIntoDatabase();
 			return $sArray = array("json" => 1, "type" => "success", "result" => "Template/ISO added.", "reload" => "1");
