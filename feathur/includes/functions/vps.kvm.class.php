@@ -362,10 +362,10 @@ class kvm {
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
 		$sTemplate = new Template($sVPS->sTemplateId);
-		$sLog[] = array("command" => "virsh attach-disk kvm{$sVPS->sContainerId} /var/feathur/data/templates/kvm/{$sTemplate->sPath}.iso hdc --type cdrom;", "result" => $sSSH->exec("virsh attach-disk kvm{$sVPS->sContainerId} /var/feathur/data/templates/kvm/{$sTemplate->sPath}.iso hdc --type cdrom;"));
+		$sLog[] = array("command" => "virsh attach-disk kvm{$sVPS->sContainerId} /var/feathur/data/templates/kvm/{$sTemplate->sPath} hdc --type cdrom;", "result" => $sSSH->exec("virsh attach-disk kvm{$sVPS->sContainerId} /var/feathur/data/templates/kvm/{$sTemplate->sPath}.iso hdc --type cdrom;"));
 		$sUpdateConfig = $this->kvm_config($sUser, $sVPS, $sRequested);
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
-		return $sArray = array("json" => 1, "type" => "success", "result" => "{$sTemplate->sName} has been mounted!");
+		return $sArray = array("json" => 1, "type" => "success", "result" => "{$sTemplate->sName} has been mounted, please reboot your VPS.");
 	}
 	
 	public function kvm_config($sUser, $sVPS, $sRequested, $sPassword = 0){
