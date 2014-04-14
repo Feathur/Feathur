@@ -50,6 +50,21 @@ NewTemplater::SetGlobalVariable("BandwidthAccounting", $sBandwidthAccounting->sV
 $sLicense = Core::GetSetting('license');
 NewTemplater::SetGlobalVariable("License", $sLicense->sValue);
 
+// Mail Settings
+$sMail = Core::GetSetting('mail');
+NewTemplater::SetGlobalVariable("Mail", $sMail->sValue);
+
+// Mail User
+$sMailUsername = Core::GetSetting('mail_username');
+NewTemplater::SetGlobalVariable("MailUsername", $sMailUsername->sValue);
+
+// Check For Mail Password
+$sMailPassword = Core::GetSetting('mail_password');
+$sMailPassword = $sMailPassword->sValue;
+if(!empty($sMailPassword)){
+	NewTemplater::SetGlobalVariable("MailPassword", "1");
+}
+
 if($sMail->sValue == 1){
 	include("./includes/library/sendgrid/SendGrid_loader.php");
 } elseif($sMail->sValue == 2){
