@@ -279,7 +279,7 @@ class kvm {
 		}
 		
 		if(strpos($sLog[0]["result"], "cannot open file '/dev") !== false) {
-			return $sArray = array("json" => 1, "type" => "success", "result" => "Virtual disk does not exist, contact support.");
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Virtual disk does not exist, contact support.");
 		}
 		
 		return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured, contact support if your VPS fails to boot.");
