@@ -592,6 +592,10 @@ class kvm {
 		if(strpos($sLog[0]["result"], 'running') === false) {
 			return $sArray = array("json" => 1, "type" => "status", "result" => "offline", "hostname" => $sVPS->sHostname, "content" => $sStatistics);
 		} else {
+			if($sVPS->sISOSyncing == 1){
+					$sVPS->uISOSyncing = 0;
+					$sVPS->InsertIntoDatabase();
+			}
 			return $sArray = array("json" => 1, "type" => "status", "result" => "online", "hostname" => $sVPS->sHostname, "content" => $sStatistics);
 		}
 	}
