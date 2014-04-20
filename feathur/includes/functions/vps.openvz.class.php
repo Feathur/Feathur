@@ -865,6 +865,10 @@ class openvz {
 			$sLog[] = array("command" => "vzctl stop {$sVPS->sContainerId}", "result" => $sSSH->exec("vzctl stop {$sVPS->sContainerId}"));
 			$sLog[] = array("command" => "vzctl destroy {$sVPS->sContainerId}", "result" => $sSSH->exec("vzctl destroy {$sVPS->sContainerId}"));
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
+			$sIPList = list_ipspace($sVPS);
+			foreach($sIPList as $sIPData){
+				$sCleanUP = RDNS::add_rdns($sIPData["ip"], ' ');
+			}
 			$sTerminate = $database->CachedQuery("DELETE FROM vps WHERE `id` = :VPSId", array('VPSId' => $sVPS->sId));
 			$sCleanIPs = $database->CachedQuery("UPDATE ipaddresses SET `vps_id` = 0 WHERE `vps_id` = :VPSId", array('VPSId' => $sVPS->sId));
 			return $sArray = array("json" => 1, "type" => "success", "result" => "This VPS has been terminated.", "reload" => 1);

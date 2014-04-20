@@ -946,6 +946,10 @@ class kvm {
 			$sCommandList = escapeshellarg($sCommandList);
 			$sLog[] = array("command" => "VPS Termination via Screen", "result" => $sSSH->exec("screen -dm -S {$sVPS->sContainerId} bash -c {$sCommandList};"));
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
+			$sIPList = list_ipspace($sVPS);
+			foreach($sIPList as $sIPData){
+				$sCleanUP = RDNS::add_rdns($sIPData["ip"], ' ');
+			}
 			$sTerminate = $database->CachedQuery("DELETE FROM vps WHERE `id` = :VPSId", array('VPSId' => $sVPS->sId));
 			$sCleanIPs = $database->CachedQuery("UPDATE ipaddresses SET `vps_id` = 0 WHERE `vps_id` = :VPSId", array('VPSId' => $sVPS->sId));
 			return $sArray = array("json" => 1, "type" => "error", "result" => "This VPS has been terminated.", "reload" => 1);
