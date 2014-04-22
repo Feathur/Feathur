@@ -74,7 +74,7 @@ if($sServerList = $database->CachedQuery("SELECT * FROM servers", array())){
 			sleep(5);
 		}
 		$sServer = new Server($sServer["id"]);
-		$sCommandList .= "screen -dm -S uptracker bash -c 'cd /var/feathur/feathur/scripts/;php pull_server.php {$sServer->sId} >> /var/feathur/data/status.log;exit;';";
+		$sCommandList .= "screen -dm -S uptracker bash -c 'cd /var/feathur/feathur/scripts/;php pull_server.php {$sServer->sId} >> /var/feathur/data/status.log;sleep 20;exit;';";
 		$sTotal++;
 		
 		$sBefore = (time() - (5 * 60));
