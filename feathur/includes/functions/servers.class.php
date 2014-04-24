@@ -141,6 +141,7 @@ class Server extends CPHPDatabaseRecordClass {
 	
 	public static function server_connect($sServer, $sAPI = 0){
 		try {
+			error_reporting(0);
 			$sSSH = new Net_SSH2($sServer->sIPAddress);
 		
 			if($sServer->sPassword == 0){
