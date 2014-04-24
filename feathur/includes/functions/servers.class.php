@@ -152,20 +152,16 @@ class Server extends CPHPDatabaseRecordClass {
 			}
 			
 			if (!$sSSH->login($sServer->sUser, $sKey)) {
-				if(!empty($sAPI)){
-					return $sResult = array("result" => 'Unable to connect to the host node, please contact customer service.');
-				}
-				echo json_encode(array("result" => 'Unable to connect to the host node, please contact customer service.'));
-				die();
+				throw new Exception('Can not connect.');
 			} else {
 				$sSSH->setTimeout(10);
 				return $sSSH;
 			}
 		} catch (Exception $e) { 
 			if(!empty($sAPI)){
-				return $sResult = array("result" => 'Unable to connect to the host node, please contact customer service.');
+				return $sResult = array("json" => 1, "type" => "error", "result" => "Unable to connect to the host node.");
 			}
-			echo json_encode(array("result" => 'Unable to connect to the host node, please contact customer service.'));
+			echo json_encode(array("json" => 1, "type" => "error", "result" => "Unable to connect to the host node."));
 			die();
 		}
 	}
