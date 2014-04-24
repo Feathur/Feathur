@@ -865,7 +865,7 @@ class openvz {
 			$sLog[] = array("command" => "vzctl stop {$sVPS->sContainerId}", "result" => $sSSH->exec("vzctl stop {$sVPS->sContainerId}"));
 			$sLog[] = array("command" => "vzctl destroy {$sVPS->sContainerId}", "result" => $sSSH->exec("vzctl destroy {$sVPS->sContainerId}"));
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
-			$sIPList = list_ipspace($sVPS);
+			$sIPList = VPS::list_ipspace($sVPS);
 			foreach($sIPList as $sIPData){
 				$sCleanUP = RDNS::add_rdns($sIPData["ip"], ' ');
 			}

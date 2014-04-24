@@ -946,7 +946,7 @@ class kvm {
 			$sCommandList = escapeshellarg($sCommandList);
 			$sLog[] = array("command" => "VPS Termination via Screen", "result" => $sSSH->exec("screen -dm -S {$sVPS->sContainerId} bash -c {$sCommandList};"));
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
-			$sIPList = list_ipspace($sVPS);
+			$sIPList = VPS::list_ipspace($sVPS);
 			foreach($sIPList as $sIPData){
 				$sCleanUP = RDNS::add_rdns($sIPData["ip"], ' ');
 			}
