@@ -140,15 +140,16 @@ class Server extends CPHPDatabaseRecordClass {
 	}
 	
 	public static function server_connect($sServer, $sAPI = 0){
-		$sSSH = new Net_SSH2($sServer->sIPAddress);
-		
-		if($sServer->sPassword == 0){
-			$sKey = new Crypt_RSA();
-			$sKey->loadKey(file_get_contents('/var/feathur/data/keys/'.$sServer->sKey));
-		} else {
-			$sKey = file_get_contents('/var/feathur/data/keys'.$sServer->sKey);
-		}
 		try {
+			$sSSH = new Net_SSH2($sServer->sIPAddress);
+		
+			if($sServer->sPassword == 0){
+				$sKey = new Crypt_RSA();
+				$sKey->loadKey(file_get_contents('/var/feathur/data/keys/'.$sServer->sKey));
+			} else {
+				$sKey = file_get_contents('/var/feathur/data/keys'.$sServer->sKey);
+			}
+			
 			if (!$sSSH->login($sServer->sUser, $sKey)) {
 				if(!empty($sAPI)){
 					return $sResult = array("result" => 'Unable to connect to the host node, please contact customer service.');
@@ -156,7 +157,7 @@ class Server extends CPHPDatabaseRecordClass {
 				echo json_encode(array("result" => 'Unable to connect to the host node, please contact customer service.'));
 				die();
 			} else {
-				$sSSH->setTimeout(30);
+				$sSSH->setTimeout(10);
 				return $sSSH;
 			}
 		} catch (Exception $e) { 
