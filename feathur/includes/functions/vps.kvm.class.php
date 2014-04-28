@@ -199,7 +199,7 @@ class kvm {
 	public function kvm_boot($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
-		$sCreate = $this->kvm_config($sUser, $sVPS, $sRequested);
+		$sCreate = $this->kvm_config($sUser, $sVPS, $sRequested, $_SESSION["vnc_password"]);
 		$sDHCP = $this->kvm_dhcp($sUser, $sVPS, $sRequested);
 		
 		if($sVPS->sISOSyncing == 1){
