@@ -482,8 +482,12 @@ class kvm {
 		if($sRequested["GET"]["diskchanged"] == 1){
 			$sCommandList .= "lvextend --size {$sVPS->sDisk}G /dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img;";
 		}
-			
-		$sLog[] = array("command" => str_replace($sPassword, "obfuscated", $sCommandList), "result" => $sSSH->exec($sCommandList));
+		
+		if(empty($sPassword)){
+			$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
+		} else {
+			$sLog[] = array("command" => str_replace($sPassword, "obfuscated", $sCommandList), "result" => $sSSH->exec($sCommandList));
+		}
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
 	}
 	
