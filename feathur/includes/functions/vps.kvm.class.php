@@ -471,14 +471,13 @@ class kvm {
 			$sVPSConfig .= "<graphics type='vnc' port='{$sVPS->sVNCPort}' passwd={$sPassword} listen='0.0.0.0'/>";
 		}
 		$sVPSConfig .= "<input type='tablet'/><input type='mouse'/></devices><features><acpi/><apic/></features></domain>";
-		$sVPSConfig = escapeshellarg($sVPSConfig);
-			
+
 		$sBlock = new Block($sIPList[0]["block"]);
 		$sDHCP .= "host kvm{$sVPS->sContainerId}.0 { hardware ethernet {$sVPS->sMac}; option routers {$sBlock->sGateway}; option subnet-mask {$sBlock->sNetmask}; fixed-address {$sIPList[0]["ip"]}; option domain-name-servers {$sVPS->sNameserver}; }";
 		$sDHCP = escapeshellarg($sDHCP);
 		
 		$sHead = escapeshellarg(file_get_contents('/var/feathur/feathur/includes/configs/dhcp.head'));
-		$sCommandList .= "mkdir /var/feathur/;mkdir /var/feathur/configs/;echo {$sVPSConfig} > /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml; echo {$sHead} > /var/feathur/configs/dhcp.head;echo {$sDHCP} > /var/feathur/configs/kvm{$sVPS->sContainerId}-dhcp.conf;cat /var/feathur/configs/dhcpd.head /var/feathur/configs/*-dhcp.conf > /etc/dhcp/dhcpd.conf;service isc-dhcp-server restart;{$sPrivateNetworkCommands}";
+		$sCommandList .= "mkdir /var/feathur/;mkdir /var/feathur/configs/; echo \"{$sVPSConfig}\" > /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml; echo {$sHead} > /var/feathur/configs/dhcp.head;echo {$sDHCP} > /var/feathur/configs/kvm{$sVPS->sContainerId}-dhcp.conf;cat /var/feathur/configs/dhcpd.head /var/feathur/configs/*-dhcp.conf > /etc/dhcp/dhcpd.conf;service isc-dhcp-server restart;{$sPrivateNetworkCommands}";
 		
 		if($sRequested["GET"]["diskchanged"] == 1){
 			$sCommandList .= "lvextend --size {$sVPS->sDisk}G /dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img;";
