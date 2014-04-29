@@ -325,10 +325,21 @@ class kvm {
 	
 	public function kvm_password($sUser, $sVPS, $sRequested){
 		if((!empty($sRequested["POST"]["password"])) && ((strlen($sRequested["POST"]["password"])) >= 5)){
+			// Make sure this is a valid password
+			if(strlen($sRequested["POST"]["password"]) >= 9){
+				return $sArray = array("json" => 1, "type" => "error", "result" => "Your password must be less than 9 characters.");
+			}
+			
+			if(!ctype_alnum($sRequested["POST"]["password"])){
+				return $sArray = array("json" => 1, "type" => "error", "result" => "Your password can not contain special characters.");
+			}
+			
+			// Connect to server and set session variables.
 			$sServer = new Server($sVPS->sServerId);
 			$sSSH = Server::server_connect($sServer);
 			$_SESSION["vnc_password"] = $sRequested["POST"]["password"];
 			$_SESSION["vnc_vps"] = $sVPS->sId;
+			
 			// Check to see if virsh is at least version 1.0. Password setting is bugged on previous versions.
 			// Rather not save password to text file if we don't have to, but will if need be.
 			$sLog[] = array("command" => "virsh --version", "result" => $sSSH->exec("virsh --version"));
@@ -345,7 +356,7 @@ class kvm {
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
 			return $sArray = array("json" => 1, "type" => "success", "result" => $sSuccess);
 		} else {
-			return $sArray = array("json" => 1, "type" => "error", "result" => "Your password must be at least 5 characters!");
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Your password must be at least 5 characters.");
 		}
 	}
 	
@@ -467,6 +478,7 @@ class kvm {
 		if(empty($sPassword)){
 			$sVPSConfig .= "<graphics type='vnc' port='{$sVPS->sVNCPort}' passwd='' listen='127.0.0.1'/>";
 		} else {
+			$sPassword = preg_replace("/[^A-Za-z0-9]/", '', $sPassword);
 			$sPassword = escapeshellarg($sPassword);
 			$sVPSConfig .= "<graphics type='vnc' port='{$sVPS->sVNCPort}' passwd={$sPassword} listen='0.0.0.0'/>";
 		}
