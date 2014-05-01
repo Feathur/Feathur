@@ -3,7 +3,7 @@ require_once('./includes/loader.php');
 
 $sId		= abs((int) $_GET['id']);
 $sView		= preg_replace('/[^\w\d]/', '', $_GET['view']);
-$sAction	= preg_replace('/[^\w\d]/', '', $_GET['action']);
+$sAction	= preg_replace('/[^\w\d_]/', '', $_GET['action']);
 $sSearch	= preg_replace('/[^\w\d\.]/', '', $_GET['search']);
 $sType		= preg_replace('/[^\w\d]/', '', $_GET['type']);
 
