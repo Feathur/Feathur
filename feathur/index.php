@@ -7,7 +7,7 @@ $sAction = preg_replace('/[^\w\d]/', '', $_GET['action']);
  * Redirect user to main page if not logged in
  */
 
-if (empty($sUser)) die(header("Location: main.php", 401));
+if (!empty($sUser)) die(header("Location: main.php", 401));
 
 /*
  * Process login if provided
