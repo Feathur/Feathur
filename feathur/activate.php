@@ -1,29 +1,61 @@
 <?php
-include('./includes/loader.php');
+require_once('./includes/loader.php');
 
-$sAction = $_GET['action'];
+$sAction = preg_replace('/[^\w\d]/', '', $_GET['action']);
 
-if((empty($_GET['email'])) || (empty($_GET['id']))){
-	header("Location: index.php");
-	die();
+/*
+ * If activation email/id is empty, redirect back to index
+ */
+
+if (empty($_GET['email']) || empty($_GET['id'])) die(header("Location: index.php", 401));
+
+/*
+ * See if an activation code exists for the given email/id
+ */
+
+$sEmail = preg_replace('/[^\w\d_\._@+]/', '', $_GET['email']);
+$iID    = abs((int) $_GET['id']);
+
+$sActivate = $database->CachedQuery("SELECT * FROM accounts WHERE (`password` = -1 AND `email_address` = :EmailAddress AND `activation_code` = :ActivationCode) || (`email_address` = :EmailAddress AND `forgot` = :ActivationCode)", array('EmailAddress' => $sEmail, 'ActivationCode' => $iID));
+
+/*
+ * Redirect to index if there's no need to activate
+ */
+
+if (empty($sActivate)) die(header("Location: index.php", 403));
+
+
+/*
+ * Process activation
+ */
+
+if ($sAction == 'save')
+{
+  if (sha1($_POST['password']) == sha1($_POST['passwordagain']))
+  {
+    $sUser = new User($sActivate->data[0]['id']);
+    $sChange = $sUser->change_password($sUser, $_POST['password'], $_POST['passwordagain']);
+  } else {
+    $sErrors[] = array('Errors' => 'Password and confirmation do not match.');
+  }
+  if (is_array($sChange))
+  {
+	$sErrors[] = array("Errors" => $sChange);
+  } else {
+    die(header("Location: index.php"));
+  }
 }
 
-$sActivate = $database->CachedQuery("SELECT * FROM accounts WHERE (`password` = -1 AND `email_address` = :EmailAddress AND `activation_code` = :ActivationCode) || (`email_address` = :EmailAddress AND `forgot` = :ActivationCode)", array('EmailAddress' => $_GET['email'], 'ActivationCode' => $_GET['id']));
+/*
+ * Display activation result page
+ */
 
-if(empty($sActivate)){
-	header("Location: index.php");
-	die();
-}
-
-if($sAction == save){
-	$sUser = new User($sActivate->data[0]["id"]);
-	$sChange = $sUser->change_password($sUser, $_POST['password'], $_POST['passwordagain']);
-	if(is_array($sChange)){
-		$sErrors = array("Errors" => $sChange);
-	} else {
-		header("Location: index.php");
-		die();
-	}
-}
-	
-echo Templater::AdvancedParse($sTemplate->sValue.'/activate', $locale->strings, array('Errors' => $sErrors, 'Id' => urlencode($_GET['id']), 'Email' => urlencode($_GET['email'])));
+echo Templater::AdvancedParse(
+       $sTemplate->sValue.'/activate',
+	   $locale->strings,
+	   array(
+	     'Errors'	=> $sErrors,
+		 'Id'		=> $iID,
+		 'Email'	=> $sEmail
+	   )
+	 );

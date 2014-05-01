@@ -1,171 +1,180 @@
 <?php
-include('./includes/loader.php');
+require_once('./includes/loader.php');
 
-if((!empty($_POST['email'])) && (!empty($_POST['password']))){
-	$sUser = User::login($_POST['email'], $_POST['password'], 1);
-	if(is_array($sUser)){
-		echo json_encode($sUser);
-		die();
-	}
+/*
+ * If email and password aren't empty, try to login
+ */
+
+if (!empty($_POST['email']) && !empty($_POST['password']))
+{
+  $sUser = User::login($_POST['email'], $_POST['password'], 1);
+  if (is_array($sUser)) die(json_encode($sUser));
 } else {
-	echo json_encode(array("json" => 1, "type" => "result", "result" => "The username and password can not be blank!"));
-	die();
+  die(json_encode(array('json' => 1, 'type' => 'result', 'result' => 'The username and password can not be blank!')));
 }
 
-$sAction = $_POST['action'];
+$sAction = preg_replace('/[^\w\d]/', '', $_POST['action']);
+$sEmail  = preg_replace('/[^\w\d_\._@+]/', '', $_POST['useremail']);
+$sServer = preg_replace('/[^\d\.]/', '', $_POST['server']);
+$sTemplate = preg_replace('/[^\w\d\s\-\._]/', '', $_POST['template']);
+$iVPSid  = abs((int) $_POST['vpsid']);
 
-if(empty($sAction)){
-	echo json_encode(array("json" => 1, "type" => "result", "result" => "You must submit an action!"));
-	die();
-}
+/*
+ * Handle invalid actions
+ */
 
-if($sUser->sPermissions == 7){
-	if($sAction == 'listservers'){
-		echo json_encode(VPS::array_servers());
-		die();
+if (empty($sAction)) die(json_encode(array('json' => 1, 'type' => 'result', 'result' => 'You must submit an action!')));
+
+
+/*
+ * If user has admin permissions
+ */
+
+if ($sUser->sPermissions == 7)
+{
+
+  /*
+   *  Return a list of servers
+   */
+   
+  if ($sAction == 'listservers') die(json_encode(VPS::array_servers()));
+
+  /*
+   *  Create a VPS
+   */
+   
+  if ($sAction == 'createvps')
+  {
+	if (!is_numeric($sServer))
+	{
+	  if($sServers = $database->CachedQuery('SELECT * FROM servers WHERE `ip_address` = :ServerIP', array(':ServerIP' => $sServer)))
+	  {
+		$sServer = new Server($sServers->data[0]['id']);
+		$sRequested['POST']['server'] = $sServers->data[0]['id'];
+	  } else {
+		die(json_encode(array('result' => 'Unfortunately no server matches your query.')));
+	  }
 	}
-	
-	if($sAction == 'createvps'){
 		
-		// Get server information
-		if(!is_numeric($sRequested["POST"]["server"])){
-			if($sServers = $database->CachedQuery("SELECT * FROM servers WHERE `ip_address` = :ServerIP", array(':ServerIP' => $_POST['server']))){
-				$sServer = new Server($sServers->data[0]["id"]);
-				$sRequested["POST"]["server"] = $sServers->data[0]["id"];
-			} else {
-				echo json_encode(array("result" => "Unfortunatly no server matches your query."));
-				die();
-			}
-		}
+	if ($sCheckUsers = $database->CachedQuery('SELECT * FROM accounts WHERE `email_address` = :UserEmail', array(':UserEmail' => $sEmail)))
+	{
+	  $sActionUser = new User($sCheckUsers->data[0]['id']);
+	  $sRequested['POST']['user'] = $sActionUser->sId;
+	} else {
+	  $sActionUser = User::generate_user($sEmail, $_POST['username'], 1);
+	  if (is_array($sActionUser)) die(json_encode($sActionUser));
+	  $sRequested['POST']['user'] = $sActionUser->sId;
+	}
 		
-		// Get user information
-		if($sCheckUsers = $database->CachedQuery("SELECT * FROM accounts WHERE `email_address` = :UserEmail", array(':UserEmail' => $_POST['useremail']))){
-			$sActionUser = new User($sCheckUsers->data[0]["id"]);
-			$sRequested["POST"]["user"] = $sActionUser->sId;
-		} else {
-			$sActionUser = User::generate_user($_POST['useremail'], $_POST['username'], 1);
-			if(is_array($sActionUser)){
-				echo json_encode($sActionUser);
-				die();
-			}
-			$sRequested["POST"]["user"] = $sActionUser->sId;
-		}
+	if ($sTemplates = $database->CachedQuery('SELECT * FROM templates WHERE `name` = :Template AND `type` = :Type', array(':Template' => $sTemplate, ':Type' => $sServer->sType)))
+	{
+	  $sRequested['POST']['template'] = $sTemplates->data[0]['id'];
+	} else {
+	  if ($sTemplates = $database->CachedQuery('SELECT * FROM templates WHERE `type` = :Type ORDER BY id ASC', array(':Type' => $sServer->sType)))
+	  {
+		$sRequested['POST']['template'] = $sTemplates->data[0]['id'];
+	  } else {
+		die(json_encode(array('result' => 'Unfortunately no templates exist, VPS creation failed!')));
+	  }
 		
-		// Get template info.
-		if($sTemplates = $database->CachedQuery("SELECT * FROM templates WHERE `name` = :Template AND `type` = :Type", array(':Template' => $_POST['template'], ':Type' => $sServer->sType))){
-			$sRequested["POST"]["template"] = $sTemplates->data[0]["id"];
-		} else {
-			if($sTemplates = $database->CachedQuery("SELECT * FROM templates WHERE `type` = :Type ORDER BY id ASC", array(':Type' => $sServer->sType))){
-				$sRequested["POST"]["template"] = $sTemplates->data[0]["id"];
-			} else {
-				echo json_encode(array("result" => "Unfortunatly no templates exist, vps creation failed!"));
-				die();
-			}
-		}
-		
+	  $sServerType = new $sServer->sType;
+	  $sMethod = "database_{$sServer->sType}_create";
+	  $sSecond = "{$sServer->sType}_create";
+	  $sCreate = $sServerType->$sMethod($sUser, $sRequested);
+	  if (is_array($sCreate)) die(json_encode($sCreate));
+	  $sFinish = $sServerType->$sSecond($sUser, $sRequested);
+	  if (is_array($sFinish)) die(json_encode($sFinish));
+	}
+  }	
+
+  /*
+   *  Terminate a VPS
+   */
+
+  if ($sAction == 'terminatevps')
+  {
+	if ($sCheckUser = $database->CachedQuery('SELECT * FROM accounts WHERE `email_address` = :UserEmail', array(':UserEmail' => $sEmail)))
+	{
+	  $sActionUser = new User($sCheckUser->data[0]['id']);
+	  if ($sVPS = $database->CachedQuery('SELECT * FROM vps WHERE `user_id` = :UserId AND `id` = :Id', array(':UserId' => $sActionUser->sId, ':Id' => $iVPSid)))
+	  {
+		$sVPS = new VPS($sVPS->data[0]['id']);
+		$sServer = new Server($sVPS->sServerId);
 		$sServerType = new $sServer->sType;
-		$sMethod = "database_{$sServer->sType}_create";
-		$sSecond = "{$sServer->sType}_create";
-		$sCreate = $sServerType->$sMethod($sUser, $sRequested);
-		if(is_array($sCreate)){
-			echo json_encode($sCreate);
-			die();
-		}
-		$sFinish = $sServerType->$sSecond($sUser, $sRequested);
-		if(is_array($sFinish)){
-			echo json_encode($sFinish);
-			die();
-		}
+		$sMethod = "database_{$sServer->sType}_terminate";
+		$sSecond = "{$sServer->sType}_terminate";
+		$sTerminate = $sServerType->$sMethod($sUser, $sVPS, $sRequested);
+		if (is_array($sTerminate)) die(json_encode($sTerminate));
+		$sFinish = $sServerType->$sSecond($sUser, $sVPS, $sRequested);
+		if (is_array($sFinish)) die(json_encode($sFinish));
+	  } else {
+		die(json_encode(array('type' => 'success', 'result' => 'The VPS Id is either invalid or does not belong to this user.')));
+	  }
+	} else {
+	  die(json_encode(array('result' => 'Invalid user email, manual termination required.')));
 	}
-	
-	if($sAction == 'terminatevps'){
-		if($sCheckUser = $database->CachedQuery("SELECT * FROM accounts WHERE `email_address` = :UserEmail", array(':UserEmail' => $_POST['useremail']))){
-			$sActionUser = new User($sCheckUser->data[0]["id"]);
-			if($sVPS = $database->CachedQuery("SELECT * FROM vps WHERE `user_id` = :UserId AND `id` = :Id", array(':UserId' => $sActionUser->sId, ':Id' => $_POST['vpsid']))){
-				$sVPS = new VPS($sVPS->data["0"]["id"]);
-				$sServer = new Server($sVPS->sServerId);
-				$sServerType = new $sServer->sType;
-				$sMethod = "database_{$sServer->sType}_terminate";
-				$sSecond = "{$sServer->sType}_terminate";
-				$sTerminate = $sServerType->$sMethod($sUser, $sVPS, $sRequested);
-				if(is_array($sTerminate)){
-					echo json_encode($sTerminate);
-					die();
-				}
-				$sFinish = $sServerType->$sSecond($sUser, $sVPS, $sRequested);
-				if(is_array($sFinish)){
-					echo json_encode($sFinish);
-					die();
-				}
-			} else {
-				echo json_encode(array("type" => "success", "result" => "The VPS Id is either invalid or does not belong to this user."));
-				die();
-			}
-		} else {
-			echo json_encode(array("result" => "Invalid user email, manual termination required."));
-			die();
-		}
+  }
+  
+  /*
+   *  Suspend a VPS
+   */
+
+  if ($sAction == 'suspendvps')
+  {
+	if($sCheckUser = $database->CachedQuery('SELECT * FROM accounts WHERE `email_address` = :UserEmail', array(':UserEmail' => $sEmail)))
+	{
+	  $sActionUser = new User($sCheckUser->data[0]['id']);
+	  if ($sVPS = $database->CachedQuery('SELECT * FROM vps WHERE `user_id` = :UserId AND `id` = :Id', array(':UserId' => $sActionUser->sId, ':Id' => $iVPSid)))
+	  {
+		$sVPS = new VPS($sVPS->data[0]['id']);
+		$sServer = new Server($sVPS->sServerId);
+		$sServerType = new $sServer->sType;
+		$sMethod = "database_{$sServer->sType}_suspend";
+		$sSecond = "{$sServer->sType}_suspend";
+		$sSuspend = $sServerType->$sMethod($sUser, $sVPS, $sRequested);
+		if (is_array($sSuspend)) die(json_encode($sSuspend));
+		$sFinish = $sServerType->$sSecond($sUser, $sVPS, $sRequested);
+		if(is_array($sFinish)) die(json_encode($sFinish));
+	  } else {
+		die(json_encode(array('result' => 'The VPS Id is either invalid or does not belong to this user.')));
+	  }
+	} else {
+	  die(json_encode(array("result" => "Invalid user email, manual suspension required.")));
 	}
-	
-	if($sAction == 'suspendvps'){
-		if($sCheckUser = $database->CachedQuery("SELECT * FROM accounts WHERE `email_address` = :UserEmail", array(':UserEmail' => $_POST['useremail']))){
-			$sActionUser = new User($sCheckUser->data[0]["id"]);
-			if($sVPS = $database->CachedQuery("SELECT * FROM vps WHERE `user_id` = :UserId AND `id` = :Id", array(':UserId' => $sActionUser->sId, ':Id' => $_POST['vpsid']))){
-				$sVPS = new VPS($sVPS->data["0"]["id"]);
-				$sServer = new Server($sVPS->sServerId);
-				$sServerType = new $sServer->sType;
-				$sMethod = "database_{$sServer->sType}_suspend";
-				$sSecond = "{$sServer->sType}_suspend";
-				$sSuspend = $sServerType->$sMethod($sUser, $sVPS, $sRequested);
-				if(is_array($sSuspend)){
-					echo json_encode($sSuspend);
-					die();
-				}
-				$sFinish = $sServerType->$sSecond($sUser, $sVPS, $sRequested);
-				if(is_array($sFinish)){
-					echo json_encode($sFinish);
-					die();
-				}
-			} else {
-				echo json_encode(array("result" => "The VPS Id is either invalid or does not belong to this user."));
-				die();
-			}
-		} else {
-			echo json_encode(array("result" => "Invalid user email, manual suspension required."));
-			die();
-		}
+  }
+  
+  /*
+   *  Unsuspend a VPS
+   */
+
+  if ($sAction == 'unsuspendvps')
+  {
+	if ($sCheckUser = $database->CachedQuery('SELECT * FROM accounts WHERE `email_address` = :UserEmail', array(':UserEmail' => $sEmail)))
+	{
+	  $sActionUser = new User($sCheckUser->data[0]['id']);
+	  if ($sVPS = $database->CachedQuery("SELECT * FROM vps WHERE `user_id` = :UserId AND `id` = :Id", array(':UserId' => $sActionUser->sId, ':Id' => $iVPSid)))
+	  {
+	    $sVPS = new VPS($sVPS->data[0]['id']);
+		$sServer = new Server($sVPS->sServerId);
+		$sServerType = new $sServer->sType;
+		$sMethod = "database_{$sServer->sType}_unsuspend";
+		$sSecond = "{$sServer->sType}_unsuspend";
+		$sUnsuspend = $sServerType->$sMethod($sUser, $sVPS, $sRequested);
+		if (is_array($sUnsuspend)) die(json_encode($sUnsuspend));
+		$sFinish = $sServerType->$sSecond($sUser, $sVPS, $sRequested);
+		if (is_array($sFinish)) die(json_encode($sFinish));
+	  } else {
+		die(json_encode(array('result' => 'The VPS Id is either invalid or does not belong to this user.')));
+	  }
+	} else {
+	  die(json_encode(array('result' => 'Invalid user email, manual unsuspension required.')));
 	}
-	
-	if($sAction == 'unsuspendvps'){
-		if($sCheckUser = $database->CachedQuery("SELECT * FROM accounts WHERE `email_address` = :UserEmail", array(':UserEmail' => $_POST['useremail']))){
-			$sActionUser = new User($sCheckUser->data[0]["id"]);
-			if($sVPS = $database->CachedQuery("SELECT * FROM vps WHERE `user_id` = :UserId AND `id` = :Id", array(':UserId' => $sActionUser->sId, ':Id' => $_POST['vpsid']))){
-				$sVPS = new VPS($sVPS->data["0"]["id"]);
-				$sServer = new Server($sVPS->sServerId);
-				$sServerType = new $sServer->sType;
-				$sMethod = "database_{$sServer->sType}_unsuspend";
-				$sSecond = "{$sServer->sType}_unsuspend";
-				$sUnsuspend = $sServerType->$sMethod($sUser, $sVPS, $sRequested);
-				if(is_array($sUnsuspend)){
-					echo json_encode($sUnsuspend);
-					die();
-				}
-				$sFinish = $sServerType->$sSecond($sUser, $sVPS, $sRequested);
-				if(is_array($sFinish)){
-					echo json_encode($sFinish);
-					die();
-				}
-			} else {
-				echo json_encode(array("result" => "The VPS Id is either invalid or does not belong to this user."));
-				die();
-			}
-		} else {
-			echo json_encode(array("result" => "Invalid user email, manual unsuspension required."));
-			die();
-		}
-	}
-	
+  }
 } else {
 
-}
+  /*
+   *  Generic failure message
+   */
 
+  die(json_encode(array('result' => 'API access denied.')));
+}
