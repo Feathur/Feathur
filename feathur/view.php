@@ -12,9 +12,10 @@ if (!empty($sUser)) die(header("Location: main.php", 401));
  * Redirect to main page if user is not looking at a VPS
  */
 
+$sId = (isset($_GET['id']) ? preg_replace('/[^\d]/', '', $_GET['id']) : 0);
 if ((empty($sId)) || (!is_numeric($sId))) die(header("Location: main.php", 403));
 
-$sAction	= preg_replace('/[^\w\d]/', '', $_GET['action']);
+$sAction = preg_replace('/[^\w\d]/', '', $_GET['action']);
 
 /*
  * Check for the existence of a VPS for currently logged in user, or existence at all if admin
@@ -23,9 +24,9 @@ $sAction	= preg_replace('/[^\w\d]/', '', $_GET['action']);
 try {
 	if ($sUser->sPermissions != 7)
 	{
-	  $database->CachedQuery('SELECT * FROM vps WHERE `id` = :VPSId AND `user_id` = :UserId', array('VPSId' => $sId, 'UserId' => $sUser->sId));
+		$database->CachedQuery('SELECT * FROM vps WHERE `id` = :VPSId AND `user_id` = :UserId', array('VPSId' => $sId, 'UserId' => $sUser->sId));
 	} else {
-	  $database->CachedQuery('SELECT * FROM vps WHERE `id` = :VPSId', array('VPSId' => $sId));
+		$database->CachedQuery('SELECT * FROM vps WHERE `id` = :VPSId', array('VPSId' => $sId));
 	}
 	$sVPS = new VPS($sId);
 } catch (Exception $e) {
@@ -100,7 +101,7 @@ if ($sTransfer = $database->CachedQuery('SELECT * FROM transfers WHERE `complete
 
 if (!empty($sAction))
 {
-  @set_time_limit(100);
+  @set_time_limit(15);
   $sStart = new $sVPS->sType;
   $sDBAction = "database_{$sVPS->sType}_{$sAction}";
   $sServerAction = "{$sVPS->sType}_{$sAction}";

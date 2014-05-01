@@ -32,12 +32,6 @@ $sLocalKey->loadKey(file_get_contents($cphp_config->settings->rootkey));
 if (! $sLocalSSH->login("root", $sLocalKey)) die("Cannot connect to this server, check local key.");
 
 /*
- * Create template link for KVM
- */
-
-$sLink = $sLocalSSH->exec("ln -s /var/feathur/data/templates/kvm /var/feathur/feathur/templates/");
-
-/*
  * Clean up screen sessions
  */
 
