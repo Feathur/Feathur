@@ -5,7 +5,7 @@ require_once('./includes/loader.php');
  * Redirect user to main page if not logged in
  */
 
-if (!empty($sUser)) die(header("Location: main.php", 401));
+if (empty($sUser)) die(header("Location: main.php", 401));
 
 
 /*
