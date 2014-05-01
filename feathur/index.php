@@ -1,15 +1,26 @@
 <?php
 require_once('./includes/loader.php');
 
-$sAction = $_GET['action'];
+$sAction = preg_replace('/[^\w\d]/', '', $_GET['action']);
 
-if(!empty($sUser)){
-	header("Location: main.php");
-	die();
-}
+/*
+ * Redirect user to main page if not logged in
+ */
 
-if($sAction == 'login'){
-	$sErrors[] = User::login($_POST['email'], $_POST['password']);
-}
+if (!empty($sUser)) die(header("Location: main.php", 401));
 
-echo Templater::AdvancedParse($sTemplate->sValue.'/login', $locale->strings, array("Errors" => $sErrors));
+/*
+ * Process login if provided
+ */
+
+if ($sAction == 'login') $sErrors[] = User::login($_POST['email'], $_POST['password']);
+
+/*
+ * Display login template
+ */
+
+echo Templater::AdvancedParse(
+       $sTemplate->sValue.'/login',
+	   $locale->strings,
+	   array('Errors' => $sErrors)
+	 );

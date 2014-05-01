@@ -1,43 +1,76 @@
 <?php
-include('./includes/loader.php');
+require_once('./includes/loader.php');
 
-// Get prerequisites.
-$sId = $_GET['id'];
-$sAction = $_GET['action'];
+$sId		= abs((int) $_GET['id']);
+$sAction	= preg_replace('/[^\w\d]/', '', $_GET['action']);
+$iPort		= abs((int) $_POST['port']);
+$sHostname	= preg_replace('/[^\w\d\.\-]/', '', $_POST['hostname']);
 
-// Check for login.
-if(empty($sUser)){
-	header("Location: index.php");
-	die();
-}
+/*
+ * Redirect to index if user is not logged in
+ */
 
-// Check to make sure the user is actually trying to view a vps.
-if(empty($sId)){
-	header("Location: main.php");
-	die();
-}
+if (empty($sUser)) die(header("Location: index.php", 401));
 
-// Check to make sure the vps the user is trying to view is theirs or they are a admin.
+/*
+ * If a VPS is not being viewed, redirect to main page
+ */
+
+if (empty($sId)) die(header("Location: main.php", 301));
+
+/*
+ * Redirect if user is not viewing their VPS, or user is not an admin
+ */
+
 $sVPS = new VPS($sId);
-if(($sVPS->sUserId != $sUser->sId) && ($sUser->sPermissions != 7)){
-	header("Location: main.php");
-	die();
+if (($sVPS->sUserId != $sUser->sId) && ($sUser->sPermissions != 7)) die(header("Location: main.php", 401));
+
+/*
+ * Show suspension page if user's VPS is suspended
+ */
+
+if (($sVPS->sSuspended == 1) && ($sUser->sPermissions != 7))
+{
+  echo Templater::AdvancedParse($sTemplate->sValue.'/suspended', $locale->strings, array());
+  die();
 }
 
-// Restrict access to the vps if the user's vps is suspended.
-if(($sVPS->sSuspended == 1) && ($sUser->sPermissions != 7)){
-	echo Templater::AdvancedParse($sTemplate->sValue.'/suspended', $locale->strings, array());
-	die();
-}
+/*
+ * Show console screen if all other conditions are met
+ */
 
-if($sAction == connect){
-	if((!empty($_POST['hostname'])) && (!empty($_POST['port']))){
-		$sView = Templater::AdvancedParse($sTemplate->sValue.'/console', $locale->strings, array("connect" => "1", "VPS" => array("data" => $sVPS->uData), "Hostname" => htmlspecialchars($_POST["hostname"], ENT_QUOTES), "Port" => htmlspecialchars($_POST["port"], ENT_QUOTES)));
-	} else { 
-		$sView = Templater::AdvancedParse($sTemplate->sValue.'/console', $locale->strings, array("connect" => "0", "VPS" => array("data" => $sVPS->uData)));
-	}
+if ($sAction == 'connect')
+{
+  if ((!empty($sHostname)) && (!empty($iPort)))
+  {
+	$sView = Templater::AdvancedParse(
+	           $sTemplate->sValue.'/console',
+			   $locale->strings,
+			   array(
+			     'connect' => 1,
+				 'VPS' => array('data' => $sVPS->uData),
+				 'Hostname'	=> $sHostname,
+				 'Port'		=> $iPort
+			   )
+			 );
+  } else { 
+	$sView = Templater::AdvancedParse(
+	           $sTemplate->sValue.'/console',
+			   $locale->strings,
+			   array(
+			     'connect' => 0,
+				 'VPS' => array("data" => $sVPS->uData)
+			   )
+			 );
+  }
 } else {
-	$sView = Templater::AdvancedParse($sTemplate->sValue.'/console', $locale->strings, array("connect" => "0", "VPS" => array("data" => $sVPS->uData)));
+  $sView = Templater::AdvancedParse(
+             $sTemplate->sValue.'/console',
+			 $locale->strings,
+			 array(
+			   'connect' => 0,
+			   'VPS' => array('data' => $sVPS->uData)
+			 )
+		   );
 }
-
 echo $sView;
