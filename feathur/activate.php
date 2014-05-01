@@ -14,9 +14,9 @@ if (empty($_GET['email']) || empty($_GET['id'])) die(header("Location: index.php
  */
 
 $sEmail = preg_replace('/[^\w\d_\._@+]/', '', $_GET['email']);
-$iID    = abs((int) $_GET['id']);
+$sID    = preg_replace('/[^\w\d_]/', '', $_GET['id']);
 
-$sActivate = $database->CachedQuery("SELECT * FROM accounts WHERE (`password` = -1 AND `email_address` = :EmailAddress AND `activation_code` = :ActivationCode) || (`email_address` = :EmailAddress AND `forgot` = :ActivationCode)", array('EmailAddress' => $sEmail, 'ActivationCode' => $iID));
+$sActivate = $database->CachedQuery("SELECT * FROM accounts WHERE (`password` = -1 AND `email_address` = :EmailAddress AND `activation_code` = :ActivationCode) || (`email_address` = :EmailAddress AND `forgot` = :ActivationCode)", array('EmailAddress' => $sEmail, 'ActivationCode' => $sID));
 
 /*
  * Redirect to index if there's no need to activate
@@ -55,7 +55,7 @@ echo Templater::AdvancedParse(
 	   $locale->strings,
 	   array(
 	     'Errors'	=> $sErrors,
-		 'Id'		=> $iID,
+		 'Id'		=> $sID,
 		 'Email'	=> $sEmail
 	   )
 	 );
