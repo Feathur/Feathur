@@ -16,7 +16,7 @@ if (!empty($_POST['email']) && !empty($_POST['password']))
 $sAction = preg_replace('/[^\w\d]/', '', $_POST['action']);
 $sEmail  = preg_replace('/[^\w\d_\._@+]/', '', $_POST['useremail']);
 $sServer = preg_replace('/[^\d\.]/', '', $_POST['server']);
-$sTemplate = preg_replace('/[^\w\d\s\-\._]/', '', $_POST['template']);
+$sTemplate = preg_replace('/[^\w\d\s\-\._\(\)]/', '', $_POST['template']);
 $iVPSid  = abs((int) $_POST['vpsid']);
 
 /*
