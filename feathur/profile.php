@@ -1,34 +1,60 @@
 <?php
-include('./includes/loader.php');
+require_once('./includes/loader.php');
 
-// Get prerequisites.
-$sId = $_GET['id'];
-$sAction = $_GET['action'];
+/*
+ * Redirect user to main page if not logged in
+ */
 
-// Check for login.
-if(empty($sUser)){
-	header("Location: index.php");
-	die();
-}
+if (empty($sUser)) die(header("Location: index.php", 401));
 
-if($sAction == password){
+
+$sAction	= preg_replace('/[^\w\d]/', '', $_GET['action']);
+$sUsername	= preg_replace('/[^a-zA-Z0-9\s]/', '', $_POST['username']);
+
+/*
+ * Process password update
+ */
+
+if ($sAction == 'password')
+{
 	$sChange = $sUser->change_password($sUser, $_POST['password'], $_POST['passwordagain']);
-	if(is_array($sChange)){
-		echo json_encode($sChange);
+	if(is_array($sChange))
+	{
+	  echo json_encode($sChange);
 	} else {
-		echo json_encode(array("content" => "Your password has been updated."));
-	}
-	die();
-} elseif($sAction == username){
-	if(strlen($_POST['username']) > 2){
-		$sUser->uUsername = preg_replace("/[^a-zA-Z0-9\s]/", "", $_POST['username']);
-		$sUser->InsertIntoDatabase();
-		echo json_encode(array("content" => "Your name has been updated in the database."));
-	} else {
-		echo json_encode(array("content" => "Your name must be at least 2 characters long."));
+	  echo json_encode(array("content" => "Your password has been updated."));
 	}
 	die();
 }
 
-$sView = Templater::AdvancedParse($sTemplate->sValue.'/profile', $locale->strings, array("Username" => $sUser->sUsername));
-echo Templater::AdvancedParse($sTemplate->sValue.'/master', $locale->strings, array("Content" => $sView, "Page" => "profile", "Errors" => $sErrors));
+/*
+ * Process username update
+ */
+
+if ($sAction == 'username')
+{
+  if(strlen($sUsername) > 2)
+  {
+	$sUser->uUsername = $sUsername;
+	$sUser->InsertIntoDatabase();
+	echo json_encode(array('content' => 'Your name has been updated in the database.'));
+  } else {
+	echo json_encode(array('content' => 'Your name must be at least 2 characters long.'));
+  }
+  die();
+}
+
+$sView = Templater::AdvancedParse(
+           $sTemplate->sValue.'/profile',
+		   $locale->strings,
+		   array('Username' => $sUser->sUsername)
+		 );
+echo Templater::AdvancedParse(
+       $sTemplate->sValue.'/master',
+	   $locale->strings,
+	   array(
+	     'Content'	=> $sView,
+		 'Page'		=> 'profile',
+		 'Errors'	=> $sErrors
+	   )
+	 );
