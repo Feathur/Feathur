@@ -4,7 +4,7 @@ require_once('./includes/loader.php');
 $sId		= abs((int) $_GET['id']);
 $sView		= preg_replace('/[^\w\d]/', '', $_GET['view']);
 $sAction	= preg_replace('/[^\w\d_]/', '', $_GET['action']);
-$sSearch	= preg_replace('/[^\d\w\s\.\-_]/', '', $_POST['search']);
+$sSearch	= preg_replace('/[^\d\w\s\.\-_]/', '', $_GET['search']);
 $sType		= preg_replace('/[^\w\d]/', '', $_GET['type']);
 
 $sPage		= 'admin';
