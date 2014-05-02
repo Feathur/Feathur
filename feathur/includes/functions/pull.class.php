@@ -137,7 +137,7 @@ class Pull {
 		$sMaxSMTP = Core::GetSetting('max_smtp_connections');
 		
 		// Get all current SMTP connection IP addresses.
-		$sConnections = explode("\n", $sSSH->exec("netstat -nputw | grep \"smtp\" | grep -E -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'"));
+		$sConnections = explode("\n", $sSSH->exec("netstat -nputw | grep \"smtp\" | grep -E -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}';netstat -nputw | grep \":25 \" | grep -E -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'"));
 		
 		// Count the number of connections for each IP.
 		$sCountConnections = array_count_values($sConnections);
