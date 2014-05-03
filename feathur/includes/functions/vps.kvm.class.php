@@ -236,8 +236,6 @@ class kvm {
 				
 				// Check to make sure the template is on the server and is within 5 MB of the target size.
 				$sCheckSynced = $sSSH->exec("cd /var/feathur/data/templates/kvm/;ls -nl {$sTemplatePath} | awk '{print $5}'");
-				$sUpper = $sTemplate->sSize + 5242880;
-				$sLower = $sTemplate->sSize - 5242880;
 				if(strpos($sCheckSynced, 'No such file or directory') !== false) { 
 					$sSync = true;
 				}
