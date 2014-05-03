@@ -241,11 +241,6 @@ class kvm {
 				if(strpos($sCheckSynced, 'No such file or directory') !== false) { 
 					$sSync = true;
 				}
-
-				if(($sCheckSynced < $sLower) || ($sCheckSynced > $sUpper)){
-					$sSync = true;
-					$sCleanup = $sSSH->exec("cd /var/feathur/data/templates/kvm/;rm -rf {$sTemplatePath};");
-				}
 				
 				if($sSync === true){
 					$sVPS->uISOSyncing = 1;
