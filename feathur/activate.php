@@ -13,7 +13,7 @@ if (empty($_GET['email']) || empty($_GET['id'])) die(header("Location: index.php
  * See if an activation code exists for the given email/id
  */
 
-$sEmail = preg_replace('/[^\w\d_\._@+]/', '', $_GET['email']);
+$sEmail = preg_replace('/[^\w\d_\-\._@+]/', '', $_GET['email']);
 $sID    = preg_replace('/[^\w\d_]/', '', $_GET['id']);
 
 $sActivate = $database->CachedQuery("SELECT * FROM accounts WHERE (`password` = -1 AND `email_address` = :EmailAddress AND `activation_code` = :ActivationCode) || (`email_address` = :EmailAddress AND `forgot` = :ActivationCode)", array('EmailAddress' => $sEmail, 'ActivationCode' => $sID));
