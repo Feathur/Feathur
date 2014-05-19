@@ -9,7 +9,7 @@ if(!empty($sServerId)){
 		$sLVM = preg_replace("/[^0-9]/","", $sLVM);
 		if($sLVM > 0){
 			if(!$sExists = $database->CachedQuery("SELECT * FROM `vps` WHERE `container_id` = :ContainerId", array('ContainerId' => $sLVM))){
-				echo "virsh destroy {$sLVM};lvremove -f {$sServer->sVolumeGroup}/kvm{$sLVM}_img;"
+				echo "virsh destroy {$sLVM};lvremove -f {$sServer->sVolumeGroup}/kvm{$sLVM}_img;";
 			}
 		}
 	}
