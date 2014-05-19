@@ -950,7 +950,7 @@ class kvm {
 			$sCommandList .= "rm -rf /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;rm -rf /var/feathur/configs/kvm{$sVPS->sContainerId}-dhcp.conf;";
 			$sCommandList .= "cat /var/feathur/configs/dhcpd.head /var/feathur/configs/*-dhcp.conf > /etc/dhcp/dhcpd.conf;service isc-dhcp-server restart;";
 			$sCommandList .= "dd if=/dev/zero of=/dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img;";
-			$sCommandList .= "lvremove -f /dev/{$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img;exit;";
+			$sCommandList .= "lvremove -f {$sServer->sVolumeGroup}/kvm{$sVPS->sContainerId}_img;exit;";
 			$sCommandList = escapeshellarg($sCommandList);
 			$sLog[] = array("command" => "VPS Termination via Screen", "result" => $sSSH->exec("screen -dm -S {$sVPS->sContainerId} bash -c {$sCommandList};"));
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
