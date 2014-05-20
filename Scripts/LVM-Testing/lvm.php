@@ -10,6 +10,7 @@ include('./includes/loader.php');
 if($sServerList = $database->CachedQuery("SELECT * FROM `servers` WHERE `type` = :Type", array('Type' => "kvm"))){
 	foreach($sServerList->data as $sServer){
 		$sServer = new Server($sServer["id"]);
+		echo "Starting server: {$sServer->sName}\n";
 		$sSSH = Server::server_connect($sServer);
 		$sLVMs = explode("\n", $sSSH->exec("cd /dev/{$sServer->sVolumeGroup}/;ls"));
 		foreach($sLVMs as $sLVM){
