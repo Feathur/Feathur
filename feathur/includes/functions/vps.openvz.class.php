@@ -525,7 +525,7 @@ class openvz {
 	public function openvz_cancelrebuild($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
-		$sCancel = $sSSH->exec("screen -S {$sVPS->sContainerId} -X quit");
+		$sCancel = $sSSH->exec("screen -X -S {$sVPS->sContainerId} kill");
 		return $sArray = array("json" => 1, "type" => "success", "reload" => 1, "result" => "Rebuild Cancelled.");
 	}
 	
