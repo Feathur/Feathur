@@ -516,10 +516,20 @@ class openvz {
 		return $sArray = array("json" => 1, "type" => "success", "result" => "Hostname has been updated successfully.");
 	}
 	
+	public function database_openvz_cancelrebuild($sUser, $sVPS, $sRequested){
+		$sVPS->uRebuilding = 0;
+		$sVPS->InsertIntoDatabase();
+		return $sArray = array("json" => 1, "type" => "success", "reload" => 1, "result" => "Rebuild Cancelled.");
+	}
+	
+	public function openvz_cancelrebuild($sUser, $sVPS, $sRequested){
+		return true;
+	}
+	
 	public function database_openvz_rebuild($sUser, $sVPS, $sRequested){
 		if(is_numeric($sRequested["GET"]["template"])){
 			$sVPS->uTemplateId = $sRequested["GET"]["template"];
-			$sVPS->uRebuilding = 1;
+			$sVPS->uRebuilding = time();
 			$sVPS->InsertIntoDatabase();
 			return true;
 		} else {
@@ -603,6 +613,7 @@ class openvz {
 	public function database_openvz_rebuildcheck($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
+		$sTimestamp = time() - (60 * 5);
 		$sCheck = $sSSH->exec("cat /vz/feathur_tmp/{$sVPS->sContainerId}.finished");
 		if(strpos($sCheck, $sVPS->sId) !== false){
 			$sRemove = $sSSH->exec("rm -rf /vz/feathur_tmp/*{$sVPS->sContainerId}*;");
@@ -610,7 +621,10 @@ class openvz {
 			$sVPS->InsertIntoDatabase();
 			return $sArray = array("json" => 1, "type" => "success", "reload" => 1, "result" => "Rebuild Completed.");
 		} else {
-			return $sArray = array("json" => 1, "type" => "pending", "reload" => 0, "result" => "Rebuild Pending.");
+			if($sVPS->sRebuilding > $sTimestamp){
+				$sCancel = 1;
+			}
+			return $sArray = array("json" => 1, "type" => "pending", "allowcancel" => $sCancel, "reload" => 0, "result" => "Rebuild Pending.");
 		}
 	}
 	

@@ -19,9 +19,21 @@
 						} else {
 							counttx=0;
 						}
+						if(result.allowcancel == 1){
+							$("#Cancel").css({visibility: "visible"});
+						}
 					});
 				});
 			}
+			$("#Cancel").click(function() {
+				$('#Cancel').html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
+				$.getJSON("view.php?id={%?vps[id]}&action=cancelrebuild",function(result){
+					if(result.reload == 1){
+						location.reload();
+						counttx=0;
+					}
+				});
+			});
 			setInterval(rebuildcheck, 5000);
 		});
 	</script>
@@ -38,6 +50,8 @@
 				</div>
 				<br><div align="center" style="width:30px;display:inline;white-space:nowrap;">Last update: <a id="timer" style="white-space:nowrap;">0</a> seconds ago</div>
 				<br><img src="templates/default/img/loading/7.gif">
+				<br><br>
+				<div align="center"><a href="#" id="Cancel" class="button-red" style="color:#FFFFFF;visibility:hidden;">Cancel Rebuild</a></div>
 			</div>
 		</div>
 	</div>

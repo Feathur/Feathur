@@ -120,7 +120,7 @@ if (!empty($sAction))
  * Ensure VPS isn't currently rebuilding
  */
 
-if ($sVPS->sRebuilding == 1)
+if($sVPS->sRebuilding > 0)
 {
   $sUserView .= Templater::AdvancedParse(
                   $sTemplate->sValue.'/rebuild',
