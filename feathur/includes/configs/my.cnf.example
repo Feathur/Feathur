@@ -14,25 +14,27 @@ port		= 3306
 basedir		= /usr
 datadir		= /var/lib/mysql
 tmpdir		= /tmp
+
 lc-messages-dir	= /usr/share/mysql
 skip-external-locking
 bind-address		= 127.0.0.1
 default-storage-engine = myisam
-key_buffer = 1M
-query_cache_size = 1M
-query_cache_limit = 128k
+key_buffer = 2M
+query_cache_size = 8M
+query_cache_type = 1
+query_cache_limit = 1M
 max_connections=100
 thread_cache=1
 skip-innodb
 query_cache_min_res_unit=0
-tmp_table_size = 1M
-max_heap_table_size = 1M
-table_cache=32
+tmp_table_size = 32M
+max_heap_table_size = 32M
+table_cache=64
 concurrent_insert=2 
-max_allowed_packet = 1M
-sort_buffer_size = 64K
-read_buffer_size = 256K
-read_rnd_buffer_size = 256K
+max_allowed_packet = 100M
+sort_buffer_size = 1M
+read_buffer_size = 1M
+read_rnd_buffer_size = 1M
 net_buffer_length = 2K
 thread_stack = 64K
 expire_logs_days	= 10
