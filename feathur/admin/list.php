@@ -1,14 +1,10 @@
 <?php
-if ($sUser->sPermissions != 7)
-{
-	die("Sorry, you've accessed our system without permission");
-}
 
-if ($sType == search)
-{
+if ($sUser->sPermissions != 7) die("Sorry, you've accessed our system without permission");
 
+if ($sType == 'search')
+{
   $sPage = 'search';
-
   if (strpos($sSearch,'server=') !== false)
   {
 	$sSearchServer = preg_replace('/server=/', '', $sSearch);
