@@ -11,7 +11,7 @@
  * licensing text.
  */
 
-cphp_dependency_provides("cphp_router", "1.1");
+cphp_dependency_provides('cphp_router', '1.1');
 
 class RouterException extends Exception {}
 
@@ -20,7 +20,7 @@ class CPHPRouter extends CPHPBaseClass
 	public $routes = array();
 	public $parameters = array();
 	public $uVariables = array();
-	public $custom_query = "";
+	public $custom_query = '';
 	public $allow_slash = false;
 	public $ignore_query = false;
 	
@@ -67,7 +67,7 @@ class CPHPRouter extends CPHPBaseClass
 					{
 						if(strpos($route_regex, "$") !== false)
 						{
-							$route_regex = str_replace("$", "/?$", $route_regex);
+							$route_regex = preg_replace("$", "/?$", $route_regex);
 						}
 						else
 						{
@@ -75,7 +75,7 @@ class CPHPRouter extends CPHPBaseClass
 						}
 					}
 					
-					$regex = str_replace("/", "\/", $route_regex);
+					$regex = preg_replace("/", "\/", $route_regex);
 					if(preg_match("/{$regex}/i", $requestpath, $matches))
 					{
 						$this->uParameters = $matches;
