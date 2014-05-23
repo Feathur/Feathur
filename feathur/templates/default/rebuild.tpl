@@ -48,8 +48,8 @@
 				<br><div align="center" style="width:30px;display:inline;white-space:nowrap;">Last update: <a id="timer" style="white-space:nowrap;">0</a> seconds ago</div>
 				<br><img src="templates/default/img/loading/7.gif">
 				<br><br>
-				<div align="center"><a href="#" id="Cancel" class="button-red" style="color:#FFFFFF;visibility:hidden;">Cancel Rebuild</a><br><br>
-				<strong>NOTE: Cancelling a rebuild will not save your data, once the process starts your data is gone.</strong></div>
+				<div align="center"><a href="#" id="Cancel" class="button-red" style="color:#FFFFFF;">Abort / Cancel Rebuild</a><br><br>
+				<strong>NOTE: Cancelling a rebuild will not save your data, once the process starts your data is gone. If you cancel the rebuild you will need to restart it again.</strong></div>
 			</div>
 		</div>
 	</div>
