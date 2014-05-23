@@ -621,7 +621,7 @@ class openvz {
 			$sVPS->InsertIntoDatabase();
 			return $sArray = array("json" => 1, "type" => "success", "reload" => 1, "result" => "Rebuild Completed.");
 		} else {
-			if($sVPS->sRebuilding > $sTimestamp){
+			if($sVPS->sRebuilding < $sTimestamp){
 				$sCancel = 1;
 			}
 			return $sArray = array("json" => 1, "type" => "pending", "allowcancel" => $sCancel, "reload" => 0, "result" => "Rebuild Pending.");
