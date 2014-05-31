@@ -359,6 +359,9 @@ class kvm {
 			$sVPS->uTemplateId = $sTemplate->sId;
 			$sVPS->InsertIntoDatabase();
 			$this->kvm_config($sUser, $sVPS, $sRequested);
+			if(empty($sRequested["GET"]["template"])){
+				return $sArray = array("json" => 1, "type" => "success", "result" => "{$sTemplate->sName} has been mounted, please reboot your VPS.");
+			}
 			return true;
 		} else {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Invalid ISO selected, please try again!");
