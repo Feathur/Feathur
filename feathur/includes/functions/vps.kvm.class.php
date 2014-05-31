@@ -355,8 +355,13 @@ class kvm {
 	
 	public function database_kvm_mount($sUser, $sVPS, $sRequested){
 		if(is_numeric($sRequested["GET"]["template"])){
-			$sTemplate = new Template($sRequested["GET"]["template"]);
-			$sVPS->uTemplateId = $sTemplate->sId;
+			if(!empty($sRequested["GET"]["template"])){
+				$sTemplate = new Template($sRequested["GET"]["template"]);
+				$sTemplateId = $sTemplate->sId;
+			} else {
+				$sTemplateId = 0;
+			}
+			$sVPS->uTemplateId = $sTemplateId;
 			$sVPS->InsertIntoDatabase();
 			$this->kvm_config($sUser, $sVPS, $sRequested);
 			if(empty($sRequested["GET"]["template"])){
