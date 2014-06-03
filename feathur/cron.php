@@ -118,7 +118,8 @@ if ($sServerList = $database->CachedQuery('SELECT * FROM servers', array()))
 		  foreach ($sAdminList->data as $sAdmin)
 		  {
 			$sVariable = array('server' => $sServer->sName);
-			$sAlert = Core::SendEmail($sAdmin['email_address'], "Server Down: {$sServer->sName} - To {$sAdmin['email_address']}", 'down', $sVariable);
+			// Disabled temporarily.
+			//$sAlert = Core::SendEmail($sAdmin['email_address'], "Server Down: {$sServer->sName} - To {$sAdmin['email_address']}", 'down', $sVariable);
 		  }
 		}
 		$sServer->uStatusWarning = true;
