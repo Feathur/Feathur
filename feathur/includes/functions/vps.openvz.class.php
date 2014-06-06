@@ -3,156 +3,158 @@ class openvz {
 
 	public function database_openvz_create($sUser, $sRequested, $sAPI = 0){
 		$sUserPermissions = $sUser->sPermissions;
-		if($sUserPermissions == 7){
-			global $database;
-			global $sRequested;
-			$uServer = $sRequested["POST"]["server"];
-			$uUser = $sRequested["POST"]["user"];
-			$uTemplate = $sRequested["POST"]["template"];
-			$uRAM = $sRequested["POST"]["ram"];
-			$uSWAP = $sRequested["POST"]["swap"];
-			$uDisk = $sRequested["POST"]["disk"];
-			$uInodes = $sRequested["POST"]["inodes"];
-			$uNumProc = $sRequested["POST"]["numproc"];
-			$uNumIPTent = $sRequested["POST"]["numiptent"];
-			$uIPAddresses = $sRequested["POST"]["ipaddresses"];
-			$uHostname = $sRequested["POST"]["hostname"];
-			$uNameserver = $sRequested["POST"]["nameserver"];
-			$uPassword = $sRequested["POST"]["password"];
-			$uCPUUnits = $sRequested["POST"]["cpuunits"];
-			$uCPULimit = $sRequested["POST"]["cpulimit"];
-			$uBandwidthLimit = $sRequested["POST"]["bandwidthlimit"];
-			if((!empty($uServer)) && (is_numeric($uServer))){
-				if((!empty($uUser)) && (is_numeric($uUser))){
-					if((!empty($uTemplate)) && (is_numeric($uTemplate))){
-						if((!empty($uRAM)) && (is_numeric($uRAM))){
-							if((!empty($uSWAP)) && (is_numeric($uSWAP))){
-								if((!empty($uDisk)) && (is_numeric($uDisk))){
-									if((!empty($uInodes)) && (is_numeric($uInodes))){
-										if((!empty($uNumProc)) && (is_numeric($uNumProc))){
-											if((!empty($uNumIPTent)) && (is_numeric($uNumIPTent))){
-												if((!empty($uInodes)) && (is_numeric($uInodes))){
-													if((!empty($uCPUUnits)) && (is_numeric($uCPUUnits))){
-														if((!empty($uCPULimit)) && (is_numeric($uCPULimit))){
-															if((!empty($uBandwidthLimit)) && (is_numeric($uBandwidthLimit))){
-																$sServer = new Server($uServer);
-																$sOwner = new User($uUser);
-																$sTemplate = new Template($uTemplate);
-																
-																if($uIPAddressess > 0){
-																	$sIPCheck = VPS::check_ipspace($sServer->sId, $uIPAddresses);
-																	if(is_array($sIPCheck)){
-																		return $sIPCheck;
-																	}
-																}
-																
-																if(!is_array($sSSH)){
-																	if(empty($uHostname)){
-																		$uHostname = "vps.example.com";
-																	}
-																	
-																	if(empty($uNameserver)){
-																		$uNameserver = "8.8.8.8";
-																	}
-																	
-																	// VPS Database setup
-																	$sVPSId = Core::GetSetting('container_id');
-																	$sUpdate = Core::UpdateSetting('container_id', ($sVPSId->sValue + 1));
-																	$sVPS = new VPS(0);
-																	$sVPS->uType = $sServer->sType;
-																	$sVPS->uHostname = preg_replace('/[^A-Za-z0-9-.]/', '', $uHostname);
-																	$sVPS->uNameserver = $uNameserver;
-																	$sVPS->uUserId = $sOwner->sId;
-																	$sVPS->uServerId = $sServer->sId;
-																	$sVPS->uContainerId = $sVPSId->sValue;
-																	$sVPS->uNumIPTent = $uNumIPTent;
-																	$sVPS->uNumProc = $uNumProc;
-																	$sVPS->uInodes = $uInodes;
-																	$sVPS->uRAM = $uRAM;
-																	$sVPS->uSWAP = $uSWAP;
-																	$sVPS->uDisk = $uDisk;
-																	$sVPS->uCPUUnits = $uCPUUnits;
-																	$sVPS->uCPULimit = $uCPULimit;
-																	$sVPS->uTemplateId = $sTemplate->sId;
-																	$sVPS->uBandwidthLimit = $uBandwidthLimit;
-																	$sVPS->InsertIntoDatabase();
-																	
-																	if($uIPAddresses > 0){
-																		if($sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId AND `ipv6` = 0", array('ServerId' => $sServer->sId))){
-																			foreach($sBlocks->data as $key => $value){
-																				if($sIPs = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `block_id` = :BlockId AND `vps_id` = 0", array('BlockId' => $value["block_id"]))){
-																					foreach($sIPs->data as $subvalue){
-																						if($sCurrentIPs < $uIPAddresses){
-																							$sIPList[] = array("id" => $subvalue["id"], "ip_address" => $subvalue["ip_address"]);
-																							$sUpdate = $database->CachedQuery("UPDATE ipaddresses SET `vps_id` = :VPSId WHERE `id` = :Id", array('VPSId' => $sVPS->sId, 'Id' => $subvalue["id"]));
-																							if(empty($sFirst)){
-																								$sVPS->uPrimaryIP = $subvalue["ip_address"];
-																								$sVPS->InsertIntoDatabase();
-																								$sFirst = 1;
-																							}
-																							$sCurrentIPs++;
-																						}
-																					}
-																				}																					
-																			}
-																		}
-																		$sRequested["POST"]["IPList"] = $sIPList;
-																	}
-																	
-																	$sRequested["POST"]["VPS"] = $sVPS->sId;
-																	$sRequested["POST"]["IPList"] = $sIPList;
-																	
-																	if(!empty($sAPI)){
-																		return $sVPS->sId;
-																	}
-																	return true;
-																} else {
-																	return $sArray = array("json" => 1, "type" => "error", "result" => "Unable to connect to the node selected!");
-																}
-															} else {
-																return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input a bandwidth limit!");
-															}
-														} else {
-															return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the CPU limit!");
-														}
-													} else {
-														return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the number of CPU units!");
-													}
-												} else {
-													return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the number of inodes");
-												}
-											} else {
-												return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the maximum number of connections to create a VPS!");
-											}
-										} else {
-											return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the maximum number of processes to create a VPS!");
-										}
-									} else {
-										return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the maximum inodes to create a VPS!");
-									}		
-								} else {
-									return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the maximum disk to create a VPS!");
-								}
-							} else {
-								return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the maximum SWAP to create a VPS!");
-							}
-						} else {
-							return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the maximum RAM to create a VPS!");
-						}
-					} else {
-						return $sArray = array("json" => 1, "type" => "caution", "result" => "You must select a template to create a VPS!");
-					}
-				} else {
-					return $sArray = array("json" => 1, "type" => "caution", "result" => "You must specify a user to create a VPS!");
-				}
-			} else {
-				return $sArray = array("json" => 1, "type" => "caution", "result" => "You must specify a server to create a VPS!");
-			}
-		} else {
+
+		if($sUserPermissions != 7){
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Permissions invalid for selected action.");
 		}
-	}		
-														
+
+		global $database;
+		global $sRequested;
+		$uServer = $sRequested["POST"]["server"];
+		$uUser = $sRequested["POST"]["user"];
+		$uTemplate = $sRequested["POST"]["template"];
+		$uRAM = $sRequested["POST"]["ram"];
+		$uSWAP = $sRequested["POST"]["swap"];
+		$uDisk = $sRequested["POST"]["disk"];
+		$uInodes = $sRequested["POST"]["inodes"];
+		$uNumProc = $sRequested["POST"]["numproc"];
+		$uNumIPTent = $sRequested["POST"]["numiptent"];
+		$uIPAddresses = $sRequested["POST"]["ipaddresses"];
+		$uHostname = $sRequested["POST"]["hostname"];
+		$uNameserver = $sRequested["POST"]["nameserver"];
+		$uPassword = $sRequested["POST"]["password"];
+		$uCPUUnits = $sRequested["POST"]["cpuunits"];
+		$uCPULimit = $sRequested["POST"]["cpulimit"];
+		$uBandwidthLimit = $sRequested["POST"]["bandwidthlimit"];
+
+		if((empty($uServer)) || (!is_numeric($uServer))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must specify a server to create a VPS!");
+		}
+
+		if((empty($uUser)) || (!is_numeric($uUser))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must specify a user to create a VPS!");
+		}
+
+		if((empty($uTemplate)) || (!is_numeric($uTemplate))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must select a template to create a VPS!");
+		}
+
+		if((empty($uRAM)) || (!is_numeric($uRAM))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the maximum RAM to create a VPS!");
+		}
+
+		if((empty($uSWAP)) || (!is_numeric($uSWAP))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the maximum SWAP to create a VPS!");
+		}
+
+		if((empty($uDisk)) || (!is_numeric($uDisk))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the maximum disk to create a VPS!");
+		}
+
+		if((empty($uInodes)) || (!is_numeric($uInodes))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the maximum inodes to create a VPS!");
+		}
+
+		if((empty($uNumProc)) || (!is_numeric($uNumProc))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the maximum number of processes to create a VPS!");
+		}
+
+		if((empty($uNumIPTent)) || (!is_numeric($uNumIPTent))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the maximum number of connections to create a VPS!");
+		}
+
+		if((empty($uInodes)) || (!is_numeric($uInodes))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the number of inodes");
+		}
+
+		if((empty($uCPUUnits)) || (!is_numeric($uCPUUnits))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the number of CPU units!");
+		}
+
+		if((empty($uCPULimit)) || (!is_numeric($uCPULimit))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the CPU limit!");
+		}
+
+		if((empty($uBandwidthLimit)) || (!is_numeric($uBandwidthLimit))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input a bandwidth limit!");
+		}
+
+		$sServer = new Server($uServer);
+		$sOwner = new User($uUser);
+		$sTemplate = new Template($uTemplate);
+					
+		if($uIPAddressess > 0){
+			$sIPCheck = VPS::check_ipspace($sServer->sId, $uIPAddresses);
+			if(is_array($sIPCheck)){
+				return $sIPCheck;
+			}
+		}
+											
+		if(!is_array($sSSH)){
+			if(empty($uHostname)){
+				$uHostname = "vps.example.com";
+			}
+
+			if(empty($uNameserver)){
+				$uNameserver = "8.8.8.8";
+			}
+
+			// VPS Database setup
+			$sVPSId = Core::GetSetting('container_id');
+			$sUpdate = Core::UpdateSetting('container_id', ($sVPSId->sValue + 1));
+			$sVPS = new VPS(0);
+			$sVPS->uType = $sServer->sType;
+			$sVPS->uHostname = preg_replace('/[^A-Za-z0-9-.]/', '', $uHostname);
+			$sVPS->uNameserver = $uNameserver;
+			$sVPS->uUserId = $sOwner->sId;
+			$sVPS->uServerId = $sServer->sId;
+			$sVPS->uContainerId = $sVPSId->sValue;
+			$sVPS->uNumIPTent = $uNumIPTent;
+			$sVPS->uNumProc = $uNumProc;
+			$sVPS->uInodes = $uInodes;
+			$sVPS->uRAM = $uRAM;
+			$sVPS->uSWAP = $uSWAP;
+			$sVPS->uDisk = $uDisk;
+			$sVPS->uCPUUnits = $uCPUUnits;
+			$sVPS->uCPULimit = $uCPULimit;
+			$sVPS->uTemplateId = $sTemplate->sId;
+			$sVPS->uBandwidthLimit = $uBandwidthLimit;
+			$sVPS->InsertIntoDatabase();
+
+			if($uIPAddresses > 0){
+				if($sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId AND `ipv6` = 0", array('ServerId' => $sServer->sId))){
+					foreach($sBlocks->data as $key => $value){
+						if($sIPs = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `block_id` = :BlockId AND `vps_id` = 0", array('BlockId' => $value["block_id"]))){
+							foreach($sIPs->data as $subvalue){
+								if($sCurrentIPs < $uIPAddresses){
+									$sIPList[] = array("id" => $subvalue["id"], "ip_address" => $subvalue["ip_address"]);
+									$sUpdate = $database->CachedQuery("UPDATE ipaddresses SET `vps_id` = :VPSId WHERE `id` = :Id", array('VPSId' => $sVPS->sId, 'Id' => $subvalue["id"]));
+									if(empty($sFirst)){
+										$sVPS->uPrimaryIP = $subvalue["ip_address"];
+										$sVPS->InsertIntoDatabase();
+										$sFirst = 1;
+									}
+									$sCurrentIPs++;
+								}
+							}
+						}
+					}
+				}
+				$sRequested["POST"]["IPList"] = $sIPList;
+			}
+
+			$sRequested["POST"]["VPS"] = $sVPS->sId;
+			$sRequested["POST"]["IPList"] = $sIPList;
+
+			if(!empty($sAPI)){
+				return $sVPS->sId;
+			}
+			return true;
+		} else {
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Unable to connect to the node selected!");
+		}
+	}
+
 	public function openvz_create($sUser, $sRequested){
 		$sUserPermissions = $sUser->sPermissions;
 		if($sUserPermissions == 7){
