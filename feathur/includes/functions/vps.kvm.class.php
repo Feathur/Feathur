@@ -953,7 +953,7 @@ class kvm {
 		if($sUserPermissions == 7){
 			$sServer = new Server($sVPS->sServerId);
 			$sSSH = Server::server_connect($sServer);
-			$sCommandList .= "virsh autostart --disabled kvm{$sVPS->sContainerId}}";
+			$sCommandList .= "virsh autostart --disabled kvm{$sVPS->sContainerId};";
 			$sCommandList .= "virsh destroy kvm{$sVPS->sContainerId};";
 			$sCommandList .= "rm -rf /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;rm -rf /var/feathur/configs/kvm{$sVPS->sContainerId}-dhcp.conf;";
 			$sCommandList .= "cat /var/feathur/configs/dhcpd.head /var/feathur/configs/*-dhcp.conf > /etc/dhcp/dhcpd.conf;service isc-dhcp-server restart;";
