@@ -50,7 +50,7 @@ if ($sUser->sPermissions == 7)
 	if (!is_numeric($sServerGroup))
 	{
 	  // If the string begins with { it's a group.
-	  if (strpos($sServerGroup,'Group=>') !== false) {
+	  if (strpos($sServerGroup,'Group') !== false) {
 		$sCleanup = explode("-", $sServerGroup);
 		$uGroupId = preg_replace("[^0-9]","",$sCleanup[0]);
 		$sServer = new Server(ServerGroups::select_server($uGroupId));
