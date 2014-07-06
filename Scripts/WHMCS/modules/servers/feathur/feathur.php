@@ -43,7 +43,7 @@ function feathur_ConfigOptions() {
 				);
 	$sGroups = feathur_RemoteConnect($sPost, $sConfig["master"]);
 	foreach($sGroups as $value){
-		$sGroupList .= "{{$value["id"]}|{$value["name"]}},";
+		$sGroupList .= "Group:{$value["id"]}-{$value["name"]},";
 	}
 	
 	if(is_array($sGroups)){
