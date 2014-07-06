@@ -53,7 +53,8 @@ if ($sUser->sPermissions == 7)
 	  if (strpos($sServerGroup,'Group') !== false) {
 		$sCleanup = explode("-", $sServerGroup);
 		$uGroupId = preg_replace("[^0-9]","",$sCleanup[0]);
-		$sServer = new Server(ServerGroups::select_server($uGroupId));
+		$sServerId = ServerGroups::select_server($uGroupId);
+		$sServer = new Server($sServerId);
 	  } else {
 		  // If not it's a server IP and we need to look it up.
 		  $sServer = $sServerGroup;
