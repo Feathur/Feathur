@@ -16,8 +16,12 @@ class ServerGroups extends CPHPDatabaseRecordClass {
 	
 	public static function select_server($uGroupId){
 		global $database;
-		$sGroup = new Group($uGroupId);
-		
+			try {
+				$sGroup = new Group($uGroupId);
+			} catch(Exception $e){
+				die(json_encode(array('result' => 'Group selection was invalid.')));
+			}
+			
 		// Look up servers in this group.
 		if($sServers = $database->CachedQuery('SELECT * FROM server_groups WHERE `group_id` = :GroupId', array(':GroupId' => $sGroup->sId))){
 			foreach($sServers->data as $sServer){
