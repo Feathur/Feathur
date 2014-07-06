@@ -204,7 +204,7 @@ if (!$sFindSetting = $database->CachedQuery('SELECT * FROM settings WHERE `setti
 if(!$sFindSetting = $database->CachedQuery('SELECT * FROM settings WHERE `setting_name` LIKE :Setting', array('Setting' => 'templates_cleaned')))
 {
   // Create new table.
-  $sAdd = $database->prepare("CREATE TABLE `new_templates`(`id` int(8) NOT NULL AUTO_INCREMENT, `name` varchar(65) NOT NULL, `path` varchar(65) NOT NULL, `url` varchar(255) NOT NULL, `type` varchar(65) NOT NULL, `disabled` int(2) NOT NULL, `size` int(65) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16;");
+  $sAdd = $database->prepare("CREATE TABLE `new_templates` IF NOT EXISTS (`id` int(8) NOT NULL AUTO_INCREMENT, `name` varchar(65) NOT NULL, `path` varchar(65) NOT NULL, `url` varchar(255) NOT NULL, `type` varchar(65) NOT NULL, `disabled` int(2) NOT NULL, `size` int(65) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16;");
   $sAdd->execute();
 	
   // Rename old table, rename new table.
@@ -232,4 +232,12 @@ $sAdd->execute();
  */
 
 $sAdd = $database->prepare("ALTER TABLE `templates` CHANGE `path` `path` VARCHAR(255) NOT NULL;");
+$sAdd->execute();
+
+// Create new table for group storage.
+$sAdd = $database->prepare("CREATE TABLE `groups` IF NOT EXISTS (`id` int(8) NOT NULL AUTO_INCREMENT, `name` varchar(65) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16;");
+$sAdd->execute();
+
+// Create new table for server_groups storage.
+$sAdd = $database->prepare("CREATE TABLE `server_groups` IF NOT EXISTS (`id` int(8) NOT NULL AUTO_INCREMENT, `server_id` int(8) NOT NULL, `group_id` int(8) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16;");
 $sAdd->execute();

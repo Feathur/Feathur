@@ -287,6 +287,19 @@ CREATE TABLE IF NOT EXISTS `smtp` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
+CREATE TABLE IF NOT EXISTS `groups` (
+  `id` int(8) NOT NULL AUTO_INCREMENT,
+  `name` varchar(65) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+CREATE TABLE IF NOT EXISTS `server_groups` (
+  `id` int(8) NOT NULL AUTO_INCREMENT,
+  `server_id` (8) NOT NULL,
+  `group_id` (8) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
 USE dns;
 
 create table domains (

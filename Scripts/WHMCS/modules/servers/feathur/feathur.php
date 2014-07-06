@@ -35,8 +35,25 @@ function feathur_ConfigOptions() {
 	foreach($sServers as $value){
 		$sServerList .= $value["ip"].',';
 	}
+	
+	$sPost = array(
+				"email" => $sConfig["email"],
+				"password" => $sConfig["password"],
+				"action" => "listgroups"
+				);
+	$sGroups = feathur_RemoteConnect($sPost, $sConfig["master"]);
+	foreach($sGroups as $value){
+		$sGroupList .= "{{$value["id"]}|{$value["name"]}},";
+	}
+	
+	if(is_array($sGroups)){
+		$sList = $sGroupList;
+	} else {
+		$sList = $sServerList;
+	}
+	
 	$sConfigArray = array(
-		"Server" => array("Type" => "dropdown", "Options" => $sServerList),
+		"Server / Group" => array("Type" => "dropdown", "Options" => $sList, "Description" => "Will list servers if no groups exist."),
 		"RAM" => array("Type" => "text", "Size" => "25", "Default" => "256", "Description" => "MB" ),
 		"SWAP" => array("Type" => "text", "Size" => "25", "Default" => "256", "Description" => "MB" ),
 		"Disk" => array("Type" => "text", "Size" => "25", "Default" => "10", "Description" => "GB" ),

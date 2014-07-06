@@ -16,4 +16,18 @@ class IP extends CPHPDatabaseRecordClass {
 			'BlockId' => "block_id",
 		)
 	);
+	
+	public static function free_ipv4($sServer){
+		if ($sBlockList = $database->CachedQuery("SELECT * FROM `server_blocks` WHERE `server_id` = :ServerId", array("ServerId" => $sServer->sId))) {
+			foreach ($sBlockList->data as $sBlockRow) {
+				if ($sIPList = $database->CachedQuery("SELECT * FROM `ipaddresses` WHERE `block_id` = :BlockId AND `vps_id` = :VPSId", array('BlockId' => $sBlockRow['block_id'], 'VPSId' => 0))) {
+					$sIPCount = ($sIPCount + count($sIPList->data));
+				}
+			}
+		} else {
+			$sIPCount = '0';
+		}
+		
+		return $sIPCount;
+	}
 }
