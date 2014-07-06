@@ -64,9 +64,9 @@ if ($sUser->sPermissions == 7)
 		  } else {
 			die(json_encode(array('result' => 'Unfortunately no server matches your query.')));
 		  }
-		} else {
-			$sServer = new Server($sServer);
-		}
+	  }
+	} else {
+		$sServer = new Server($sServer);
 	}
 	
 	if ($sCheckUsers = $database->CachedQuery('SELECT * FROM accounts WHERE `email_address` = :UserEmail', array(':UserEmail' => $sEmail)))
