@@ -15,7 +15,7 @@ if (!empty($_POST['email']) && !empty($_POST['password']))
 
 $sAction = preg_replace('/[^\w\d]/', '', $_POST['action']);
 $sEmail  = preg_replace('/[^\w\d_\-\._@+]/', '', $_POST['useremail']);
-$sServerGroup = preg_replace('/[^\d\w\.\-_]/', '', $_POST['server']);
+$sServer = preg_replace('/[^\d\w\.\-_]/', '', $_POST['server']);
 $sTemplate = preg_replace('/[^\w\d\s\-\._\(\)]/', '', $_POST['template']);
 $iVPSid  = abs((int) $_POST['vpsid']);
 
@@ -38,37 +38,24 @@ if ($sUser->sPermissions == 7)
    */
    
   if ($sAction == 'listservers') die(json_encode(VPS::array_servers()));
-  if ($sAction == 'listgroups') die(json_encode(Group::array_groups()));
+
   /*
    *  Create a VPS
    */
    
   if ($sAction == 'createvps')
   {
-	// Determine if this is a server or a group.
-	// If this is numeric it's a server ID.
-	if (!is_numeric($sServerGroup))
+	if (!is_numeric($sServer))
 	{
-	  // If the string begins with { it's a group.
-	  if (substr($sServerGroup, 0, 1) === '{'){
-		$sCleanup = explode("|", $sServerGroup);
-		$uGroupId = preg_replace("[^0-9]","",$sCleanup[0]);
-		$sServer = new Server(ServerGroups::select_server($uGroupId));
+	  if($sServers = $database->CachedQuery('SELECT * FROM servers WHERE `ip_address` = :ServerIP', array(':ServerIP' => $sServer)))
+	  {
+		$sServer = new Server($sServers->data[0]['id']);
+		$sRequested['POST']['server'] = $sServers->data[0]['id'];
 	  } else {
-		  // If not it's a server IP and we need to look it up.
-		  $sServer = $sServerGroup;
-		  if($sServers = $database->CachedQuery('SELECT * FROM servers WHERE `ip_address` = :ServerIP', array(':ServerIP' => $sServer)))
-		  {
-			$sServer = new Server($sServers->data[0]['id']);
-			$sRequested['POST']['server'] = $sServers->data[0]['id'];
-		  } else {
-			die(json_encode(array('result' => 'Unfortunately no server matches your query.')));
-		  }
+		die(json_encode(array('result' => 'Unfortunately no server matches your query.')));
 	  }
-	} else {
-		$sServer = new Server($sServer);
 	}
-	
+		
 	if ($sCheckUsers = $database->CachedQuery('SELECT * FROM accounts WHERE `email_address` = :UserEmail', array(':UserEmail' => $sEmail)))
 	{
 	  $sActionUser = new User($sCheckUsers->data[0]['id']);
