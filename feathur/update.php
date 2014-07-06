@@ -235,9 +235,9 @@ $sAdd = $database->prepare("ALTER TABLE `templates` CHANGE `path` `path` VARCHAR
 $sAdd->execute();
 
 // Create new table for group storage.
-$sAdd = $database->prepare("CREATE TABLE `groups` IF NOT EXISTS (`id` int(8) NOT NULL AUTO_INCREMENT, `name` varchar(65) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16;");
+$sAdd = $database->prepare("CREATE TABLE IF NOT EXISTS `groups` (`id` int(8) NOT NULL AUTO_INCREMENT, `name` varchar(65) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16;");
 $sAdd->execute();
 
 // Create new table for server_groups storage.
-$sAdd = $database->prepare("CREATE TABLE `server_groups` IF NOT EXISTS (`id` int(8) NOT NULL AUTO_INCREMENT, `server_id` int(8) NOT NULL, `group_id` int(8) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16;");
+$sAdd = $database->prepare("CREATE TABLE IF NOT EXISTS `server_groups` (`id` int(8) NOT NULL AUTO_INCREMENT, `server_id` int(8) NOT NULL, `group_id` int(8) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16;");
 $sAdd->execute();
