@@ -55,6 +55,7 @@ if ($sUser->sPermissions == 7)
 		$uGroupId = preg_replace("/\D/", "", $sCleanup[0]);
 		$sServerId = ServerGroups::select_server($uGroupId);
 		$sServer = new Server($sServerId);
+		$sRequested['POST']['server'] = $sServer->sId;
 	  } else {
 		  // If not it's a server IP and we need to look it up.
 		  $sServer = $sServerGroup;

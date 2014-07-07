@@ -50,7 +50,7 @@ class ServerGroups extends CPHPDatabaseRecordClass {
 			
 			if(isset($sServerList)){
 				arsort($sServerList);
-				return current(array_keys($sServerList));;
+				return current(array_keys($sServerList));
 			}
 		}
 		die(json_encode(array('result' => 'No servers were found in the group you selected.')));
