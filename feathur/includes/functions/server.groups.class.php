@@ -25,7 +25,7 @@ class ServerGroups extends CPHPDatabaseRecordClass {
 		// Look up servers in this group.
 		if($sServers = $database->CachedQuery('SELECT * FROM server_groups WHERE `group_id` = :GroupId', array(':GroupId' => $sGroup->sId))){
 			foreach($sServers->data as $sServer){
-				$sServer = new Server($sServer["id"]);
+				$sServer = new Server($sServer["server_id"]);
 				$sIPCount = IP::free_ipv4($sServer);
 				
 				// If free IPv4 is greater than zero and free disk is greater than 20% add server to list.
