@@ -1,4 +1,11 @@
 ==============================
+0.6.3.8 - March 14, 2014
+==============================
+- HIGHLY recommend updating to this version or later.
+- Patched WHMCS module and openvz modules to prevent potential abuse.
+- Cleaned up code and fixed spelling/gramatical errors.
+
+==============================
 0.6.3.5 - January 5, 2014
 ==============================
 - KVM set startup on boot.

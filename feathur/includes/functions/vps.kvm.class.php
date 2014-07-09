@@ -12,149 +12,154 @@ class kvm {
 
 	public function database_kvm_create($sUser, $sRequested, $sAPI = 0){
 		$sUserPermissions = $sUser->sPermissions;
-		if($sUserPermissions == 7){
-			global $database;
-			global $sRequested;
-			$uServer = $sRequested["POST"]["server"];
-			$uUser = $sRequested["POST"]["user"];
-			$uTemplate = $sRequested["POST"]["template"];
-			$uRAM = $sRequested["POST"]["ram"];
-			$uDisk = $sRequested["POST"]["disk"];
-			$uIPAddresses = $sRequested["POST"]["ipaddresses"];
-			$uHostname = $sRequested["POST"]["hostname"];
-			$uNameserver = $sRequested["POST"]["nameserver"];
-			$uCPULimit = $sRequested["POST"]["cpulimit"];
-			$uBandwidthLimit = $sRequested["POST"]["bandwidthlimit"];
-			if((!empty($uServer)) && (is_numeric($uServer))){
-				if((!empty($uUser)) && (is_numeric($uUser))){
-					if((!empty($uRAM)) && (is_numeric($uRAM))){
-						if((!empty($uDisk)) && (is_numeric($uDisk))){
-							if((!empty($uCPULimit)) && (is_numeric($uCPULimit))){
-								if((!empty($uBandwidthLimit)) && (is_numeric($uBandwidthLimit))){
-									$sServer = new Server($uServer);
-									$sOwner = new User($uUser);
-									
-									if(!empty($uTemplate)){
-										$sTemplate = new Template($uTemplate);
-									}
-									if(empty($sAPI)){
-										$sIPCheck = VPS::check_ipspace($sServer->sId, $uIPAddresses);
-										if(is_array($sIPCheck)){
-											return $sIPCheck;
-										}
-									}
-		
-									if(empty($uHostname)){
-										$uHostname = "vps.example.com";
-									}
-										
-									if(empty($uNameserver)){
-										$uNameserver = "8.8.8.8";
-									}
-									
-									while($sTotalMacs < $uIPAddresses){
-										if(empty($sTotalMacs)){
-											$sMac = generate_mac();
-										} else {
-											$sMac .= ",".generate_mac();
-										}
-										$sTotalMacs++;
-									}
-									
-									// VPS Database setup
-									$sVPSId = Core::GetSetting('container_id');
-									$sUpdate = Core::UpdateSetting('container_id', ($sVPSId->sValue + 1));
-									$sVPS = new VPS(0);
-									$sVPS->uType = $sServer->sType;
-									$sVPS->uHostname = $uHostname;
-									$sVPS->uNameserver = $uNameserver;
-									$sVPS->uUserId = $sOwner->sId;
-									$sVPS->uServerId = $sServer->sId;
-									$sVPS->uContainerId = $sVPSId->sValue;
-									$sVPS->uRAM = $uRAM;
-									$sVPS->uDisk = $uDisk;
-									$sVPS->uMac = $sMac;
-									$sVPS->uCPULimit = $uCPULimit;
-									if(!empty($uTemplate)){
-										$sVPS->uTemplateId = $sTemplate->sId;
-									}
-									$sVPS->uBandwidthLimit = $uBandwidthLimit;
-									$sVPS->uVNCPort = ($sVPSId->sValue + 5900);
-									$sVPS->uBootOrder = "hd";
-									$sVPS->InsertIntoDatabase();
-									
-									if($sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId AND `ipv6` = 0", array('ServerId' => $sServer->sId))){
-										foreach($sBlocks->data as $key => $value){
-											if($sIPs = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `block_id` = :BlockId AND `vps_id` = 0", array('BlockId' => $value["block_id"]))){
-												foreach($sIPs->data as $subvalue){
-													if($sCurrentIPs < $uIPAddresses){
-														$sIPList[] = array("id" => $subvalue["id"], "ip_address" => $subvalue["ip_address"], "block" => $subvalue["block_id"]);
-														$sUpdate = $database->CachedQuery("UPDATE ipaddresses SET `vps_id` = :VPSId WHERE `id` = :Id", array('VPSId' => $sVPS->sId, 'Id' => $subvalue["id"]));
-														if(empty($sFirst)){
-															$sVPS->uPrimaryIP = $subvalue["ip_address"];
-															$sVPS->InsertIntoDatabase();
-															$sFirst = 1;
-														}
-														$sCurrentIPs++;
-													}
-												}
-											}																					
-										}
-									}
-									$sRequested["POST"]["VPS"] = $sVPS->sId;
-									$sRequested["POST"]["IPList"] = $sIPList;
-									
-									if(!empty($sAPI)){
-										return $sVPS->sId;
-									}
-									return true;
-								} else {
-									return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the bandwidth limit!");
-								}
-							} else {
-								return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the CPU limit!");
-							}
-						} else {
-							return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the disk limit!");
-						}
-					} else {
-						return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the available RAM!");
-					}
-				} else {
-					return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the owner of this VPS!");
-				}
-			} else {
-				return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the server!");
-			}
-		} else {
+
+		if($sUserPermissions != 7){
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Permissions invalid for selected action.");
 		}
-	}		
-	
+
+		global $database;
+		global $sRequested;
+		$uServer = $sRequested["POST"]["server"];
+		$uUser = $sRequested["POST"]["user"];
+		$uTemplate = $sRequested["POST"]["template"];
+		$uRAM = $sRequested["POST"]["ram"];
+		$uDisk = $sRequested["POST"]["disk"];
+		$uIPAddresses = $sRequested["POST"]["ipaddresses"];
+		$uHostname = $sRequested["POST"]["hostname"];
+		$uNameserver = $sRequested["POST"]["nameserver"];
+		$uCPULimit = $sRequested["POST"]["cpulimit"];
+		$uBandwidthLimit = $sRequested["POST"]["bandwidthlimit"];
+
+		if((empty($uServer)) || (!is_numeric($uServer))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the server!");
+		}
+
+		if((empty($uUser)) || (!is_numeric($uUser))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the owner of this VPS!");
+		}
+
+		if((empty($uRAM)) || (!is_numeric($uRAM))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the available RAM!");
+		}
+
+		if((empty($uDisk)) || (!is_numeric($uDisk))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the disk limit!");
+		}
+
+		if((empty($uCPULimit)) || (!is_numeric($uCPULimit))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the CPU limit!");
+		}
+
+		if((empty($uBandwidthLimit)) || (!is_numeric($uBandwidthLimit))){
+			return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the bandwidth limit!");
+		}
+
+		$sServer = new Server($uServer);
+		$sOwner = new User($uUser);
+					
+		if(!empty($uTemplate)){
+			$sTemplate = new Template($uTemplate);
+		}
+
+		if(empty($sAPI)){
+			$sIPCheck = VPS::check_ipspace($sServer->sId, $uIPAddresses);
+			if(is_array($sIPCheck)){
+				return $sIPCheck;
+			}
+		}
+
+		if(empty($uHostname)){
+			$uHostname = "vps.example.com";
+		}
+
+		if(empty($uNameserver)){
+			$uNameserver = "8.8.8.8";
+		}
+
+		while($sTotalMacs < $uIPAddresses){
+			if(empty($sTotalMacs)){
+				$sMac = generate_mac();
+			} else {
+				$sMac .= ",".generate_mac();
+			}
+			$sTotalMacs++;
+		}
+
+		// VPS Database setup
+		$sVPSId = Core::GetSetting('container_id');
+		$sUpdate = Core::UpdateSetting('container_id', ($sVPSId->sValue + 1));
+		$sVPS = new VPS(0);
+		$sVPS->uType = $sServer->sType;
+		$sVPS->uHostname = preg_replace('/[^A-Za-z0-9-.]/', '', $uHostname);
+		$sVPS->uNameserver = $uNameserver;
+		$sVPS->uUserId = $sOwner->sId;
+		$sVPS->uServerId = $sServer->sId;
+		$sVPS->uContainerId = $sVPSId->sValue;
+		$sVPS->uRAM = $uRAM;
+		$sVPS->uDisk = $uDisk;
+		$sVPS->uMac = $sMac;
+		$sVPS->uCPULimit = $uCPULimit;
+		if(!empty($uTemplate)){
+			$sVPS->uTemplateId = $sTemplate->sId;
+		}
+		$sVPS->uBandwidthLimit = $uBandwidthLimit;
+		$sVPS->uVNCPort = ($sVPSId->sValue + 5900);
+		$sVPS->uBootOrder = "hd";
+		$sVPS->InsertIntoDatabase();
+
+		if($sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId AND `ipv6` = 0", array('ServerId' => $sServer->sId))){
+			foreach($sBlocks->data as $key => $value){
+				if($sIPs = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `block_id` = :BlockId AND `vps_id` = 0", array('BlockId' => $value["block_id"]))){
+					foreach($sIPs->data as $subvalue){
+						if($sCurrentIPs < $uIPAddresses){
+							$sIPList[] = array("id" => $subvalue["id"], "ip_address" => $subvalue["ip_address"], "block" => $subvalue["block_id"]);
+							$sUpdate = $database->CachedQuery("UPDATE ipaddresses SET `vps_id` = :VPSId WHERE `id` = :Id", array('VPSId' => $sVPS->sId, 'Id' => $subvalue["id"]));
+							if(empty($sFirst)){
+								$sVPS->uPrimaryIP = $subvalue["ip_address"];
+								$sVPS->InsertIntoDatabase();
+								$sFirst = 1;
+							}
+							$sCurrentIPs++;
+						}
+					}
+				}
+			}
+		}
+
+		$sRequested["POST"]["VPS"] = $sVPS->sId;
+		$sRequested["POST"]["IPList"] = $sIPList;
+
+		if(!empty($sAPI)){
+			return $sVPS->sId;
+		}
+		return true;
+	}
+
 	public function kvm_create($sUser, $sRequested){
 		$sUserPermissions = $sUser->sPermissions;
-		if($sUserPermissions == 7){
-			$sVPS = new VPS($sRequested["POST"]["VPS"]);
-			$sServer = new Server($sVPS->sServerId);
-			$sSSH = Server::server_connect($sServer);
-			$sCreate = $this->kvm_config($sUser, $sVPS, $sRequested);
-			$sDHCP = $this->kvm_dhcp($sUser, $sVPS, $sRequested);
-			
-			$sCommandList .= "lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId}";
-			
-			$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
-			$sSave = VPS::save_vps_logs($sLog, $sVPS);
-			
-			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS has been created!", "reload" => 1, "vps" => $sVPS->sId);
-		} else {
+
+		if($sUserPermissions != 7){
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Permissions invalid for selected action.");
 		}
+
+		$sVPS = new VPS($sRequested["POST"]["VPS"]);
+		$sServer = new Server($sVPS->sServerId);
+		$sSSH = Server::server_connect($sServer);
+		$sCreate = $this->kvm_config($sUser, $sVPS, $sRequested);
+		$sDHCP = $this->kvm_dhcp($sUser, $sVPS, $sRequested);
+		
+		$sCommandList .= "lvcreate -n kvm{$sVPS->sContainerId}_img -L {$sVPS->sDisk}G {$sServer->sVolumeGroup};virsh create /var/feathur/configs/kvm{$sVPS->sContainerId}-vps.xml;virsh autostart kvm{$sVPS->sContainerId}";
+			
+		$sLog[] = array("command" => $sCommandList, "result" => $sSSH->exec($sCommandList));
+		$sSave = VPS::save_vps_logs($sLog, $sVPS);
+		
+		return $sArray = array("json" => 1, "type" => "success", "result" => "VPS has been created!", "reload" => 1, "vps" => $sVPS->sId);
 	}
-	
+
 	public function database_kvm_boot($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function kvm_boot($sUser, $sVPS, $sRequested){
 		
 		// Load up settings.
@@ -172,66 +177,66 @@ class kvm {
 		} else {
 			$sVPSTemplate = "404";
 		}
-		
+
 		$sPanelURL = Core::GetSetting('panel_url');
 		$sVNCPort = ($sVPS->sVNCPort - 5900);
-		
+
 		$sVNCPassword = $_SESSION['vnc_password'];
 		if(empty($sVNCPassword)){
 			$sVNCPassword = "feathurpassword";
 		}
 		$sVNCPassword = escapeshellarg($sVNCPassword);
-		
+
 		$sPanelMode = Core::GetSetting('panel_mode');
 		$sPanelMode = $sPanelMode->sValue;
 		if(empty($sPanelMode)){
 			$sPanelMode = "https://";
 		}
 		$sPanelURL = escapeshellarg("{$sPanelMode}{$sPanelURL->sValue}");
-		
+
 		// Connect to server.
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
-		
+
 		// Check Virsh Version. If less than 1.0 force config update to ensure VNC password remains.
 		$sVersion = $sSSH->exec("virsh --version");
 		$sVersion = explode(".", $sVersion);
 		if($sVersion[0] != 1){
 			$sChange = $this->kvm_config($sUser, $sVPS, $sRequested, $_SESSION['vnc_password']);
 		}
-		
+
 		// Dump necessary code on server.
 		$sStartupCode = escapeshellarg(file_get_contents('/var/feathur/Scripts/start-kvm.sh'));
 		$sBalance = escapeshellarg(file_get_contents('/var/feathur/Scripts/balancer.py'));
 		$sDumpCode = $sSSH->exec("mkdir -p /var/feathur/data;echo {$sStartupCode} > /var/feathur/data/start-kvm.sh;echo {$sBalance} > /var/feathur/data/balancer.py");
-		
+
 		// Start VPS.
 		$sStart = $sSSH->exec("cd /var/feathur/data/;bash start-kvm.sh {$sVPS->sContainerId} {$sPanelURL} {$sVPSTemplate} {$sVNCPassword} {$sVNCPort}; virsh autostart kvm{$sVPS->sContainerId}");
-		
+
 		// Return output.
 		if($sStart == 1){
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Your VPS is already booted...");
 		}
-		
+
 		if($sStart == 2){
 			return $sArray = array("json" => 1, "type" => "success", "result" => "ISO Syncing VPS will start in ~3 minutes.");
 		}
-		
+
 		if($sStart == 3){
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Virtual device missing, contact support.");
 		}
-		
+
 		if($sStart = 4){
 			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS is being restarted now...");
 		} 
-		
+
 		return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured. Pease contact support.");
 	}
-	
+
 	public function database_kvm_shutdown($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function kvm_shutdown($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
