@@ -598,7 +598,7 @@ class openvz {
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --ipadd {$value['ip_address']} --save;";
 		}
 
-		if(!empty($sPassword)){
+		if(!empty($sRequested["POST"]["password"])){
 			$sPassword = escapeshellarg($sRequested["POST"]["password"]);
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --userpasswd root:{$sPassword} --save;";
 		}
