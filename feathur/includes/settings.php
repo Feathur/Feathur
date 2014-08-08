@@ -43,6 +43,9 @@ NewTemplater::SetGlobalVariable("PanelMode", $sPanelMode->sValue);
 $sBandwidthAccounting = Core::GetSetting('bandwidth_accounting');
 NewTemplater::SetGlobalVariable("BandwidthAccounting", $sBandwidthAccounting->sValue);
 
+// Version
+NewTemplater::SetGlobalVariable("FeathurVersion", file_get_contents('/var/feathur/version.txt'));
+
 // License Setting
 // Please don't remove or edit this code, a lot of work went into Feathur.
 // Thank us for our work by leaving this code here or by paying for a license.
