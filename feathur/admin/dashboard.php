@@ -59,6 +59,7 @@ if ($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array()))
 	$sUptime = explode(',', ConvertTime(round($sServer->sHardwareUptime, 0)));
 	
 	$sStatistics[] = array(
+					  'id'				=>  $sServer->sId,
 					  'name'			=>	$sServer->sName,
 					  'load_average' 	=>  $sServer->sLoadAverage,
 					  'disk_usage'		=>	$sHardDiskUsed,
