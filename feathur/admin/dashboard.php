@@ -56,7 +56,8 @@ if ($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array()))
 
 	// Calculates Free IP Space
 	$sIPCount = IP::free_ipv4($sServer);
-		
+	$sUptime = explode(',', ConvertTime(round($sServer->sHardwareUptime, 0)));
+	
 	$sStatistics[] = array(
 					  'name'			=>	$sServer->sName,
 					  'load_average' 	=>  $sServer->sLoadAverage,
@@ -65,7 +66,7 @@ if ($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array()))
 					  'ram_usage'		=>	$sRAMUsed,
 					  'ram_free'		=>	$sRAMFree,
 					  'status'			=>	$sServer->sStatus,
-					  'uptime'			=>	explode(',', ConvertTime(round($sServer->sHardwareUptime, 0))),
+					  'uptime'			=>	$sUptime[0].$sUptime[1],
 					  'ip_count'		=>	$sIPCount,
 					  'type'			=>	$sType,
 					  'bandwidth'		=>	$sBandwidthDifference
