@@ -87,6 +87,8 @@ if ($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array()))
 	unset($sBandwidthDifference);
 	unset($sIPCount);
   }
+  
+  if (!empty($sRequested['GET']['json-variables'])) die(json_encode(array('servers' => $sStatistics)));
 }
 
 $sPage		= 'dashboard';
