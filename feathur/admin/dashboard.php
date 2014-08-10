@@ -9,9 +9,6 @@ if ($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array()))
   {
 	$sServer = new Server($sServer['id']);
 
-	// Defines left or right in template.
-    $sType = ($sType == 1 ? 0 : 1);
-
 	// Calculates hard disk usage percentages.
 	$sServerHDF = $sServer->sHardDiskFree;
 	$sServerHDT = $sServer->sHardDiskTotal;
@@ -69,7 +66,7 @@ if ($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array()))
 					  'status'			=>	$sServer->sStatus,
 					  'uptime'			=>	$sUptime[0].$sUptime[1],
 					  'ip_count'		=>	$sIPCount,
-					  'type'			=>	$sType,
+					  'type'			=>	$sServer->sType,
 					  'bandwidth'		=>	$sBandwidthDifference
 					 );
 		
