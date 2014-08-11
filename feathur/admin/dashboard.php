@@ -65,7 +65,7 @@ if ($sServerList = $database->CachedQuery("SELECT * FROM `servers`", array()))
 		}
 	  }
 	} else {
-	  $sIPCount = '0';
+	  $sIPCount = 0;
 	}
 		
 	$sStatistics[] = array(
