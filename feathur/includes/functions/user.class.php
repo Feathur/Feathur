@@ -106,10 +106,10 @@ class User extends CPHPDatabaseRecordClass {
 					return $sSend;
 				}
 			} else {
-				return $sReturn = array("content" => "The email you entered is invalid.");
+				return $sReturn = array("content" => "The email you entered is invalid.", "success" => 0);
 			}
 		} else {
-			return $sReturn = array("content" => "The email you entered already has an account!");
+			return $sReturn = array("content" => "The email you entered already has an account!", "success" => 1);
 		}
 	}
 	
