@@ -604,9 +604,9 @@ class kvm {
 											"sync_error" => $sSyncError,
 											"percent_sync" => $sPercentSync,
 							));
-		$sStatistics = Templater::AdvancedParse($sTemplate->sValue.'/'.$sVPS->sType.'.statistics', $locale->strings, array("Statistics" => $sStatistics));
+		$sContent = Templater::AdvancedParse($sTemplate->sValue.'/'.$sVPS->sType.'.statistics', $locale->strings, array("Statistics" => $sStatistics));
 		if(strpos($sLog[0]["result"], 'running') === false) {
-			return $sArray = array("json" => 1, "type" => "status", "result" => "offline", "hostname" => $sVPS->sHostname, "content" => $sStatistics);
+			return $sArray = array("json" => 1, "type" => "status", "result" => "offline", "hostname" => $sVPS->sHostname, "content" => $sContent, "statistics" => $sStatistics);
 		} else {
 			if($sVPS->sISOSyncing == 1){
 					$sVPS->uISOSyncing = 0;
