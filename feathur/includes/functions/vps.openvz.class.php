@@ -1122,8 +1122,8 @@ class openvz {
 					"primary_ip" => $sVPS->sPrimaryIP
 					));
 			
-			$sStatistics = Templater::AdvancedParse($sTemplate->sValue.'/'.$sVPS->sType.'.statistics', $locale->strings, array("Statistics" => $sStatistics));
-			return $sArray = array("json" => 1, "type" => "status", "result" => "online", "content" => $sStatistics, "hostname" => $sVPS->sHostname);
+			$sContent = Templater::AdvancedParse($sTemplate->sValue.'/'.$sVPS->sType.'.statistics', $locale->strings, array("Statistics" => $sStatistics));
+			return $sArray = array("json" => 1, "type" => "status", "result" => "online", "content" => $sContent, "statistics" => $sStatistics, "hostname" => $sVPS->sHostname);
 		}
 	}
 }
