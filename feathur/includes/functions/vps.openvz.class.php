@@ -226,11 +226,13 @@ class openvz
         $sStart .= "yum -y install screen ploop;python -c 'open(\"/etc/vz/vz.conf\", \"w\").write(re.sub(\"^(#)?(VE_LAYOUT=ploop)$\", \"VE_LAYOUT=simfs\"                         , open(\"/etc/vz/vz.conf\", \"r\").read(), flags = re.M))'";
         $sCommandList = "cd /vz/template/cache/;wget -O {$sTemplatePath} {$sTemplateURL};".$sCommandList;
         $sScreen = "screen -dmS build{$sVPS->sContainerId} bash -c \"".$sCommandList."sleep 5;mkdir /vz/feathur_tmp/;echo \"{$sVPS->sId}\" > /vz/feathur_                         tmp/{$sVPS->sContainerId}.finished;exit;\";";
+        // TODO: Switch to preg_replace to obfuscate passwords from command logging
         $sLog[] = array("command" => $sStart.str_replace($sPassword, "obfuscated", $sScreen), "result" => $sSSH->exec($sStart.$sScreen));
         $sSave = VPS::save_vps_logs($sLog, $sVPS);
         return $sArray = array("json" => 1, "type" => "success", "result" => "VPS has been created!", "reload" => 1, "vps" => $sVPS->sId);
       }
-
+      
+      // TODO: Switch to preg_replace to obfuscate passwords from command logging
       $sLog[] = array("command" => str_replace($sPassword, "obfuscated", $sCommandList), "result" => $sSSH->exec($sCommandList));
 
       $sSave = VPS::save_vps_logs($sLog, $sVPS);
