@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * TODO: Enable CLI force update
+ * root@li326-144:/var/feathur/feathur/admin# php update.php
+ * PHP Notice:  Undefined variable: sUser in /var/feathur/feathur/admin/update.php on line 2
+ * PHP Notice:  Trying to get property of non-object in /var/feathur/feathur/admin/update.php on line 2
+ * Sorry you've accessed our system without permission
+ */
+ 
 if($sUser->sPermissions != 7) die("Sorry you've accessed our system without permission.");
 
 $sPage		= 'update';
