@@ -211,12 +211,12 @@ class openvz
       {
         foreach($sIPList as $key => $value)
         {
-          $sCommandList[] .= sprintf("vzctl set %d --ipadd %s --save", (int) $sVPS->sContainerId, $value['ip_address']);
+          $sCommandList .= sprintf("vzctl set %d --ipadd %s --save", (int) $sVPS->sContainerId, $value['ip_address']);
         }
       }
 
-      $sCommandList[] .= "vzctl stop {$sVPS->sContainerId};";
-      $sCommandList[] .= "vzctl start {$sVPS->sContainerId};";
+      $sCommandList .= "vzctl stop {$sVPS->sContainerId};";
+      $sCommandList .= "vzctl start {$sVPS->sContainerId};";
 
       // If the template needs to be synced throw the build process in a screen and act as if the VPS is just rebuilding...
       if($sSync === true){
