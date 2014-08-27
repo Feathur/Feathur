@@ -36,7 +36,7 @@ if ($sAction == 'create')
 	$sCreate = $sServerType->$sMethod($sUser, $sRequested);
 	if (is_array($sCreate)) die(json_encode($sCreate));
 	$sFinish = $sServerType->$sSecond($sUser, $sRequested);
-	if(is_array($sFinish)) die(json_encode($sFinish));
+	if (is_array($sFinish)) die(json_encode($sFinish));
   }
 }
 
