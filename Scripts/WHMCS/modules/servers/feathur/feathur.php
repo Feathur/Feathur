@@ -48,6 +48,8 @@ function feathur_ConfigOptions() {
 		"Max Connections" => array("Type" => "text", "Size" => "25", "Default" => "80", "Description" => "Default: 80" ),
 		"IP Addresses" => array("Type" => "dropdown", "Options" => "1,2,3,4,5,6,7,8,9,10"),
 		"Nameserver" => array("Type" => "text", "Size" => "25", "Default" => "8.8.8.8", "Description" => "Default: 8.8.8.8" ),
+	        "OS Template" => array("Type" => "text", "Size" => "25", "Default" => "", "Description" => "Exact name of the Template."),
+
 	);
 	return $sConfigArray;
 }
@@ -72,7 +74,8 @@ function feathur_CreateAccount($sData) {
 				"numiptent" => $sData["configoption10"],
 				"ipaddresses" => $sData["configoption11"],
 				"nameserver" => $sData["configoption12"],
-				"hostname" => $sData["domain"],
+				"template" => $sData["configoption13"],
+				"hostname" => preg_replace('/[^A-Za-z0-9-.]/', '', $sData["domain"]),
 				);
 
 	$sSetupVPS = feathur_RemoteConnect($sPost, $sConfig["master"]);
