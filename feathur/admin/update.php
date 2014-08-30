@@ -7,7 +7,7 @@
  * PHP Notice:  Trying to get property of non-object in /var/feathur/feathur/admin/update.php on line 2
  * Sorry you've accessed our system without permission
  */
- 
+
 if($sUser->sPermissions != 7) die("Sorry you've accessed our system without permission.");
 
 $sPage		= 'update';
