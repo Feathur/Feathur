@@ -178,7 +178,7 @@ input, select, textarea{background:#fff; border:1px solid #D2D4D4; border-top:1p
 .albox .small-close:hover{background:url(../img/icons/mini/close-opacity-42.png) no-repeat center}
 .albox .icon{position:absolute; left:14px; top:14px}
 .warningbox{background:#FFF8D8 url(../img/icons/error/error.png) no-repeat 14px 14px; border:1px solid #F3D97E; color:#A68510}
-.succesbox{background:#EBF9E2 url(../img/icons/error/accept.png) no-repeat 14px 14px; border:1px solid #BEE4A5; color:#658C2C}
+.successbox{background:#EBF9E2 url(../img/icons/error/accept.png) no-repeat 14px 14px; border:1px solid #BEE4A5; color:#658C2C}
 .small-success{background-color:#EBF9E2; border:1px solid #BEE4A5; color:#658C2C; padding:0px; margin:0px; text-align:center;}
 .small-caution{background-color:#FFF8D8; border:1px solid #F3D97E; color:#A68510; padding:0px; margin:0px; text-align:center;}
 .small-error{background-color:#FFF8D8; border:1px solid #F3D97E; color:#A68510; padding:0px; margin:0px; text-align:center;}
