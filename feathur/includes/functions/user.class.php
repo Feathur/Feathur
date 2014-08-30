@@ -172,14 +172,18 @@ class User extends CPHPDatabaseRecordClass
     }
   }
 
-  public static function forgot($uEmail)
+  public static function forgot($uEmail, $sAPI = 0)
   {
 
     global $database;
 
-    $sAttempt = User::check_attempts('forgot password');
-    if (is_array($sAttempt)) return $sAttempt;
-    $sAttempt = User::add_attempt('forgot password');
+    if ($sAPI == 0)
+    {
+      $sAttempt = User::check_attempts('forgot password');
+      if (is_array($sAttempt)) return $sAttempt;
+      $sAttempt = User::add_attempt('forgot password');
+    }
+
     if ($sResult = $database->CachedQuery('SELECT * FROM accounts WHERE `email_address` = :EmailAddress', array('EmailAddress' => $uEmail)))
     {
       $sForgotCode = random_string(60);
@@ -192,7 +196,7 @@ class User extends CPHPDatabaseRecordClass
 
     if (!is_array($sSend))
     {
-      return $sResult = array('content' => 'Check your email for an activation link.', 'type' => 'successbox"';
+      return $sResult = array('content' => 'Check your email for an activation link.', 'type' => 'successbox');
     } else {
       return $sResult = array('content' => $sSend['content'], 'type' => 'alertbox');
     }
