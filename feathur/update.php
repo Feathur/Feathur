@@ -246,7 +246,7 @@ $sAdd->execute();
  * Drop url column from servers table
  */
 
-if (version_compare($sCurrentVersion->sValue, '0.6.3.8', '<'))
+if (version_compare($sCurrentVersion->sValue, '0.6.3.7', '<'))
 {
   $sDel = $database->prepare("ALTER TABLE `servers` DROP `url`;");
   $sDel->execute();
