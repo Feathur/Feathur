@@ -1028,7 +1028,8 @@ class openvz {
 			$sDiskUsed = $sDiskUsed / 1048576;
 			$sDiskTotal = $sVPS->sDisk;
 			$sCPU = explode(' ', $sSSH->exec("vzctl exec {$sVPS->sContainerId} cat /proc/loadavg"));	
-		
+			$sTop = explode(' ', $sSSH->exec("top -b -n 1 | head -n 12  | tail -n 5"));
+			
 			if($sUsedRAM > 0){
 				$sUsedRAM = round(($sUsedRAM / 1024), 0);
 			}
@@ -1119,7 +1120,8 @@ class openvz {
 					"percent_bandwidth" => round(((100 / ($sVPS->sBandwidthLimit * 1024)) * $sVPS->sBandwidthUsage), 0),
 					"operating_system" => $sTemplateName,
 					"hostname" => $sVPS->sHostname,
-					"primary_ip" => $sVPS->sPrimaryIP
+					"primary_ip" => $sVPS->sPrimaryIP,
+					"top" => $sTop
 					));
 			
 			$sContent = Templater::AdvancedParse($sTemplate->sValue.'/'.$sVPS->sType.'.statistics', $locale->strings, array("Statistics" => $sStatistics));
