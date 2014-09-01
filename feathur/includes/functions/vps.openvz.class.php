@@ -215,7 +215,7 @@ class openvz {
 				$sVPS->sRebuilding = 1;
 				$sVPS->InsertIntoDatabase();
 				$sTemplateURL = escapeshellarg($sTemplate->sURL);
-				$sStart .= "yum -y install screen ploop;python -c 'open(\"/etc/vz/vz.conf\", \"w\").write(re.sub(\"^(#)?(VE_LAYOUT=ploop)$\", \"VE_LAYOUT=simfs\", open(\"/etc/vz/vz.conf\", \"r\").read(), flags = re.M))'";
+				//$sStart .= "yum -y install screen ploop;python -c 'open(\"/etc/vz/vz.conf\", \"w\").write(re.sub(\"^(#)?(VE_LAYOUT=ploop)$\", \"VE_LAYOUT=simfs\", open(\"/etc/vz/vz.conf\", \"r\").read(), flags = re.M))'";
 				$sCommandList = "cd /vz/template/cache/;wget -O {$sTemplatePath} {$sTemplateURL};".$sCommandList;
 				$sScreen = "screen -dmS build{$sVPS->sContainerId} bash -c \"".$sCommandList."sleep 5;mkdir /vz/feathur_tmp/;echo \"{$sVPS->sId}\" > /vz/feathur_tmp/{$sVPS->sContainerId}.finished;exit;\";";
 				$sLog[] = array("command" => $sStart.str_replace($sPassword, "obfuscated", $sScreen), "result" => $sSSH->exec($sStart.$sScreen));
