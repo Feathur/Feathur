@@ -249,9 +249,13 @@ class VPS extends CPHPDatabaseRecordClass {
 	public static function remove_template($sLocalSSH, $uId){
 		global $database;
 		if(is_numeric($uId)){
-			$sTemplate = new Template($uId);
-			$sClean = $database->CachedQuery("DELETE FROM templates WHERE `id` = :Id", array('Id' => $sTemplate->sId));
-			return $sArray = array("json" => 1, "type" => "success", "result" => "Template/ISO has been deleted.", "reload" => "1");
+			try {
+				$sTemplate = new Template($uId);
+				$sClean = $database->CachedQuery("DELETE FROM templates WHERE `id` = :Id", array('Id' => $sTemplate->sId));
+				return $sArray = array("json" => 1, "type" => "success", "result" => "Template/ISO has been deleted.", "reload" => "1");
+			} catch(NotFoundException $e){
+				return $sArray = array("json" => 1, "type" => "error", "result" => "There is no template matching that id.");
+			}
 		} else {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "There is no template matching that id.");
 		}
