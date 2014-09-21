@@ -37,6 +37,8 @@ if ($sAction == 'create')
 	if (is_array($sCreate)) die(json_encode($sCreate));
 	$sFinish = $sServerType->$sSecond($sUser, $sRequested);
 	if (is_array($sFinish)) die(json_encode($sFinish));
+  } else {
+	die json_encode(array("json" => 1, "type" => "error", "result" => "Server selection missing in creation call."));
   }
 }
 
