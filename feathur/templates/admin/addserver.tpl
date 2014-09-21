@@ -1,71 +1,58 @@
-<br><div align="center">First run the feathur installer, then fill out the form bellow.</div><br>
-<div align="center">
+<div class="pure-u-sm-1 pure-u-md-1 pure-u-lg-1-2 pure-u-xl-1-2 nofluid">
+    <div class="alert warningbox static-alert">
+        <p>First run the feathur installer, then fill out the form below.</p>
+    </div>
+</div>
+<div class="pure-u-sm-1 pure-u-md-1 pure-u-lg-1-2 pure-u-xl-1-2">
 	{%if isset|Errors == true}
-		{%foreach error in Errors}
-			<div style="z-index: 670;width:60%;height:25px;" class="albox small-{%?error[type]}">
-				<div id="Status" style="padding:4px;padding-left:5px;width:95%;">{%?error[content]}</div>
-				<div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div>
-			</div>
-			<br><br>
-		{%/foreach}
+        <div class="pure-u-1">
+            {%foreach error in Errors}
+                <div class="alert {%?error[type]}box nofluid">
+                    <div id="Status" style="padding:4px;padding-left:5px;width:95%;">{%?error[content]}</div>
+                </div>
+                <br><br>
+            {%/foreach}
+        </div>
 	{%/if}
-	<form name="input" action="admin.php?view=addserver&action=submitserver" method="post">
-		<div class="simplebox grid740" style="text-align:left;">
-			<div class="titleh">
-				<h3>Add Server</h3>
-			</div>
-			<div class="body">
-				<div class="st-form-line">	
-					<span class="st-labeltext">Name:</span>	
-					<input id="name" type="text" name="name" style="width:500px;">
-					<div class="clear"></div>
-				</div>
-				<div class="st-form-line">	
-					<span class="st-labeltext">IP/Hostname:</span>	
-					<input id="Hostname" type="text" name="hostname" style="width:500px;">
-					<div class="clear"></div>
-				</div>
-				<div class="st-form-line">	
-					<span class="st-labeltext">Super User (Usually root):</span>	
-					<input id="Username" type="text" name="username" value="root" style="width:500px;">
-					<div class="clear"></div>
-				</div>
-				<div class="st-form-line">
-					<span class="st-labeltext">SSH Key:</span>	
-					<textarea name="key" class="st-forminput" id="key" style="width:510px" rows="3" cols="47"></textarea>
-					<div style="z-index: 470;" class="clear"></div>
-				</div>
-				<div class="st-form-line">
-					<span class="st-labeltext">Server Type</span>	
-					<select name="type" id="ServerType" class="uniform">
-						<option value="openvz">OpenVZ</option>
-						<option value="kvm">KVM</option>
-					</select>
-				</div>
-				<div class="st-form-line">	
-					<span class="st-labeltext">Status URL (IF NOT DEFAULT):</span>	
-					<input id="status" type="text" name="status" style="width:500px;">
-					<div class="clear"></div>
-				</div>
-				<div class="st-form-line">	
-					<span class="st-labeltext">Location:</span>	
-					<input id="location" type="text" name="location" style="width:500px;">
-					<div class="clear"></div>
-				</div>
-				<div class="st-form-line">	
-					<span class="st-labeltext">Volume Group (KVM Only, Ex: vg_1232324):</span>	
-					<input id="volume_group" type="text" name="volume_group" style="width:500px;">
-					<div class="clear"></div>
-				</div>
-				<div class="st-form-line">	
-					<span class="st-labeltext">QEMU Path (KVM Only, leave blank for default):</span>	
-					<input id="qemu" type="text" name="qemu" style="width:500px;">
-					<div class="clear"></div>
-				</div>
-				<div class="st-form-line">
-					<div align="center"><button class="small blue" id="AddServer">Add Server</button></div>
-				</div>
-			</div>
-		</div>
-	</form>
+    <form name="input" action="admin.php?view=addserver&action=submitserver" method="post" class="pure-u-1 pure-form pure-form-aligned">
+        <h3 class="title">Add Server</h3>
+        <div class="pure-control-group">
+            <label for="name">Name:</label>
+            <input id="name" type="text" name="name" required>
+        </div>
+        <div class="pure-control-group">
+            <label for="Hostname">Hostname:</label>
+            <input id="Hostname" type="text" name="hostname" required>
+        </div>
+        <div class="pure-control-group">
+            <label for="Username">Super User (Usually root):</label>
+            <input id="Username" type="text" name="username" value="root" required>
+        </div>
+        <div class="pure-control-group">
+            <label for="key">SSH Key:</label>
+            <textarea name="key" class="st-forminput" id="key" rows="3" cols="47" required></textarea>
+        </div>
+        <div class="pure-control-group">
+            <label for="ServerType">Server Type:</label>
+            <select name="type" id="ServerType" required>
+                <option value="openvz">OpenVZ</option>
+                <option value="kvm">KVM</option>
+            </select>
+        </div>
+        <div class="pure-control-group">
+            <label for="location">Location:</label>
+            <input id="location" type="text" name="location" required>
+        </div>
+        <div class="pure-control-group">
+            <label for="volume_group">Volume Group (KVM Only, Ex: vg_1232324):</label>
+            <input id="volume_group" type="text" name="volume_group">
+        </div>
+        <div class="pure-control-group">
+            <label for="gemu">QEMU Path (KVM Only, leave blank for default):</label>
+            <input id="qemu" type="text" name="qemu">
+        </div>
+        <hr>
+        <p class="formnote">Please double-check everything entered before submitting.</p>
+        <button type="submit" class="centered pure-button pure-button-primary button-green" id="addserver">Create Server</button>
+    </form>
 </div>

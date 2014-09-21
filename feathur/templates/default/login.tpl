@@ -1,62 +1,55 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>{%?Title}</title>
-    <link rel="stylesheet" type="text/css" href="templates/default/style/base.css" /> 
-    <!--[if IE 7]>	  <link rel="stylesheet" type="text/css" href="templates/default/style/ie7-style.css" />	<![endif]-->
-	<script type="text/javascript" src="templates/default/js/jquery.min.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery-ui-1.8.11.custom.min.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery-settings.js"></script>
-	<script type="text/javascript" src="templates/default/js/toogle.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.tipsy.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.uniform.min.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.wysiwyg.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.tablesorter.min.js"></script>
-	<script type="text/javascript" src="templates/default/js/raphael.js"></script>
-	<script type="text/javascript" src="templates/default/js/analytics.js"></script>
-	<script type="text/javascript" src="templates/default/js/popup.js"></script>
-	<script type="text/javascript" src="templates/default/js/fullcalendar.min.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.prettyPhoto.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.core.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.mouse.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.widget.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.slider.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.datepicker.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.tabs.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.accordion.js"></script>
-	<script type="text/javascript" src="templates/default/https://www.google.com/jsapi"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.dataTables.js"></script>
-</head>
-<body>
-	<div class="loginform">
-		<div class="title" style="padding:5px;margin-top:0px;">
-			<img src="templates/default/img/logo.png"/>
-		</div>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>{%?Title}</title>
+		<link rel="stylesheet" type="text/css" href="templates/{%?Template}/style/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href='https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700'>
+        <link rel="stylesheet" type="text/css" href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.0/animate.min.css'>
+        <link rel="stylesheet" type="text/css" href='templates/{%?Template}/style/jquery.dataTables.min.css'>
+        <link rel="stylesheet" type="text/css" href="templates/{%?Template}/style/modal.css">
+        <link rel="stylesheet" type="text/css" href="templates/{%?Template}/style/grids-responsive-min.css">
+        <link rel="stylesheet" type="text/css" href="templates/{%?Template}/style/forms-min.css">
+        <link rel="stylesheet" type="text/css" href="templates/{%?Template}/style/buttons-min.css">
+        <link rel="stylesheet" type="text/css" href="templates/{%?Template}/style/tables-min.css">
+        <link rel="stylesheet" type="text/css" href="templates/{%?Template}/style/chosen.min.css">
+        <link rel="stylesheet" type="text/css" href="templates/{%?Template}/style/style.css">
 
-		<div class="body">
-			{%if isset|Errors == true}
-				<div style="z-index: 670;" class="albox errorbox">
-					{%foreach error in Errors}
-						{%?error[result]}
-					{%/foreach}
-					<a original-title="close" href="#" class="close tips">close</a>
-				</div>
-			{%/if}
-			<form id="form1" name="form1" method="post" action="index.php?action=login">
-				<label class="log-lab">Email Address</label>
-				<input name="email" type="text" class="login-input-user" id="textfield" value=""/>
-	
-				<label class="log-lab">Password</label>
-				<input name="password" type="password" class="login-input-pass" id="textfield" value=""/>
-	
-				<input type="submit" name="submit" id="button" value="Login" class="button"/>
-			</form>
-			<br>
-			<div align="center">
-				<a href="forgot.php">Forgot Password</a>
-			</div>
-		</div>
-	</div>
-</body>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script type="text/javascript" src="templates/{%?Template}/js/uiScripts.js"></script>
+        <script type="text/javascript" defer="defer" src="templates/{%?Template}/js/jquery-settings.js"></script>
+        <script type="text/javascript" defer="defer" src="templates/{%?Template}/js/ajaxsbmt.js"></script>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript" defer="defer" src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" defer="defer" src="templates/{%?Template}/js/jquery.simplemodal.1.4.4.min.js"></script>
+        <script type="text/javascript" defer="defer" src="templates/{%?Template}/js/chosen.jquery.min.js"></script>
+	</head>
+	<body class="login">
+        <div id="containlogin">
+            <div class="logo" style="position: absolute;left: 50%;margin-left: -77px;margin-top: -100px;"></div>
+            <div class="loginform" style="width: 387px;margin: 0 auto;">
+                <form id="form1" name="form1" method="post" action="index.php?action=login">
+                    <p style="font-size: 16px;color: rgb( 255, 255, 255 );text-align: center;text-shadow: 1px 1.7px 3px rgba(0, 0, 0, 0.3);margin-top: 11px;margin-bottom: 11px;">Log in below to continue</p>
+                    <input name="email" type="text" class="login-input-user" id="textfield" value="" placeholder="Email" autofocus="true"/>
+                    <br>
+                    <input name="password" type="password" class="login-input-pass" id="textfield" value="" placeholder="Password"/>
+                    <div class="pure-u-1 text-centered"><button type="submit" name="submit" id="button" class="pure-button pure-button-primary" style="margin-top: 7px;margin-right: 10px;">Log In</button><a href="forgot.php" style="color: #fff; margin-top: 7px;margin-left: 10px;" class="forgotpwdlnk">Forgot Password</a></div>
+                </form>
+                <br>
+                {%if isset|Errors == true}
+                <div style="margin:10px auto;z-index: -2;" class="alert errorbox static-alert">
+                    {%foreach error in Errors}
+                    {%?error[result]}
+                    {%/foreach}
+                </div>
+                <br>
+                {%/if}
+            </div>
+            
+            <div class="formCopyrightNotice">Copyright© 2014 Feathur - All Rights Reserved</div>
+            
+        </div>
+		<div class="copyright">Copyright© 2014 Feathur - All Rights Reserved</div>
+	</body>
 </html>

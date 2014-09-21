@@ -1,76 +1,49 @@
-<html>
+<html style="box-shadow: none;">
 <head>
-	<link rel="stylesheet" type="text/css" href="templates/default/style/reset.css" /> 
-    <link rel="stylesheet" type="text/css" href="templates/default/style/fonts/fontawesome/css/font-awesome.min.css" /> 
-    <link rel="stylesheet" type="text/css" href="templates/default/style/root.css" /> 
-    <link rel="stylesheet" type="text/css" href="templates/default/style/grid.css" /> 
-    <link rel="stylesheet" type="text/css" href="templates/default/style/typography.css" /> 
-    <link rel="stylesheet" type="text/css" href="templates/default/style/jquery-ui.css" />
-    <link rel="stylesheet" type="text/css" href="templates/default/style/jquery-plugin-base.css" />
-	<link rel="stylesheet" type="text/css" href="templates/default/style/basic.css" />
-    <!--[if IE 7]>	  <link rel="stylesheet" type="text/css" href="templates/default/style/ie7-style.css" />	<![endif]-->
-	<!--[if lt IE 7]> <link type='text/css' href='css/basic_ie.css' rel='stylesheet' media='screen' /> <![endif]-->
-	<script type="text/javascript" src="templates/default/js/jquery.min.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery-ui-1.8.11.custom.min.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery-settings.js"></script>
-	<script type="text/javascript" src="templates/default/js/toogle.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.tipsy.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.uniform.min.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.wysiwyg.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.tablesorter.min.js"></script>
-	<script type="text/javascript" src="templates/default/js/raphael.js"></script>
-	<script type="text/javascript" src="templates/default/js/analytics.js"></script>
-	<script type="text/javascript" src="templates/default/js/popup.js"></script>
-	<script type="text/javascript" src="templates/default/js/fullcalendar.min.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.prettyPhoto.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.core.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.mouse.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.widget.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.slider.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.datepicker.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.tabs.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.accordion.js"></script>
-	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.simplemodal.js"></script>
-	<script type="text/javascript" src="templates/default/js/basic.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.dataTables.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.form.js"></script>
-	<script type="text/javascript" src="templates/default/js/ajaxsubmit.js"></script>
-	<script type="text/javascript" src="templates/default/js/plupload.full.js"></script>
+    <link rel="stylesheet" type="text/css" href="templates/{%?Template}/style/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href='https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700'>
+    <link rel="stylesheet" type="text/css" href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.0/animate.min.css'>
+    <link rel="stylesheet" type="text/css" href='templates/{%?Template}/style/jquery.dataTables.min.css'>
+    <link rel="stylesheet" type="text/css" href="templates/{%?Template}/style/modal.css">
+    <link rel="stylesheet" type="text/css" href="templates/{%?Template}/style/grids-responsive-min.css">
+    <link rel="stylesheet" type="text/css" href="templates/{%?Template}/style/forms-min.css">
+    <link rel="stylesheet" type="text/css" href="templates/{%?Template}/style/buttons-min.css">
+    <link rel="stylesheet" type="text/css" href="templates/{%?Template}/style/tables-min.css">
+    <link rel="stylesheet" type="text/css" href="templates/{%?Template}/style/chosen.min.css">
+    <link rel="stylesheet" type="text/css" href="templates/{%?Template}/style/style.css">
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="templates/{%?Template}/js/uiScripts.js"></script>
+    <script type="text/javascript" defer="defer" src="templates/{%?Template}/js/jquery-settings.js"></script>
+    <script type="text/javascript" defer="defer" src="templates/{%?Template}/js/ajaxsbmt.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" defer="defer" src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" defer="defer" src="templates/{%?Template}/js/jquery.simplemodal.1.4.4.min.js"></script>
+    <script type="text/javascript" defer="defer" src="templates/{%?Template}/js/chosen.jquery.min.js"></script>
 </head>
-<body style="background:#FFFFFF;">
+<body>
 {%foreach vps in VPS}
-	<div align="center" style="height:500px;verical-align:center;">
+	<div align="center" style="verical-align:center; background: #fff;" class="pure-u-sm-1 pure-u-md-1 pure-u-lg-l pure-u-xl-1">
 		{%if isempty|connect == true}
-			<br><br>
-			<form action="console.php?id={%?vps[id]}&action=connect" method="post">
-				<div class="simplebox grid360">
-					<div class="titleh">
-						<h3>SSH Java Console</h3>
-					</div>
-					<table class="tablesorter">
-						<tr>
-							<td width="40%">Hostname / IP:</td>
-							<td width="60%"><input id="Hostname" type="text" name="hostname" value="{%?vps[primary_ip]}" style="width:100%" /></td>
-						</tr>
-						<tr>
-							<td width="40%">Port (Default 22):</td>
-							<td width="60%"><input id="Port" type="text" name="port" value="22" style="width:100%" /></td>
-						</tr>
-						<tr>
-							<td colspan="2">
-								<div align="center">
-									<button class="button small orange" id="StartConsole" type="submit">Start Java Console</button>
-								</div>
-							</td>
-						</tr>
-					</table>
-				</div>
+			<form action="console.php?id={%?vps[id]}&action=connect" method="post" class="pure-form pure-form-aligned outlined">
+                <h3>SSH Java Console</h3>
+                <div class="pure-control-group">
+                    <label for="Hostname">Hostname / IP:</label>
+                    <input id="Hostname" type="text" name="hostname" value="{%?vps[primary_ip]}" />
+                </div>
+                <div class="pure-control-group">
+                    <label for="Hostname">Port (Default 22):</label>
+                    <input id="Port" type="text" name="port" value="22" />
+                </div>
+                <br>
+                <div class="pure-u-1">
+                    <button class="pure-button pure-button-primary button-orange button-xlarge" id="StartConsole" type="submit">Start Java Console</button>
+                </div>
 			</form>
 		{%/if}
 		
 		{%if isempty|connect == false}
-			  <applet width="640" height="480" archive="SSHTermApplet-signed.jar,SSHTermApplet-jdkbug-workaround-signed.jar,SSHTermApplet-jdk1.3.1-dependencies-signed.jar" code="com.sshtools.sshterm.SshTermApplet" codebase="./includes/library/sshterm/" style="border-style: solid; border-width: 1; padding-left: 4; padding-right: 4; padding-top: 1; padding-bottom: 1">
+			  <applet width="640" height="480" archive="SSHTermApplet-signed.jar,SSHTermApplet-jdkbug-workaround-signed.jar,SSHTermApplet-jdk1.3.1-dependencies-signed.jar" code="com.sshtools.sshterm.SshTermApplet" codebase="./includes/library/sshterm/" style="background: #fff; border-style: solid; border-width: 1; padding-left: 4; padding-right: 4; padding-top: 1; padding-bottom: 1">
 			  	<param name="sshapps.connection.host" value="{%?Hostname}">
 			  	<param name="sshapps.connection.port" value="{%?Port}">
 			  	<param name="sshapps.connection.userName" value="root">

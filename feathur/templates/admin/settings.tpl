@@ -1,144 +1,157 @@
 <script type="text/javascript">
-	$(function() {
-		$( "#tabs" ).tabs();
-	});
-	$(document).ready(function(){
-		$('#mail-info').css('display','none');
-		$('#mail').change(function(){
-			if(document.getElementById('mail').value == 1){
-				$('#mail-info').show('slow');
-			} else if(document.getElementById('mail').value == 2){
-				 $('#mail-info').show('slow'); 
-			} else if(document.getElementById('mail').value == 0){
-				 $('#mail-info').hide('slow'); 
-			}
-		});
-		
-		$('#mail').change();
-		
-		$("#SettingsForm").submit(function(event) {
-			event.preventDefault();
-			$("#Notice").html('<img src="templates/default/img/loading/9.gif" style="padding:0px;margin:0px;" id="LoadingImage">');
-			var values = $(this).serialize();
-			$.ajax({
-				url: "admin.php?view=settings&submit=1",
-				type: "post",
-				data: values,
-				success: function(data){
-					var result = $.parseJSON(data);
-					$('#Notice').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div><br><input type="submit" name="button" id="button" value="Submit" class="st-button"/>');
-				}
-			});
-		});
-	});
+$(document).ready(function(){
+    $('#mail-info').css('display','none');
+    $('#mail').change(function(){
+        if(document.getElementById('mail').value == 1){
+            $('#mail-info').show('slow');
+        } else if(document.getElementById('mail').value == 2){
+             $('#mail-info').show('slow'); 
+        } else if(document.getElementById('mail').value == 0){
+             $('#mail-info').hide('slow'); 
+        }
+    });
+    
+    $('#mail').change();
+    
+    $("#SettingsForm").submit(function(e) {
+        e.preventDefault();
+        loading(1);
+        var values = $(this).serialize();
+        $.ajax({
+            url: "admin.php?view=settings&submit=1",
+            type: "post",
+            data: values,
+            success: function(data){
+                loading(0);
+                var result = $.parseJSON(data);
+                $('.ajax-alert').html('<div class="alert ' + result.type + 'box"><p>' + result.result + '</p></div>');
+                $('.ajax-alert').css("display","block");
+            }
+        });
+    });
+});
+
+var prevTab=1;
+var showCon = function(i){
+    if(i != prevTab){
+        $(".tab").removeClass("cur")
+        $(".tab.btn"+prevTab).removeClass("cur");
+        $(".tab.btn"+i).addClass("cur");
+        for(var n=1;n < $('.tabs.primarytabs').children().size()+1;n++){
+            $("#tabCon.con"+n).hide();
+        }
+        $("#tabCon.con"+i).show();
+        $("#tabConWrap").css("height",$("#tabCon.con"+i).height() + "px")
+        prevTab=i;
+    }
+}
 </script>
-<br><br>
-<div align="center">
-	<div id="tabs" style="width:95%;">
-		<ul>
-			<li><a href="#tabs-1">General</a></li>
-			<li><a href="#tabs-2">Mail</a></li>
-			<li><a href="#tabs-3">Bandwidth</a></li>
-			<li><a href="#tabs-4">Templates</a></li>
-		</ul>
-		<form id="SettingsForm" name="settings" method="post" action="">
-			<div id="tabs-1" align="left">
-				<p>
-					<div class="st-form-line">	
-						<span class="st-labeltext">Title: </span>
-						<input name="title" type="text" class="st-forminput" id="title" style="width:400px" value="{%?Title}" /> 
-						<div class="clear"></div>
-					</div>
-					<div class="st-form-line">	
-						<span class="st-labeltext">Description: </span>
-						<input name="description" type="text" class="st-forminput" id="description" style="width:400px" value="{%?Description}" /> 
-						<div class="clear"></div>
-					</div>
-					<div class="st-form-line">	
-						<span class="st-labeltext">Panel URL (without http://): </span>
-						<input name="panel_url" type="text" class="st-forminput" id="panel_url" style="width:400px" value="{%?PanelURL}" /> 
-						<div class="clear"></div>
-					</div>
-					<div class="st-form-line">	
-						<span class="st-labeltext">Maintenance Mode: </span>
-						<label class="margin-right10"><input type="checkbox" name="maintenance" value="1" {%if isset|Maintenance == true}{%if isempty|Maintenance == false}selected="selected"{%/if}{%/if} id="maintenance" class="uniform"/> Enabled</label>
-						<div class="clear"></div>
-					</div>
-					<div class="st-form-line">	
-						<span class="st-labeltext">Update Branch:</span>
-						<select name="update_type" id="update_type" class="uniform">
-							<option value="develop" {%if isset|UpdateType == true}{%if UpdateType == develop}selected="selected"{%/if}{%/if}>Development</option>
-							<option value="Testing" {%if isset|UpdateType == true}{%if UpdateType == Testing}selected="selected"{%/if}{%/if}>Testing (not recommended)</option>
-						</select>
-						<div class="clear"></div>
-					</div>
-					{%?TemplatesRedone}
-					<div class="st-form-line">	
-						<span class="st-labeltext">Template Warning Message (Dashboard):</span>
-						<select name="template_redone_setting" id="template_redone_setting" class="uniform">
-							<option value="0" {%if isset|TemplatesRedone == true}{%if isempty|TemplatesRedone == true}selected="selected"{%/if}{%/if}>Enabled</option>
-							<option value="1" {%if isset|TemplatesRedone == true}{%if isempty|TemplatesRedone == false}selected="selected"{%/if}{%/if}>Disabled</option>
-						</select>
-						<div class="clear"></div>
-					</div>
-				</p>
-			</div>
-			<div id="tabs-2" align="left">
-				<p>
-					<div class="st-form-line">	
-						<span class="st-labeltext">Mail Sender Type:</span>
-						<select name="mail" id="mail" class="uniform">
-							<option value="0" {%if isset|Mail == false}selected="selected"{%/if}>Sendmail</option>
-							<option value="1" {%if isset|Mail == true}{%if Mail == 1}selected="selected"{%/if}{%/if}>Send Grid</option>
-							<option value="2" {%if isset|Mail == true}{%if Mail == 2}selected="selected"{%/if}{%/if}>Mandrill</option>
-						</select>
-						<div class="clear"></div>
-					</div>
-					<div id="mail-info">
-						<div class="st-form-line">	
-							<span class="st-labeltext">SMTP Username: </span>
-							<input name="mail_username" type="text" class="st-forminput" id="mail_username" style="width:400px" value="{%if isset|MailUsername == true}{%?MailUsername}{%/if}" /> 
-							<div class="clear"></div>
-						</div>
-						<div class="st-form-line">	
-							<span class="st-labeltext">SMTP Password: </span>
-							<input name="mail_password" type="password" class="st-forminput" {%if isset|MailPassword == true}value="password"{%/if} id="mail_password" style="width:400px" /> 
-							<div class="clear"></div>
-						</div>
-					</div>
-				</p>
-			</div>
-			<div id="tabs-3">
-				<p>
-					<div class="st-form-line">	
-						<span class="st-labeltext">Bandwidth Accounting: </span>
-						<select name="bandwidth_accounting" id="bandwidth_accounting" class="uniform">
-							<option value="upload" {%if isset|BandwidthAccounting == true}{%if BandwidthAccounting == upload}selected="selected"{%/if}{%/if}>Upload Only</option>
-							<option value="download" {%if isset|BandwidthAccounting == true}{%if BandwidthAccounting == download}selected="selected"{%/if}{%/if}>Download Only</option>
-							<option value="both" {%if isset|BandwidthAccounting == true}{%if BandwidthAccounting == both}selected="selected"{%/if}{%/if}>Both (Upload and Download)</option>
-						</select>
-						<div class="clear"></div>
-					</div>
-				</p>
-			</div>
-			<div id="tabs-4">
-				<p>
-					<div class="st-form-line">	
-						<span class="st-labeltext">User Template: </span>
-						<input name="template" type="text" class="st-forminput" id="template" style="width:400px" value="{%?Template}" /> 
-						<div class="clear"></div>
-					</div>
-					<div class="st-form-line">	
-						<span class="st-labeltext">Admin Template: </span>
-						<input name="admin_template" type="text" class="st-forminput" id="admin_template" style="width:400px" value="{%?AdminTemplate}" /> 
-						<div class="clear"></div>
-					</div>
-				</p>
-			</div>
-		</div>
-		<br><br>
-		<div id="Notice" class="button-box">
-			<input type="submit" name="button" id="SettingSubmit" value="Submit" class="st-button"/>
-		</div>
+
+      <div class="tabs primarytabs">
+         <div class="tab nth btn1 cur" onclick="showCon(1)"><span>General</span><i class="fa fa-cogs"></i></div>
+         <div class="tab nth btn2" onclick="showCon(2)"><span>Mail</span><i class="fa fa-envelope"></i></div>
+         <div class="tab nth btn3" onclick="showCon(3)"><span>Bandwidth</span><i class="fa fa-tasks"></i></div>
+         <div class="tab nth btn4" onclick="showCon(4)"><span>Templates</span><i class="fa fa-list-alt"></i></div>
+      </div>
+      
+<div id="tabConWrap" class="pure-u-sm-1 pure-u-md-1 pure-u-lg-l pure-u-xl-1-2">
+      <form id="SettingsForm" class="whitebox pure-form pure-form-aligned pure-u-1" name="settings" method="post" action="" autocomplete="off">
+      
+        <!-- fake fields are a workaround for chrome autofill getting the wrong fields -->
+        <input style="display:none" type="text" name="noautofillusernameremembered"/>
+        <input style="display:none" type="password" name="noautofillpasswordremembered"/>
+      
+        <div class="ajax-alert pure-u-1" style="display: none;"></div>
+        <div id="tabCon" class="con1">
+            <div id="tabConTxt">
+                <div class="pure-control-group">
+                    <label for="title">Title:</label>
+                    <input name="title" type="text" id="title" value="{%?Title}" /> 
+                </div>
+                <div class="pure-control-group">
+                    <label for="description">Description:</label>
+                    <input name="description" type="text" class="st-forminput" id="description" value="{%?Description}" />
+                </div>
+                <div class="pure-control-group">
+                    <label for="panel_url">Panel URL (without http://):</label>
+                    <input name="panel_url" type="text" class="st-forminput" id="panel_url" value="{%?PanelURL}" />
+                </div>
+                <div class="pure-control-group">
+                    <label>Matinenance Mode:</label>
+                    <label for="maintenance" class="pure-checkbox" style="text-align: left;">
+                        <input type="checkbox" name="maintenance" value="1" {%if isset|Maintanance == true}{%if isempty|Maintanance == false}checked{%/if}{%/if} id="maintenance"/> Enabled
+                    </label>
+                </div>
+                <div class="pure-control-group">
+                    <label for="update_type">Update Branch:</label>
+                    <select name="update_type" id="update_type">
+                        <option value="develop" {%if isset|UpdateType == true}{%if UpdateType == develop}selected="selected"{%/if}{%/if}>Development</option>
+                        <option value="Testing" {%if isset|UpdateType == true}{%if UpdateType == Testing}selected="selected"{%/if}{%/if}>Testing (not recommended)</option>
+                    </select>
+                </div>
+                <div class="pure-control-group">
+                    <label for="template_redone_setting">Template Warning Message (Dashboard):</label>
+                    <select name="template_redone_setting" id="template_redone_setting">
+                        <option value="0" {%if isset|TemplatesRedone == true}{%if isempty|TemplatesRedone == true}selected="selected"{%/if}{%/if}>Enabled</option>
+                        <option value="1" {%if isset|TemplatesRedone == true}{%if isempty|TemplatesRedone == false}selected="selected"{%/if}{%/if}>Disabled</option>
+                    </select>
+                </div>
+            </div>
+         </div>
+         
+         <div id="tabCon" class="con2" style="display: none">
+            <div id="tabConTxt">
+                <div class="pure-control-group">
+                    <label for="mail">Mail Sender Type:</label>
+                    <select name="mail" id="mail">
+                        <option value="0" {%if isset|Mail == false}selected="selected"{%/if}>Sendmail</option>
+                        <option value="1" {%if isset|Mail == true}{%if Mail == 1}selected="selected"{%/if}{%/if}>Send Grid</option>
+                        <option value="2" {%if isset|Mail == true}{%if Mail == 2}selected="selected"{%/if}{%/if}>Mandrill</option>
+                    </select>
+                </div>
+                <div id="mail-info">
+                    <div class="pure-control-group">
+                        <label for="mail_username">SMTP Username:</label>
+                        <input name="mail_username" autocomplete="off" type="text" id="mail_username" value="{%if isset|MailUsername == true}{%?MailUsername}{%/if}"><br>
+                    </div>
+                    <div class="pure-control-group">
+                        <label for="mail_password">SMTP Password:</label>
+                        <input name="mail_password" autocomplete="off" type="password" {%if isset|MailPassword == true}value="password"{%/if} id="mail_password">
+                    </div>
+                </div>
+            </div>
+         </div>
+         
+         <div id="tabCon" class="con3" style="display: none">
+            <div id="tabConTxt">
+                <div class="pure-control-group">
+                    <label for="bandwidth_accounting">Bandwidth Accounting:</label>
+                    <select name="bandwidth_accounting" id="bandwidth_accounting">
+                        <option value="upload" {%if isset|BandwidthAccounting == true}{%if BandwidthAccounting == upload}selected="selected"{%/if}{%/if}>Upload Only</option>
+                        <option value="download" {%if isset|BandwidthAccounting == true}{%if BandwidthAccounting == download}selected="selected"{%/if}{%/if}>Download Only</option>
+                        <option value="both" {%if isset|BandwidthAccounting == true}{%if BandwidthAccounting == both}selected="selected"{%/if}{%/if}>Both (Upload and Download)</option>
+                    </select>
+                </div>
+            </div>
+         </div>
+         
+         <div id="tabCon" class="con4" style="display: none">
+            <div id="tabConTxt">
+                <p class="formnote" style="margin-top: 0;">Templates can be found in the <b>var/feathur/feathur/templates</b> directory.</p>
+                <div class="pure-control-group">
+                    <label for="template">User Template:</label>
+                    <input name="template" type="text" id="template" value="{%?Template}">
+                </div>
+                <div class="pure-control-group">
+                    <label for="admin_template">Admin Template:</label>
+                    <input name="admin_template" type="text" id="admin_template" value="{%?AdminTemplate}" /> 
+                </div>
+            </div>
+         </div>
+        <br>
+        <div align="center">
+            <button type="submit" name="button" id="SettingSubmit" class="pure-button pure-button-primary button-large">Submit Settings</button>
+        </div>
 	</form>
 </div>
+<!-- End tabbedConWrap -->

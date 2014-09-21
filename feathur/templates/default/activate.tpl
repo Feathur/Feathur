@@ -3,30 +3,18 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>{%?Title}</title>
-    <link rel="stylesheet" type="text/css" href="templates/default/style/base.css" /> 
-    <!--[if IE 7]>	  <link rel="stylesheet" type="text/css" href="templates/default/style/ie7-style.css" />	<![endif]-->
-	<script type="text/javascript" src="templates/default/js/jquery.min.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery-ui-1.8.11.custom.min.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery-settings.js"></script>
-	<script type="text/javascript" src="templates/default/js/toogle.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.tipsy.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.uniform.min.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.wysiwyg.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.tablesorter.min.js"></script>
-	<script type="text/javascript" src="templates/default/js/raphael.js"></script>
-	<script type="text/javascript" src="templates/default/js/analytics.js"></script>
-	<script type="text/javascript" src="templates/default/js/popup.js"></script>
-	<script type="text/javascript" src="templates/default/js/fullcalendar.min.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.prettyPhoto.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.core.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.mouse.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.widget.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.slider.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.datepicker.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.tabs.js"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.ui.accordion.js"></script>
-	<script type="text/javascript" src="templates/default/https://www.google.com/jsapi"></script>
-	<script type="text/javascript" src="templates/default/js/jquery.dataTables.js"></script>
+		<link rel="stylesheet" type="text/css" href="templates/new/style/reset.css">
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href='https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700' rel='stylesheet' type='text/css'>
+        <link href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.0/animate.min.css' rel='stylesheet' type='text/css'>
+        <link href='https://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="templates/new/style/style.css">
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script type="text/javascript" src="templates/new/js/jquery-settings.js"></script>
+        <script type="text/javascript" src="templates/new/js/uiScripts.js"></script>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
 	<div class="loginform">
