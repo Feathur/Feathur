@@ -1028,12 +1028,12 @@ class openvz {
 			$sDiskUsed = $sDiskUsed / 1048576;
 			$sDiskTotal = $sVPS->sDisk;
 			$sCPU = explode(' ', $sSSH->exec("vzctl exec {$sVPS->sContainerId} cat /proc/loadavg"));	
-			$sTop = explode("\n", $sSSH->exec("top -b -n 1 | head -n 12  | tail -n 5"));
+			$sTop = explode("\n", $sSSH->exec("ps -eo command,pcpu,pmem --sort=-pcpu | head -6"));
 			$sTopReturn = array();
 			foreach($sTop as $sProcess){
 				$sProcess = preg_replace("/\s+/", " ", $sProcess);
 				$sProcess = explode(' ', $sProcess);
-				$sTopReturn[] = array("name" => substr($sProcess[1], 20), "cpu" => $sProcess[8], "ram" => $sProcess[9]);
+				$sTopReturn[] = array("name" => substr($sProcess[0], 20), "cpu" => $sProcess[1], "ram" => $sProcess[2]);
 				unset($sProcess);
 			}
 			
