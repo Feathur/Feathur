@@ -1028,7 +1028,7 @@ class openvz {
 			$sDiskUsed = $sDiskUsed / 1048576;
 			$sDiskTotal = $sVPS->sDisk;
 			$sCPU = explode(' ', $sSSH->exec("vzctl exec {$sVPS->sContainerId} cat /proc/loadavg"));	
-			$sTop = explode("\n", $sSSH->exec("ps -eo command,pcpu,pmem --sort=-pcpu | head -6"));
+			$sTop = explode("\n", $sSSH->exec('ps -eo pcpu,pmem,command --sort=-pcpu | head -6'));
 			$sTopReturn = array();
 			foreach($sTop as $sProcess){
 				if(!isset($first)){
@@ -1037,9 +1037,11 @@ class openvz {
 				}
 				$sProcess = preg_replace("/\s+/", " ", $sProcess);
 				$sProcess = explode(' ', $sProcess);
-				$sProcessName = (strlen($string) > 20) ? substr($sProcess[1],0,19).'...' : $sProcess[1];
-				$sProcessCPU = isset($sProcess[2]) ? $sProcess[2] : "0.0";
-				$sProcessRAM = isset($sProcess[3]) ? $sProcess[3] : "0.0";
+				// In theory this could be done with array_slice, but array slice appears to be inconsistent in testing.
+				$sProcessName = $sProcess[3].$sProcess[4].$sProcess[5].$sProcess[6].$sProcess[7];
+				$sProcessName = (strlen($sProcessName) > 20) ? substr($sProcessName,0,19).'...' : $sProcessName;
+				$sProcessCPU = isset($sProcess[1]) ? $sProcess[1] : "0.0";
+				$sProcessRAM = isset($sProcess[2]) ? $sProcess[2] : "0.0";
 				$sTopReturn[] = array("name" => $sProcessName, "cpu" => $sProcessCPU, "ram" => $sProcessRAM);
 				unset($sProcess);
 			}
