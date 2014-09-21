@@ -68,15 +68,15 @@
 						<span class="st-labeltext">Update Branch:</span>
 						<select name="update_type" id="update_type" class="uniform">
 							<option value="develop" {%if isset|UpdateType == true}{%if UpdateType == develop}selected="selected"{%/if}{%/if}>Development</option>
-							<option value="develop-develop" {%if isset|UpdateType == true}{%if UpdateType == develop-develop}selected="selected"{%/if}{%/if}>Testing (not recommended)</option>
+							<option value="Testing" {%if isset|UpdateType == true}{%if UpdateType == Testing}selected="selected"{%/if}{%/if}>Testing (not recommended)</option>
 						</select>
 						<div class="clear"></div>
 					</div>
 					<div class="st-form-line">	
 						<span class="st-labeltext">Template Warning Message (Dashboard):</span>
 						<select name="template_redone_setting" id="template_redone_setting" class="uniform">
-							<option value="0" {%if isset|TemplateRedone == true}{%if isempty|TemplatesRedone == true}selected="selected"{%/if}{%/if}>Enabled</option>
-							<option value="1" {%if isset|TemplateRedone == true}{%if isempty|TemplatesRedone == false}selected="selected"{%/if}{%/if}>Disabled</option>
+							<option value="0" {%if isset|TemplateRedone == true}{%if TemplatesRedone == 0}selected="selected"{%/if}{%/if}>Enabled</option>
+							<option value="1" {%if isset|TemplateRedone == true}{%if TemplatesRedone == 1}selected="selected"{%/if}{%/if}>Disabled</option>
 						</select>
 						<div class="clear"></div>
 					</div>
