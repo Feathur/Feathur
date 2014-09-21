@@ -1,0 +1,5 @@
+#sidemenu li, #sidemenu .ballon, .subtitle .action{position:static}
+
+.subtitle .arrow{position:static; margin-top:-6px; margin-left:5px}
+
+.subtitle .action .arrow{position:static; margin-top:-6px; margin-left:5px}
