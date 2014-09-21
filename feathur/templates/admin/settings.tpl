@@ -72,6 +72,7 @@
 						</select>
 						<div class="clear"></div>
 					</div>
+					{%?TemplatesRedone}
 					<div class="st-form-line">	
 						<span class="st-labeltext">Template Warning Message (Dashboard):</span>
 						<select name="template_redone_setting" id="template_redone_setting" class="uniform">
