@@ -1030,11 +1030,19 @@ class openvz {
 			$sCPU = explode(' ', $sSSH->exec("vzctl exec {$sVPS->sContainerId} cat /proc/loadavg"));	
 			$sTop = explode("\n", $sSSH->exec('ps -eo pcpu,pmem,command --sort=-pcpu | head -6'));
 			$sTopReturn = array();
+			$sLastElement = end($sTop);
 			foreach($sTop as $sProcess){
+				
+				// This command is not friendly. We have to do a lot to clean it up.
 				if(!isset($first)){
 					$first = 0;
 					continue;
 				}
+				
+				if($sProcess == $sLastElement){
+					continue;
+				}
+				
 				$sProcess = preg_replace("/\s+/", " ", $sProcess);
 				$sProcess = explode(' ', $sProcess);
 				// In theory this could be done with array_slice, but array slice appears to be inconsistent in testing.
