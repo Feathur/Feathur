@@ -170,7 +170,7 @@ class VPS extends CPHPDatabaseRecordClass {
 		global $database;
 		$sTypes = array(".iso", ".tar.gz", ".tar.xz");
 		if(filter_var($uURL, FILTER_VALIDATE_URL) === FALSE) {
-			return $sError = array("red" => "Invalid URL for the template to download");
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Template/ISO URL is invalid.");
 		}
 		
 		// Attempt to get data about the template.
