@@ -16,7 +16,6 @@ class Server extends CPHPDatabaseRecordClass
       'IPAddress' => 'ip_address',
       'Key' => 'key',
       'Type' => 'type',
-      'URL' => 'url',
       'StatusType' => 'status_type',
       'LoadAlert' => 'load_alert',
       'RAMAlert' => 'ram_alert',
