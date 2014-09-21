@@ -1031,9 +1031,16 @@ class openvz {
 			$sTop = explode("\n", $sSSH->exec("ps -eo command,pcpu,pmem --sort=-pcpu | head -6"));
 			$sTopReturn = array();
 			foreach($sTop as $sProcess){
+				if(!isset($first)){
+					$first = 0;
+					continue;
+				}
 				$sProcess = preg_replace("/\s+/", " ", $sProcess);
 				$sProcess = explode(' ', $sProcess);
-				$sTopReturn[] = array("name" => substr($sProcess[0], 20), "cpu" => $sProcess[1], "ram" => $sProcess[2]);
+				$sProcessName = (strlen($string) > 20) ? substr($sProcess[1],0,19).'...' : $sProcess[1];
+				$sProcessCPU = isset($sProcess[2]) ? $sProcess[2] : "0.0";
+				$sProcessRAM = isset($sProcess[3]) ? $sProcess[3] : "0.0";
+				$sTopReturn[] = array("name" => $sProcessName, "cpu" => $sProcessCPU, "ram" => $sProcessRAM);
 				unset($sProcess);
 			}
 			
