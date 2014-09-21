@@ -1028,7 +1028,7 @@ class openvz {
 			$sDiskUsed = $sDiskUsed / 1048576;
 			$sDiskTotal = $sVPS->sDisk;
 			$sCPU = explode(' ', $sSSH->exec("vzctl exec {$sVPS->sContainerId} cat /proc/loadavg"));	
-			$sTop = explode('\n', $sSSH->exec("top -b -n 1 | head -n 12  | tail -n 5"));
+			$sTop = explode("\n", $sSSH->exec("top -b -n 1 | head -n 12  | tail -n 5"));
 			
 			if($sUsedRAM > 0){
 				$sUsedRAM = round(($sUsedRAM / 1024), 0);
