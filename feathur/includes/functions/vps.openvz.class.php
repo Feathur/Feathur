@@ -1121,7 +1121,7 @@ class openvz {
 					"operating_system" => $sTemplateName,
 					"hostname" => $sVPS->sHostname,
 					"primary_ip" => $sVPS->sPrimaryIP,
-					"top" => $sTop
+					"top" => trim($sTop),
 					));
 			
 			$sContent = Templater::AdvancedParse($sTemplate->sValue.'/'.$sVPS->sType.'.statistics', $locale->strings, array("Statistics" => $sStatistics));
