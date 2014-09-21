@@ -1029,6 +1029,13 @@ class openvz {
 			$sDiskTotal = $sVPS->sDisk;
 			$sCPU = explode(' ', $sSSH->exec("vzctl exec {$sVPS->sContainerId} cat /proc/loadavg"));	
 			$sTop = explode("\n", $sSSH->exec("top -b -n 1 | head -n 12  | tail -n 5"));
+			$sTopReturn = array();
+			foreach($sTop as $sProcess){
+				$sProcess = preg_replace("/\s+/", " ", $sProcess);
+				$sProcess = explode(' ', $sProcess);
+				$sTopReturn[] = array("name" => substr($sProcess[1], 20), "cpu" => $sProcess[8], "ram" => $sProcess[9]);
+				unset($sProcess);
+			}
 			
 			if($sUsedRAM > 0){
 				$sUsedRAM = round(($sUsedRAM / 1024), 0);
@@ -1121,7 +1128,7 @@ class openvz {
 					"operating_system" => $sTemplateName,
 					"hostname" => $sVPS->sHostname,
 					"primary_ip" => $sVPS->sPrimaryIP,
-					"top" => $sTop,
+					"top" => $sTopReturn,
 					));
 			
 			$sContent = Templater::AdvancedParse($sTemplate->sValue.'/'.$sVPS->sType.'.statistics', $locale->strings, array("Statistics" => $sStatistics));
