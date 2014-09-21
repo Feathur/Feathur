@@ -32,7 +32,7 @@ $sMaintanance = Core::GetSetting('maintenance');
 NewTemplater::SetGlobalVariable("Maintanance", $sMaintanance->sValue);
 
 // Update Type
-$sMaintanance = Core::GetSetting('update_type');
+$sUpdateType = Core::GetSetting('update_type');
 NewTemplater::SetGlobalVariable("UpdateType", $sUpdateType->sValue);
 
 // Panel Mode
