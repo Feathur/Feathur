@@ -658,13 +658,17 @@ class kvm {
 	}
 	
 	public function database_kvm_primaryip($sUser, $sVPS, $sRequested){
-		$sIP = new IP($sRequested["GET"]["ip"]);
-		if($sIP->sVPSId == $sVPS->sId){
-			$sVPS->uPrimaryIP = $sIP->sIPAddress;
-			$sVPS->InsertIntoDatabase();
-			return true;
-		} else {
-			return $sArray = array("json" => 1, "type" => "error", "result" => "That IP does not belong to you.");
+		try {
+			$sIP = new IP($sRequested["GET"]["ip"]);
+			if($sIP->sVPSId == $sVPS->sId){
+				$sVPS->uPrimaryIP = $sIP->sIPAddress;
+				$sVPS->InsertIntoDatabase();
+				return true;
+			} else {
+				return $sArray = array("json" => 1, "type" => "error", "result" => "IP not assigned to this VPS.");
+			}
+		} catch(ConstructorException $e){
+			return $sArray = array("json" => 1, "type" => "error", "result" => "Invalid IP.");
 		}
 	}
 	
