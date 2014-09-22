@@ -3,7 +3,7 @@
 	$(document).ready(function() {
 		$(".GenericAction").click(function() {
 			loading(1);
-			var action = $(this).attr('value');    
+			var action = $(this).attr('value');
 			$.getJSON("view.php?id={%?vps[id]}&action=" + action,function(result){
                 loading(0);
 				setNotice("#Notice",result.result, result.type);
@@ -14,9 +14,11 @@
 				}
 			});
 		});
-        var bwVal = $('#AdminBandwidthLimit').prop('value');
-        bwVal = bwVal.replace(".0000","");
-        $('#AdminBandwidthLimit').val(bwVal);
+        if($('#AdminBandwidthLimit').length){
+            var bwVal = $('#AdminBandwidthLimit').prop('value');
+            bwVal = bwVal.replace(".0000","");
+            $('#AdminBandwidthLimit').val(bwVal);
+        }
         var retryTimeout = 0;
         var retryTimeoutSet = false;
         var receivedData = true;
