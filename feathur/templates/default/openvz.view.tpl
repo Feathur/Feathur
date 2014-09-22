@@ -281,7 +281,7 @@
         $(".GenericAction").click(function(e) {
             e.preventDefault();
 			loading(1);
-			var action = $(this).attr("value");
+			var action = $(this).prop("value");
 			$.getJSON("view.php?id={%?vps[id]}&action=" + action,function(result){
                 loading(0);
                 setNotice("#GeneralNotice",result.result, result.type);
@@ -311,7 +311,7 @@
 		$("#ChangePrimaryIP").click(function(e) {
             e.preventDefault();
 			loading(1);
-			var ipaddress = $('#SelectedIP').attr('value');
+			var ipaddress = $('#SelectedIP').prop('value');
 			$.getJSON("view.php?id={%?vps[id]}&action=primaryip&ip=" + ipaddress,function(result){
                 loading(0);
 				setNotice("#SettingsNotice",result.result, result.type);
@@ -319,7 +319,7 @@
 		});
 		$("#RDNSIP").change(function(e) {
             e.preventDefault();
-			var ipid = $('#RDNSIP').attr('value');
+			var ipid = $('#RDNSIP').prop('value');
 			loading(1);
 			$.getJSON("view.php?id={%?vps[id]}&action=getrdns&ip=" + ipid,function(result){
                 loading(0);
@@ -329,7 +329,7 @@
 		});
 		$("#UpdateRDNS").click(function(e) {
             e.preventDefault();
-			var ipid = $('#RDNSIP').attr('value');
+			var ipid = $('#RDNSIP').prop('value');
 			var rdns = $('#RDNSValue').val();
 			loading(1);
 			$.getJSON("view.php?id={%?vps[id]}&action=setrdns&ip=" + ipid + "&hostname=" + rdns,function(result){
@@ -354,7 +354,7 @@
 			{%if isempty|IPv6Exist == false}
 				$("#AddIPv6").click(function(e) {
                     e.preventDefault();
-					var blockid = $('#AddIPv6').attr('value');
+					var blockid = $('#AddIPv6').prop('value');
 					loading(1);
 					$.getJSON("view.php?id={%?vps[id]}&action=addipv6&block=" + blockid,function(result){
                         loading(0);
@@ -444,7 +444,7 @@
 		$("#Rebuild").click(function(e) {
             e.preventDefault();
 			loading(1);
-			var template = $('#SelectedTemplate').attr('value');
+			var template = $('#SelectedTemplate').prop('value');
 			var rebuildpassword = $('#RebuildPassword').val();
 			var verify = $('#VerifyRebuild').is(':checked');
 			if(verify == 1) {
@@ -499,7 +499,7 @@
 				var cpuunits = $('#AdminCPUUnits').val();
 				var cpulimit = $('#AdminCPULimit').val();
 				var bandwidthlimit = $('#AdminBandwidthLimit').val();
-				var ipv6allowed = $('#AdminIPv6Allowed').attr('value');
+				var ipv6allowed = $('#AdminIPv6Allowed').prop('value');
 				var inodes = $('#AdminInodes').val();
 				$.getJSON("view.php?id={%?vps[id]}&action=update&ram=" + ram + "&swap=" + swap + "&disk=" + disk + "&cpuunits=" + cpuunits + "&cpulimit=" + cpulimit + "&bandwidth=" + bandwidthlimit + "&inodes=" + inodes + "&ipv6allowed=" + ipv6allowed,function(result){
                     loading(0);
@@ -509,7 +509,7 @@
 			$("#AddIPAddresses").click(function(e) {
                 e.preventDefault();
 				loading(1);
-				var add = $('#AddIP').attr('value');
+				var add = $('#AddIP').prop('value');
 				$.getJSON("view.php?id={%?vps[id]}&action=addip&ip=" + add,function(result){
                     loading(0);
 					setNotice("#AdminNotice",result.result, result.type);
@@ -521,7 +521,7 @@
 			$("#RemoveIPAddress").click(function(e) {
                 e.preventDefault();
 				loading(1);
-				var remove = $('#RemoveIP').attr('value');
+				var remove = $('#RemoveIP').prop('value');
 				$.getJSON("view.php?id={%?vps[id]}&action=removeip&ip=" + remove,function(result){
                     loading(0);
 					setNotice("#AdminNotice",result.result, result.type);
