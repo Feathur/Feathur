@@ -32,6 +32,9 @@
 <div id="serverstatscontain" class="pure-u-1">
 
 <script type="text/javascript">
+    var prevServerCount = 0;
+    var curServerCount = 0;
+
     loading(1);
 	var counttx = 0;
 	google.load('visualization', '1.0', {'packages': ['corechart']});
@@ -41,54 +44,56 @@
             $('#timer').html(counttx);
         }
 		function drawChart(val) {
-			// Create the data table.
-			chartdat = google.visualization.arrayToDataTable([
-				['A', 'B'],
-				['Used', val.ram_usage ],
-				['Free', val.ram_free ]
-			]);
-			// Create the data table.
-			chartdat2 = google.visualization.arrayToDataTable([
-				['A', 'B'],
-				['Used', val.disk_usage ],
-				['Free', val.disk_free ]
-			]);
+            if(curServerCount < 51 || curServerCount > prevServerCount) {
+                // Create the data table.
+                chartdat = google.visualization.arrayToDataTable([
+                    ['A', 'B'],
+                    ['Used', val.ram_usage ],
+                    ['Free', val.ram_free ]
+                ]);
+                // Create the data table.
+                chartdat2 = google.visualization.arrayToDataTable([
+                    ['A', 'B'],
+                    ['Used', val.disk_usage ],
+                    ['Free', val.disk_free ]
+                ]);
 
-			// Set chart options
-			chartopt = {
-				title: '',
-				legend: 'none',
-				pieSliceText: 'none',
-				enableInteractivity: 'false',
-				backgroundColor: 'transparent',
-				chartArea: {width: '105', height: '105'},
-				pieSliceBorderColor: 'transparent',
-				slices: {
-					0: { color: '#7ce2e8' },
-					1: { color: '#335367' }
-				}
-			};
-			// Set chart options
-			chartopt2 = {
-				title: '',
-				legend: 'none',
-				pieSliceText: 'none',
-				enableInteractivity: 'false',
-				backgroundColor: 'transparent',
-				chartArea: {width: '105', height: '105'},
-				pieSliceBorderColor: 'transparent',
-				slices: {
-					0: { color: '#7ce2e8' },
-					1: { color: '#335367' }
-				}
-			};
-            
-            //Don't draw graphs if the screen isn''t big enough to show them
-            if($(window).width() > 529) {
-                var chart = new google.visualization.PieChart(document.getElementById('memChart' + val.id));
-                chart.draw(chartdat, chartopt);
-                var chart2 = new google.visualization.PieChart(document.getElementById('diskChart' + val.id));
-                chart2.draw(chartdat2, chartopt2);
+                // Set chart options
+                chartopt = {
+                    title: '',
+                    legend: 'none',
+                    pieSliceText: 'none',
+                    enableInteractivity: 'false',
+                    backgroundColor: 'transparent',
+                    chartArea: {width: '105', height: '105'},
+                    pieSliceBorderColor: 'transparent',
+                    slices: {
+                        0: { color: '#7ce2e8' },
+                        1: { color: '#335367' }
+                    }
+                };
+                // Set chart options
+                chartopt2 = {
+                    title: '',
+                    legend: 'none',
+                    pieSliceText: 'none',
+                    enableInteractivity: 'false',
+                    backgroundColor: 'transparent',
+                    chartArea: {width: '105', height: '105'},
+                    pieSliceBorderColor: 'transparent',
+                    slices: {
+                        0: { color: '#7ce2e8' },
+                        1: { color: '#335367' }
+                    }
+                };
+                
+                //Don't draw graphs if the screen isn''t big enough to show them
+                if($(window).width() > 529) {
+                    var chart = new google.visualization.PieChart(document.getElementById('memChart' + val.id));
+                    chart.draw(chartdat, chartopt);
+                    var chart2 = new google.visualization.PieChart(document.getElementById('diskChart' + val.id));
+                    chart2.draw(chartdat2, chartopt2);
+                }
             }
 		}
 		
@@ -99,6 +104,7 @@
                 var srvtype = ''
                 var ipcount = 0;
 				var servercount = result.servers.length;
+                curServerCount = servercount;
                 var serversoffline = [];
                 var bandwidthstr = '';
                 var servershighbandwidth = [];
@@ -191,6 +197,7 @@
 			});
             counttx = 0;
             loading(0);
+            prevServerCount = curServerCount;
 		}
 		
 		uptime();
