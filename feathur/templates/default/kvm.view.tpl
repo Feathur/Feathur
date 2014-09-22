@@ -3,7 +3,7 @@
 	$(document).ready(function() {
 		$(".GenericAction").click(function() {
 			loading(1);
-			var action = $(this).val();    
+			var action = $(this).attr('value');    
 			$.getJSON("view.php?id={%?vps[id]}&action=" + action,function(result){
                 loading(0);
 				setNotice("#Notice",result.result, result.type);

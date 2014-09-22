@@ -279,9 +279,8 @@
         {%/if}
         
         $(".GenericAction").click(function(e) {
-            e.preventDefault();
 			loading(1);
-			var action = $(this).prop("value");
+			var action = $(this).attr('value');
 			$.getJSON("view.php?id={%?vps[id]}&action=" + action,function(result){
                 loading(0);
                 setNotice("#GeneralNotice",result.result, result.type);
