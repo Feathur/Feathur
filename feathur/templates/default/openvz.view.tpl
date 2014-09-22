@@ -6,7 +6,7 @@
     var ramUsage = [];
     var topProcesseshtml = "";
     
-    var offlineData = {load_average:"N/A",uptime:"N/A",hostname:"Use the returned \"hostname\" variable instead!",primary_ip:"N/A",operating_system:"N/A",percent_cpu:0,percent_ram:0,percent_swap:0,percent_disk:0,percent_bandwidth:0};
+    var offlineData = {load_average:"N/A",uptime:"N/A",hostname:"Use the returned \"hostname\" variable instead!",primary_ip:"N/A",operating_system:"N/A",percent_cpu:0,percent_ram:0,percent_swap:0,percent_disk:0,percent_bandwidth:0,top:[{"name":"N/A","cpu":"N/A","ram":"N/A"},{"name":"N/A","cpu":"N/A","ram":"N/A"},{"name":"N/A","cpu":"N/A","ram":"N/A"},{"name":"N/A","cpu":"N/A","ram":"N/A"},{"name":"N/A","cpu":"N/A","ram":"N/A"},]};
 
     //fills the area chart arrays with 50 blank pieces of data
     for(i = 0; i < 50; i++){
@@ -215,7 +215,8 @@
             for(i = 0; i < theData.top.length; i++){
                 var index = i + 1;
                 topProcesseshtml += "<tr><td>"+theData.top[i].name+"</td><td>"+theData.top[i].cpu+"</td><td>"+theData.top[i].ram+"</td></tr>";
-                console.log("Found stat data" + theData.top[i].name);
+                console.log("Found data for top processes!");
+                //console.log("Found stat data" + theData.top[i].name);
             };
             $("#topprocesses table tbody").html(topProcesseshtml);
             

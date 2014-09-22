@@ -44,7 +44,7 @@
             $('#timer').html(counttx);
         }
 		function drawChart(val) {
-            if(curServerCount < 51 || curServerCount > prevServerCount) {
+            //if(curServerCount < 51 || curServerCount > prevServerCount) {
                 // Create the data table.
                 chartdat = google.visualization.arrayToDataTable([
                     ['A', 'B'],
@@ -94,7 +94,7 @@
                     var chart2 = new google.visualization.PieChart(document.getElementById('diskChart' + val.id));
                     chart2.draw(chartdat2, chartopt2);
                 }
-            }
+            //}
 		}
 		
 		function uptime() {
