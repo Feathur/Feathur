@@ -39,23 +39,23 @@ class openvz {
 																$sServer = new Server($uServer);
 																$sOwner = new User($uUser);
 																$sTemplate = new Template($uTemplate);
-																
+
 																if($uIPAddressess > 0){
 																	$sIPCheck = VPS::check_ipspace($sServer->sId, $uIPAddresses);
 																	if(is_array($sIPCheck)){
 																		return $sIPCheck;
 																	}
 																}
-																
+
 																if(!is_array($sSSH)){
 																	if(empty($uHostname)){
 																		$uHostname = "vps.example.com";
 																	}
-																	
+
 																	if(empty($uNameserver)){
 																		$uNameserver = "8.8.8.8";
 																	}
-																	
+
 																	// VPS Database setup
 																	$sVPSId = Core::GetSetting('container_id');
 																	$sUpdate = Core::UpdateSetting('container_id', ($sVPSId->sValue + 1));
@@ -78,7 +78,7 @@ class openvz {
 																	$sVPS->uBandwidthLimit = $uBandwidthLimit;
 																	$sVPS->uIPv6 = $uIPv6Allowed;
 																	$sVPS->InsertIntoDatabase();
-																	
+
 																	if($uIPAddresses > 0){
 																		if($sBlocks = $database->CachedQuery("SELECT * FROM server_blocks WHERE `server_id` = :ServerId AND `ipv6` = 0", array('ServerId' => $sServer->sId))){
 																			foreach($sBlocks->data as $key => $value){
@@ -95,15 +95,15 @@ class openvz {
 																							$sCurrentIPs++;
 																						}
 																					}
-																				}																					
+																				}
 																			}
 																		}
 																		$sRequested["POST"]["IPList"] = $sIPList;
 																	}
-																	
+
 																	$sRequested["POST"]["VPS"] = $sVPS->sId;
 																	$sRequested["POST"]["IPList"] = $sIPList;
-																	
+
 																	if(!empty($sAPI)){
 																		return $sVPS->sId;
 																	}
@@ -131,7 +131,7 @@ class openvz {
 										}
 									} else {
 										return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the maximum inodes to create a VPS!");
-									}		
+									}
 								} else {
 									return $sArray = array("json" => 1, "type" => "caution", "result" => "You must input the maximum disk to create a VPS!");
 								}
@@ -153,8 +153,8 @@ class openvz {
 		} else {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Permissions invalid for selected action.");
 		}
-	}		
-														
+	}
+
 	public function openvz_create($sUser, $sRequested){
 		$sUserPermissions = $sUser->sPermissions;
 		if($sUserPermissions == 7){
@@ -166,14 +166,14 @@ class openvz {
 			$sIPList = $sRequested["POST"]["IPList"];
 			$sHighDisk = $sVPS->sDisk + 1;
 			$sCPUs = round((($sVPS->sCPULimit) / 100));
-			
+
 			$sTemplatePath = escapeshellarg($sTemplate->sPath);
-			
+
 			// Check to make sure the template is on the server and is within 5 MB of the target size.
 			$sCheckSynced = $sSSH->exec("cd /vz/template/cache/;ls -nl {$sTemplatePath} | awk '{print $5}'");
 			$sUpper = $sTemplate->sSize + 5242880;
 			$sLower = $sTemplate->sSize - 5242880;
-			if(strpos($sCheckSynced, 'No such file or directory') !== false) { 
+			if(strpos($sCheckSynced, 'No such file or directory') !== false) {
 				$sSync = true;
 			}
 
@@ -181,7 +181,7 @@ class openvz {
 				$sSync = true;
 				$sCleanup = $sSSH->exec("cd /vz/template/cache/;rm -rf {$sTemplatePath};");
 			}
-			
+
 			$sOSTemplate = str_replace(array(".tar.gz", ".tar.xz"), '', $sTemplatePath);
 			$sCommandList .= "vzctl create {$sVPS->sContainerId} --ostemplate {$sOSTemplate};";
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --onboot yes --save;";
@@ -197,7 +197,7 @@ class openvz {
 			$sCommandList .= "modprobe tun;vzctl set {$sVPS->sContainerId} --devnodes net/tun:rw --save;vzctl set {$sVPS->sContainerId} --devices c:10:200:rw --save;vzctl set {$sVPS->sContainerId} --capability net_admin:on --save;vzctl exec {$sVPS->sContainerId} mkdir -p /dev/net;vzctl exec {$sVPS->sContainerId} mknod /dev/net/tun c 10 200;";
 			$sCommandList .= "modprobe ip_tables ipt_nat ipt_helper ipt_REDIRECT ipt_TCPMSS ipt_LOG ipt_TOS iptable_nat ipt_MASQUERADE ipt_multiport xt_multiport ipt_state xt_state ipt_limit xt_limit ipt_recent xt_connlimit ipt_owner xt_owner iptable_nat ipt_DNAT iptable_nat ipt_REDIRECT ipt_length ipt_tcpmss iptable_mangle ipt_tos iptable_filter ipt_helper ipt_tos ipt_ttl ipt_SAME ipt_REJECT ipt_helper ipt_owner ipt_nat;";
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --iptables ipt_REJECT --iptables ipt_tos --iptables ipt_TOS --iptables ipt_LOG --iptables ip_conntrack --iptables ipt_limit --iptables ipt_multiport --iptables iptable_filter --iptables iptable_mangle --iptables ipt_TCPMSS --iptables ipt_tcpmss --iptables ipt_ttl --iptables ipt_length --iptables ipt_state --iptables iptable_nat --iptables ip_nat_ftp --save;";
-		
+
 			if(!empty($sPassword)){
 				$sCommandList .= "vzctl set {$sVPS->sContainerId} --userpasswd root:{$sPassword} --save;";
 			}
@@ -206,10 +206,10 @@ class openvz {
 					$sCommandList .= "vzctl set {$sVPS->sContainerId} --ipadd {$value['ip_address']} --save;";
 				}
 			}
-			
+
 			$sCommandList .= "vzctl stop {$sVPS->sContainerId};";
 			$sCommandList .= "vzctl start {$sVPS->sContainerId};";
-			
+
 			// If the template needs to be synced throw the build process in a screen and act as if the VPS is just rebuilding...
 			if($sSync === true){
 				$sVPS->sRebuilding = 1;
@@ -222,20 +222,20 @@ class openvz {
 				$sSave = VPS::save_vps_logs($sLog, $sVPS);
 				return $sArray = array("json" => 1, "type" => "success", "result" => "VPS has been created!", "reload" => 1, "vps" => $sVPS->sId);
 			}
-	
+
 			$sLog[] = array("command" => str_replace($sPassword, "obfuscated", $sCommandList), "result" => $sSSH->exec($sCommandList));
-		
+
 			$sSave = VPS::save_vps_logs($sLog, $sVPS);
 			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS has been created!", "reload" => 1, "vps" => $sVPS->sId);
 		} else {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Permissions invalid for selected action.");
 		}
 	}
-	
+
 	public function database_openvz_boot($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function openvz_boot($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
@@ -247,17 +247,17 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "VPS is disabled, contact support!");
 		} elseif(strpos($sLog[0]["result"], 'inode_hard_limit') !== false) {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "VPS is out of inodes, contact support!");
-		} elseif(strpos($sLog[0]["result"], 'Container start in progress...') !== false) { 
+		} elseif(strpos($sLog[0]["result"], 'Container start in progress...') !== false) {
 			return $sArray = array("json" => 1, "type" => "success", "result" => "VPS is currently starting up...");
 		} else {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured, contact support!");
 		}
 	}
-	
+
 	public function database_openvz_shutdown($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function openvz_shutdown($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
@@ -271,11 +271,11 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured, contact support!");
 		}
 	}
-	
+
 	public function database_openvz_reboot($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function openvz_reboot($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
@@ -293,11 +293,11 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured, contact support!");
 		}
 	}
-	
+
 	public function database_openvz_kill($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function openvz_kill($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
@@ -311,7 +311,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "An unknown error occured, contact support!");
 		}
 	}
-	
+
 	public function database_openvz_suspend($sUser, $sVPS, $sRequested){
 		$sUserPermissions = $sUser->sPermissions;
 		if($sUserPermissions == 7){
@@ -322,7 +322,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Permissions invalid for selected action.");
 		}
 	}
-	
+
 	public function openvz_suspend($sUser, $sVPS, $sRequested){
 		$sUserPermissions = $sUser->sPermissions;
 		if($sUserPermissions == 7){
@@ -336,7 +336,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "You might want to try a different profession.", "reload" => 1);
 		}
 	}
-	
+
 	public function database_openvz_unsuspend($sUser, $sVPS, $sRequested){
 		$sUserPermissions = $sUser->sPermissions;
 		if($sUserPermissions == 7){
@@ -347,7 +347,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Permissions invalid for selected action.");
 		}
 	}
-	
+
 	public function openvz_unsuspend($sUser, $sVPS, $sRequested){
 		$sUserPermissions = $sUser->sPermissions;
 		if($sUserPermissions == 7){
@@ -361,11 +361,11 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "You might want to try a different profession.", "reload" => 1);
 		}
 	}
-	
+
 	public function database_openvz_password($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function openvz_password($sUser, $sVPS, $sRequested){
 		if(!empty($sRequested["POST"]["password"])){
 			$sPassword = escapeshellarg($sRequested["POST"]["password"]);
@@ -378,7 +378,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Password can not be blank!");
 		}
 	}
-	
+
 	public function database_openvz_primaryip($sUser, $sVPS, $sRequested){
 		$sIP = new IP($sRequested["GET"]["ip"]);
 		if($sIP->sVPSId == $sVPS->sId){
@@ -389,11 +389,11 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "That IP does not belong to you.");
 		}
 	}
-	
+
 	public function openvz_primaryip($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function database_openvz_getrdns($sUser, $sVPS, $sRequested){
 		$sIP = new IP($sRequested["GET"]["ip"]);
 		if($sIP->sVPSId == $sVPS->sId){
@@ -402,11 +402,11 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "That IP does not belong to you.");
 		}
 	}
-	
+
 	public function openvz_getrdns($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function database_openvz_setrdns($sUser, $sVPS, $sRequested){
 		$sIP = new IP($sRequested["GET"]["ip"]);
 		if($sIP->sVPSId == $sVPS->sId){
@@ -415,11 +415,11 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "That IP does not belong to you.");
 		}
 	}
-	
+
 	public function openvz_setrdns($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function database_openvz_tuntap($sUser, $sVPS, $sRequested){
 		if(is_numeric($sRequested["GET"]["setting"])){
 			$sVPS->uTunTap = $sRequested["GET"]["setting"];
@@ -429,7 +429,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Invalid setting modifier.");
 		}
 	}
-	
+
 	public function openvz_tuntap($sUser, $sVPS, $sRequested){
 		$sSetting = $sRequested["GET"]["setting"];
 		if($sSetting == 0){
@@ -444,7 +444,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Invalid setting modifier.");
 		}
 	}
-	
+
 	public function database_openvz_ppp($sUser, $sVPS, $sRequested){
 		if(is_numeric($sRequested["GET"]["setting"])){
 			$sVPS->uPPP = $sRequested["GET"]["setting"];
@@ -454,7 +454,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Invalid setting modifier.");
 		}
 	}
-	
+
 	public function openvz_ppp($sUser, $sVPS, $sRequested){
 		$sSetting = $sRequested["GET"]["setting"];
 		if($sSetting == 0){
@@ -469,7 +469,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Invalid setting modifier.");
 		}
 	}
-	
+
 	public function database_openvz_iptables($sUser, $sVPS, $sRequested){
 		if(is_numeric($sRequested["GET"]["setting"])){
 			$sVPS->uIPTables = $sRequested["GET"]["setting"];
@@ -479,7 +479,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Invalid setting modifier.");
 		}
 	}
-	
+
 	public function openvz_iptables($sUser, $sVPS, $sRequested){
 		$sSetting = $sRequested["GET"]["setting"];
 		if($sSetting == 0){
@@ -495,7 +495,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Invalid setting modifier.");
 		}
 	}
-	
+
 	public function database_openvz_hostname($sUser, $sVPS, $sRequested){
 		$sHostname = preg_replace('/[^A-Za-z0-9-.]/', '', $sRequested["GET"]["hostname"]);
 		if(!empty($sHostname)){
@@ -506,7 +506,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Hostname can not be blank!");
 		}
 	}
-	
+
 	public function openvz_hostname($sUser, $sVPS, $sRequested){
 		$sHostname = escapeshellarg($sVPS->sHostname);
 		$sServer = new Server($sVPS->sServerId);
@@ -515,20 +515,20 @@ class openvz {
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
 		return $sArray = array("json" => 1, "type" => "success", "result" => "Hostname has been updated successfully.");
 	}
-	
+
 	public function database_openvz_cancelrebuild($sUser, $sVPS, $sRequested){
 		$sVPS->uRebuilding = 0;
 		$sVPS->InsertIntoDatabase();
 		return true;
 	}
-	
+
 	public function openvz_cancelrebuild($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
 		$sCancel = $sSSH->exec('for session in $(screen -ls | grep \''.$sVPS->sContainerId.'\'); do screen -S "${session}" -X quit; done;rm -rf /vz/feathur_tmp/*{$sVPS->sContainerId}*;');
 		return $sArray = array("json" => 1, "type" => "success", "reload" => 1, "result" => "Rebuild Cancelled.");
 	}
-	
+
 	public function database_openvz_rebuild($sUser, $sVPS, $sRequested){
 		if(is_numeric($sRequested["GET"]["template"])){
 			$sVPS->uTemplateId = $sRequested["GET"]["template"];
@@ -539,7 +539,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Invalid template selected, please try again.");
 		}
 	}
-	
+
 	public function openvz_rebuild($sUser, $sVPS, $sRequested){
 		global $database;
 		global $locale;
@@ -547,17 +547,17 @@ class openvz {
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
 		$sOpenVZTemplate = new Template($sVPS->sTemplateId);
-		
+
 		$sTemplatePath = escapeshellarg($sOpenVZTemplate->sPath);
-		
+
 		// Make sure the marker for VPS rebuild finished is removed.
 		$sCommandList .= "rm -rf /vz/feathur_tmp/*{$sVPS->sContainerId}*;";
-			
+
 		// Check to make sure the template is on the server and is within 5 MB of the target size.
 		$sCheckSynced = $sSSH->exec("cd /vz/template/cache/;ls -nl {$sTemplatePath} | awk '{print $5}'");
 		$sUpper = $sOpenVZTemplate->sSize + 5242880;
 		$sLower = $sOpenVZTemplate->sSize - 5242880;
-		if(strpos($sCheckSynced, 'No such file or directory') !== false) { 
+		if(strpos($sCheckSynced, 'No such file or directory') !== false) {
 			$sSync = true;
 		}
 
@@ -565,12 +565,12 @@ class openvz {
 			$sSync = true;
 			$sCleanup = $sSSH->exec("cd /vz/template/cache/;rm -rf {$sTemplatePath};");
 		}
-		
+
 		if($sSync === true){
 			$sTemplateURL = escapeshellarg($sOpenVZTemplate->sURL);
 			$sCommandList .= "cd /vz/template/cache/;wget -O {$sTemplatePath} {$sTemplateURL};";
 		}
-		
+
 		// Remove and setup VPS again.
 		$sHighDisk = $sVPS->sDisk + 1;
 		$sCPUs = round((($sVPS->sCPULimit) / 100));
@@ -592,7 +592,7 @@ class openvz {
 		$sCommandList .= "vzctl set {$sVPS->sContainerId} --nameserver {$sVPS->sNameserver} --save;";
 		$sCommandList .= "vzctl set {$sVPS->sContainerId} --diskspace {$sVPS->sDisk}G:{$sHighDisk}G --save;";
 		$sCommandList .= "vzctl set {$sVPS->sContainerId} --hostname {$sVPS->sHostname} --save;";
-		
+
 		$sIPs = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `vps_id` = :VPSId", array('VPSId' => $sVPS->sId));
 		foreach($sIPs->data as $key => $value){
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --ipadd {$value['ip_address']} --save;";
@@ -602,7 +602,7 @@ class openvz {
 			$sPassword = escapeshellarg($sRequested["POST"]["password"]);
 			$sCommandList .= "vzctl set {$sVPS->sContainerId} --userpasswd root:{$sPassword} --save;";
 		}
-		
+
 		$sCommandList .= "vzctl stop {$sVPS->sContainerId};";
 		$sCommandList .= "vzctl start {$sVPS->sContainerId};";
 		$sCommandList .= "sleep 5;mkdir /vz/feathur_tmp/;echo \"{$sVPS->sId}\" > /vz/feathur_tmp/{$sVPS->sContainerId}.finished";
@@ -612,7 +612,7 @@ class openvz {
 		$sUserView .= Templater::AdvancedParse($sTemplate->sValue.'/rebuild', $locale->strings, array("VPS" => array("data" => $sVPS->uData)));
 		return $sArray = array("json" => 1, "type" => "success", "result" => $sUserView);
 	}
-	
+
 	public function database_openvz_rebuildcheck($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
@@ -626,11 +626,11 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "pending", "reload" => 0, "result" => "Rebuild Pending.");
 		}
 	}
-	
+
 	public function database_openvz_console($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function openvz_console($sUser, $sVPS, $sRequested){
 		$sServer = new Server($sVPS->sServerId);
 		$sSSH = Server::server_connect($sServer);
@@ -639,11 +639,11 @@ class openvz {
 		$sSave = VPS::save_vps_logs($sLog, $sVPS);
 		return $sArray = array("result" => nl2br($sLog[0]["result"]), "type" => "success", "json" => 1);
 	}
-	
+
 	public function openvz_rebuildcheck($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function database_openvz_update($sUser, $sVPS, $sRequested){
 		$sUserPermissions = $sUser->sPermissions;
 		if($sUserPermissions == 7){
@@ -697,7 +697,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.");
 		}
 	}
-	
+
 	public function openvz_update($sUser, $sVPS, $sRequested){
 		$sUserPermissions = $sUser->sPermissions;
 		if($sUserPermissions == 7){
@@ -705,7 +705,7 @@ class openvz {
 			$sSSH = Server::server_connect($sServer);
 			$sHighDisk = $sVPS->sDisk + 1;
 			$sCPUs = round((($sVPS->sCPULimit) / 100));
-			
+
 			$sLog[] = array("command" => "vzctl set {$sVPS->sContainerId} --ram {$sVPS->sRAM}M --swap {$sVPS->sSWAP}M --save;", "result" => $sSSH->exec("vzctl set {$sVPS->sContainerId} --ram {$sVPS->sRAM}M --swap {$sVPS->sSWAP}M --save;"));
 			$sLog[] = array("command" => "vzctl set {$sVPS->sContainerId} --cpuunits {$sVPS->sCPUUnits} --save;", "result" => $sSSH->exec("vzctl set {$sVPS->sContainerId} --cpuunits {$sVPS->sCPUUnits} --save;"));
 			$sLog[] = array("command" => "vzctl set {$sVPS->sContainerId} --cpulimit {$sVPS->sCPULimit} --cpus {$sCPUs} --save;", "result" => $sSSH->exec("vzctl set {$sVPS->sContainerId} --cpulimit {$sVPS->sCPULimit} --cpus {$sCPUs} --save;"));
@@ -717,7 +717,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.");
 		}
 	}
-	
+
 	public function database_openvz_addip($sUser, $sVPS, $sRequested){
 		$sUserPermissions = $sUser->sPermissions;
 		if($sUserPermissions == 7){
@@ -732,10 +732,10 @@ class openvz {
 								if((empty($sVPS->sPrimaryIP)) || (!$sData = $database->CachedQuery("SELECT * FROM ipaddresses WHERE `vps_id` = :VPSId AND `ip_address` = :PrimaryIP", array('VPSId' => $sVPS->sId, 'PrimaryIP' => $sVPS->sPrimaryIP)))){
 									$sVPS->uPrimaryIP = $subvalue["ip_address"];
 									$sVPS->InsertIntoDatabase();
-								}	
+								}
 								$sCurrentIPs++;
 							}
-						}																					
+						}
 					}
 				}
 				if(empty($sCurrentIPs)){
@@ -749,7 +749,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.");
 		}
 	}
-	
+
 	public function openvz_addip($sUser, $sVPS, $sRequested){
 		$sUserPermissions = $sUser->sPermissions;
 		if($sUserPermissions == 7){
@@ -768,7 +768,7 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.");
 		}
 	}
-	
+
 	public function database_openvz_removeip($sUser, $sVPS, $sRequested){
 		$sUserPermissions = $sUser->sPermissions;
 		if($sUserPermissions == 7){
@@ -792,11 +792,11 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.");
 		}
 	}
-	
+
 	public function openvz_removeip($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function database_openvz_assignip($sUser, $sVPS, $sRequested){
 		$sUserPermissions = $sUser->sPermissions;
 		$sVPSUser = new User($sVPS->sUserId);
@@ -814,7 +814,7 @@ class openvz {
 					$sTotalIPs++;
 				}
 			}
-				
+
 			$sAvailableIPs = count($sIPList);
 			if($sAvailableIPs == 1){
 				$sUpdate = $database->CachedQuery("UPDATE ipaddresses SET `vps_id` = :VPSId WHERE `id` = :Id", array('VPSId' => $sVPS->sId, 'Id' => $sIPList[0]["id"]));
@@ -866,11 +866,11 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.");
 		}
 	}
-	
+
 	public function openvz_assignip($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function database_openvz_terminate($sUser, $sVPS, $sRequested){
 		global $database;
 		$sUserPermissions = $sUser->sPermissions;
@@ -891,11 +891,11 @@ class openvz {
 			return $sArray = array("json" => 1, "type" => "error", "result" => "Insufficient permissions for this action.", "reload" => 1);
 		}
 	}
-	
+
 	public function openvz_terminate($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function database_openvz_requestblock($sUser, $sVPS, $sRequested){
 		global $database;
 		$sBlockCheck = Block::vps_ipv6_block($sVPS);
@@ -904,7 +904,7 @@ class openvz {
 				foreach($sBlockLookup->data as $sRow){
 					$sBlock = new Block($sRow["block_id"]);
 					$sCurrent = $sBlock->sCurrent;
-					
+
 					// If the admin has elected to assign a number of IPs to the VPS.
 					if(ctype_digit($sBlock->sPerUser)){
 							$sUserBlock = new UserIPv6Block(0);
@@ -937,11 +937,11 @@ class openvz {
 		}
 		return $sArray = array("json" => 1, "type" => "error", "result" => "You already have a block.", "reload" => 1);
 	}
-	
+
 	public function openvz_requestblock($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function database_openvz_addipv6($sUser, $sVPS, $sRequested){
 		$sUserBlock = new UserIPv6Block($sRequested["GET"]["block"]);
 		if($sUserBlock->sVPSId == $sVPS->sId){
@@ -952,14 +952,14 @@ class openvz {
 			$sIPv6->uBlockId = $sBlock->sId;
 			$sIPv6->uUserBlockId = $sUserBlock->sId;
 			$sIPv6->InsertIntoDatabase();
-			
+
 			$sUserBlock->uCurrent = $sUserBlock->sCurrent + 1;
 			$sUserBlock->InsertIntoDatabase();
 			return true;
 		}
 		return $sArray = array("json" => 1, "type" => "error", "result" => "Invalid block, please try again.", "reload" => 1);
 	}
-	
+
 	public function openvz_addipv6($sUser, $sVPS, $sRequested){
 		global $database;
 		$sBlockSize = array("/48" => 4,
@@ -992,11 +992,11 @@ class openvz {
 		}
 		return $sArray = array("json" => 1, "type" => "success", "result" => "No IPv6 were assigned to the VPS.", "reload" => 1);
 	}
-	
+
 	public function database_openvz_statistics($sUser, $sVPS, $sRequested){
 		return true;
 	}
-	
+
 	public function openvz_statistics($sUser, $sVPS, $sRequested){
 		global $sTemplate;
 		global $database;
@@ -1027,22 +1027,22 @@ class openvz {
 			}
 			$sDiskUsed = $sDiskUsed / 1048576;
 			$sDiskTotal = $sVPS->sDisk;
-			$sCPU = explode(' ', $sSSH->exec("vzctl exec {$sVPS->sContainerId} cat /proc/loadavg"));	
-			$sTop = explode("\n", $sSSH->exec('ps -eo pcpu,pmem,command --sort=-pcpu | head -6'));
+			$sCPU = explode(' ', $sSSH->exec("vzctl exec {$sVPS->sContainerId} cat /proc/loadavg"));
+			$sTop = explode("\n", $sSSH->exec("vzctl exec {$sVPS->sContainerId} ps -eo pcpu,pmem,command --sort=-pcpu | head -6"));
 			$sTopReturn = array();
 			$sLastElement = end($sTop);
 			foreach($sTop as $sProcess){
-				
+
 				// This command is not friendly. We have to do a lot to clean it up.
 				if(!isset($first)){
 					$first = 0;
 					continue;
 				}
-				
+
 				if($sProcess == $sLastElement){
 					continue;
 				}
-				
+
 				$sProcess = preg_replace("/\s+/", " ", $sProcess);
 				$sProcess = explode(' ', $sProcess);
 				// In theory this could be done with array_slice, but array slice appears to be inconsistent in testing.
@@ -1053,31 +1053,31 @@ class openvz {
 				$sTopReturn[] = array("name" => $sProcessName, "cpu" => $sProcessCPU, "ram" => $sProcessRAM);
 				unset($sProcess);
 			}
-			
+
 			if($sUsedRAM > 0){
 				$sUsedRAM = round(($sUsedRAM / 1024), 0);
 			}
-		
+
 			if($sTotalRAM > 0){
 				 $sTotalRAM = round(($sTotalRAM / 1024), 0);
 			}
-		
+
 			if(($sUsedRAM > 0) && ($sTotalRAM > 0)){
 				$sPercentRAM = round((100 / $sTotalRAM) * $sUsedRAM, 0);
 			} else {
 				$sPercentRAM = 0;
 			}
-		
+
 			if($sUsedSWAP > 0){
 				$sUsedSWAP = round(($sUsedSWAP / 1024), 0);
 			}
-		
+
 			if(($sUsedSWAP > 0) && ($sTotalSWAP > 0)){
 				$sPercentSWAP = round((100 / $sTotalSWAP) * $sUsedSWAP, 0);
 			} else {
 				$sPercentSWAP = 0;
 			}
-		
+
 			if(($sDiskUsed > 0) && ($sDiskTotal > 0)){
 				$sPercentDisk = round((100 / $sDiskTotal) * $sDiskUsed, 0);
 			} else {
@@ -1089,26 +1089,26 @@ class openvz {
 			} else {
 				$sPercentCPU = 0;
 			}
-		
+
 			if($sVPS->sCPULimit > 0){
 				$sCores = round(($sVPS->sCPULimit / 100), 0);
 			} else {
 				$sCores = 0;
 			}
-		
+
 			if($sDiskUsed < 1){
 				$sDiskUsed = round($sDiskUsed, 2);
 			} else {
 				$sDiskUsed = round($sDiskUsed, 0);
 			}
-		
+
 			if($sTemplates = $database->CachedQuery("SELECT * FROM templates WHERE `id` = :TemplateId", array('TemplateId' => $sVPS->sTemplateId))){
 				$sVPSTemplate = new Template($sVPS->sTemplateId);
 				$sTemplateName = $sVPSTemplate->sName;
 			} else {
 				$sTemplateName = "N/A";
 			}
-		
+
 			if($sVPS->sBandwidthUsage > 0){
 				$sBandwidthUsage = FormatBytes($sVPS->sBandwidthUsage, 2);
 			} else {
@@ -1122,21 +1122,21 @@ class openvz {
 			} else {
 				$sPercentBandwidth = 0;
 			}
-			
+
 			$sStatistics = array("info" => array("uptime" => ConvertTime($sUptime[0]),
-					"used_ram" => $sUsedRAM, 
-					"total_ram" => $sTotalRAM, 
+					"used_ram" => $sUsedRAM,
+					"total_ram" => $sTotalRAM,
 					"percent_ram" => $sPercentRAM,
-					"used_swap" => $sUsedSWAP, 
-					"total_swap" => $sTotalSWAP, 
+					"used_swap" => $sUsedSWAP,
+					"total_swap" => $sTotalSWAP,
 					"percent_swap" => $sPercentSWAP,
-					"used_disk" => $sDiskUsed, 
-					"total_disk" => round($sDiskTotal, 0), 
+					"used_disk" => $sDiskUsed,
+					"total_disk" => round($sDiskTotal, 0),
 					"percent_disk" => $sPercentDisk,
-					"total_cpu" => $sVPS->sCPULimit, 
+					"total_cpu" => $sVPS->sCPULimit,
 					"total_cores" => $sCores,
 					"used_cores" => $sCPU[0],
-					"used_cpu" => ($sCPU[0] * 100), 
+					"used_cpu" => ($sCPU[0] * 100),
 					"percent_cpu" => $sPercentCPU,
 					"load_average" => "$sCPU[0] $sCPU[1] $sCPU[2]",
 					"bandwidth_usage" => $sBandwidthUsage,
@@ -1147,7 +1147,7 @@ class openvz {
 					"primary_ip" => $sVPS->sPrimaryIP,
 					"top" => $sTopReturn,
 					));
-			
+
 			$sContent = Templater::AdvancedParse($sTemplate->sValue.'/'.$sVPS->sType.'.statistics', $locale->strings, array("Statistics" => $sStatistics));
 			return $sArray = array("json" => 1, "type" => "status", "result" => "online", "content" => $sContent, "statistics" => $sStatistics, "hostname" => $sVPS->sHostname);
 		}
