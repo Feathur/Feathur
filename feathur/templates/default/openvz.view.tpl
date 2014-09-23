@@ -5,7 +5,7 @@
     var ramTime = [];
     var ramUsage = [];
     var topProcesseshtml = "";
-    
+
     var offlineData = {load_average:"N/A",uptime:"N/A",hostname:"Use the returned \"hostname\" variable instead!",primary_ip:"N/A",operating_system:"N/A",percent_cpu:0,percent_ram:0,percent_swap:0,percent_disk:0,percent_bandwidth:0,top:[{"name":"N/A","cpu":"N/A","ram":"N/A"},{"name":"N/A","cpu":"N/A","ram":"N/A"},{"name":"N/A","cpu":"N/A","ram":"N/A"},{"name":"N/A","cpu":"N/A","ram":"N/A"},{"name":"N/A","cpu":"N/A","ram":"N/A"},]};
 
     //fills the area chart arrays with 50 blank pieces of data
@@ -16,24 +16,24 @@
         ramTime.push('N/A');
         ramUsage.push(0);
     }
-    
+
     function getlength(number) {
         return number.toString().length;
     }
-    
+
     google.load("visualization", "1", {packages:["corechart"]});
     google.setOnLoadCallback(drawChart);
-    
+
     function drawChart() {
         var dataCPU = new google.visualization.DataTable();
         var dataRAM = new google.visualization.DataTable();
-        
+
         dataCPU.addColumn('string', 'time');
         dataCPU.addColumn('number', 'Usage');
-        
+
         dataRAM.addColumn('string', 'time');
         dataRAM.addColumn('number', 'Usage');
-        
+
         //Add the data to the chart to be drawn
         for(i = 0; i< cpuTime.length; i++) {
             dataCPU.addRow([cpuTime[i], cpuUsage[i]]);
@@ -41,7 +41,7 @@
         for(i = 0; i< ramTime.length; i++) {
             dataRAM.addRow([ramTime[i], ramUsage[i]]);
         }
-        
+
         //Chart options
         var optionsCPU = {
             areaOpacity: '1',
@@ -83,29 +83,29 @@
             tooltip: { isHtml: true },
             colors:['#f5c802']
         };
-        
+
         //Set the charts' data sources
         var chartCPU = new google.visualization.AreaChart(document.getElementById('chart_cpu'));
         var chartRAM = new google.visualization.AreaChart(document.getElementById('chart_ram'));
-        
+
         //Draw the charts
         chartCPU.draw(dataCPU, optionsCPU);
         chartRAM.draw(dataRAM, optionsRAM);
     }
-    
+
 	$(document).ready(function() {
-    
+
         $("#sidebar2").css("display","block");
-        
+
         //creates sidebar html with blank values
         var sidebarhtml = '<div class="sb-title"><div class="loadingtxt"></div></div><div class="sb-lightbg"><div id="title-cpu" class="sb-progresstitle">CPU Load:<span>%</span></div><div class="progressContain"><div id="progress-cpu" class="progressbar"><div id="progress-cpu-overlay" class="progress-overlay"></div></div></div><div id="title-ram" class="sb-progresstitle">RAM Usage:<span>%</span></div><div class="progressContain"><div id="progress-ram" class="progressbar"><div id="progress-ram-overlay" class="progress-overlay"></div></div></div><div id="title-swap" class="sb-progresstitle">SWAP Usage:<span>%</span></div><div class="progressContain"><div id="progress-swap" class="progressbar"><div id="progress-swap-overlay" class="progress-overlay"></div></div></div><div id="title-disk" class="sb-progresstitle">Disk Usage:<span>%</span></div><div class="progressContain"><div id="progress-disk" class="progressbar"><div id="progress-disk-overlay" class="progress-overlay"></div></div></div><div id="title-bandwidth" class="sb-progresstitle">Bandwidth:<span>%</span></div><div class="progressContain"><div id="progress-bandwidth" class="progressbar"><div id="progress-bandwidth-overlay" class="progress-overlay"></div></div></div></div><br><div class="sb-smalltitle">Top Processes</div><div id="topprocesses"><table class="small-striped"><thead><tr><td>Name</td><td width="20%">CPU</td><td width="20%">RAM</td></tr></thead><tbody><tr><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td></tr></tbody></table></div><br><div class="sb-smalltitle">CPU</div><div id="chart_cpu" style="height: 80px;"></div><br><div class="sb-smalltitle">RAM</div><div id="chart_ram" style="height: 80px;"></div>';
-        
+
         <!-- If the vps is NOT suspended -->
         {%if vps[suspended] == 0}
         var loadingtxtTimer = 1;
         var normalLoading = "Loading.";
         loading(1);
-        
+
         $(".loadingtxt").html(normalLoading);
         setInterval(function() {
             $(".loadingtxt").append(".");
@@ -116,18 +116,18 @@
                 loadingtxtTimer = 0;
             }
         }, 500);
-        
+
         {%/if}
         <!-- /if -->
-        
+
         <!-- If the vps is suspended -->
         {%if vps[suspended] != 0}
         //creates sidebar html with blank values
         var sidebarhtml = '<div class="sb-title"><div class="statuscoloroffline"></div> {%?vps[hostname]}</div><div class="sb-lightbg"><div id="title-cpu" class="sb-progresstitle">CPU Load:<span>%</span></div><div class="progressContain"><div id="progress-cpu" class="progressbar"><div id="progress-cpu-overlay" class="progress-overlay"></div></div></div><div id="title-ram" class="sb-progresstitle">RAM Usage:<span>%</span></div><div class="progressContain"><div id="progress-ram" class="progressbar"><div id="progress-ram-overlay" class="progress-overlay"></div></div></div><div id="title-swap" class="sb-progresstitle">SWAP Usage:<span>%</span></div><div class="progressContain"><div id="progress-swap" class="progressbar"><div id="progress-swap-overlay" class="progress-overlay"></div></div></div><div id="title-disk" class="sb-progresstitle">Disk Usage:<span>%</span></div><div class="progressContain"><div id="progress-disk" class="progressbar"><div id="progress-disk-overlay" class="progress-overlay"></div></div></div><div id="title-bandwidth" class="sb-progresstitle">Bandwidth:<span>%</span></div><div class="progressContain"><div id="progress-bandwidth" class="progressbar"><div id="progress-bandwidth-overlay" class="progress-overlay"></div></div></div></div><br><div class="sb-smalltitle">Top Processes</div><div id="topprocesses"><table class="small-striped"><thead><tr><td>Name</td><td width="20%">CPU</td><td width="20%">RAM</td></tr></thead><tbody><tr><td>Process</td><td>CPU</td><td>RAM</td></tr><tr><td>Process</td><td>CPU</td><td>RAM</td></tr><tr><td>Process</td><td>CPU</td><td>RAM</td></tr><tr><td>Process</td><td>CPU</td><td>RAM</td></tr><tr><td>Process</td><td>CPU</td><td>RAM</td></tr></tbody></table></div><br><div class="sb-smalltitle">CPU</div><div id="chart_cpu" style="height: 80px;"></div><br><div class="sb-smalltitle">RAM</div><div id="chart_ram" style="height: 80px;"></div>';
-        
+
         $(".loadingtxt").html("Unavailable");
         $("#vpsStatus").html("Suspended");
-        
+
         //Progress bar text percentages
         $(".vpsStat:nth-child(1) span").html("Suspended");
         $(".vpsStat:nth-child(1)").removeClass("online, offline").addClass("offline");
@@ -136,11 +136,11 @@
         $("#title-swap span, .vpsStat:nth-child(4) span").html("N/A");
         $("#title-disk span, .vpsStat:nth-child(5) span").html("N/A");
         $("#title-bandwidth span, .vpsStat:nth-child(6) span").html("N/A");
-        
+
         {%/if}
         <!-- /if -->
         $("#sidebar2").html(sidebarhtml);
-    
+
         var getBgColor = function(percent){
             if(percent <= 50)
             {
@@ -162,7 +162,7 @@
                 return "rgb(255, 0, 0)";//red
             }
         }
-        
+
         {%if vps[suspended] == 0}
         var updateAllStats = function(theData, hostName){
             //All stats with html that needs to be updated should be updated here.
@@ -171,10 +171,10 @@
             $("#stat-hostname td.info").html(hostName);
             $("#stat-primaryIP td.info").html(theData.primary_ip);
             $("#stat-operatingSystem td.info").html(theData.operating_system);
-            
+
             //Sidebar title (server type and address)
             $(".sb-title").html("<div class='statuscolor"+ ((theData.uptime != "N/A") ? "online" : "offline") +"'></div>VPS ("+hostName+")");
-            
+
             //Progress bar text percentages
             $(".vpsStat:nth-child(1) span").html(((theData.uptime != "N/A") ? "Online" : "Offline"));
             $(".vpsStat:nth-child(1)").removeClass("online, offline").addClass(((theData.uptime != "N/A") ? "online" : "offline"));
@@ -183,35 +183,40 @@
             $("#title-swap span, .vpsStat:nth-child(4) span").html(theData.percent_swap+"%");
             $("#title-disk span, .vpsStat:nth-child(5) span").html(theData.percent_disk+"%");
             $("#title-bandwidth span, .vpsStat:nth-child(6) span").html(theData.percent_bandwidth+"%");
-            
+
             //Progress bars
             $("#progress-cpu").css("width",theData.percent_cpu+"%");
+            $("#progress-cpu").css("max-width","100%");
             $("#progress-ram").css("width",theData.percent_ram+"%");
+            $("#progress-ram").css("max-width","100%");
             $("#progress-swap").css("width",theData.percent_swap+"%");
+            $("#progress-swap").css("max-width","100%");
             $("#progress-disk").css("width",theData.percent_disk+"%");
+            $("#progress-disk").css("max-width","100%");
             $("#progress-bandwidth").css("width",theData.percent_bandwidth+"%");
-            
+            $("#progress-bandwidth").css("max-width","100%");
+
             //Progress bar colors
             $("#progress-cpu-overlay").css("background",getBgColor(theData.percent_cpu));
             $("#progress-ram-overlay").css("background",getBgColor(theData.percent_ram));
             $("#progress-swap-overlay").css("background",getBgColor(theData.percent_swap));
             $("#progress-disk-overlay").css("background",getBgColor(theData.percent_disk));
             $("#progress-bandwidth-overlay").css("background",getBgColor(theData.percent_bandwidth));
-            
+
             //Area Charts
             var date = new Date;
             var second = date.getSeconds();
             var minute = date.getMinutes();
             var hour = date.getHours();
-            
+
             //Removes the earliest entry of the charts
             cpuTime.shift();
             cpuUsage.shift();
             ramTime.shift();
             ramUsage.shift();
-            
+
             topProcesseshtml = "";
-            
+
             for(i = 0; i < theData.top.length; i++){
                 var index = i + 1;
                 topProcesseshtml += "<tr><td>"+theData.top[i].name+"</td><td>"+theData.top[i].cpu+"</td><td>"+theData.top[i].ram+"</td></tr>";
@@ -219,17 +224,17 @@
                 //console.log("Found stat data" + theData.top[i].name);
             };
             $("#topprocesses table tbody").html(topProcesseshtml);
-            
+
             //Just makes the time somewhat pretty
             var timeformat = ":" + ((getlength(minute) == 1) ? "0" : "") + minute + ":" + ((getlength(second) == 1) ? "0" : "") + second;
             var time = ((hour < 12 || hour == 0) ?  hour + timeformat + " AM" : (hour % 12) + timeformat + " PM");
-            
+
             cpuTime.push(time);
             ramTime.push(time);
-            
+
             cpuUsage.push(theData.percent_cpu);
             ramUsage.push(theData.percent_ram);
-            
+
             drawChart();
         };
         var retryTimeout = 0;
@@ -278,7 +283,7 @@
 		setInterval(uptime, 10000);
 		uptime();
         {%/if}
-        
+
         $(".GenericAction").click(function(e) {
 			loading(1);
 			var action = $(this).attr('value');
@@ -292,7 +297,7 @@
 				}
 			});
 		});
-        
+
 		$("#ChangePassword").click(function(e) {
             e.preventDefault();
 			loading(1);
@@ -344,7 +349,7 @@
 					loading(1)
 					$.getJSON("view.php?id={%?vps[id]}&action=requestblock",function(result){
                         loading(0);
-						$('#IPv6Notice').html('<div class="alert ' + result.type + 'box">' + result.result + '</div>');  
+						$('#IPv6Notice').html('<div class="alert ' + result.type + 'box">' + result.result + '</div>');
 						if(result.reload == 1){
 							location.reload();
 						}
@@ -358,7 +363,7 @@
 					loading(1);
 					$.getJSON("view.php?id={%?vps[id]}&action=addipv6&block=" + blockid,function(result){
                         loading(0);
-						$('#IPv6Notice').html('<div class="alert ' + result.type + 'box">' + result.result + '</div>');  
+						$('#IPv6Notice').html('<div class="alert ' + result.type + 'box">' + result.result + '</div>');
 						if(result.reload == 1){
 							location.reload();
 						}
@@ -588,7 +593,7 @@
         <div class="tab nth btn6" onclick="showCon(6)"><span>Console</span><i class="fa fa-desktop"></i></div>
         {%if UserPermissions == 7}<div class="tab nth btn7" onclick="showCon(7)"><span>Admin</span><i class="fa fa-key"></i></div>{%/if}
     </div>
-      
+
     <div id="mobileVPSStats">
         <div class="vpsStat pure-u-1-2">Server <span></span></div>
         <div class="vpsStat pure-u-1-2">CPU Load: <span></span></div>
@@ -597,7 +602,7 @@
         <div class="vpsStat pure-u-1-2">Disk Usage: <span></span></div>
         <div class="vpsStat pure-u-1-2">Bandwidth: <span></span></div>
     </div>
-      
+
     <div id="tabConWrap">
         <div id="tabCon" class="con1">
             <div id="tabConTxt" class="noBorder">
@@ -666,7 +671,7 @@
                 </div>
             </div>
          </div>
-         
+
          <div id="tabCon" class="con2" style="display: none">
             <div id="tabConTxt" class="whitebox">
 				<div id="SettingsNotice" class="pure-u-1"></div>
@@ -677,7 +682,7 @@
                             <input id="password" type="password" name="password" style="margin-right: 10px;" class="pure-u-sm-1 pure-u-lg-1-2">
                             <button class="pure-button button-large pure-button-primary" id="ChangePassword" style="margin-top: 4px;">Change Password</button>
                         </div>
-                        
+
                         <br>
                         <div class="pure-control-group">
                             <label for="SelectedIP">Primary IP:</label>
@@ -690,14 +695,14 @@
                             </select>
                             <button class="pure-button pure-button-primary button-large" id="ChangePrimaryIP" style="margin-top: 4px;">Change Primary IP</button>
                         </div>
-                        
+
                         <br>
                         <div class="pure-control-group">
                             <label for="Hostname">Hostname:</label>
                             <input id="Hostname" type="text" name="Hostname" value="{%?vps[hostname]}" style="margin-right: 10px;" class="pure-u-sm-1 pure-u-lg-1-2"/>
                             <button class="pure-button pure-button-primary button-large" id="ChangeHostname" style="margin-top: 4px;">Change Hostname</button>
                         </div>
-                        
+
                         <br>
                         <div class="pure-control-group pure-g">
                             <fieldset>
@@ -735,7 +740,7 @@
                             {%if isempty|vps[iptables] == true}0{%/if}
                             {%if isempty|vps[iptables] == false}1{%/if}
                         </div>
-                    
+
                         <div class="pure-control-group" style="display:block;">
                             <div class="pure-u-1 nofluid">
                                 <div id="TunTapButton" class="pure-button button-inline button-xlarge button-{%if isempty|vps[iptables] == true}green{%/if}{%if isempty|vps[iptables] == false}red{%/if}">
@@ -766,7 +771,7 @@
                 </form>
             </div>
          </div>
-         
+
          <div id="tabCon" class="con3" style="display: none">
             <div id="tabConTxt" class="whitebox">
             {%if vps[ipv6] == 1}
@@ -833,12 +838,12 @@
 								{%/if}
                             </select>
                         </div>
-                        
+
                         <div class="pure-control-group">
                             <label for="RebuildPassword">New Root Password:</label>
                             <input id="RebuildPassword" type="password" name="password" style="min-width:200px;">
                         </div>
-                        
+
                         <div class="pure-controls" style="margin:0;">
                             <div class="formnote">
                                 <label for="VerifyRebuild" class="pure-checkbox">
@@ -862,20 +867,20 @@
                 <div class="whitebox">
                     <div class="pure-u-1">
                         <div style="height: 280px;background: #0c161c;color: #FFF;overflow-x: hidden;overflow-y: visible;padding: 10px;border-radius: 3px;box-sizing: border-box;text-align: left;" id="ConsoleOutput"></div>
-                        
+
                         <div style="background: #0c161c;color: #FFFFFF;height: 38px;border-radius: 3px 0px 0 3px;float: left;width: 27px;margin-top:6px;box-shadow: 1px 0 #050C11;">
                             <div style="font-size: 19px;padding-left: 4px;padding-top: 10px;text-align: center;visibility: hidden;z-index: -1;" id="ConsoleLoading">
                                 <i class="fa fa-spinner fa-spin"></i>
                             </div>
                         </div>
-                        
+
                         <input id="ConsoleInput" class="pure-u-1" type="text" name="ConsoleInput" style="background: #0c161c;color: #fff;margin-top: 6px;height: 38px;float: right;width: calc(100% - 27px);border-radius:0 3px 3px 0 !important;" placeholder="Type commands here"/>
                     </div>
                 </div>
 			</div>
             </div>
         </div>
-         
+
         <div id="tabCon" class="con6" style="display: none">
             <div id="tabConTxt">
                 <iframe src="console.php?id={%?vps[id]}" width="100%" height="500" frameborder="0" scrolling="no" style="background: #fff;"></iframe>
