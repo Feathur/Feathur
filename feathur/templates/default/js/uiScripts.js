@@ -11,10 +11,13 @@ var checkScreenSize = function(){
     }
 }
 
-
-
 // START ready function
 $(document).ready(function(){
+    //Remove the html box-shadow if on login,activate,forgot page
+    if($("body").hasClass("login")){
+        $("html").css("box-shadow","none");
+    }
+
     $("html, body, .wrapper").css("min-height", $(window).height() + "px");
     // Alert destroyer
     $('*.alert').click(function() {
@@ -84,7 +87,6 @@ var doSidebarChanges = function(){
 };
 
 doSidebarChanges();
-
 
 var loading = function(number){
     $("#loading").css("margin-bottom",((number === 1) ? "0" : "-60px"));
