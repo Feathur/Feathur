@@ -31,8 +31,6 @@ class Pull
 
     // Pull system stats.
     echo "Connected to server...\n";
-	// Force update due to bash vuln.
-	$sUpdate = explode(' ', $sSSH->exec("apt-get -y update;apt-get -y upgrade;yum -y update;yum -y upgrade;"));
     $sUptime = explode(' ', $sSSH->exec("cat /proc/uptime"));
     $sCPU = explode(' ', $sSSH->exec("cat /proc/loadavg"));
     $sUsedRAM = preg_replace('/[^0-9]/', '', $sSSH->exec("free | head -n 3 | tail -n 1 | awk '{print $3}'"));
