@@ -804,6 +804,7 @@ body.login {
 background: url(../img/tpl/pagehighlight.png) no-repeat top center #2f526b;
 width: 100%;
 position: absolute;
+box-shadow: none !important;
 }
 #containlogin {
 display: block;

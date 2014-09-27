@@ -33,7 +33,7 @@
         <div id="containlogin">
             <div class="logo" style="position: absolute;left: 50%;margin-left: -77px;margin-top: -100px;"></div>
             <div class="loginform" style="width: 387px;margin: 0 auto;">
-                <form id="form1" name="form1" method="post" action="index.php?action=forgot">
+                <form id="form1" name="form1" method="post" action="forgot.php?action=forgot">
                     <p style="font-size: 16px;color: rgb( 255, 255, 255 );text-align: center;text-shadow: 1px 1.7px 3px rgba(0, 0, 0, 0.3);margin-top: 11px;margin-bottom: 11px">Enter your email address below.</p>
                     <input name="email" type="text" class="login-input-user" id="textfield" value="" placeholder="Email" autofocus="true"/>
                     <br>
