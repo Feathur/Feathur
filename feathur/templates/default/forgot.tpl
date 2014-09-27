@@ -37,7 +37,7 @@
                     <p style="font-size: 16px;color: rgb( 255, 255, 255 );text-align: center;text-shadow: 1px 1.7px 3px rgba(0, 0, 0, 0.3);margin-top: 11px;margin-bottom: 11px">Enter your email address below.</p>
                     <input name="email" type="text" class="login-input-user" id="textfield" value="" placeholder="Email" autofocus="true"/>
                     <br>
-                    <div class="pure-u-1 text-centered"><button type="submit" name="submit" id="button" class="pure-button pure-button-primary" style="margin-top: 7px;margin-right: 10px;width: auto !important;" value="Request Password Reset"></button>
+                    <div class="pure-u-1 text-centered"><button type="submit" name="submit" id="button" class="pure-button pure-button-primary" style="margin-top: 7px;margin-right: 10px;width: auto !important;">Request Password Reset</button>
                     <a href="/" style="color: #fff;margin-left: 10px;height: 47px;display: inline-block;" class="forgotpwdlnk">Back to Login</a></div>
                     </div>
                 </form>
