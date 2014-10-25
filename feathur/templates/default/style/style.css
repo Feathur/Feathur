@@ -174,6 +174,10 @@ content: '';
 display: block;
 border-radius: 5px;
 opacity: 0.5;
+-webkit-transition: all 0.3s;
+-moz-transition: all 0.3s;
+-o-transition: all 0.3s;
+transition: all 0.3s;
 }
 .sb-smalltitle {
 text-align: center;
@@ -317,9 +321,6 @@ margin-bottom: 11px;
 }
 .statusTxtInfo {
 line-height: 21px;
-}
-.statuschartpercent {
-z-index: 1;
 }
 
 #SearchSystem {
@@ -485,7 +486,7 @@ background: url(../img/tpl/statboxbg.png) no-repeat top left rgba(57,93,116,1);
 color: #fff;
 text-align: left;
 padding-left: 52px !important;
-padding: 8px 5px;
+padding: 8px;
 font-size: 14px;
 line-height: 16px;
 display: inline-block;
@@ -501,52 +502,6 @@ display: inline-block;
 margin: 0;
 }
 .profilemenu ul {padding:0px;margin:0px;}
-
-.statuschart div:nth-child(3) {
-background: #395d74 !important;
-width: 57px;
-height: 57px;
-position: relative;
-margin-top: -83px;
-margin-left: 22px;
-border-radius: 30px;
-border: 2px solid #7ce2e8;
-}
-.statuschart:before {
-content: '';
-width: 104px;
-height: 103px;
-display: block;
-position: absolute;
-z-index: 999;
-border-radius: 53px;
-box-shadow: 0 4px rgba(0, 0, 0, 0.09) inset;
-border-bottom: 1px solid rgba(255, 255, 255, 0.16);
-margin-left: 1px;
-margin-top: 1px;
-}
-.statuschartpercent {
-width: 107px;
-display: inline-block;
-text-align: center;
-position: relative;
-margin-bottom: -69px;
-margin-top: 51px;
-font-size: 13px;
-}
-.statuschartpercent.null {
-margin-top: 57px;
-margin-bottom: -73px;
-}
-.statuschartname {
-width: 107px;
-text-align: center;
-display: inline-block;
-margin-bottom: -13px;
-margin-top: -3px;
-font-weight: bold;
-color: #fff;
-}
 /*#serverstatscontain {
 display: -webkit-flex;
 display: flex;
@@ -567,7 +522,7 @@ background: white;
 }
 #serverstatscontain h3 {
 padding: 0;
-margin: 0;
+margin: 0 0 11px 0;
 color: #fff;
 text-shadow: 0 0 #000;
 }
@@ -1519,7 +1474,30 @@ background: #D67A7A;
     }
 }
 @media only screen and (max-width: 529px) {
+    .fluidbox.statusbox > div:nth-child(3) {
+    width: 60%;
+    }
     .fluidbox.statusbox > div:nth-child(2) {
+    width: 40%;
+    }
+    
+    .fluidbox.statusbox > div:nth-child(2) span {
+    background: rgba(0, 0, 0, 0.36);
+    line-height: 20px;
+    padding: 3px 7px;
+    border-radius: 5px;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15) inset;
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+    font-size: 12px;
+    text-align: center;
+    }
+    .fluidbox.statusbox > div:nth-child(2) .progressContain {
+    display: none;
+    }
+    .fluidbox.statusbox > div:nth-child(2) .progressContain {
     display: none;
     }
 }

@@ -241,22 +241,6 @@
         $("#VPSHostname").html('('+theData.hostname+')');
         
     };
-    
-    var prevTab=1;
-    var numOfTabs = 10;
-    var showCon = function(i){
-        if(i != prevTab){
-            $(".tab").removeClass("cur")
-            $(".tab.btn"+prevTab).removeClass("cur");
-            $(".tab.btn"+i).addClass("cur");
-            for(var n=1;n<numOfTabs;n++){
-                    $("#tabCon.con"+n).hide();
-            }
-            $("#tabCon.con"+i).show();
-            $("#tabConWrap").css("height",$("#tabCon.con"+i).height() + "px");
-            prevTab=i;
-        }
-    };
 </script>
 
 
