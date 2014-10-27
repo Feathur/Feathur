@@ -73,14 +73,15 @@
                         //alert(val.load);
                         srvtype = val.type;
                         ipcount = val.ip_count;
-                        srvtype = ((srvtype == "openvz") ? srvtype = "OpenVZ" : srvtype = "KVM");
-                        if(srvtype == "openvz"){srvtype = "OpenVZ"}else{srvtype = "KVM"}
+                        if(srvtype == "openvz"){srvtype = "OpenVZ"}else if(srvtype == "kvm"){srvtype = "KVM"}else{srvtype = srvtype};
                         if(ipcount == null){ipcount = 0}
                         
                         //Check if statusbox is in DOM already, if not, create it
                         if($(".statusbox.status-"+val.id+"").length) {
-                            console.log("found element for ID:"+val.id);
+                            //console.log("found element for ID:"+val.id);
                             if (val.status == true) { // If online replace old data with new data
+                                var bandwidthstr = val.bandwidth;
+                                if(bandwidthstr >= 100){servershighbandwidth.push(val.name);}
                                 $(".statusbox.status-"+val.id+" .statuscolor").attr("class", "statuscolor statuscoloronline");
                                 $(".statusbox.status-"+val.id+" .stat-virtualization").html(srvtype);
                                 $(".statusbox.status-"+val.id+" .stat-ram").html("RAM: "+val.ram_usage+"%");
@@ -94,6 +95,7 @@
                                 $(".statusbox.status-"+val.id+" .progress-ram-overlay").css("background",getBgColor(val.ram_usage));
                                 $(".statusbox.status-"+val.id+" .progress-disk-overlay").css("background",getBgColor(val.disk_usage));
                             } else {// If offline replace with filler data unless the data is able to be found
+                                serversoffline.push(val.name);
                                 $(".statusbox.status-"+val.id+" .statuscolor").attr("class", "statuscolor statuscoloroffline");
                                 $(".statusbox.status-"+val.id+" .stat-virtualization").html(srvtype);
                                 $(".statusbox.status-"+val.id+" .stat-ram").html("RAM: N/A");
@@ -108,11 +110,11 @@
                                 $(".statusbox.status-"+val.id+" .progress-disk-overlay").css("background",getBgColor(0));
                             }
                         }else{ //Creating box, couldn't find one already created. This is the base html for the status boxes. Changes here that you expect to have automatically update will need to be added above.
-                            console.log("Could NOT find element for ID:"+val.id);
+                            //console.log("Could NOT find element for ID:"+val.id);
                             if (val.status == true) {
                                 var bandwidthstr = val.bandwidth;
-                                bandwidthstr = bandwidthstr.replace("Mbps","");
                                 if(bandwidthstr >= 100){servershighbandwidth.push(val.name);}
+                                bandwidthstr = bandwidthstr.replace("Mbps","");
                                 boxhtml = '<a href="admin.php?view=list&type=search&search=server='+val.id+'"><div class="fluidbox statusbox status-'+val.id+'">'
                                     + '<div class="statuscolor statuscoloronline">'
                                     + '</div>'
@@ -154,7 +156,7 @@
 					});
 				}
                 
-                if(serversoffline != "")
+                if(serversoffline.length !== 0)
                 {
                     $("#errorcontain .errorbox p.inlineB").empty();
                     $("#errorcontain .errorbox p.inlineB").html(serversoffline.join(", "));
@@ -162,7 +164,7 @@
                 }else{
                     $("#errorcontain .errorbox").css("display","none");
                 }
-                if(servershighbandwidth != "")
+                if(servershighbandwidth.length !== 0)
                 {
                     $("#errorcontain .warningbox.1 p.inlineB").empty();
                     $("#errorcontain .warningbox.1 p.inlineB").html(servershighbandwidth.join(", "));

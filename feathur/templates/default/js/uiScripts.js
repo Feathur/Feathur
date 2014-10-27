@@ -71,10 +71,10 @@ $(document).ready(function(){
 var prevTab=1;
 var showCon = function(i){
     if(i != prevTab){
-        $(".tab").removeClass("cur")
+        $(".tab").removeClass("cur");
         $(".tab.btn"+prevTab).removeClass("cur");
         $(".tab.btn"+i).addClass("cur");
-        for(var n=1;n < $('.tabs.primarytabs').children().size()+1;n++){
+        for(var n=1;n < $('.tabs.primarytabs').children().size()+2;n++){
             $("#tabCon.con"+n).hide();
         }
         $("#tabCon.con"+i).show();

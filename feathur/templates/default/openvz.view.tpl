@@ -220,7 +220,7 @@
             for(i = 0; i < theData.top.length; i++){
                 var index = i + 1;
                 topProcesseshtml += "<tr><td>"+theData.top[i].name+"</td><td>"+theData.top[i].cpu+"</td><td>"+theData.top[i].ram+"</td></tr>";
-                console.log("Found data for top processes!");
+                //console.log("Found data for top processes!");
                 //console.log("Found stat data" + theData.top[i].name);
             };
             $("#topprocesses table tbody").html(topProcesseshtml);
@@ -250,33 +250,33 @@
                             if (data.hostname === undefined){
                                 retryTimeout++;
                                 if(retryTimeout >= 3){
-                                    console.log("Tried to load the data 3 times. Not trying again until page reload.");
+                                    //console.log("Tried to load the data 3 times. Not trying again until page reload.");
                                     retryTimeoutSet = true;
                                     alert("Tried to load the data 3 times, but got nothing back. Not trying again until page reload.");
                                     return;
                                 }
-                                console.log("Failed to load data. Retrying.");
+                                //console.log("Failed to load data. Retrying.");
                                 uptime();
                             } else {
-                                console.log("Hostname found!");
+                                //console.log("Hostname found!");
                                 $("#vpsStatus").html('Currently '+ data.result.toUpperCase());
                                 if(data.statistics){
-                                    console.log("Successfully loaded data!");
+                                    //console.log("Successfully loaded data!");
                                     updateAllStats(data.statistics.info, data.hostname);
                                 } else {
-                                    console.log("No statistics data found!");
+                                    //console.log("No statistics data found!");
                                     updateAllStats(offlineData, data.hostname);
                                 }
                                 loading(0);
                             }
                         })
                         .fail(function() {
-                            console.log("Did not get data.");
+                            //console.log("Did not get data.");
                             receivedData = true;
                         });
                     });
                 }else{
-                    console.log("Have not yet recieved data; Waiting.");
+                    //console.log("Have not yet recieved data; Waiting.");
                 }
             }
 		}
