@@ -1,5 +1,7 @@
 <?php
 
+/* WHMCS Module for Feathur Control Panel */
+
 function feathur_GeneralConfig()
 {
   // Set these variables accordingly.
