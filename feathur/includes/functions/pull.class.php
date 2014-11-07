@@ -242,7 +242,6 @@ class Pull
         $sVPS->uBandwidthUsage = $sVPS->sBandwidthUsage + $sChange;
 
         if (($sVPS->sBandwidthUsage + $sChange) >= ($sVPS->sBandwidthLimit * 1024)) {
-          $sServer = new Server($sVPS->sServerId);
           $sSSH = Server::server_connect($sServer);
           $sLog[] = array("command" => "vzctl stop {$sVPS->sContainerId} --fast", "result" => $sSSH->exec("vzctl stop {$sVPS->sContainerId} --fast"));
           $sLog[] = array("command" => "vzctl set {$sVPS->sContainerId} --disabled yes --save", "result" => $sSSH->exec("vzctl set {$sVPS->sContainerId} --disabled yes --save"));
@@ -251,7 +250,6 @@ class Pull
         } else {
           if ($sVPS->sSuspended > 0) {
             $sVPS->uSuspended = 0;
-            $sServer = new Server($sVPS->sServerId);
             $sSSH = Server::server_connect($sServer);
             $sLog[] = array("command" => "vzctl set {$sVPS->sContainerId} --disabled no --save", "result" => $sSSH->exec("vzctl set {$sVPS->sContainerId} --disabled no --save"));
             $sLog[] = array("command" => "vzctl start {$sVPS->sContainerId}", "result" => $sSSH->exec("vzctl start {$sVPS->sContainerId}"));
