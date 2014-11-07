@@ -220,7 +220,7 @@
             for(i = 0; i < theData.top.length; i++){
                 var index = i + 1;
                 topProcesseshtml += "<tr><td>"+theData.top[i].name+"</td><td>"+theData.top[i].cpu+"</td><td>"+theData.top[i].ram+"</td></tr>";
-                console.log("Found data for top processes!");
+                //console.log("Found data for top processes!");
                 //console.log("Found stat data" + theData.top[i].name);
             };
             $("#topprocesses table tbody").html(topProcesseshtml);
@@ -250,33 +250,33 @@
                             if (data.hostname === undefined){
                                 retryTimeout++;
                                 if(retryTimeout >= 3){
-                                    console.log("Tried to load the data 3 times. Not trying again until page reload.");
+                                    //console.log("Tried to load the data 3 times. Not trying again until page reload.");
                                     retryTimeoutSet = true;
                                     alert("Tried to load the data 3 times, but got nothing back. Not trying again until page reload.");
                                     return;
                                 }
-                                console.log("Failed to load data. Retrying.");
+                                //console.log("Failed to load data. Retrying.");
                                 uptime();
                             } else {
-                                console.log("Hostname found!");
+                                //console.log("Hostname found!");
                                 $("#vpsStatus").html('Currently '+ data.result.toUpperCase());
                                 if(data.statistics){
-                                    console.log("Successfully loaded data!");
+                                    //console.log("Successfully loaded data!");
                                     updateAllStats(data.statistics.info, data.hostname);
                                 } else {
-                                    console.log("No statistics data found!");
+                                    //console.log("No statistics data found!");
                                     updateAllStats(offlineData, data.hostname);
                                 }
                                 loading(0);
                             }
                         })
                         .fail(function() {
-                            console.log("Did not get data.");
+                            //console.log("Did not get data.");
                             receivedData = true;
                         });
                     });
                 }else{
-                    console.log("Have not yet recieved data; Waiting.");
+                    //console.log("Have not yet recieved data; Waiting.");
                 }
             }
 		}
@@ -389,7 +389,7 @@
                     loading(0);
 					setNotice("#SettingsNotice",result.result, result.type);
 					$('#TunTapValue').html(0);
-					$('#TunTap').addClass('button-green').removeClass('button-red');
+					$('#TunTapButton').addClass('button-green').removeClass('button-red');
 					$('#TunTap').text("Enable Tun/Tap");
 				});
 			} else {
@@ -397,7 +397,7 @@
                     loading(0);
 					setNotice("#SettingsNotice",result.result, result.type);
 					$('#TunTapValue').html(1);
-					$('#TunTap').addClass('button-red').removeClass('button-green');
+					$('#TunTapButton').addClass('button-red').removeClass('button-green');
 					$('#TunTap').text("Disable Tun/Tap");
 				});
 			}
@@ -411,7 +411,7 @@
                     loading(0);
 					setNotice("#SettingsNotice",result.result, result.type);
 					$('#PPPValue').html(0);
-					$('#PPP').addClass('button-green').removeClass('button-red');
+					$('#PPPButton').addClass('button-green').removeClass('button-red');
 					$('#PPP').text("Enable PPP");
 				});
 			} else {
@@ -419,7 +419,7 @@
                 loading(0);
 					setNotice("#SettingsNotice",result.result, result.type);
 					$('#PPPValue').html(1);
-					$('#PPP').addClass('button-red').removeClass('button-green');
+					$('#PPPButton').addClass('button-red').removeClass('button-green');
 					$('#PPP').text("Disable PPP");
 				});
 			}
@@ -433,7 +433,7 @@
                     loading(0);
 					setNotice("#SettingsNotice",result.result, result.type);
 					$('#IPTablesValue').html(0);
-					$('#IPTables').addClass('button-green').removeClass('button-red');
+					$('#IPTablesButton').addClass('button-green').removeClass('button-red');
 					$('#IPTables').text("Enable IP Tables");
 				});
 			} else {
@@ -441,7 +441,7 @@
                     loading(0);
 					setNotice("#SettingsNotice",result.result, result.type);
 					$('#IPTablesValue').html(1);
-					$('#IPTables').addClass('button-red').removeClass('button-green');
+					$('#IPTablesButton').addClass('button-red').removeClass('button-green');
 					$('#IPTables').text("Disable IPTables");
 				});
 			}
@@ -566,22 +566,6 @@
 			});
 		{%/if}
 	});
-
-    var prevTab=1;
-    var numOfTabs = 10;
-    var showCon = function(i){
-        if(i != prevTab){
-            $(".tab").removeClass("cur")
-            $(".tab.btn"+prevTab).removeClass("cur");
-            $(".tab.btn"+i).addClass("cur");
-            for(var n=1;n<numOfTabs;n++){
-                    $("#tabCon.con"+n).hide();
-            }
-            $("#tabCon.con"+i).show();
-            $("#tabConWrap").css("height",$("#tabCon.con"+i).height() + "px");
-            prevTab=i;
-        }
-    };
 </script>
 <div class="pure-u-1">
     <div class="tabs primarytabs">

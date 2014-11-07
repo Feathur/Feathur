@@ -3,7 +3,7 @@
 	$(document).ready(function() {
 		$(".GenericAction").click(function() {
 			loading(1);
-			var action = $(this).attr('value');    
+			var action = $(this).attr('value');
 			$.getJSON("view.php?id={%?vps[id]}&action=" + action,function(result){
                 loading(0);
 				setNotice("#Notice",result.result, result.type);
@@ -14,9 +14,11 @@
 				}
 			});
 		});
-        var bwVal = $('#AdminBandwidthLimit').prop('value');
-        bwVal = bwVal.replace(".0000","");
-        $('#AdminBandwidthLimit').val(bwVal);
+        if($('#AdminBandwidthLimit').length){
+            var bwVal = $('#AdminBandwidthLimit').prop('value');
+            bwVal = bwVal.replace(".0000","");
+            $('#AdminBandwidthLimit').val(bwVal);
+        }
         var retryTimeout = 0;
         var retryTimeoutSet = false;
         var receivedData = true;
@@ -238,22 +240,6 @@
         //Hostname
         $("#VPSHostname").html('('+theData.hostname+')');
         
-    };
-    
-    var prevTab=1;
-    var numOfTabs = 10;
-    var showCon = function(i){
-        if(i != prevTab){
-            $(".tab").removeClass("cur")
-            $(".tab.btn"+prevTab).removeClass("cur");
-            $(".tab.btn"+i).addClass("cur");
-            for(var n=1;n<numOfTabs;n++){
-                    $("#tabCon.con"+n).hide();
-            }
-            $("#tabCon.con"+i).show();
-            $("#tabConWrap").css("height",$("#tabCon.con"+i).height() + "px");
-            prevTab=i;
-        }
     };
 </script>
 

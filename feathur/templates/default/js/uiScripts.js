@@ -11,10 +11,13 @@ var checkScreenSize = function(){
     }
 }
 
-
-
 // START ready function
 $(document).ready(function(){
+    //Remove the html box-shadow if on login,activate,forgot page
+    if($("body").hasClass("login")){
+        $("html").css("box-shadow","none");
+    }
+
     $("html, body, .wrapper").css("min-height", $(window).height() + "px");
     // Alert destroyer
     $('*.alert').click(function() {
@@ -65,6 +68,21 @@ $(document).ready(function(){
     
 }); // END ready function
 
+var prevTab=1;
+var showCon = function(i){
+    if(i != prevTab){
+        $(".tab").removeClass("cur");
+        $(".tab.btn"+prevTab).removeClass("cur");
+        $(".tab.btn"+i).addClass("cur");
+        for(var n=1;n < $('.tabs.primarytabs').children().size()+2;n++){
+            $("#tabCon.con"+n).hide();
+        }
+        $("#tabCon.con"+i).show();
+        $("#tabConWrap").css("height",$("#tabCon.con"+i).height() + "px")
+        prevTab=i;
+    }
+}
+
 var doSidebarChanges = function(){
     checkScreenSize();
     // Make room for the second sidebar, if enabled
@@ -84,7 +102,6 @@ var doSidebarChanges = function(){
 };
 
 doSidebarChanges();
-
 
 var loading = function(number){
     $("#loading").css("margin-bottom",((number === 1) ? "0" : "-60px"));

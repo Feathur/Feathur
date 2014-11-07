@@ -31,20 +31,6 @@ $(document).ready(function(){
     });
 });
 
-var prevTab=1;
-var showCon = function(i){
-    if(i != prevTab){
-        $(".tab").removeClass("cur")
-        $(".tab.btn"+prevTab).removeClass("cur");
-        $(".tab.btn"+i).addClass("cur");
-        for(var n=1;n < $('.tabs.primarytabs').children().size()+1;n++){
-            $("#tabCon.con"+n).hide();
-        }
-        $("#tabCon.con"+i).show();
-        $("#tabConWrap").css("height",$("#tabCon.con"+i).height() + "px")
-        prevTab=i;
-    }
-}
 </script>
 
       <div class="tabs primarytabs">

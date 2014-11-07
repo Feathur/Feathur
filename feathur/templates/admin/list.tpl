@@ -106,8 +106,12 @@
 		{%if isset|UserCount == false}
 			{%if isset|VPSCount == false}
 				{%if isset|Result == false}
-					<div class="formnote pure-u-sm-1 pure-u-md-1 pure-u-lg-1 pure-u-xl-1-2" style="margin:0.5em;">
-                        Unfortunately, no results were returned for your query of <span class="searchTerm">""</span>. Try searching again?
+                    <div class="pure-u-sm-1 pure-u-md-1 pure-u-lg-1 pure-u-xl-1-2">
+                        <div class="alert warningbox static-alert">No search results found!</div>
+                    </div>
+					<div class="pure-u-sm-1 pure-u-md-1 pure-u-lg-1 pure-u-xl-1-2 nofluid">
+                        <div class="formnote">
+                        Unfortunately, no results were returned for your query of <span class="searchTerm">""</span>. Try searching again?</div>
                     </div>
 				{%/if}
 			{%/if}

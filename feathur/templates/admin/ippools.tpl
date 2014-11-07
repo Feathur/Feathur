@@ -547,21 +547,6 @@
 						$("#DeleteForm").modal();
 					});
 				});
-                var prevTab=1;
-                var numOfTabs = 10;
-                var showCon = function(i){
-                    if(i != prevTab){
-                        $(".tab").removeClass("cur")
-                        $(".tab.btn"+prevTab).removeClass("cur");
-                        $(".tab.btn"+i).addClass("cur");
-                        for(var n=1;n<numOfTabs;n++){
-                            $("#tabCon.con"+n).hide();
-                        }
-                        $("#tabCon.con"+i).show();
-                        $("#tabConWrap").css("height",$("#tabCon.con"+i).height() + "px");
-                        prevTab=i;
-                    }
-                };
 			</script>
 			<br>
             <div class="tabs primarytabs">
@@ -660,7 +645,6 @@
                                 {%if isempty|ServerList == true}
                                     <tr>
                                         <td style="display:none;"></td>
-                                        <td style="display:none;"></td>
                                         <td colspan="2">
                                             <div align="center" style="height: 38px;padding: 0;line-height: 38px;">There are no servers assigned to this block, add one using the + above. (1)</div>
                                         </td>
@@ -669,7 +653,6 @@
                             {%/if}
                             {%if isset|ServerList == false}
                                 <tr>
-                                    <td style="display:none;"></td>
                                     <td style="display:none;"></td>
                                     <td colspan="2">
                                         <div align="center" style="height: 38px;padding: 0;line-height: 38px;">There are no servers assigned to this block, add one using the + above. (2)</div>
@@ -855,6 +838,8 @@
                                 {%/if}
                                 {%if isempty|IPList == true}
                                     <tr>
+                                        <td style="display:none;"></td>
+                                        <td style="display:none;"></td>
                                         <td colspan="3">
                                             <div align="center" style="height: 38px;padding: 0;line-height: 38px;">There are no IPs currently assigned to any VPS.</div>
                                         </td>
@@ -863,6 +848,8 @@
                             {%/if}
                             {%if isset|IPList == false}
                                 <tr>
+                                    <td style="display:none;"></td>
+                                    <td style="display:none;"></td>
                                     <td colspan="3">
                                         <div align="center" style="height: 38px;padding: 0;line-height: 38px;">There are no IPs currently assigned to any VPS.</div>
                                     </td>
@@ -901,7 +888,6 @@
                             {%if isempty|ServerList == true}
                                 <tr>
                                     <td style="display:none;"></td>
-                                    <td style="display:none;"></td>
                                     <td colspan="2">
                                         <div align="center" style="height: 38px;padding: 0;line-height: 38px;">There are no servers assigned to this block, add one using the + above. (1)</div>
                                     </td>
@@ -910,7 +896,6 @@
                         {%/if}
                         {%if isset|ServerList == false}
                             <tr>
-                                <td style="display:none;"></td>
                                 <td style="display:none;"></td>
                                 <td colspan="2">
                                     <div align="center" style="height: 38px;padding: 0;line-height: 38px;">There are no servers assigned to this block, add one using the + above. (2)</div>
