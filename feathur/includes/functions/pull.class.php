@@ -241,7 +241,7 @@ class Pull
         echo "Bandwidth for: {$sVPS->sId} - Total: {$sTotal} - Change: +{$sChange}\n";
         $sVPS->uBandwidthUsage = $sVPS->sBandwidthUsage + $sChange;
 
-        if (($sVPS->sBandwidthUsage + $sChange) >= ($sVPS->sBandwidthLimit * 1024)) {
+        if (($sVPS->uBandwidthUsage) >= ($sVPS->sBandwidthLimit * 1024)) {
           $sSSH = Server::server_connect($sServer);
           $sLog[] = array("command" => "vzctl stop {$sVPS->sContainerId} --fast", "result" => $sSSH->exec("vzctl stop {$sVPS->sContainerId} --fast"));
           $sLog[] = array("command" => "vzctl set {$sVPS->sContainerId} --disabled yes --save", "result" => $sSSH->exec("vzctl set {$sVPS->sContainerId} --disabled yes --save"));
