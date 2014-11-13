@@ -51,7 +51,7 @@ class Pull
 
     $sDiskUsed = $sDiskUsed / 1048576;
     $sDiskTotal = $sDiskTotal / 1048576;
-    $sPullBandwidth = explode("\n", $sSSH->exec("ifconfig $interface | grep 'RX bytes' | awk -F: '{print $2,$3}' | awk '{print $1,$6}'"));
+    $sPullBandwidth = explode("\n", $sSSH->exec("grep '$interface:' /vz/private/{$sVPS->sContainerId}/proc/net/dev | perl -i -pe 's/\t|\s+/:/g' | awk -F: '{print $3,$11}'"));
 
     foreach($sPullBandwidth as $sData)
     {
