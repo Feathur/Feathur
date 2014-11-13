@@ -212,7 +212,8 @@ class Pull
 
         if ($sServer->sType == 'openvz')
         {
-          $sPullBandwidth = explode("\n", $sSSH->exec("vzctl exec {$sVPS->sContainerId} ifconfig $interface | grep 'RX bytes' | awk -F: '{print $2,$3}' | awk '{print $1,$6}';"));
+          $sPullBandwidth = explode("\n",
+            $sSSH->exec("grep '$interface:' /vz/private/{$sVPS->sContainerId}/proc/net/dev | perl -i -pe 's/\t|\s+/:/g' | awk -F: '{print $3,$11}'"));
         }
 
         if ($sServer->sType == 'kvm')
