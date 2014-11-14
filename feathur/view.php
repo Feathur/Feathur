@@ -21,16 +21,20 @@ $sAction = preg_replace('/[^\w\d]/', '', $_GET['action']);
  * Check for the existence of a VPS for currently logged in user, or existence at all if admin
  */
 
-try {
-	if ($sUser->sPermissions != 7)
-	{
-		$database->CachedQuery('SELECT * FROM vps WHERE `id` = :VPSId AND `user_id` = :UserId', array('VPSId' => $sId, 'UserId' => $sUser->sId));
-	} else {
-		$database->CachedQuery('SELECT * FROM vps WHERE `id` = :VPSId', array('VPSId' => $sId));
-	}
-	$sVPS = new VPS($sId);
+try
+{
+
+  if ($sUser->sPermissions != 7)
+  {
+    $database->CachedQuery('SELECT * FROM vps WHERE `id` = :VPSId AND `user_id` = :UserId', array('VPSId' => $sId, 'UserId' => $sUser->sId));
+  } else {
+    $database->CachedQuery('SELECT * FROM vps WHERE `id` = :VPSId', array('VPSId' => $sId));
+  }
+
+  $sVPS = new VPS($sId);
+
 } catch (Exception $e) {
-	die(header("Location: main.php", 401));
+  die(header("Location: main.php", 401));
 }
 
 /*
@@ -44,22 +48,25 @@ if (($sVPS->sUserId != $sUser->sId) && ($sUser->sPermissions != 7)) die(header("
  */
 
 $sSuspended = $sVPS->sSuspended;
+
 if ((!empty($sSuspended)) && ($sUser->sPermissions != 7))
 {
+
   if ($sSuspended == 2)
   {
-	$sUserView = Templater::AdvancedParse(
+    $sUserView = Templater::AdvancedParse(
 	               $sTemplate->sValue.'/abuse',
 				   $locale->strings,
 				   array('Hostname' => $sVPS->sHostname)
 				 );
   } else {
-	$sUserView = Templater::AdvancedParse(
+    $sUserView = Templater::AdvancedParse(
 	               $sTemplate->sValue.'/suspended',
 				   $locale->strings,
 				   array('Hostname' => $sVPS->sHostname)
 				 );
-  } 
+  }
+
   echo Templater::AdvancedParse(
          $sTemplate->sValue.'/master',
 		 $locale->strings,
@@ -109,11 +116,12 @@ if (!empty($sAction))
   {
     $sDBResult = $sStart->$sDBAction($sUser, $sVPS, $sRequested);
     if (is_array($sDBResult)) die(json_encode($sDBResult));
-	$sServerResult = $sStart->$sServerAction($sUser, $sVPS, $sRequested);
-	if (!empty($sServerResult['json'])) die(json_encode($sServerResult));
+    $sServerResult = $sStart->$sServerAction($sUser, $sVPS, $sRequested);
+    if (!empty($sServerResult['json'])) die(json_encode($sServerResult));
   } else {
-	die(json_encode(array('json' => 1, 'type' => 'error', 'result' => 'Invalid action requested. Please try again.', 'reload' => 1)));
+    die(json_encode(array('json' => 1, 'type' => 'error', 'result' => 'Invalid action requested. Please try again.', 'reload' => 1)));
   }
+
 }
 
 /*

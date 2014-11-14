@@ -14,9 +14,6 @@ $(document).ready(function(){
   });
 });
 
-
-
-
 /* ALERT AND DIALOG BOXES */
 //<![CDATA[    
    // START ready function

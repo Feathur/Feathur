@@ -419,25 +419,17 @@ color: #fff;
 .alert.errorbox {
 background: url(../img/tpl/error_bg.png) no-repeat center right, #e87f7c;
 border: 1px solid #cf716d;
+font-size: 18px;
 }
 .alert.warningbox, .alert.cautionbox {
-background: url(../img/tpl/warn_bg.png) no-repeat center right, #e8b77c;
-border: 1px solid #cfa36d;
+background: url(../img/tpl/warn_bg.png) no-repeat center right, #777;
+border: 1px solid #555;
 }
 .alert.successbox {
 background: url(../img/tpl/success_bg.png) no-repeat center right, #7dd8a0;
 border: 1px solid #6dcfa0;
 }
-.alert:after {
-content: 'Click to dismiss';
-color: #fff;
-font-size: 10px;
-line-height: 20px;
-vertical-align: baseline;
-height: 7px !important;
-display: block;
-margin-top: 3px;
-}
+
 .static-alert:after {
 display: none !important;
 }
