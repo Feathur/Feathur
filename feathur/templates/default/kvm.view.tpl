@@ -219,20 +219,20 @@
     
     var updateAllStats = function(theData){
         
-        var offlineData = {"content":{"ram":"N\/A","disk":"N\/A","cpulimit":"N\/A","bandwidth_usage":"N\/A","bandwidth_limit":"N\/A","percent_bandwidth":"N\/A","template":"N\/A","hostname":"!Use returned hostname var!","primary_ip":"N\/A","gateway":"N\/A","netmask":"N\/A","mac":"N\/A","iso_sync":null,"sync_error":null,"percent_sync":null}};
+        var offlineData = {"statistics":{"info":{"ram":"N\/A","disk":"N\/A","cpulimit":"N\/A","bandwidth_usage":"N\/A","bandwidth_limit":"N\/A","percent_bandwidth":"N\/A","template":"N\/A","hostname":"!Use returned hostname var!","primary_ip":"N\/A","gateway":"N\/A","netmask":"N\/A","mac":"N\/A","iso_sync":null,"sync_error":null,"percent_sync":null}}};
         
         //stat table cells
-        $('.stat-ram').html(theData.content.info.ram + " MB");
-        $('.stat-disk').html(theData.content.info.disk + " GB");
-        $('.stat-cores').html(theData.content.info.cpulimit);
-        $('.stat-bwusage').html(theData.content.info.bandwidth_usage);
+        $('.stat-ram').html(theData.statistics.info.ram + " MB");
+        $('.stat-disk').html(theData.statistics.info.disk + " GB");
+        $('.stat-cores').html(theData.statistics.info.cpulimit);
+        $('.stat-bwusage').html(theData.statistics.info.bandwidth_usage);
         
         //Info table cells
-        $('.info-mounted').html(theData.content.info.template);
+        $('.info-mounted').html(theData.statistics.info.template);
         $('.info-hostname').html(theData.hostname);
-        $('.info-ip').html(theData.content.info.primary_ip);
-        $('.info-gateway').html(theData.content.info.gateway);
-        $('.info-netmask').html(theData.content.info.netmask);
+        $('.info-ip').html(theData.statistics.info.primary_ip);
+        $('.info-gateway').html(theData.statistics.info.gateway);
+        $('.info-netmask').html(theData.statistics.info.netmask);
         
         //Status
         $("#Status").html('<img src="./templates/{%?Template}/img/tpl/' + theData.result + '.png" style="width:21px;">');
