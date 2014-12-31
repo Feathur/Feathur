@@ -250,9 +250,9 @@
                             if (data.hostname === undefined){
                                 retryTimeout++;
                                 if(retryTimeout >= 3){
-                                    //console.log("Tried to load the data 3 times. Not trying again until page reload.");
+                                    //console.log("Tried to load the statistics data 3 times but got nothing back. Please try again by reloading this page. Contact support if this error persists.");
                                     retryTimeoutSet = true;
-                                    alert("Tried to load the data 3 times, but got nothing back. Not trying again until page reload.");
+                                    alert("Tried to load the statistics data 3 times but got nothing back. Please try again by reloading this page. Contact support if this error persists.");
                                     return;
                                 }
                                 //console.log("Failed to load data. Retrying.");
