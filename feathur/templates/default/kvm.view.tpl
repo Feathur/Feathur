@@ -32,24 +32,20 @@
                             if (data.hostname === undefined){
                                 retryTimeout++;
                                 if(retryTimeout >= 3){
-                                    console.log("Tried to load the data 3 times. Not trying again until page reload.");
+                                    console.log("Tried to load the statistics data 3 times but got nothing back. Please try again by reloading this page. Contact support if this error persists.");
                                     retryTimeoutSet = true;
-                                    alert("Tried to load the data 3 times, but got nothing back. Not trying again until page reload.");
+                                    alert("Tried to load the statistics data 3 times but got nothing back. Please try again by reloading this page. Contact support if this error persists.");
                                     return;
                                 }
                                 console.log("Failed to load data. Retrying.");
                                 uptime();
                             } else {
-                                console.log("Hostname found!");
-                                if(data.content){
+                                //console.log("Hostname found!");
+                                if(data.statistics){
                                     console.log("Successfully loaded data!");
-                                    updateAllStats(data, data.hostname);
-                                } else {
-                                    console.log("No statistics data found!");
-                                    updateAllStats(offlineData, data.hostname);
+                                    updateAllStats(data);
                                 }
                             }
-                            
                         })
                         .fail(function() {
                             console.log("Did not get data.");
@@ -218,8 +214,6 @@
 	});
     
     var updateAllStats = function(theData){
-        
-        var offlineData = {"statistics":{"info":{"ram":"N\/A","disk":"N\/A","cpulimit":"N\/A","bandwidth_usage":"N\/A","bandwidth_limit":"N\/A","percent_bandwidth":"N\/A","template":"N\/A","hostname":"!Use returned hostname var!","primary_ip":"N\/A","gateway":"N\/A","netmask":"N\/A","mac":"N\/A","iso_sync":null,"sync_error":null,"percent_sync":null}}};
         
         //stat table cells
         $('.stat-ram').html(theData.statistics.info.ram + " MB");
