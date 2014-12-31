@@ -606,13 +606,13 @@ class kvm {
 							));
 		$sContent = Templater::AdvancedParse($sTemplate->sValue.'/'.$sVPS->sType.'.statistics', $locale->strings, array("Statistics" => $sStatistics));
 		if(strpos($sLog[0]["result"], 'running') === false) {
-			return array("json" => 1, "type" => "status", "result" => "offline", "hostname" => $sVPS->sHostname, "content" => $sStatistics);
+			return array("json" => 1, "type" => "status", "result" => "offline", "hostname" => $sVPS->sHostname, "statistics" => $sStatistics);
 		} else {
 			if($sVPS->sISOSyncing == 1){
 					$sVPS->uISOSyncing = 0;
 					$sVPS->InsertIntoDatabase();
 			}
-			return array("json" => 1, "type" => "status", "result" => "online", "hostname" => $sVPS->sHostname, "content" => $sStatistics);
+			return array("json" => 1, "type" => "status", "result" => "online", "hostname" => $sVPS->sHostname, "statistics" => $sStatistics);
 		}
 	}
 	
