@@ -43,6 +43,9 @@ float: left;
 a {
 text-decoration: none;
 }
+a:focus {
+outline: none;
+}
 hr {
 border: 1px solid rgba(0, 0, 0, 0.04);
 margin: 20px 0 20px 0;
