@@ -6,7 +6,7 @@
 			var action = $(this).attr('value');
 			$.getJSON("view.php?id={%?vps[id]}&action=" + action,function(result){
                 loading(0);
-				setNotice("#Notice",result.result, result.type);
+				setNotice("#GeneralNotice",result.result, result.type);
 				if(result.reload == 1){
 					location.reload();
 				} else {
@@ -233,6 +233,26 @@
         
         //Hostname
         $("#VPSHostname").html('('+theData.hostname+')');
+        
+        if(theData.statistics.info.iso_sync == 1)
+        {
+            if(theData.statistics.info.sync_error != 1)
+            {
+                if($("#progress-sync").length){
+                    $("#progress-sync.progressbar").css("width","" + theData.statistics.info.sync_percent + "%");
+                    if(theData.statistices.info.sync_percent < 100) {
+                        $("p.syncNote").html("Sync status: <b>" + theData.statistices.info.sync_percent + "%</b>");
+                    }else{
+                        $("p.syncNote").html("Sync status: <b>Finished</b>");
+                        $("#progress-sync-overlay").css("background","rgb(0, 255, 31)");
+                    }
+                }else{
+                    $('<p class="syncNote"></p><br><div class="progressContain"><div id="progress-sync" class="progressbar"><div id="progress-sync-overlay" class="progress-overlay" style="background:rgb(190, 255, 0);"></div></div></div>').insertAfter( $(".errorcontain") );
+                }
+            }else{
+                setNotice("#GeneralNotice", "Something went wrong while syncing. Please contact support.", "error");
+            }
+        }
         
     };
 </script>
