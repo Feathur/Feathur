@@ -402,7 +402,7 @@ margin-right: 1px;
 
 .alert {
 width: calc(100% - 77px);
-font-size: 12px;
+font-size: 15px;
 color: #fff !important;
 text-shadow: 0 1px rgba(0,0,0,.38);
 text-align: left !important;
@@ -419,7 +419,6 @@ color: #fff;
 .alert.errorbox {
 background: url(../img/tpl/error_bg.png) no-repeat center right, #e87f7c;
 border: 1px solid #cf716d;
-font-size: 18px;
 }
 .alert.warningbox, .alert.cautionbox {
 background: url(../img/tpl/warn_bg.png) no-repeat center right, #777;
@@ -428,10 +427,6 @@ border: 1px solid #555;
 .alert.successbox {
 background: url(../img/tpl/success_bg.png) no-repeat center right, #7dd8a0;
 border: 1px solid #6dcfa0;
-}
-
-.static-alert:after {
-display: none !important;
 }
 .alert.warningbox a, .alert.errorbox a, .alert.cautionbox a {
 color: rgb(255, 245, 0);
