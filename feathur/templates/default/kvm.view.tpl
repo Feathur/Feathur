@@ -241,7 +241,7 @@
                 if($("#progress-sync").length){
                     $("#progress-sync.progressbar").css("width","" + theData.statistics.info.sync_percent + "%");
                     if(theData.statistics.info.sync_percent < 100) {
-                        $("p.syncNote span").html("" + theData.statistics.info.sync_percent + "");
+                        $("p.syncNote span").html("" + theData.statistics.info.sync_percent + "%");
                     }else{
                         $("p.syncNote span").html("Finished");
                         $("#progress-sync-overlay").css("background","rgb(74, 224, 50)");
