@@ -32,7 +32,6 @@
                 <form id="form1" name="form1" method="post" action="index.php?action=login">
                     <p style="font-size: 16px;color: rgb( 255, 255, 255 );text-align: center;text-shadow: 1px 1.7px 3px rgba(0, 0, 0, 0.3);margin-top: 11px;margin-bottom: 11px;">Log in below to continue</p>
                     <input name="email" type="text" class="login-input-user" id="textfield" value="" placeholder="Email" autofocus="true"/>
-                    <br>
                     <input name="password" type="password" class="login-input-pass" id="textfield" value="" placeholder="Password"/>
                     <div class="pure-u-1 text-centered"><button type="submit" name="submit" id="button" class="pure-button pure-button-primary" style="margin-top: 7px;margin-right: 10px;">Log In</button><a href="forgot.php" style="color: #fff; margin-top: 7px;margin-left: 10px;" class="forgotpwdlnk">Forgot Password</a></div>
                 </form>
