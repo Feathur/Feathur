@@ -788,12 +788,12 @@ margin-left: -75px;
 z-index: -1;
 }
 body.login form#form1 input#textfield {
-margin: 0px auto;
+margin: 0px auto 9px auto;
 width: 200px;
 display: block;
 background: rgba(0, 0, 0, 0.33);
 border: 0px;
-padding: 12px 20px;
+padding: 9px 20px;
 box-shadow: 0 1px rgba(255, 255, 255, 0.17);
 text-align: center;
 font: 16px ubuntu;
