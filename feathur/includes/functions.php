@@ -1,4 +1,5 @@
 <?php
+set_include_path(get_include_path() . PATH_SEPARATOR . 'includes/library/');
 include('./includes/functions/user.class.php');
 include('./includes/functions/core.class.php');
 include('./includes/functions/settings.class.php');
