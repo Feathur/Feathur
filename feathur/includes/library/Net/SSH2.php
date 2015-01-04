@@ -855,15 +855,15 @@ class Net_SSH2
         // Include Math_BigInteger
         // Used to do Diffie-Hellman key exchange and DSA/RSA signature verification.
         if (!class_exists('Math_BigInteger')) {
-            include_once 'Math/BigInteger.php';
+            include_once 'includes/library/Math/BigInteger.php';
         }
 
         if (!function_exists('crypt_random_string')) {
-            include_once 'Crypt/Random.php';
+            include_once 'includes/library/Crypt/Random.php';
         }
 
         if (!class_exists('Crypt_Hash')) {
-            include_once 'Crypt/Hash.php';
+            include_once 'includes/library/Crypt/Hash.php';
         }
 
         $this->message_numbers = array(
