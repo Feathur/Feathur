@@ -240,14 +240,14 @@
             {
                 if($("#progress-sync").length){
                     $("#progress-sync.progressbar").css("width","" + theData.statistics.info.sync_percent + "%");
-                    if(theData.statistices.info.sync_percent < 100) {
-                        $("p.syncNote").html("Sync status: <b>" + theData.statistices.info.sync_percent + "%</b>");
+                    if(theData.statistics.info.sync_percent < 100) {
+                        $("p.syncNote span").html("" + theData.statistics.info.sync_percent + "%");
                     }else{
-                        $("p.syncNote").html("Sync status: <b>Finished</b>");
-                        $("#progress-sync-overlay").css("background","rgb(0, 255, 31)");
+                        $("p.syncNote span").html("Finished");
+                        $("#progress-sync-overlay").css("background","rgb(74, 224, 50)");
                     }
                 }else{
-                    $('<p class="syncNote"></p><br><div class="progressContain"><div id="progress-sync" class="progressbar"><div id="progress-sync-overlay" class="progress-overlay" style="background:rgb(190, 255, 0);"></div></div></div>').insertAfter( $(".errorcontain") );
+                    $('<div class="pure-u-1 whitebox"><p class="syncNote" style="text-align: center;margin-top: 0;">Sync Status: <b><span></span></b></p><div class="progressContain" style="margin: 0;padding: 3px;background: rgba(0, 0, 0, 0.04);height: 9px;"><div id="progress-sync" class="progressbar"><div id="progress-sync-overlay" class="progress-overlay" style="background:rgb(255, 194, 0);"></div></div></div></div>').insertAfter( $(".errorcontain") );
                 }
             }else{
                 setNotice("#GeneralNotice", "Something went wrong while syncing. Please contact support.", "error");
