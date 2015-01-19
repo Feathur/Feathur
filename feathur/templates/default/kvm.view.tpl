@@ -442,7 +442,7 @@
                             <tr>
                                 <td width="30%">Select ISO:</td>
                                 <td width="70%">
-                                    <select id="SelectedTemplate" style="width:100%">
+                                    <select id="SelectedTemplate" class="chosen-select" style="width:100%;height: 38px;">
                                         <option value="0">--- UNMOUNT / EJECT ALL ---</option>
                                         {%if isset|Templates == true}
                                             {%foreach template in Templates}
