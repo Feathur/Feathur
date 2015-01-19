@@ -814,7 +814,7 @@
                     <form class="pure-form pure-form-aligned outlined">
                         <div class="pure-control-group">
                             <label for="SelectedTemplate">Select Template:</label>
-                            <select id="SelectedTemplate" style="min-width:200px;">
+                            <select id="SelectedTemplate" class="chosen-select" style="height:38px;min-width:200px;">
                                 {%if isset|Templates == true}
 									{%foreach template in Templates}
 										<option value="{%?template[id]}" {%if template[primary] == 1}selected="selected"{%/if}>{%?template[name]}</option>
