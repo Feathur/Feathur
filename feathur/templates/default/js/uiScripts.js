@@ -15,6 +15,7 @@ function showCon(i)
     $("#tabCon.con"+i).show();
     $("#tabConWrap").css("height",$("#tabCon.con"+i).height() + "px");
     prevTab=i;
+    $(".chosen-select").chosen(); //recheck for fancy dropdowns
   }
 }
 
