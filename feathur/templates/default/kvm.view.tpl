@@ -269,7 +269,7 @@
     <div id="tabConWrap">
         <div id="tabCon" class="con1">
             <div id="tabConTxt" class="noBorder">
-                <div id="GeneralNotice" class="pure-u-1"></div>
+                <div class="pure-u-1"></div><div id="GeneralNotice"></div></div>
                 <div id="vpsStatus" class="pure-u-1" style="text-align:center; font-weight:bold;font-size: 14px;color:#a8a8a8;"><div id="Status" style="position:absolute;margin-left: -26px;margin-top: -4px;width:21px;" class="inlineB"></div> VPS - KVM <div id="VPSHostname" class="inlineB">({%?vps[hostname]})</div></div>
                 <div class="pure-u-1">
                     {%if UserPermissions == 7}
@@ -585,7 +585,9 @@
         {%if UserPermissions == 7}
         <div id="tabCon" class="con3" style="display:none">
             <div id="tabConTxt" class="noBorder">
-                <div id="AdminNotice"></div>
+            	<div class="pure-u-1">
+                	<div id="AdminNotice"></div>
+                </div>
                 <div class="pure-u-sm-1 pure-u-md-1 pure-u-lg-l pure-u-xl-1-2 left">
                     {%foreach user in User}
                         <div class="table-top">
