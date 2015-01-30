@@ -590,7 +590,9 @@
     <div id="tabConWrap">
         <div id="tabCon" class="con1">
             <div id="tabConTxt" class="noBorder">
-                <div id="GeneralNotice" class="pure-u-1"></div>
+            	<div class="pure-u-1">
+                	<div id="GeneralNotice"></div>
+                </div>
                 <div id="vpsStatus" class="pure-u-1" style="text-align:center; font-weight:bold;font-size: 14px;color:#a8a8a8;">Loading Status</div>
                 <div class="pure-u-1">
                     {%if UserPermissions == 7}
@@ -658,7 +660,9 @@
 
          <div id="tabCon" class="con2" style="display: none">
             <div id="tabConTxt" class="whitebox">
-				<div id="SettingsNotice" class="pure-u-1"></div>
+            	<div class="pure-u-1">
+			<div id="SettingsNotice"></div>
+		</div>
                 <form class="whitebox pure-form pure-form-stacked pure-u-1 pure-g">
                     <div class="pure-u-sm-1 pure-u-md-1 pure-u-lg-1 pure-u-xl-1-2 left">
                         <div class="pure-control-group">
@@ -761,7 +765,9 @@
             {%if vps[ipv6] == 1}
 			{%if isempty|IPv6Exist == false}
 				<div id="tabs-3" style="height:600px;">
-					<div id="IPv6Notice" class="pure-u-1"></div>
+					<div class="pure-u-1">
+						<div id="IPv6Notice"></div>
+					</div>
 					<br>
 					<div style="z-index: 500;text-align:left;" class="notice">
 						<h2>IPv6 Management Notice</h2>
@@ -807,7 +813,9 @@
         </div>
         <div id="tabCon" class="con4" style="display: none">
             <div id="tabConTxt">
-                <div id="RebuildNotice" class="pure-u-1"></div>
+            	<div class="pure-u-1">
+                	<div id="RebuildNotice"></div>
+                </div>
                 <div align="center" class="pure-u-sm-1 pure-u-md-1 pure-u-lg-l pure-u-xl-1">
 				<div class="pure-u-sm-1 pure-u-md-1 pure-u-lg-1-2">
 					<h3>Rebuild</h3>
@@ -873,7 +881,9 @@
         {%if UserPermissions == 7}
         <div id="tabCon" class="con7" style="display: none">
             <div id="tabConTxt" class="pure-g">
-                <div id="AdminNotice" class="pure-u-1"></div>
+            	<div class="pure-u-1">
+                	<div id="AdminNotice"></div>
+                </div>
                 <div class="pure-u-sm-1 pure-u-md-1 pure-u-lg-l pure-u-xl-1-2 left">
                     {%foreach user in User}
                         <div class="table-top">
