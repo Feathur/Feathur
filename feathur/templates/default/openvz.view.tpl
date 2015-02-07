@@ -731,7 +731,7 @@
 
                         <div class="pure-control-group" style="display:block;">
                             <div class="pure-u-1 nofluid">
-                                <div id="TunTapButton" class="pure-button button-inline button-xlarge button-{%if isempty|vps[iptables] == true}green{%/if}{%if isempty|vps[iptables] == false}red{%/if}">
+                                <div id="TunTapButton" class="pure-button button-inline button-xlarge button-{%if isempty|vps[tuntap] == true}green{%/if}{%if isempty|vps[tuntap] == false}red{%/if}">
                                     <a href="#" id="TunTap" style="color:#FFFFFF;" class="pure-u-1">
                                         {%if isempty|vps[tuntap] == true}Enable TunTap{%/if}
                                         {%if isempty|vps[tuntap] == false}Disable TunTap{%/if}
@@ -739,7 +739,7 @@
                                 </div>
                             </div><br>
                             <div class="pure-u-1 nofluid">
-                                <div id="PPPButton" class="pure-button button-inline button-xlarge button-{%if isempty|vps[iptables] == true}green{%/if}{%if isempty|vps[iptables] == false}red{%/if}">
+                                <div id="PPPButton" class="pure-button button-inline button-xlarge button-{%if isempty|vps[ppp] == true}green{%/if}{%if isempty|vps[ppp] == false}red{%/if}">
                                     <a href="#" id="PPP" style="color:#FFFFFF;" class="pure-u-1">
                                         {%if isempty|vps[ppp] == true}Enable PPP{%/if}
                                         {%if isempty|vps[ppp] == false}Disable PPP{%/if}
