@@ -1,6 +1,6 @@
 <?php
 
-if ($sUser->sPermissions != 7) die('Sorry you've accessed our system without permission');
+if ($sUser->sPermissions != 7) die("Sorry, you've accessed our system without permission");
 
 $sPage		= 'edituser';
 $sPageType	= 'users';
