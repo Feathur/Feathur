@@ -368,8 +368,7 @@
                     <div id="vpsinfoProgressbars"></div>
                 </div>
             </div>
-        </div>
-        
+       
         <div class="tabCon tab-2">
             <div id="tabConTxt" class="noBorder">
                 <div class="pure-u-1">
@@ -583,7 +582,7 @@
             </div>
         
         {%if UserPermissions == 7}
-        <div class="tabCon tab-3">
+        	<div class="tabCon tab-3">
             <div id="tabConTxt" class="noBorder">
             	<div class="pure-u-1">
                 	<div id="AdminNotice"></div>
@@ -767,8 +766,7 @@
                 </div>
 			</div>
         </div>
-		{%/if}
-        </div>
+	{%/if}
     </div><!-- End tabConWrap -->
 </div>
 {%/foreach}
