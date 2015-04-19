@@ -368,7 +368,6 @@
                     <div id="vpsinfoProgressbars"></div>
                 </div>
             </div>
-        </div>
         
         <div class="tabCon tab-2">
             <div id="tabConTxt" class="noBorder">
@@ -768,6 +767,7 @@
 			</div>
         </div>
 		{%/if}
+        </div>
         </div>
     </div><!-- End tabConWrap -->
 </div>
