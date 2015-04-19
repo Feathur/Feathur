@@ -34,10 +34,10 @@ $(document).ready(function(){
 </script>
 
       <div class="tabs primarytabs">
-         <div class="tab nth btn1 cur" onclick="showCon(1)"><span>General</span><i class="fa fa-cogs"></i></div>
-         <div class="tab nth btn2" onclick="showCon(2)"><span>Mail</span><i class="fa fa-envelope"></i></div>
-         <div class="tab nth btn3" onclick="showCon(3)"><span>Bandwidth</span><i class="fa fa-tasks"></i></div>
-         <div class="tab nth btn4" onclick="showCon(4)"><span>Templates</span><i class="fa fa-list-alt"></i></div>
+         <div class="tab nth cur" data-tab="tab-1"><span>General</span><i class="fa fa-cogs"></i></div>
+         <div class="tab nth " data-tab="tab-2"><span>Mail</span><i class="fa fa-envelope"></i></div>
+         <div class="tab nth" data-tab="tab-3"><span>Bandwidth</span><i class="fa fa-tasks"></i></div>
+         <div class="tab nth" data-tab="tab-4"><span>Templates</span><i class="fa fa-list-alt"></i></div>
       </div>
       
 <div id="tabConWrap" class="pure-u-sm-1 pure-u-md-1 pure-u-lg-l pure-u-xl-1-2">
@@ -48,7 +48,7 @@ $(document).ready(function(){
         <input style="display:none" type="password" name="noautofillpasswordremembered"/>
       
         <div class="ajax-alert pure-u-1" style="display: none;"></div>
-        <div id="tabCon" class="con1">
+        <div class="tabCon tab-1 cur">
             <div id="tabConTxt">
                 <div class="pure-control-group">
                     <label for="title">Title:</label>
@@ -85,7 +85,7 @@ $(document).ready(function(){
             </div>
          </div>
          
-         <div id="tabCon" class="con2" style="display: none">
+        <div class="tabCon tab-2">
             <div id="tabConTxt">
                 <div class="pure-control-group">
                     <label for="mail">Mail Sender Type:</label>
@@ -108,7 +108,7 @@ $(document).ready(function(){
             </div>
          </div>
          
-         <div id="tabCon" class="con3" style="display: none">
+        <div class="tabCon tab-3">
             <div id="tabConTxt">
                 <div class="pure-control-group">
                     <label for="bandwidth_accounting">Bandwidth Accounting:</label>
@@ -121,7 +121,7 @@ $(document).ready(function(){
             </div>
          </div>
          
-         <div id="tabCon" class="con4" style="display: none">
+        <div class="tabCon tab-4">
             <div id="tabConTxt">
                 <p class="formnote" style="margin-top: 0;">Templates can be found in the <b>var/feathur/feathur/templates</b> directory.</p>
                 <div class="pure-control-group">
