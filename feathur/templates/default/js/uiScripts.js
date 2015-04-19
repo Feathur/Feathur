@@ -1,23 +1,4 @@
 var isSmallScreen = false;
-var prevTab=1;
-
-function showCon(i)
-{
-  if(i != prevTab)
-  {
-    $(".tab").removeClass("cur");
-    $(".tab.btn"+prevTab).removeClass("cur");
-    $(".tab.btn"+i).addClass("cur");
-    for(var n=1;n < $('.tabs.primarytabs').children().size()+2;n++)
-    {
-      $("#tabCon.con"+n).hide();
-    }
-    $("#tabCon.con"+i).show();
-    $("#tabConWrap").css("height",$("#tabCon.con"+i).height() + "px");
-    prevTab=i;
-    $(".chosen-select").chosen(); //recheck for fancy dropdowns
-  }
-}
 
 function loading(number)
 {
@@ -27,6 +8,7 @@ function loading(number)
 function setNotice(div, html, type)
 {
   $(div).addClass('alert '+type+'box').html(html);
+  $(div).slideDown();
 }
 
 function doSidebarChanges()
@@ -49,9 +31,16 @@ function doSidebarChanges()
   }
 }
 
-
 $(document).ready(function()
 {
+  //Tabs and tabbed content
+  $(".primarytabs > .tab").click(function () {
+    var curTab = $(this).attr("data-tab");
+    $(".tabs > div, #tabConWrap .tabCon").removeClass("cur");
+    $(this).add("#tabConWrap .tabCon."+curTab).addClass("cur");
+    
+    $(".chosen-select").chosen(); //recheck for fancy dropdowns
+  });
 
   var notSmall = (($(window).width > 960) ? false : true);
 
@@ -77,14 +66,6 @@ $(document).ready(function()
     $(this).parents(".navcat").find(".navsub").slideToggle();
     return false;
   });
- 
-  // Fixes display:inline-block from pure-g class from causing
-  // all tabbed contents to either show or not show on initial load
-
-  if($("#tabCon.con1").length)
-  {
-    $("#tabCon.con1").show();
-  }
     
   $(window).on('load resize', doSidebarChanges);
 
