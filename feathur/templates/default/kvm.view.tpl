@@ -261,13 +261,13 @@
 
 <div class="pure-u-1">
     <div class="tabs primarytabs">
-        <div class="tab nth btn1 cur" onclick="showCon(1)"><span>General</span><i class="fa fa-bar-chart"></i></div>
-        <div class="tab nth btn2" onclick="showCon(2)"><span>Settings</span><i class="fa fa-cogs"></i></div>
-        {%if UserPermissions == 7}<div class="tab nth btn3" onclick="showCon(3)"><span>Admin</span><i class="fa fa-key"></i></div>{%/if}
+        <div class="tab nth cur" data-tab="tab-1"><span>General</span><i class="fa fa-bar-chart"></i></div>
+        <div class="tab nth" data-tab="tab-2"><span>Settings</span><i class="fa fa-cogs"></i></div>
+        {%if UserPermissions == 7}<div class="tab nth" data-tab="tab-3"><span>Admin</span><i class="fa fa-key"></i></div>{%/if}
     </div>
       
     <div id="tabConWrap">
-        <div id="tabCon" class="con1">
+        <div class="tabCon tab-1 cur">
             <div id="tabConTxt" class="noBorder">
                 <div class="pure-u-1"></div><div id="GeneralNotice"></div></div>
                 <div id="vpsStatus" class="pure-u-1" style="text-align:center; font-weight:bold;font-size: 14px;color:#a8a8a8;"><div id="Status" style="position:absolute;margin-left: -26px;margin-top: -4px;width:21px;" class="inlineB"></div> VPS - KVM <div id="VPSHostname" class="inlineB">({%?vps[hostname]})</div></div>
@@ -370,7 +370,7 @@
             </div>
         </div>
         
-        <div id="tabCon" class="con2" style="display:none">
+        <div class="tabCon tab-2">
             <div id="tabConTxt" class="noBorder">
                 <div class="pure-u-1">
                     <div id="SettingsNotice"></div>
@@ -583,7 +583,7 @@
             </div>
         
         {%if UserPermissions == 7}
-        <div id="tabCon" class="con3" style="display:none">
+        <div class="tabCon tab-3">
             <div id="tabConTxt" class="noBorder">
             	<div class="pure-u-1">
                 	<div id="AdminNotice"></div>
