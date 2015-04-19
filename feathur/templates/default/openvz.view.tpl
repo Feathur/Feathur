@@ -569,13 +569,13 @@
 </script>
 <div class="pure-u-1">
     <div class="tabs primarytabs">
-        <div class="tab nth btn1 cur" onclick="showCon(1)"><span>General</span><i class="fa fa-bar-chart"></i></div>
-        <div class="tab nth btn2" onclick="showCon(2)"><span>Settings</span><i class="fa fa-cogs"></i></div>
-        {%if vps[ipv6] == 1}{%if isempty|IPv6Exist == false}<div class="tab nth btn2" onclick="showCon(3)"><span>IPv6</span><i class="fa fa-table"></i></div>{%/if}{%/if}
-        <div class="tab nth btn4" onclick="showCon(4)"><span>Rebuild</span><i class="fa fa-wrench"></i></div>
-        <div class="tab nth btn5" onclick="showCon(5)"><span>Command Center</span><i class="fa fa-terminal"></i></div>
-        <div class="tab nth btn6" onclick="showCon(6)"><span>Console</span><i class="fa fa-desktop"></i></div>
-        {%if UserPermissions == 7}<div class="tab nth btn7" onclick="showCon(7)"><span>Admin</span><i class="fa fa-key"></i></div>{%/if}
+        <div class="tab nth cur" data-tab="tab-1"><span>General</span><i class="fa fa-bar-chart"></i></div>
+        <div class="tab nth" data-tab="tab-2"><span>Settings</span><i class="fa fa-cogs"></i></div>
+        {%if vps[ipv6] == 1}{%if isempty|IPv6Exist == false}<div class="tab nth" data-tab="tab-3"><span>IPv6</span><i class="fa fa-table"></i></div>{%/if}{%/if}
+        <div class="tab nth" data-tab="tab-4"><span>Rebuild</span><i class="fa fa-wrench"></i></div>
+        <div class="tab nth" data-tab="tab-5"><span>Command Center</span><i class="fa fa-terminal"></i></div>
+        <div class="tab nth" data-tab="tab-6"><span>Console</span><i class="fa fa-desktop"></i></div>
+        {%if UserPermissions == 7}<div class="tab nth" data-tab="tab-7"><span>Admin</span><i class="fa fa-key"></i></div>{%/if}
     </div>
 
     <div id="mobileVPSStats">
@@ -588,7 +588,7 @@
     </div>
 
     <div id="tabConWrap">
-        <div id="tabCon" class="con1">
+        <div class="tabCon tab-1 cur">
             <div id="tabConTxt" class="noBorder">
             	<div class="pure-u-1">
                 	<div id="GeneralNotice"></div>
@@ -658,7 +658,7 @@
             </div>
          </div>
 
-         <div id="tabCon" class="con2" style="display: none">
+        <div class="tabCon tab-2">
             <div id="tabConTxt" class="whitebox">
             	<div class="pure-u-1">
 			<div id="SettingsNotice"></div>
@@ -760,7 +760,7 @@
             </div>
          </div>
 
-         <div id="tabCon" class="con3" style="display: none">
+        <div class="tabCon tab-3">
             <div id="tabConTxt" class="whitebox">
             {%if vps[ipv6] == 1}
 			{%if isempty|IPv6Exist == false}
@@ -811,7 +811,7 @@
 		{%/if}
             </div>
         </div>
-        <div id="tabCon" class="con4" style="display: none">
+        <div class="tabCon tab-4">
             <div id="tabConTxt">
             	<div class="pure-u-1">
                 	<div id="RebuildNotice"></div>
@@ -850,7 +850,7 @@
 			</div>
             </div>
         </div>
-        <div id="tabCon" class="con5" style="display: none">
+        <div class="tabCon tab-5">
             <div id="tabConTxt">
                 <div align="center" style="width:100%">
 				<div class="alert warningbox static-alert">
@@ -873,13 +873,13 @@
             </div>
         </div>
 
-        <div id="tabCon" class="con6" style="display: none">
+        <div class="tabCon tab-6">
             <div id="tabConTxt">
                 <iframe src="console.php?id={%?vps[id]}" width="100%" height="500" frameborder="0" scrolling="no" style="background: #fff;"></iframe>
             </div>
         </div>
         {%if UserPermissions == 7}
-        <div id="tabCon" class="con7" style="display: none">
+        <div class="tabCon tab-7">
             <div id="tabConTxt" class="pure-g">
             	<div class="pure-u-1">
                 	<div id="AdminNotice"></div>
