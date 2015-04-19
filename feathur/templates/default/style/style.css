@@ -627,8 +627,11 @@ left: 245px;
 overflow-x: auto;
 overflow-y: initial;
 }
-div#tabCon[class^="con"] {
+#tabConWrap div[class^="tab-"] {
 display: none;
+}
+#tabConWrap div.cur {
+    display:block;
 }
 
 
