@@ -56,7 +56,7 @@ if ($sTemplateSync < $sBefore)
     foreach ($sTemplateList->data as $sTemplate)
 	{
 	  $sTemplate = new Template($sTemplate['id']);
-	
+
 	  try {
 		$sTemplateData = array_change_key_case(get_headers($sTemplate->sURL, TRUE));
 		if (!isset($sTemplateData['content-length']) || empty($sTemplateData['content-length']))
@@ -66,7 +66,7 @@ if ($sTemplateSync < $sBefore)
 	  } catch (Exception $e) {
 		$sDisable = 1;
 	  }
-	  
+
 	  if (($sTemplate->sDisabled == 0) && ($sDisable == 1))
 	  {
 		$sTemplate->uDisabled = 1;
@@ -100,11 +100,11 @@ if ($sServerList = $database->CachedQuery('SELECT * FROM servers', array()))
 	  echo "Dispatched 5 uptime checkers...\n";
 	  sleep(5);
 	}
-	
+
 	$sServer = new Server($sServer['id']);
 	$sCommandList .= "screen -dm -S uptracker bash -c 'cd /var/feathur/feathur/scripts/;php pull_server.php {$sServer->sId} >> /var/feathur/data/status.log;exit;';";
 	$sTotal++;
-		
+
 	$sBefore = time() - 300;
 	$sUptime = $sServer->sLastCheck;
 	$sStatus = $sServer->sStatus;
@@ -142,7 +142,7 @@ if ($sServerList = $database->CachedQuery('SELECT * FROM servers', array()))
 
 $sOldStatistics = time() - 432000;
 $sStatistics = $database->prepare('DELETE FROM `statistics` WHERE timestamp < :OldStatistics');
-$sStatistics->bindParam(':OldStatistics', $sOldStatistics, PDO::PARAM_INT);  
+$sStatistics->bindParam(':OldStatistics', $sOldStatistics, PDO::PARAM_INT);
 $sStatistics->execute();
 
 /*
@@ -151,7 +151,7 @@ $sStatistics->execute();
 
 $sOldHistory = time() - 604800;
 $sHistory = $database->prepare('DELETE FROM `history` WHERE timestamp < :OldHistory');
-$sHistory->bindParam(':OldHistory', $sOldHistory, PDO::PARAM_INT);  
+$sHistory->bindParam(':OldHistory', $sOldHistory, PDO::PARAM_INT);
 $sHistory->execute();
 
 /*
@@ -163,8 +163,7 @@ $sTimeAgo	= time() - 604800;
 $sDayToday	= date('j');
 if (($sLastReset->sValue < $sTimeAgo) && ($sDayToday == 1))
 {
-  $sReset = $database->prepare('UPDATE `vps` SET `bandwidth_usage` = :Zero');
-  $sReset->bindParam(':Zero', 0, PDO::PARAM_INT);
+  $sReset = $database->prepare('UPDATE `vps` SET `bandwidth_usage` = 0');
   $sReset->execute();
   $sUpdateReset = Core::UpdateSetting('bandwidth_timestamp', time());
 }

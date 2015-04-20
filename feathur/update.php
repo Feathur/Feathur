@@ -206,11 +206,11 @@ if(!$sFindSetting = $database->CachedQuery('SELECT * FROM settings WHERE `settin
   // Create new table.
   $sAdd = $database->prepare("CREATE TABLE IF NOT EXISTS `new_templates` (`id` int(8) NOT NULL AUTO_INCREMENT, `name` varchar(65) NOT NULL, `path` varchar(65) NOT NULL, `url` varchar(255) NOT NULL, `type` varchar(65) NOT NULL, `disabled` int(2) NOT NULL, `size` int(65) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16;");
   $sAdd->execute();
-	
+
   // Rename old table, rename new table.
   $sAdd = $database->prepare("RENAME TABLE `templates` TO `templates_old`, `new_templates` TO `templates`;");
   $sAdd->execute();
-	
+
   // Remove all VPS template settings just to make sure there's no overlap.
   $sAdd = $database->prepare("UPDATE `vps` SET `template_id` = '0';");
   $sAdd->execute();
@@ -241,3 +241,10 @@ $sAdd->execute();
 // Create new table for server_groups storage.
 $sAdd = $database->prepare("CREATE TABLE IF NOT EXISTS `server_groups` (`id` int(8) NOT NULL AUTO_INCREMENT, `server_id` int(8) NOT NULL, `group_id` int(8) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16;");
 $sAdd->execute();
+
+// Make sure bandwidth resetting happens on the first of the month by adding the correct setting
+if(!$sFindSetting = $database->CachedQuery('SELECT * FROM settings WHERE `setting_name` LIKE :Setting', array('Setting' => 'bandwidth_timestamp')))
+{
+  $sAdd = $database->prepare("INSERT INTO settings(setting_name, setting_value, setting_group) VALUES('bandwidth_timestamp', '0', 'site_settings')");
+  $sAdd->execute();
+}
