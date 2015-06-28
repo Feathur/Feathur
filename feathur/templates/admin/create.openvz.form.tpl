@@ -118,7 +118,7 @@
 			var beginbuild = $.ajax({
 				type: "POST",
 				url: "admin.php?view=createvps&action=create",
-				data: "password=" + password + "&user=" + user + "&server=" + server + "&template=" + template + "&ram=" + ram + "&swap=" + swap + "&disk=" + disk + "&cpuunits=" + cpuunits + "&cpulimit=" + cpulimit + "&bandwidthlimit=" + bandwidthlimit + "&inodes=" + inodes + "&numproc=" + numproc + "&numiptent=" + numiptent + "&ipaddresses=" + ipaddresses + "&hostname=" + hostname + "&nameserver=" + nameserver + "&password=" + password,
+				data: "user=" + user + "&server=" + server + "&template=" + template + "&ram=" + ram + "&swap=" + swap + "&disk=" + disk + "&cpuunits=" + cpuunits + "&cpulimit=" + cpulimit + "&bandwidthlimit=" + bandwidthlimit + "&inodes=" + inodes + "&numproc=" + numproc + "&numiptent=" + numiptent + "&ipaddresses=" + ipaddresses + "&hostname=" + hostname + "&nameserver=" + nameserver + "&password=" + password,
 				success: function(data){
 					var result = $.parseJSON(data);
 					$('#update').html('<div style="z-index: 670;width:60%;height:25px;" class="albox small-' + result.type + '"><div id="Status" style="padding:4px;padding-left:5px;width:95%;">' + result.result + '</div><div style="float:right;"><a href="#" onClick="return false;" style="margin:-3px;padding:0px;" class="small-close CloseToggle">x</a></div></div>');
