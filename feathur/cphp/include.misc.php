@@ -18,7 +18,7 @@ function random_string($length)
 	$output = "";
 	for ($i = 0; $i < $length; $i++) 
 	{ 
-		$output .= substr("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", mt_rand(0, 61), 1); 
+		$output .= substr("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", random_int(0, 61), 1); 
 	}
 	return $output;
 }
