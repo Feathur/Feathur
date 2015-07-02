@@ -295,8 +295,8 @@ CREATE TABLE IF NOT EXISTS `groups` (
 
 CREATE TABLE IF NOT EXISTS `server_groups` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
-  `server_id` (8) NOT NULL,
-  `group_id` (8) NOT NULL,
+  `server_id` int(8) NOT NULL,
+  `group_id` int(8) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
