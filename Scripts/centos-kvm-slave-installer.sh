@@ -1,9 +1,9 @@
 #!/bin/bash
 
-mkdir ~/feathur-install/
-cd ~/feathur-install/
-touch ~/feathur-install/install.log
-exec 3>&1 > ~/feathur-install/install.log 2>&1
+mkdir ~/Feathur-install/
+cd ~/Feathur-install/
+touch ~/Feathur-install/install.log
+exec 3>&1 > ~/Feathur-install/install.log 2>&1
 
 ############################################################
 # Functions
@@ -51,17 +51,20 @@ status "Beginning installation..."
 yum -y install bridge-utils dhcp libvirt qemu-kvm vnstat lvm2 rsync screen wget nano 
 
 cd /etc/yum.repos.d/;wget http://download.opensuse.org/repositories/home:/tsariounov:/cpuset/CentOS_CentOS-6/home:tsariounov:cpuset.repo;
-cd ~/feathur-install/
+cd ~/Feathur-install/
 
 vgcreate $volumegroup $volumegroupbackingvolume
 
-mkdir -p /var/feathur/data
+mkdir -p /var/Feathur/data
 
 cp -R /etc/sysconfig/network-scripts /etc/sysconfig/network-scripts.backup
-trunkconfig=$(egrep -v "(NM_CONTROLLED|IPADDR|GATEWAY|NETMASK|BROADCAST|BOOTPROTO)" /etc/sysconfig/network-scripts/ifcfg-$trunkinterface; echo 'BRIDGE="br0"')
-bridgeconfig=$(egrep -v "(NM_CONTROLLED|DEVICE|TYPE)" /etc/sysconfig/network-scripts/ifcfg-$trunkinterface; echo 'INTERFACE="br0"'; echo 'TYPE="Bridge"')
-echo "$trunkconfig" > /etc/sysconfig/network-scripts/ifcfg-$trunkinterface
+#trunkconfig=
+#trunkconfig=$(egrep -v "(NM_CONTROLLED|IPADDR|GATEWAY|NETMASK|BROADCAST|BOOTPROTO)" /etc/sysconfig/network-scripts/ifcfg-$trunkinterface; echo 'BRIDGE="br0"')
+bridgeconfig=$(egrep -v "(NM_CONTROLLED|DEVICE|TYPE)" /etc/sysconfig/network-scripts/ifcfg-br0; echo 'INTERFACE="br0"'; echo 'TYPE="Bridge"')
+#echo "$trunkconfig" > /etc/sysconfig/network-scripts/ifcfg-$trunkinterface
+#cp /etc/sysconfig/network-scripts/ifcfg-$trunkinterface
 echo "$bridgeconfig" > /etc/sysconfig/network-scripts/ifcfg-br0
+sed -i '$a BRIDGE="br0"' /etc/sysconfig/network-scripts/ifcfg-$trunkinterface
 service network restart
 if [[ $(ping -c 3 8.8.8.8 | wc -l) == 5 ]]
 then
