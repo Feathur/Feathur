@@ -172,16 +172,18 @@ if (($sLastReset->sValue < $sTimeAgo) && ($sDayToday == 1))
  * License Check
  */
 
-echo "License update...\n";
-if ($sSlaves = $database->CachedQuery('SELECT * FROM servers', array())) $sCountSlaves = count($sSlaves->data);
-$sHost	= Core::GetSetting('panel_url');
-$sURL	= "http://check.feathur.com/api.php?host={$sHost->sValue}&slaves={$sCountSlaves}";
-$sCurl	= curl_init();
-curl_setopt($sCurl, CURLOPT_URL, $sURL);
-curl_setopt($sCurl, CURLOPT_RETURNTRANSFER, 1);
-$sLicense = json_decode(curl_exec($sCurl), true);
-curl_close($sCurl);
-Core::UpdateSetting('license', ($sLicense['type']=='success' ? 1 : 0));
+//echo "License update...\n";
+//if ($sSlaves = $database->CachedQuery('SELECT * FROM servers', array())) $sCountSlaves = count($sSlaves->data);
+//$sHost	= Core::GetSetting('panel_url');
+//$sURL	= "http://check.feathur.com/api.php?host={$sHost->sValue}&slaves={$sCountSlaves}";
+//$sCurl	= curl_init();
+//curl_setopt($sCurl, CURLOPT_URL, $sURL);
+//curl_setopt($sCurl, CURLOPT_RETURNTRANSFER, 1);
+//$sLicense = json_decode(curl_exec($sCurl), true);
+//curl_close($sCurl);
+//Core::UpdateSetting('license', ($sLicense['type']=='success' ? 1 : 0));
+//Feathur No longer has paid licenses so just mark the license as has one as it isn't used anyway anymore.
+Core::UpdateSetting('license', 1);
 
 
 /*
