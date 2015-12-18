@@ -241,3 +241,10 @@ $sAdd->execute();
 // Create new table for server_groups storage.
 $sAdd = $database->prepare("CREATE TABLE IF NOT EXISTS `server_groups` (`id` int(8) NOT NULL AUTO_INCREMENT, `server_id` int(8) NOT NULL, `group_id` int(8) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16;");
 $sAdd->execute();
+
+// Make sure bandwidth resetting happens on the first of the month by adding the correct setting
+if(!$sFindSetting = $database->CachedQuery('SELECT * FROM settings WHERE `setting_name` LIKE :Setting', array('Setting' => 'bandwidth_timestamp')))
+{
+  $sAdd = $database->prepare("INSERT INTO settings(setting_name, setting_value, setting_group) VALUES('bandwidth_timestamp', '0', 'site_settings')");
+  $sAdd->execute();
+}
