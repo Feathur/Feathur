@@ -1,0 +1,6 @@
+{
+	"routes" : {
+		"*" : "Home/Index/Main",
+		"404" : "Home/NoRoute/Main"
+	}
+}
