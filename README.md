@@ -20,7 +20,7 @@ the terms set forth in the license provided.
 
 Maintaining and developing Feathur costs time and money. If you can please consider donating to support Feathur's development.
 
-<div align="center"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=U5NNKRY7X2JQW" target="_blank"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"></a></div>
+<a href='https://pledgie.com/campaigns/31363'><img alt='Click here to lend your support to: Development Funds and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/31363.png?skin_name=chrome' border='0' ></a>
 
 ---------------------------------------
 
