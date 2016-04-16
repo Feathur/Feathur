@@ -1,4 +1,4 @@
-﻿@charset "utf-8";
+@charset "utf-8";
 html, body, .wrapper {
 width: 100%;
 float: left;
@@ -52,7 +52,7 @@ margin: 20px 0 20px 0;
 }
 
 .logo {
-background: url(../img/tpl/logo.png) no-repeat bottom center;
+background: url(../img/core/logo.png) no-repeat bottom center;
 height: 50px;
 padding-top: 37px;
 }
@@ -80,7 +80,7 @@ border: 1px solid #ddd;
 }
 
 #header {
-background: url(../img/tpl/sb_top.png) no-repeat top left;
+background: url(../img/core/sb_top.png) no-repeat top left;
 width: 244px;
 height: 123px;
 }
@@ -163,7 +163,7 @@ box-shadow: 0 1px rgba(255, 255, 255, 0.1);
 height: 100%;
 width: 0%;
 border-radius: 5px;
-background: url(../img/tpl/stripes.png) repeat-x top left;
+background: url(../img/core/stripes.png) repeat-x top left;
 box-shadow: 0 -3px rgba(0, 0, 0, 0.18) inset;
 -webkit-transition: all 0.3s;
 -moz-transition: all 0.3s;
@@ -241,7 +241,7 @@ right: 7px;
 width: 17px;
 height: 17px;
 border-radius: 3px;
-background: url(../img/tpl/icon_arrow_down.png) no-repeat center center rgba(0, 0, 0, 0.15);
+background: url(../img/core/icon_arrow_down.png) no-repeat center center rgba(0, 0, 0, 0.15);
 pointer-events: none;
 }
 ul.navsub li.active a {
@@ -279,7 +279,7 @@ display: block;
 text-align: left;
 }
 #profilebox > a:first-child:after {
-background: url(../img/tpl/icon_arrow_down.png) no-repeat center center transparent;
+background: url(../img/core/icon_arrow_down.png) no-repeat center center transparent;
 content: '';
 display: inline-block;
 width: 7px;
@@ -328,7 +328,7 @@ line-height: 21px;
 
 #SearchSystem {
 color: #e3e3e3;
-background: url(../img/tpl/icon_search.png) 13px 10px no-repeat #274459;
+background: url(../img/core/icon_search.png) 13px 10px no-repeat #274459;
 height: 28px;
 width: 220px !important;
 margin-left: 8px;
@@ -369,7 +369,7 @@ display: inline-block !important;
 }
 
 .statuscoloronline {
-background: url(../img/tpl/online.png) no-repeat center center;
+background: url(../img/core/online.png) no-repeat center center;
 width: 21px;
 height: 129px;
 position: absolute;
@@ -377,7 +377,7 @@ margin-left: -39px;
 margin-top: -6px;
 }
 .statuscoloroffline {
-background: url(../img/tpl/offline.png) no-repeat center center;
+background: url(../img/core/offline.png) no-repeat center center;
 width: 21px;
 height: 129px;
 position: absolute;
@@ -420,15 +420,15 @@ text-align: left;
 color: #fff;
 }
 .alert.errorbox {
-background: url(../img/tpl/error_bg.png) no-repeat center right, #e87f7c;
+background: url(../img/core/error_bg.png) no-repeat center right, #e87f7c;
 border: 1px solid #cf716d;
 }
 .alert.warningbox, .alert.cautionbox {
-background: url(../img/tpl/warn_bg.png) no-repeat center right, #777;
+background: url(../img/core/warn_bg.png) no-repeat center right, #777;
 border: 1px solid #555;
 }
 .alert.successbox {
-background: url(../img/tpl/success_bg.png) no-repeat center right, #7dd8a0;
+background: url(../img/core/success_bg.png) no-repeat center right, #7dd8a0;
 border: 1px solid #6dcfa0;
 }
 .alert.warningbox a, .alert.errorbox a, .alert.cautionbox a {
@@ -472,7 +472,7 @@ text-shadow: 0 1px 3px rgba(235, 235, 235, 1);
 }
 
 .statusbox {
-background: url(../img/tpl/statboxbg.png) no-repeat top left rgba(57,93,116,1);
+background: url(../img/core/statboxbg.png) no-repeat top left rgba(57,93,116,1);
 color: #fff;
 text-align: left;
 padding-left: 52px !important;
@@ -749,7 +749,7 @@ margin-top: 3px;
 
 /* Login form */
 body.login {
-background: url(../img/tpl/pagehighlight.png) no-repeat top center #2f526b;
+background: url(../img/core/pagehighlight.png) no-repeat top center #2f526b;
 width: 100%;
 position: absolute;
 }
@@ -765,13 +765,13 @@ margin-left: -194px;
 margin-top: -101px;
 }
 body.login .logo {
-background: url(../img/tpl/logo.png) no-repeat bottom center;
+background: url(../img/core/logo.png) no-repeat bottom center;
 height: 50px;
 padding-top: 37px;
 width: 154px;
 }
 body.login form#form1 {
-background: url(../img/tpl/loginbg.png) no-repeat top left;
+background: url(../img/core/loginbg.png) no-repeat top left;
 width: 347px;
 height: 191px;
 margin: 0 auto;
@@ -779,7 +779,7 @@ padding: 6px 20px;
 }
 body.login form#form1:before {
 content: '';
-background: url(../img/tpl/loginbg_shadow.png) no-repeat top left;
+background: url(../img/core/loginbg_shadow.png) no-repeat top left;
 width: 497px;
 height: 327px;
 display: block;
@@ -982,13 +982,13 @@ border: none;
 }
 
 table.dataTable thead .sorting {
-background: url("../img/tpl/sort_both.png") no-repeat center right;
+background: url("../img/core/sort_both.png") no-repeat center right;
 }
 table.dataTable thead .sorting_desc {
-background: url("../img/tpl/sort_desc.png") no-repeat center right;
+background: url("../img/core/sort_desc.png") no-repeat center right;
 }
 table.dataTable thead .sorting_asc {
-background: url("../img/tpl/sort_asc.png") no-repeat center right;
+background: url("../img/core/sort_asc.png") no-repeat center right;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button.disabled, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
@@ -1023,7 +1023,7 @@ table:not(.striped-table) thead tr th[class*="sorting"] {
 cursor: pointer;
 }
 thead tr th[class*="sort"] {
-background: url(../img/tpl/icon_arrow_down.png) no-repeat center right 13px;
+background: url(../img/core/icon_arrow_down.png) no-repeat center right 13px;
 }
 #page table:not(.striped-table) thead th:first-child, table thead td:first-child {
 border-left: 1px solid #466174;
@@ -1527,7 +1527,7 @@ background: #D67A7A;
     margin-left: 25px !important;
     }
     #SearchSystem {
-    background: url(../img/tpl/icon_search.png) 6px 13px no-repeat #274459 !important;
+    background: url(../img/core/icon_search.png) 6px 13px no-repeat #274459 !important;
     height: 35px !important;
     width: 171px !important;
     margin-left: 10px !important;

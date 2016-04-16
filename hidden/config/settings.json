@@ -1,6 +1,6 @@
 {
 	"site" : {
-		"title" : "Ori Example Site"
+		"title" : "Feathur - Virtual Machine Manager"
 	},
 	"origin" : {
 		"max_route_attempts" : "3",
